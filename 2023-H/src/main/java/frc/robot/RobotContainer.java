@@ -4,60 +4,154 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.DriveCommands.SwerveDriveCommand;
+import frc.robot.subsystems.Autonomous;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+// import frc.robot.utils.UpdateLogs;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Drivetrain drivetrain;
+  private final OI oi;
+  private Command autoCommand;
+  private final Autonomous autonomous;
+  private final Limelight limelight;
+  //private final UpdateLogs logs;
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
+    // Configure the button bindings
+    // configureButtonBindings();
+
+    drivetrain = Drivetrain.getInstance();
+    oi = OI.getInstance(); // Make sure OI gets initialized here, this should be the first call to
+                           // getInstance()
+    autonomous = Autonomous.getInstance();
+    limelight = Limelight.getInstance();
+    // Set up a default command to ensure the robot drives by default
+    drivetrain.setDefaultCommand(new SwerveDriveCommand());
+    //logs = UpdateLogs.getInstance();
+
+    SmartDashboard.putNumber("Drive P", 0.0);
+    SmartDashboard.putNumber("Drive I", 0.0);
+    SmartDashboard.putNumber("Drive D", 0.0);
+    SmartDashboard.putNumber("Drive FF", 0.0);
+    SmartDashboard.putNumber("Angle P", 0.0);
+    SmartDashboard.putNumber("Angle I", 0.0);
+    SmartDashboard.putNumber("Angle D", 0.0);
+    SmartDashboard.putNumber("Angle FF", 0.0);
+
+    SmartDashboard.putBoolean("Command Activated?", false);
+    SmartDashboard.putBoolean("Aiming?", false);
+    SmartDashboard.putBoolean("Shooting?", false);
+    SmartDashboard.putBoolean("Intake Deployed?", false);
+
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+  // private void configureButtonBindings() {}
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+  // /**
+  // * Use this to pass the autonomous command to the main {@link Robot} class.
+  // *
+  // * @return the command to run in autonomous
+  // */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+    return autonomous.returnAutonomousCommand();
   }
+
+  public void setupSmartDashboardTestMode() {
+    SmartDashboard.putNumber("FL Drive", 0.0);
+    SmartDashboard.putNumber("FL Angle", 0.0);
+    SmartDashboard.putNumber("FR Drive", 0.0);
+    SmartDashboard.putNumber("FR Angle", 0.0);
+    SmartDashboard.putNumber("BL Drive", 0.0);
+    SmartDashboard.putNumber("BL Angle", 0.0);
+    SmartDashboard.putNumber("BR Drive", 0.0);
+    SmartDashboard.putNumber("BR Angle", 0.0);
+
+    limelight.putSmartDashboardOverrides();
+    limelight.updateLimelightInfoOnDashboard();
+  }
+
+  public void testAllSystems() {
+    drivetrain.getFrontLeftSwerveModule().setDriveMotor(SmartDashboard.getNumber("FL Drive", 0.0));
+    drivetrain.getFrontLeftSwerveModule().setAngleMotor(SmartDashboard.getNumber("FL Angle", 0.0));
+    drivetrain.getFrontRightSwerveModule().setDriveMotor(SmartDashboard.getNumber("FR Drive", 0.0));
+    drivetrain.getFrontRightSwerveModule().setAngleMotor(SmartDashboard.getNumber("FR Angle", 0.0));
+    drivetrain.getBackLeftSwerveModule().setDriveMotor(SmartDashboard.getNumber("BL Drive", 0.0));
+    drivetrain.getBackLeftSwerveModule().setAngleMotor(SmartDashboard.getNumber("BL Angle", 0.0));
+    drivetrain.getBackRightSwerveModule().setDriveMotor(SmartDashboard.getNumber("BR Drive", 0.0));
+    drivetrain.getBackRightSwerveModule().setAngleMotor(SmartDashboard.getNumber("BR Angle", 0.0));
+
+  }
+
+  public void reportAllSwerveModuleStates() {
+    SmartDashboard.putNumber("FL Drive State", drivetrain.getSwerveModules()[0].getCurrentState().speedMetersPerSecond);
+    SmartDashboard.putNumber("FL Angle State", drivetrain.getSwerveModules()[0].getCurrentState().angle.getRadians());
+    SmartDashboard.putNumber("FR Drive State", drivetrain.getSwerveModules()[1].getCurrentState().speedMetersPerSecond);
+    SmartDashboard.putNumber("FR Angle State", drivetrain.getSwerveModules()[1].getCurrentState().angle.getRadians());
+    SmartDashboard.putNumber("BL Drive State", drivetrain.getSwerveModules()[2].getCurrentState().speedMetersPerSecond);
+    SmartDashboard.putNumber("BL Angle State", drivetrain.getSwerveModules()[2].getCurrentState().angle.getRadians());
+    SmartDashboard.putNumber("BR Drive State", drivetrain.getSwerveModules()[3].getCurrentState().speedMetersPerSecond);
+    SmartDashboard.putNumber("BR Angle State", drivetrain.getSwerveModules()[3].getCurrentState().angle.getRadians());
+
+  }
+
+  public void resetGyro() {
+    drivetrain.resetGyro();
+  }
+
+  public void resetRobotPose() {
+    drivetrain.resetRobotPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+  }
+
+  public void setupAngleOffsetFromAuto(double target) {
+    drivetrain.setTeleOpAngleOffset(target);
+  }
+
+  // public void startLogging(){
+  //   logs.startLogging();
+  // }
+
+  // public void stopLogging(){
+  //   logs.stopLogging();;
+  // }
+
 }
