@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-//import frc.robot.commands.DriveCommands.SwerveDriveCommand;
+import frc.robot.commands.DriveCommands.SwerveDriveCommand;
+import frc.robot.subsystems.SwerveModule;
+import frc.robot.utils.RobotMapH;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -70,22 +72,24 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
 
-    frontLeftSwerveModule = new SwerveModule(40, 41, DriveConstants.kFrontLeftDriveP, DriveConstants.kFrontLeftAngleP,
+    frontLeftSwerveModule = new SwerveModule(RobotMapH.frontLeftSwerveModuleCID, RobotMapH.frontLeftSwerveModuleAID, DriveConstants.kFrontLeftDriveP, DriveConstants.kFrontLeftAngleP,
         DriveConstants.kFrontLeftTurningEncoderChannel, DriveConstants.kFrontLeftAngularOffset);// last 2 are random
                                                                                                 // vals. They are
                                                                                                 // canCoder ID and
                                                                                                 // offset angle in
                                                                                                 // radians
-    frontRightSwerveModule = new SwerveModule(30, 31, DriveConstants.kFrontRightDriveP,
-        DriveConstants.kFrontRightAngleP, DriveConstants.kFrontRightTurningEncoderChannel,
-        DriveConstants.kFrontRightAngularOffset);// last 2 are random vals. They are canCoder ID and offset angle in
-                                                 // radians
-    backLeftSwerveModule = new SwerveModule(20, 21, DriveConstants.kBackLeftDriveP, DriveConstants.kBackLeftAngleP,
+    frontRightSwerveModule = new SwerveModule(RobotMapH.frontRightSwerveModuleCID, RobotMapH.frontRightSwerveModuleAID, DriveConstants.kFrontRightDriveP,
+        DriveConstants.kFrontRightAngleP, DriveConstants.kFrontRightTurningEncoderChannel, DriveConstants.kFrontRightAngularOffset);
+                                                                                                // last 2 are random vals. 
+                                                                                                //They are canCoder ID 
+                                                                                                //and offset angle in
+                                                                                                // radians
+    backLeftSwerveModule = new SwerveModule(RobotMapH.backLeftSwerveModuleCID, RobotMapH.backLeftSwerveModuleAID, DriveConstants.kBackLeftDriveP, DriveConstants.kBackLeftAngleP,
         DriveConstants.kBackLeftTurningEncoderChannel, DriveConstants.kBackLeftAngularOffset);// last 2 are random vals.
                                                                                               // They are canCoder ID
                                                                                               // and offset angle in
                                                                                               // radians
-    backRightSwerveModule = new SwerveModule(10, 11, DriveConstants.kBackRightDriveP, DriveConstants.kBackRightAngleP,
+    backRightSwerveModule = new SwerveModule(RobotMapH.backRightSwerveModuleCID, RobotMapH.backRightSwerveModuleAID, DriveConstants.kBackRightDriveP, DriveConstants.kBackRightAngleP,
         DriveConstants.kBackRightTurningEncoderChannel, DriveConstants.kBackRightAngularOffset);// last 2 are random
                                                                                                 // vals. They are
                                                                                                 // canCoder ID and
