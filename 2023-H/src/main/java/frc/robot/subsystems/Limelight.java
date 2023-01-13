@@ -120,7 +120,6 @@ public class Limelight extends SubsystemBase{
   }
   public void putSmartDashboardOverrides(){
     SmartDashboard.putNumber("LL P", LimelightConstants.kLimelightP);
-    
     SmartDashboard.putNumber("LL I", LimelightConstants.kLimelightI);
     SmartDashboard.putNumber("LL D", LimelightConstants.kLimelightD);
     SmartDashboard.putNumber("LL FF", LimelightConstants.kLimelightFF);

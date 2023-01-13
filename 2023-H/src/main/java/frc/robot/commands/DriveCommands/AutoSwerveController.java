@@ -27,6 +27,8 @@ public class AutoSwerveController extends CommandBase {
 
     private final Timer timer;
     private final Trajectory trajectory;
+
+    //rename, remove m_?
     private final Supplier<Pose2d> m_pose;
     private final SwerveDriveKinematics m_kinematics;
     private final HolonomicDriveController m_controller;
