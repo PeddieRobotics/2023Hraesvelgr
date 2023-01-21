@@ -20,9 +20,9 @@ public final class Constants {
 
   public static final double JOYSTICK_THRESHHOLE = 0.05; //placeholder value 
   public static final double INCHES_TO_METERS = 0.0254; // Converting from inches to meters
-  public static final double TRACKWIDTH_M = 0.56; //test value .6 
-  public static final double WHEELBASE_M = 0.56; //test value .575
-  public static final double WHEELDIAMETER_IN = 3.90; //This is in inches 
+  public static final double TRACKWIDTH_M = 24*INCHES_TO_METERS; //test value .6 
+  public static final double WHEELBASE_M = 28*INCHES_TO_METERS; //test value .575
+  public static final double WHEELDIAMETER_IN = 3.0; //This is in inches 
   public static final double WHEELRADIUS_M = (WHEELDIAMETER_IN / 2) * INCHES_TO_METERS; // converting wheel radius to meters 
   public static final double METERS_PER_SEC_TO_RPM = 30 / (Math.PI* WHEELRADIUS_M); //Converting Meters per Second to Rotation Per Minute 
   public static final double DRIVE_GEAR_RATIO = 6.75; //Gear ratio for the standard wheel (motor to wheel rotation: 8:16:1)

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -31,6 +32,7 @@ public class SwerveModule {
 
     private final RelativeEncoder m_driveEncoder;
     private final AnalogPotentiometer m_turningEncoder;
+    private final AbsoluteEncoder m_absoluteTurningEncoder;
 
     private final PIDController anglePIDController, drivePIDController;
 
