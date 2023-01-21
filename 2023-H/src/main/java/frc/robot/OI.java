@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.DriveCommands.Target;
 import frc.robot.subsystems.Drivetrain;
 
 public class OI {
@@ -33,9 +32,7 @@ public class OI {
         drivetrain = Drivetrain.getInstance();
         new JoystickButton(driverXboxController, 1).onTrue(
                 new InstantCommand(() -> drivetrain.resetGyro()));
-        new JoystickButton(driverXboxController, 2).onTrue(
-                new InstantCommand(() -> drivetrain.resetSwerveModules()));
-        new JoystickButton(driverXboxController, 6).onTrue(new Target()); //On true replaces whenHeld, investigate if effects differ
+        // new JoystickButton(driverXboxController, 6).onTrue(new Target()); //On true replaces whenHeld, investigate if effects differ
     }
 
     public static OI getInstance() {

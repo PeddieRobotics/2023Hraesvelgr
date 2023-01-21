@@ -20,9 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
-import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
 // import frc.robot.utils.UpdateLogs;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -40,8 +38,6 @@ public class RobotContainer {
   private final Drivetrain drivetrain;
   private final OI oi;
   private Command autoCommand;
-  private final Autonomous autonomous;
-  private final Limelight limelight;
   //private final UpdateLogs logs;
 
   /**
@@ -54,8 +50,6 @@ public class RobotContainer {
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance(); // Make sure OI gets initialized here, this should be the first call to
                            // getInstance()
-    autonomous = Autonomous.getInstance();
-    limelight = Limelight.getInstance();
     // Set up a default command to ensure the robot drives by default
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     //logs = UpdateLogs.getInstance();
@@ -93,7 +87,7 @@ public class RobotContainer {
   // */
   public Command getAutonomousCommand() {
     drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-    return autonomous.returnAutonomousCommand();
+    return new WaitCommand(1);
   }
 
   public void setupSmartDashboardTestMode() {
@@ -105,9 +99,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("BL Angle", 0.0);
     SmartDashboard.putNumber("BR Drive", 0.0);
     SmartDashboard.putNumber("BR Angle", 0.0);
-
-    limelight.putSmartDashboardOverrides();
-    limelight.updateLimelightInfoOnDashboard();
   }
 
   public void testAllSystems() {
