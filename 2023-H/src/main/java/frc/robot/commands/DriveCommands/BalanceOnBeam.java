@@ -1,10 +1,12 @@
-package frc.robot.commands;
+package frc.robot.commands.DriveCommands;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Robot;
-import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class BalanceOnBeam extends CommandBase{
@@ -12,19 +14,20 @@ public class BalanceOnBeam extends CommandBase{
     private Drivetrain drivetrain;
 
     private double error;
+    private Rotation2d rotation;
     private double currentTheta;
     private double drivePower;
 
     public BalanceOnBeam(){
-        drivetrain.getInstance();
+        Drivetrain.getInstance();
         addRequirements(drivetrain);
     }
 
     @Override
     public void execute(){
-        this.currentTheta = drivetrain.getPitch();
+        this.rotation = drivetrain.getRotation2d();
 
-        error = DriveConstants.BEAM_BALANCED_GOAL_DEGREES - currentTheta;
+        error = DriveConstants.BEAM_BALANCED_GOAL_DEGREES -currentTheta;
         drivePower = -Math.min(DriveConstants.BEAM_BALANCED_DRIVE_kP * error, 1);
 
         //limit max power 
@@ -32,7 +35,11 @@ public class BalanceOnBeam extends CommandBase{
         drivePower = Math.copySign(0.4, drivePower);
         }
 
-        drivetrain.drive(drivePower);
+        //there is supposed to be a drive method from drivertrain
+        //here in order to supply power to the drivetrain and execute it, 
+        //but I cannot find a way to currently do that, investigate after.
+        //We will most likely need rotation and translation 2d in order to accomplish
+        //based on the current Drive() we have. 
     }
 
     //Called once the command ends or is interrupted

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -212,6 +213,10 @@ public class Drivetrain extends SubsystemBase {
   
   public double getGyroRate(){
     return gyro.getRate();
+  }
+
+  public IMUAxis getYaw() {
+    return gyro.getYawAxis();
   }
 
   public void stop() {
