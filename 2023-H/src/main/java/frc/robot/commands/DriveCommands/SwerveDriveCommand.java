@@ -17,9 +17,9 @@ import frc.robot.OI;
 
 public class SwerveDriveCommand extends CommandBase {
   private Drivetrain drivetrain;
-  private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlew);
-  private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlew);
-  private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlew);
+  private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
+  private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
+  private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
 
   /** Creates a new SwerveDriveCommand. */
   public SwerveDriveCommand() {

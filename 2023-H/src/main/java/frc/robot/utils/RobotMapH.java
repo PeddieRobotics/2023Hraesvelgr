@@ -13,4 +13,9 @@ public class RobotMapH {
     public static final int kRearLeftTurningCanId = 21;
     public static final int kFrontRightTurningCanId = 31;
     public static final int kRearRightTurningCanId = 41;
+
+    // Arm Motors
+    public static final int kClawMotor = 60;
+    public static final int kWristMotor = 61;
+    public static final int kShoulderMotor = 62;
 }

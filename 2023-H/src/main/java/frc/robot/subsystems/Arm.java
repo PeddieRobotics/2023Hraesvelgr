@@ -75,7 +75,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void putShuffleboard() {
-        SmartDashboard.putNumber(RobotMapH.MOTOR_SHOULDER + " Shoulder RPM", getShoulderSpeed());
-        SmartDashboard.putNumber(RobotMapH.MOTOR_WRIST + " Wrist RPM", getWristSpeed());
+        SmartDashboard.putNumber(RobotMapH.kShoulderMotor + " Shoulder RPM", getShoulderSpeed());
+        SmartDashboard.putNumber(RobotMapH.kWristMotor + " Wrist RPM", getWristSpeed());
     }
 }

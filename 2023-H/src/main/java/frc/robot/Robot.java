@@ -38,16 +38,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
-    
-    // Logger logger=Logger.getInstance();
-    // setUseTiming(true);
-    // LoggedNetworkTables.getInstance().addTable("/LiveWindow");
-    // logger.addDataReceiver(new ByteLogReceiver("/home/lvuser/"));
-    // logger.addDataReceiver(new LogSocketServer(5800));
-    // logger.start();
 
     robotContainer = new RobotContainer();
     PathPlannerServer.startServer(5985);
@@ -79,7 +69,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    robotContainer.resetRobotPose();
+    robotContainer.resetRobotPosition();
     //robotContainer.stopLogging();
   }
 
@@ -93,8 +83,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //robotContainer.startLogging();
-    robotContainer.resetRobotPose();
+    robotContainer.resetRobotPosition();
     robotContainer.setupAngleOffsetFromAuto(0);
 
     autonomousCommand = robotContainer.getAutonomousCommand();
@@ -116,8 +105,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    //Logger.getInstance().start();
-    robotContainer.resetRobotPose();
+    robotContainer.resetRobotPosition();
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
@@ -132,14 +120,12 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();
-    robotContainer.setupSmartDashboardTestMode();
+    robotContainer.resetRobotPosition();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    robotContainer.testAllSystems();
-    robotContainer.reportAllSwerveModuleStates();
   }
 
 }

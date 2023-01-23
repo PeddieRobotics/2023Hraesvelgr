@@ -85,7 +85,7 @@ public final class Constants {
                 public final static int kBackLeftTurningEncoderChannel = 1;
                 public final static int kBackRightTurningEncoderChannel = 0;
 
-                public final static double[] kKeepAnglePID = { 0.350, 0, 0 };
+                public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
 
                 public static final double BEAM_BALANCED_DRIVE_kP = 0; // starting value for p
                 public static final double BEAM_BALANCED_GOAL_DEGREES = 0;
