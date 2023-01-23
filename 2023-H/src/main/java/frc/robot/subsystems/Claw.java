@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.RobotMapH;
 
-public class Intake extends SubsystemBase {
-    private static Intake instance;
+public class Claw extends SubsystemBase {
+    private static Claw instance;
 
     private static final int MAX_INTAKE_CURRENT = 10; // TODO: change value
 
     private CANSparkMax intakeMotor;
 
-    public Intake() {
+    public Claw() {
         intakeMotor = new CANSparkMax(RobotMapH.kClawMotor, MotorType.kBrushed); // TODO: no idea what brushed means
         
         intakeMotor.setSmartCurrentLimit(MAX_INTAKE_CURRENT);
@@ -40,9 +40,9 @@ public class Intake extends SubsystemBase {
         return intakeMotor.getMotorTemperature();
     }
 
-    public static Intake getInstance() {
+    public static Claw getInstance() {
         if (instance == null) {
-            instance = new Intake();
+            instance = new Claw();
         }
 
         return instance;

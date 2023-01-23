@@ -10,10 +10,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.Constants;
+import frc.robot.utils.OI;
+import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.Robot;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants;
-import frc.robot.OI;
 
 public class SwerveDriveCommand extends CommandBase {
   private Drivetrain drivetrain;

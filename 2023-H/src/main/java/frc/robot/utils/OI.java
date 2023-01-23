@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.utils;
 
 import javax.sql.rowset.spi.TransactionalWriter;
 
@@ -11,16 +11,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.MeasurementConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.Constants.MeasurementConstants;
+import frc.robot.utils.Constants.OIConstants;
+import frc.robot.subsystems.Claw;
 
 public class OI {
     public static OI instance;
     private Drivetrain drivetrain;
-    private Intake intake;
+    private Claw intake;
     // private Joystick leftJoystick = new Joystick(0);
     // private Joystick rightJoystick = new Joystick(1);
 
