@@ -45,8 +45,8 @@ public class SwerveModule {
 
         driveMotor = new CANSparkMax(driveMotorCanId, MotorType.kBrushless);
 
-        driveMotor.setSmartCurrentLimit(DriveConstants.kTranslation);
-        driveMotor.enableVoltageCompensation(GlobalConstants.kVoltCompensation);
+        driveMotor.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+        driveMotor.enableVoltageCompensation(ModuleConstants.kTurningMotorCurrentLimit);
 
         driveMotor.setInverted(false);
 
