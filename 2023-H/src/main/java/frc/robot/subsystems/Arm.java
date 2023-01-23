@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import frc.robot.utils.Motor;
 import frc.robot.utils.RobotMapH;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,59 +11,44 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Arm extends SubsystemBase {
     private static Arm instance;
 
-    private class ShoulderMotor extends Motor {
-        // this is where you "override" constants (don't do the @Override thing)
-        // TODO: test if the override thing works
-
-        @Override
-        protected int getMotorCanId() {
-            return 0;
-        }
-
-        @Override
-        protected String getPrefixedString(String baseString) {
-            return "Shoulder " + baseString;
-        }
-    }
-
-    private Motor shoulder, wrist; // TODO: elbow, only extends once at the begining of the game
-
-    private CANSparkMax shoulderMotor, wristMotor;
+    private final Shoulder shoulder;
+    private final Wrist wrist;
 
     public Arm() {
-
+        shoulder = new Shoulder();
+        wrist = new Wrist();
     }
 
     public void setWristSpeed(double wristSpeed) {
-        wristMotor.set(wristSpeed);
+        wrist.getMotor().set(wristSpeed);
     }
 
     public double getWristSpeed() {
-        return wristMotor.get();
+        return wrist.getMotor().get();
     }
 
     public void setShoulderSpeed(double shoulderSpeed) {
-        shoulderMotor.set(shoulderSpeed);
+        shoulder.getMotor().set(shoulderSpeed);
     }
 
     public double getShoulderSpeed() {
-        return shoulderMotor.get();
+        return shoulder.getMotor().get();
     }
 
-    public double getShoulderMotorOutputCurrent() {
-        return shoulderMotor.getOutputCurrent();
+    public double getShoulderOutputCurrent() {
+        return shoulder.getMotor().getOutputCurrent();
     }
 
-    public double getShoulderMotorTemperature() {
-        return shoulderMotor.getMotorTemperature();
+    public double getShoulderTemperature() {
+        return shoulder.getMotor().getMotorTemperature();
     }
 
     public double getWristOutputCurrent() {
-        return wristMotor.getOutputCurrent();
+        return wrist.getMotor().getOutputCurrent();
     }
 
-    public double getWristMotorTemperature() {
-        return wristMotor.getMotorTemperature();
+    public double getWristTemperature() {
+        return wrist.getMotor().getMotorTemperature();
     }
 
     public static Arm getInstance() {
@@ -74,8 +58,19 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    public void putShuffleboard() {
-        SmartDashboard.putNumber(RobotMapH.MOTOR_SHOULDER + " Shoulder RPM", getShoulderSpeed());
-        SmartDashboard.putNumber(RobotMapH.MOTOR_WRIST + " Wrist RPM", getWristSpeed());
+    public void putSmartDashboardOverrides() {
+        wrist.putSmartDashboardOverrides();
+        shoulder.putSmartDashboardOverrides();
+    }
+
+    public void updateFromDashboard() {
+        wrist.updateFromDashboard();
+        shoulder.updateFromDashboard();
+    }
+
+    @Override
+    public void periodic() {
+        wrist.periodic();
+        shoulder.periodic();
     }
 }

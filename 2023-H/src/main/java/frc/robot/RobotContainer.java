@@ -35,7 +35,7 @@ public class RobotContainer {
   private Command autoCommand;
   private final Intake intake;
   private final Arm arm;
-  //private final UpdateLogs logs;
+  // private final UpdateLogs logs;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -49,7 +49,7 @@ public class RobotContainer {
                            // getInstance()
     // Set up a default command to ensure the robot drives by default
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
-    //logs = UpdateLogs.getInstance();
+    // logs = UpdateLogs.getInstance();
     intake = Intake.getInstance();
     arm = Arm.getInstance();
 
@@ -98,6 +98,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("BL Angle", 0.0);
     SmartDashboard.putNumber("BR Drive", 0.0);
     SmartDashboard.putNumber("BR Angle", 0.0);
+
+    intake.putSmartDashboardOverrides();
+    arm.putSmartDashboardOverrides();
   }
 
   public void testAllSystems() {
@@ -111,6 +114,7 @@ public class RobotContainer {
     drivetrain.getBackRightSwerveModule().setAngleMotor(SmartDashboard.getNumber("BR Angle", 0.0));
 
     intake.updateIntakeFromDashboard();
+    arm.updateFromDashboard();
   }
 
   public void reportAllSwerveModuleStates() {
@@ -138,11 +142,11 @@ public class RobotContainer {
   }
 
   // public void startLogging(){
-  //   logs.startLogging();
+  // logs.startLogging();
   // }
 
   // public void stopLogging(){
-  //   logs.stopLogging();;
+  // logs.stopLogging();;
   // }
 
 }
