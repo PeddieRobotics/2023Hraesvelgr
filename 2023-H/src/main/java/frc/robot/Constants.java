@@ -46,7 +46,7 @@ public final class Constants {
 
         public static class OIConstants {
                 public static final double JOYSTICK_THRESHHOLE = 0.05;
-                public static final double kDrivingDeadband = 0.02;
+                public static final double kDrivingDeadband = 0.05;
         }
 
         public static class DriveConstants {
@@ -75,20 +75,10 @@ public final class Constants {
                 public static final double kTranslationSlewRate = 4.5; // meters per second
                 public static final double kRotationSlewRate = 4.5; // radians per second
 
-                public static final double kFrontLeftDriveP = 0.15;
-                public static final double kFrontLeftAngleP = 0.2;
-                public static final double kFrontRightDriveP = 0.15;
-                public static final double kFrontRightAngleP = 0.2;
-                public static final double kBackLeftDriveP = 0.15;
-                public static final double kBackLeftAngleP = 0.2;
-                public static final double kBackRightDriveP = 0.15;
-                public static final double kBackRightAngleP = 0.2;
-                public static final double kDeadband = 0.10;
-
                 public static final double kMinTranslationCommand = DriveConstants.kMaxSpeedMetersPerSecond
-                                * Math.pow(DriveConstants.kDeadband, 3);
+                                * Math.pow(OIConstants.kDrivingDeadband, 3);
                 public static final double kMinRotationCommand = DriveConstants.kMaxAngularSpeed
-                                * Math.pow(DriveConstants.kDeadband, 3);
+                                * Math.pow(OIConstants.kDrivingDeadband, 3);
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
                 public final static int kFrontRightTurningEncoderChannel = 2;
