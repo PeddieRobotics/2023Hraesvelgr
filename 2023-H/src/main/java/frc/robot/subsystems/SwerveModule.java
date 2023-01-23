@@ -32,8 +32,6 @@ public class SwerveModule {
 
     private final RelativeEncoder m_driveEncoder;
     private final AnalogPotentiometer m_turningEncoder;
-    private final AbsoluteEncoder m_absoluteTurningEncoder;
-
     private final PIDController anglePIDController, drivePIDController;
 
     private final SimpleMotorFeedforward driveFeedForward, angleFeedForward;

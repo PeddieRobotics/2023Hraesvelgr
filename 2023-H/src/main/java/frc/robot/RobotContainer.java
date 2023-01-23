@@ -4,14 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -23,8 +15,11 @@ import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 // import frc.robot.utils.UpdateLogs;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.DriveCommands.SwerveDriveCommand;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -38,6 +33,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain;
   private final OI oi;
   private Command autoCommand;
+  private final Intake intake;
+  private final Arm arm;
   //private final UpdateLogs logs;
 
   /**
@@ -53,6 +50,8 @@ public class RobotContainer {
     // Set up a default command to ensure the robot drives by default
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     //logs = UpdateLogs.getInstance();
+    intake = Intake.getInstance();
+    arm = Arm.getInstance();
 
     SmartDashboard.putNumber("Drive P", 0.0);
     SmartDashboard.putNumber("Drive I", 0.0);
@@ -111,6 +110,7 @@ public class RobotContainer {
     drivetrain.getBackRightSwerveModule().setDriveMotor(SmartDashboard.getNumber("BR Drive", 0.0));
     drivetrain.getBackRightSwerveModule().setAngleMotor(SmartDashboard.getNumber("BR Angle", 0.0));
 
+    intake.updateIntakeFromDashboard();
   }
 
   public void reportAllSwerveModuleStates() {
