@@ -177,4 +177,9 @@ public class MAXSwerveModule {
   public void resetEncoders() {
     m_drivingEncoder.setPosition(0);
   }
+
+  public void putSmartDashboard(){
+    SmartDashboard.putNumber(drivingCANId + " Wheel RPM", m_drivingEncoder.getVelocity());
+    SmartDashboard.putNumber(turningCANId + " Angle Motor Angle", m_turningEncoder.getPosition());
+  }
 }

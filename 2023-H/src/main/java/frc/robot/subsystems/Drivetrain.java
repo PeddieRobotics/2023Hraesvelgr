@@ -119,10 +119,10 @@ public class Drivetrain extends SubsystemBase {
     }
     updateOdometry();
 
-    // for (SwerveModule module : swerveModules) {
-    //   module.putShuffleboard();
-    //   module.getFromShuffleboard();
-    // }
+    for (MAXSwerveModule module : swerveModules) {
+      module.putSmartDashboard();
+      // module.getFromShuffleboard();
+    }
     // SmartDashboard.putNumber("lastRotTime", lastRotTime);
     // SmartDashboard.putNumber("lastDriveTime", lastDriveTime);
     // SmartDashboard.putNumber("timeSinceRot", timeSinceRot);
