@@ -15,8 +15,8 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeMotor;
 
     public Intake() {
-        intakeMotor = new CANSparkMax(RobotMapH.MOTOR_INTAKE, MotorType.kBrushed); // TODO: no idea what brushed means
-
+        intakeMotor = new CANSparkMax(RobotMapH.kClawMotor, MotorType.kBrushed); // TODO: no idea what brushed means
+        
         intakeMotor.setSmartCurrentLimit(MAX_INTAKE_CURRENT);
     }
 
@@ -48,13 +48,13 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
-    public void putSmartDashboardOverrides() {
-        SmartDashboard.putNumber(RobotMapH.MOTOR_INTAKE + " Intake RPM", getIntakeSpeed());
+    public void putShuffleboard() {
+        SmartDashboard.putNumber(RobotMapH.kClawMotor + " Intake RPM", getIntakeSpeed());
     }
 
-    public void updateIntakeFromDashboard() {
-        double desiredIntakeSpeed = SmartDashboard.getNumber(RobotMapH.MOTOR_INTAKE + " Intake RPM", getIntakeSpeed());
-        if (desiredIntakeSpeed != getIntakeSpeed()) {
+    public void updateIntakeFromDashboard(){
+        double desiredIntakeSpeed = SmartDashboard.getNumber(RobotMapH.kClawMotor + " Intake RPM", getIntakeSpeed());
+        if (desiredIntakeSpeed!=getIntakeSpeed()) {
             setIntakeSpeed(desiredIntakeSpeed);
         }
     }

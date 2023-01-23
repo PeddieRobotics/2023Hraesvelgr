@@ -44,7 +44,7 @@ public class BalanceOnBeam extends CommandBase{
 
     //Called once the command ends or is interrupted
     public void end(boolean interrupted) {
-        drivetrain.stop();
+        drivetrain.stopSwerveModules();
     }
 
     //Returns true when the command should end
