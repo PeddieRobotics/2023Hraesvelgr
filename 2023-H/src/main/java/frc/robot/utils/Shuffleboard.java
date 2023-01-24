@@ -15,5 +15,9 @@ public class Shuffleboard {
     public void putShuffleboard(){
 
     }
+
+    public void updateFromShuffleboard(){
+        
+    }
     
 }
