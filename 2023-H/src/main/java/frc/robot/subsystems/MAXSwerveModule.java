@@ -165,6 +165,7 @@ public class MAXSwerveModule {
     m_desiredState = desiredState;
     */
 
+    // The algorithm below should be the correct setDesiredState algorithm.
     // Apply chassis angular offset to the desired state.
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
