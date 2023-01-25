@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
 
@@ -32,6 +33,7 @@ import frc.robot.subsystems.Claw;
 public class RobotContainer {
   private final Drivetrain drivetrain;
   private final OI oi;
+  private final Autonomous autonomous;
   private Command autoCommand;
   // private final Claw intake;
   // private final Arm arm;
@@ -42,14 +44,16 @@ public class RobotContainer {
   public RobotContainer() {
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
+    autonomous = Autonomous.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     // intake = Claw.getInstance();
     // arm = Arm.getInstance();
   }
 
   public Command getAutonomousCommand() {
+    drivetrain.resetGyro();
     drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-    return new WaitCommand(1);
+    return autonomous.getAutonomousCommand();
   }
 
   public void resetRobotPosition() {
