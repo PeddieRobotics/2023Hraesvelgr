@@ -90,6 +90,7 @@ public class Autonomous extends SubsystemBase{
         return autoRoutineSelector.getSelected();
     }
 
+    //Does not reflect for red -- DO NOT CHANGE
     public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
         return autoBuilder.fullAuto(trajectory);
     }
