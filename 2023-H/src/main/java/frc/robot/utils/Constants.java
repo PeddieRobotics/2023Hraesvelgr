@@ -52,8 +52,8 @@ public final class Constants {
         public static class DriveConstants {
                 public static final double kMaxSpeedMetersPerSecond = 3.5;
                 public static final double kMaxAcceleration = 3.00;
-                public static final double kMaxAngularSpeed = 2 * Math.PI;
-                public static final double kMaxAngularAcceleration = 2 * Math.PI / 2;
+                public static final double kMaxAngularSpeed = Math.PI/2;
+                public static final double kMaxAngularAcceleration = Math.PI / 2;
 
                 public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
                                 new Translation2d(MeasurementConstants.WHEELBASE_M / 2.0,
