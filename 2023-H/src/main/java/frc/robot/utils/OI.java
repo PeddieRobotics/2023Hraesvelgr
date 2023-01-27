@@ -38,7 +38,7 @@ public class OI {
         //Resets the gyro
         Trigger resetGyroButton = new JoystickButton(driverXboxController, 1);
         resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
-        Trigger lockWheels = new JoystickButton(driverXboxController, 2);
+        Trigger lockWheels = new JoystickButton(driverXboxController, 14);
         lockWheels.whileTrue(new LockDrivetrain());
         // Snap to angle
         Trigger snapToAngle = new JoystickButton(driverXboxController, 5);
