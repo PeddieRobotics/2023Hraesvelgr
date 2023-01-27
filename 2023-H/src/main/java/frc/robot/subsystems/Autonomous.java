@@ -41,7 +41,7 @@ public class Autonomous extends SubsystemBase{
         HashMap<String, Command> eventMap = new HashMap<>();
 
         autoBuilder = new SwerveAutoBuilder(
-            drivetrain ::getPose, drivetrain ::resetRobotPosition, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, drivetrain
+            drivetrain ::getPose, drivetrain ::resetRobotPosition, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, true, drivetrain
         );
 
         defineAutoPaths();
@@ -71,9 +71,25 @@ public class Autonomous extends SubsystemBase{
     public void setupAutoRoutines(){
         autoRoutines.put("1 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraight", 2,2)));
         autoRoutines.put("1 Meter Straight Path Spin", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraightSpin", 0.5, 0.5)));
+        autoRoutines.put("U-path", createCommandFromTrajectory(PathPlanner.loadPathGroup("U-path", 0.5, 0.5)));
+        autoRoutines.put("Star", createCommandFromTrajectory(PathPlanner.loadPathGroup("Star", 0.5, 0.5)));
+        autoRoutines.put("ShootingStar", createCommandFromTrajectory(PathPlanner.loadPathGroup("ShootingStar", 0.5, 0.5)));
         autoRoutines.put("SwerveTest", createCommandFromTrajectory(PathPlanner.loadPathGroup("SwerveTest", 0.3, 0.3)));
         autoRoutines.put("2 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("2MeterStraight", 1.5, 1.5)));
-    }
+
+        //Mock competition paths
+        autoRoutines.put("1 Cone Skedaddle", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeSkedaddle", 1,1)));
+        autoRoutines.put("1 Cone Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeFree", 1,1)));
+        autoRoutines.put("1 Cone Block", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeBlock", 1,1)));
+        autoRoutines.put("2 Piece Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceFree", 1,1)));
+        autoRoutines.put("2 Piece Block", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBlock", 1,1)));
+        autoRoutines.put("2 Piece Bridge Left", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBridgeL", 1,1)));
+        autoRoutines.put("2 Piece Bridge Right", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBridgeR", 1,1)));
+        autoRoutines.put("3 Link Scatter Left", createCommandFromTrajectory(PathPlanner.loadPathGroup("3LinkScatterL", 1,1)));
+        autoRoutines.put("3 Link Scatter Right", createCommandFromTrajectory(PathPlanner.loadPathGroup("3LinkScatterR", 1,1)));
+        autoRoutines.put("254", createCommandFromTrajectory(PathPlanner.loadPathGroup("254", 1,1)));
+    }   
+
 
     public void setupAutoSelector(){
         Enumeration<String> e = autoRoutines.keys();
@@ -90,7 +106,6 @@ public class Autonomous extends SubsystemBase{
         return autoRoutineSelector.getSelected();
     }
 
-    //Does not reflect for red -- DO NOT CHANGE
     public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
         return autoBuilder.fullAuto(trajectory);
     }
