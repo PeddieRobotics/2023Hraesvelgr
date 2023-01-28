@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class Wrist {
-    final int motorCanId = 1;
+    final int motorCanId = 6;
     final int kMaxCurrent = 10;
 
     final double kP = 0.01;

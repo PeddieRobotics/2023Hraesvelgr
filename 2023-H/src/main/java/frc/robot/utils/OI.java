@@ -5,7 +5,11 @@ import javax.sql.rowset.spi.TransactionalWriter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -15,6 +19,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
+import pabeles.concurrency.ConcurrencyOps.NewInstance;
 import frc.robot.subsystems.Claw;
 
 public class OI {
@@ -24,9 +29,8 @@ public class OI {
     // private Joystick leftJoystick = new Joystick(0);
     // private Joystick rightJoystick = new Joystick(1);
 
-    private Joystick driverXboxController = new Joystick(0); // this is no longer just a random number
+    private PS4Controller driverPs4Controller = new PS4Controller(0); // this is no longer just a random number
 
-    
     private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
@@ -34,13 +38,34 @@ public class OI {
 
     public OI() {
         drivetrain = Drivetrain.getInstance();
-        //Resets the gyro
-        Trigger resetGyroButton = new JoystickButton(driverXboxController, 1);
-        resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
+        // Resets the gyro
+        // Trigger resetGyroButton = new JoystickButton(driverPs4Controller, 1);
+        // resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
+
         // Snap to angle
-        Trigger snapToAngle = new JoystickButton(driverXboxController, 5);
+        // Trigger snapToAngle = new JoystickButton(driverPs4Controller, 5);
         // snapToAngle.whileTrue(new SnapToAngle());
-        
+
+        SmartDashboard.putBoolean("Circle Pressed", false);
+
+        Trigger testButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kSquare.value);
+        testButton.onTrue(new CommandBase() {
+            @Override
+            public void execute() {
+                SmartDashboard.putBoolean("Circle Pressed", true);
+
+            }
+        });
+        // testButton.onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("Circle
+        // Pressed", true)));
+        testButton.onTrue(Commands.runOnce(() -> System.out.println("WOWsers!!!!!hsgdreh")));
+
+        testButton.onFalse(new CommandBase() {
+            @Override
+            public void execute() {
+                SmartDashboard.putBoolean("Circle Pressed", true);
+            }
+        });
     }
 
     public static OI getInstance() {
@@ -51,30 +76,30 @@ public class OI {
     }
 
     public double getForward() {
-        return driverXboxController.getRawAxis(1);
+        return driverPs4Controller.getRawAxis(1);
     }
 
     public double getStrafe() {
-        return driverXboxController.getRawAxis(0);
+        return driverPs4Controller.getRawAxis(0);
     }
 
-    public Translation2d getTranslation2d(){
+    public Translation2d getTranslation2d() {
         Translation2d position = new Translation2d(
-        slewX.calculate(-inputTransform(getForward())) * DriveConstants.kMaxSpeedMetersPerSecond,
-        slewY.calculate(-inputTransform(getStrafe())) * DriveConstants.kMaxSpeedMetersPerSecond);
+                slewX.calculate(-inputTransform(getForward())) * DriveConstants.kMaxSpeedMetersPerSecond,
+                slewY.calculate(-inputTransform(getStrafe())) * DriveConstants.kMaxSpeedMetersPerSecond);
 
         return position;
     }
 
     public double getRotation() {
-        double leftRotation = driverXboxController.getRawAxis(3);
-        double rightRotation = driverXboxController.getRawAxis(4);
+        double leftRotation = driverPs4Controller.getRawAxis(3);
+        double rightRotation = driverPs4Controller.getRawAxis(4);
         return rightRotation - leftRotation;
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverXboxController.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
-        double rotY = driverXboxController.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
+        double rotX = driverPs4Controller.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
+        double rotY = driverPs4Controller.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
         if (rotX * rotY > 0) {
             rotX = -rotX;
             rotY = -rotY;
