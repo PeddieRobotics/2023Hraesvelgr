@@ -121,17 +121,10 @@ public class Drivetrain extends SubsystemBase {
 
     for (MAXSwerveModule module : swerveModules) {
       module.putSmartDashboard();
-      // module.getFromShuffleboard();
     }
-    // SmartDashboard.putNumber("lastRotTime", lastRotTime);
-    // SmartDashboard.putNumber("lastDriveTime", lastDriveTime);
-    // SmartDashboard.putNumber("timeSinceRot", timeSinceRot);
-    // SmartDashboard.putNumber("timeSinceDrive", timeSinceDrive);
-    // SmartDashboard.putNumber("keep angle", keepAngle);
-    // SmartDashboard.putNumber("gyro angle", gyro.getAngle());
-    // SmartDashboard.putNumber("gyro heading", getHeading());
-    // SmartDashboard.putNumber("x", getPose().getTranslation().getX());
-    // SmartDashboard.putNumber("y", getPose().getTranslation().getY());
+
+    SmartDashboard.putNumber("x", getPose().getTranslation().getX());
+    SmartDashboard.putNumber("y", getPose().getTranslation().getY());
   }
 
   public static Drivetrain getInstance() {
@@ -149,6 +142,12 @@ public class Drivetrain extends SubsystemBase {
 
   // Resets the current pose of the robot
   public void resetOdometry(Pose2d pose) {
+    odometry.resetPosition(getRotation2d(), swerveModulePositions, pose);
+  }
+
+  // Resets the current pose and heading of the robot
+  public void resetRobotPosition(Pose2d pose){
+    resetGyro();
     odometry.resetPosition(getRotation2d(), swerveModulePositions, pose);
   }
 

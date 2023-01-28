@@ -41,7 +41,7 @@ public class Autonomous extends SubsystemBase{
         HashMap<String, Command> eventMap = new HashMap<>();
 
         autoBuilder = new SwerveAutoBuilder(
-            drivetrain ::getPose, drivetrain ::resetOdometry, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, drivetrain
+            drivetrain ::getPose, drivetrain ::resetRobotPosition, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, drivetrain
         );
 
         defineAutoPaths();
@@ -50,7 +50,10 @@ public class Autonomous extends SubsystemBase{
     }
 
     @Override
-    public void periodic(){}
+    public void periodic(){
+        SmartDashboard.putNumber("path intial pose x", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getX());
+        SmartDashboard.putNumber("path intial pose y", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getY());
+    }
 
     public static Autonomous getInstance(){
         if(autonomous == null){
@@ -66,8 +69,10 @@ public class Autonomous extends SubsystemBase{
 
 
     public void setupAutoRoutines(){
-        autoRoutines.put("1 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraight", 0.5, 0.5)));
-
+        autoRoutines.put("1 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraight", 2,2)));
+        autoRoutines.put("1 Meter Straight Path Spin", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraightSpin", 0.5, 0.5)));
+        autoRoutines.put("SwerveTest", createCommandFromTrajectory(PathPlanner.loadPathGroup("SwerveTest", 0.3, 0.3)));
+        autoRoutines.put("2 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("2MeterStraight", 1.5, 1.5)));
     }
 
     public void setupAutoSelector(){
@@ -85,6 +90,7 @@ public class Autonomous extends SubsystemBase{
         return autoRoutineSelector.getSelected();
     }
 
+    //Does not reflect for red -- DO NOT CHANGE
     public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
         return autoBuilder.fullAuto(trajectory);
     }

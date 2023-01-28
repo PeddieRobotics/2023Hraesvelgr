@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class Wrist {
-    final int motorCanId = 6;
+    final int motorCanId = 61;
     final int kMaxCurrent = 10;
 
     final double kP = 0.01;
@@ -42,7 +42,7 @@ public class Wrist {
     double kS, kG, kV, kA;
 
     protected Wrist() {
-        sparkMax = new CANSparkMax(motorCanId, MotorType.kBrushless); // TODO: no idea what brushless means
+        sparkMax = new CANSparkMax(motorCanId, MotorType.kBrushless);
         sparkMax.setSmartCurrentLimit(kMaxCurrent);
 
         pidController = sparkMax.getPIDController();

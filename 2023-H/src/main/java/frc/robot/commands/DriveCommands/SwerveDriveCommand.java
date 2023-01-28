@@ -17,6 +17,7 @@ import frc.robot.Robot;
 
 public class SwerveDriveCommand extends CommandBase {
   private Drivetrain drivetrain;
+  private OI oi = OI.getInstance();
   private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
   private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
   private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
@@ -43,32 +44,8 @@ public class SwerveDriveCommand extends CommandBase {
         slewY.calculate(-oi.inputTransform(oi.getStrafe())) * DriveConstants.kMaxSpeedMetersPerSecond);
 
     double rotation = slewRot.calculate(-oi.inputTransform(oi.getRotation())) * DriveConstants.kMaxAngularSpeed;
-    // double rotation = -oi.inputTransform(oi.getRotation()) *
-    // DriveConstants.kMaxAngularSpeed;
 
     Translation2d centerOfRotation = oi.getCenterOfRotation();
-
-    // double forward = -OI.getInstance().getForward();
-    // //not using a deadband because it would not allow continuous motion in
-    // certain situations
-    // forward = Math.copySign(Math.pow(forward, 2.0), forward); // square joystick
-    // input while keeping its sign
-
-    // double strafe = -OI.getInstance().getStrafe();
-    // //not using a deadband because it would not allow continuous motion in
-    // certain situations
-    // strafe = Math.copySign(Math.pow(strafe, 2.0), strafe); // square joystick
-    // input while keeping its sign
-
-    // double rotation = -OI.getInstance().getRotation();
-    // //not using a deadband because it would not allow continuous motion in
-    // certain cituations
-    // rotation = Math.copySign(Math.pow(rotation, 2.0), rotation); // square
-    // joystick input while keeping its sign
-
-    SmartDashboard.putNumber("position x", position.getX());
-    SmartDashboard.putNumber("position y", position.getY());
-    SmartDashboard.putNumber("rotation", rotation);
 
     drivetrain.drive(position, rotation, true, centerOfRotation);
   }
