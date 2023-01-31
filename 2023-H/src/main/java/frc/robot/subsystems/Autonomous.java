@@ -11,11 +11,13 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.AutoCommands.TestPath;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
 
@@ -30,6 +32,9 @@ public class Autonomous extends SubsystemBase{
 
     // Auto Builder
     private SwerveAutoBuilder autoBuilder;
+
+    // Paths
+    private PathPlannerTrajectory OneMeterStraight, SwerveTest, SwerveTestRed;
 
     public Autonomous(){
         drivetrain = Drivetrain.getInstance();
@@ -53,6 +58,7 @@ public class Autonomous extends SubsystemBase{
     public void periodic(){
         SmartDashboard.putNumber("path intial pose x", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getX());
         SmartDashboard.putNumber("path intial pose y", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getY());
+
     }
 
     public static Autonomous getInstance(){
@@ -63,7 +69,10 @@ public class Autonomous extends SubsystemBase{
     }
 
     public void defineAutoPaths(){
-        
+        OneMeterStraight = PathPlanner.loadPath("1MeterStraight", 0.5, 0.5);
+        SwerveTest = PathPlanner.loadPath("SwerveTest", 1, 1);
+        SwerveTestRed = PathPlanner.loadPath("SwerveTestRed", 0.5, 0.5);
+
 
     }
 
@@ -106,8 +115,18 @@ public class Autonomous extends SubsystemBase{
         return autoRoutineSelector.getSelected();
     }
 
-    public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
-        return autoBuilder.fullAuto(trajectory);
+    public PPSwerveControllerCommand createCommandFromTrajectory(PathPlannerTrajectory trajectory){
+        //return autoBuilder.fullAuto(trajectory);
+        var thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        PPSwerveControllerCommand swerveAutoCommand = new PPSwerveControllerCommand(trajectory, drivetrain::getPose,
+                DriveConstants.kinematics, new PIDController(AutoConstants.kPXController, 0, 0),
+                new PIDController(AutoConstants.kPYController, 0, 0),
+
+                thetaController, drivetrain::setSwerveModuleStates, drivetrain);
+
+        return swerveAutoCommand;
     }
 
 
