@@ -48,9 +48,9 @@ public class SwerveDriveCommand extends CommandBase {
 
     Translation2d centerOfRotation = new Translation2d(); // oi.getCenterOfRotation();
 
-    SmartDashboard.putNumber("position x", position.getX());
-    SmartDashboard.putNumber("position y", position.getY());
-    SmartDashboard.putNumber("rotation", rotation);
+    // SmartDashboard.putNumber("position x", position.getX());
+    // SmartDashboard.putNumber("position y", position.getY());
+    // SmartDashboard.putNumber("rotation", rotation);
 
     drivetrain.drive(position, rotation, true, centerOfRotation);
 

@@ -119,12 +119,9 @@ public class Drivetrain extends SubsystemBase {
     }
     updateOdometry();
 
-    for (MAXSwerveModule module : swerveModules) {
-      module.putSmartDashboard();
-    }
-
-    SmartDashboard.putNumber("x", getPose().getTranslation().getX());
-    SmartDashboard.putNumber("y", getPose().getTranslation().getY());
+    // for (MAXSwerveModule module : swerveModules) {
+    //   module.putSmartDashboard();
+    // }
   }
 
   public static Drivetrain getInstance() {
