@@ -13,19 +13,17 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants;
 import frc.robot.utils.OI;
 import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.OI.DPadDirection;
 import frc.robot.Robot;
 
 public class SwerveDriveCommand extends CommandBase {
-  private Drivetrain drivetrain;
+  private Drivetrain drivetrain = Drivetrain.getInstance();
   private OI oi = OI.getInstance();
-  private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
-  private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
-  private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
+
 
   /** Creates a new SwerveDriveCommand. */
   public SwerveDriveCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    drivetrain = Drivetrain.getInstance();
+    // Use addRequirements() here to declare subsystem dependencies. 
     addRequirements(drivetrain);
   }
 
@@ -37,17 +35,25 @@ public class SwerveDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    OI oi = OI.getInstance();
+    Translation2d position;
 
-    Translation2d position = new Translation2d(
-        slewX.calculate(-oi.inputTransform(oi.getForward())) * DriveConstants.kMaxSpeedMetersPerSecond,
-        slewY.calculate(-oi.inputTransform(oi.getStrafe())) * DriveConstants.kMaxSpeedMetersPerSecond);
+    if(oi.getDriverDPadInput() != DPadDirection.NONE){
+      position = oi.getCardinalDirection();
+    }
+    else{
+      position = oi.getSwerveTranslation();
+    }
 
-    double rotation = slewRot.calculate(-oi.inputTransform(oi.getRotation())) * DriveConstants.kMaxAngularSpeed;
+    double rotation = -oi.getRotation();
 
-    Translation2d centerOfRotation = oi.getCenterOfRotation();
+    Translation2d centerOfRotation = new Translation2d(); // oi.getCenterOfRotation();
+
+    SmartDashboard.putNumber("position x", position.getX());
+    SmartDashboard.putNumber("position y", position.getY());
+    SmartDashboard.putNumber("rotation", rotation);
 
     drivetrain.drive(position, rotation, true, centerOfRotation);
+
   }
 
   // Called once the command ends or is interrupted.
