@@ -19,7 +19,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
-import pabeles.concurrency.ConcurrencyOps.NewInstance;
+
+import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.subsystems.Claw;
 
 public class OI {
@@ -29,7 +30,7 @@ public class OI {
     // private Joystick leftJoystick = new Joystick(0);
     // private Joystick rightJoystick = new Joystick(1);
 
-    private PS4Controller driverPs4Controller = new PS4Controller(0); // this is no longer just a random number
+    private PS4Controller driverController = new PS4Controller(0);
 
     private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
@@ -38,47 +39,48 @@ public class OI {
 
     public OI() {
         drivetrain = Drivetrain.getInstance();
-        // Resets the gyro
-        // Trigger resetGyroButton = new JoystickButton(driverPs4Controller, 1);
-        // resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
-
+        //Resets the gyro
+        Trigger resetGyroButton = new JoystickButton(driverController, 1);
+        resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
+        Trigger lockWheels = new JoystickButton(driverController, 2);
+        lockWheels.whileTrue(new LockDrivetrain());
         // Snap to angle
         // Trigger snapToAngle = new JoystickButton(driverPs4Controller, 5);
         // snapToAngle.whileTrue(new SnapToAngle());
 
-        Trigger xButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kCross.value);
+        Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
         // TODO: ejects game piece
         xButton.onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", true)));
         xButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", false)));
 
-        Trigger circleButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kCircle.value);
+        Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
         // TODO: runs level 2 scoring pose function
 
-        Trigger squareButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kSquare.value);
+        Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
         // TODO: runs human station intake pose function
 
-        Trigger triangleButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kTriangle.value);
+        Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
         // TODO: runs level 3 scoring pose function
 
-        Trigger leftBumperButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kL1.value);
+        Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
         // TODO: changes to slow mode
 
-        Trigger rightBumperButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kR1.value);
+        Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         // TODO: runs auto-aligner/driver assist
 
-        Trigger leftStickButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kL3.value);
+        Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
         // TODO: runs X lock (safe pose)
 
-        Trigger rightStickButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kR3.value);
+        Trigger rightStickButton = new JoystickButton(driverController, PS4Controller.Button.kR3.value);
         // TODO: runs rotations lock
 
-        Trigger backButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kShare.value);
+        Trigger backButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
         // TODO: runs cone floor intake/level 1 scoring pose
 
-        Trigger startButton = new JoystickButton(driverPs4Controller, PS4Controller.Button.kOptions.value);
+        Trigger startButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
         // TODO: runs cube floor intake/level 1 scoring pose
 
-        Trigger ps4Button = new JoystickButton(driverPs4Controller, PS4Controller.Button.kPS.value);
+        Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);
         ps4Button.onTrue(new InstantCommand(() -> drivetrain.resetGyro()));
     }
 
@@ -90,11 +92,11 @@ public class OI {
     }
 
     public double getForward() {
-        return driverPs4Controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
     }
 
     public double getStrafe() {
-        return driverPs4Controller.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
     }
 
     public Translation2d getTranslation2d() { // TODO: Cardinal directions
@@ -106,14 +108,14 @@ public class OI {
     }
 
     public double getRotation() {
-        double leftRotation = driverPs4Controller.getRawAxis(PS4Controller.Axis.kL2.value);
-        double rightRotation = driverPs4Controller.getRawAxis(PS4Controller.Axis.kR2.value);
+        double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
+        double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
         return rightRotation - leftRotation;
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverPs4Controller.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
-        double rotY = driverPs4Controller.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
+        double rotX = driverController.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
+        double rotY = driverController.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
         if (rotX * rotY > 0) {
             rotX = -rotX;
             rotY = -rotY;

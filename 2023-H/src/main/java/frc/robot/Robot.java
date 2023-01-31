@@ -15,6 +15,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
 
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
 
     robotContainer = new RobotContainer();
     PathPlannerServer.startServer(5985);
+    SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /**

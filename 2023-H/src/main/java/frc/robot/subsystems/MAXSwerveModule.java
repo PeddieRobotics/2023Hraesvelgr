@@ -189,7 +189,7 @@ public class MAXSwerveModule {
   public void stop() {
     m_drivingSparkMax.set(0);
     m_turningSparkMax.set(0);
-}
+  }
 
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
