@@ -257,4 +257,12 @@ public class Drivetrain extends SubsystemBase {
     targeted = lockedOn;
   }
 
+  public void lock(){
+    frontLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI/4)));
+    backLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(3*Math.PI/4)));
+    frontRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI/4)));
+    backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3*Math.PI/4)));
+  }
+  
+
 }

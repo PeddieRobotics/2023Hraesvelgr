@@ -15,6 +15,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
+import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.subsystems.Claw;
 
 public class OI {
@@ -37,6 +38,8 @@ public class OI {
         //Resets the gyro
         Trigger resetGyroButton = new JoystickButton(driverXboxController, 1);
         resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
+        Trigger lockWheels = new JoystickButton(driverXboxController, 2);
+        lockWheels.whileTrue(new LockDrivetrain());
         // Snap to angle
         Trigger snapToAngle = new JoystickButton(driverXboxController, 5);
         // snapToAngle.whileTrue(new SnapToAngle());
