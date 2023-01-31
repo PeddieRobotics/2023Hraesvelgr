@@ -166,6 +166,10 @@ public class Drivetrain extends SubsystemBase {
   public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerOfRotation) {
     ChassisSpeeds speeds;
 
+    if(snapped){
+      rotation = snapToAngle();
+    }
+
     if (fieldOriented) {
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), rotation, Rotation2d.fromDegrees(teleOpAngleOffset + getHeading()));
     } else {
@@ -237,7 +241,6 @@ public class Drivetrain extends SubsystemBase {
       output = snapToAnglePID.calculate(getHeading(), snapToAngleHeading);
     }
     return output;
-
   }
 
   public boolean getSnapped(){
