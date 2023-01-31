@@ -115,18 +115,9 @@ public class Autonomous extends SubsystemBase{
         return autoRoutineSelector.getSelected();
     }
 
-    public PPSwerveControllerCommand createCommandFromTrajectory(PathPlannerTrajectory trajectory){
-        //return autoBuilder.fullAuto(trajectory);
-        var thetaController = new PIDController(AutoConstants.kPThetaController, 0, 0);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        PPSwerveControllerCommand swerveAutoCommand = new PPSwerveControllerCommand(trajectory, drivetrain::getPose,
-                DriveConstants.kinematics, new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-
-                thetaController, drivetrain::setSwerveModuleStates, drivetrain);
-
-        return swerveAutoCommand;
+    //Does not reflect for red -- DO NOT CHANGE
+    public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
+        return autoBuilder.fullAuto(trajectory);
     }
 
 
