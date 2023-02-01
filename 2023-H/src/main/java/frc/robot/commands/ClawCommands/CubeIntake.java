@@ -14,7 +14,7 @@ public class CubeIntake extends CommandBase{
 
     @Override
     public void initialize() {
-        claw.setSpeed(ClawConstants.kCubeIntakeSpeed);
+        claw.intakeCube();
     }
 
     @Override

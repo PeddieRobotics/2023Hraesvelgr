@@ -14,7 +14,7 @@ public class ConeIntake extends CommandBase{
 
     @Override
     public void initialize() {
-        claw.setSpeed(ClawConstants.kConeIntakeSpeed);
+        claw.intakeCone();
     }
 
     @Override

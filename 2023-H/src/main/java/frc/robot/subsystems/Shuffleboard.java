@@ -12,6 +12,9 @@ public class Shuffleboard extends SubsystemBase{
     public Shuffleboard(){
         drivetrain = Drivetrain.getInstance();
         claw = Claw.getInstance();
+
+        drivetrainShuffleboard();
+        clawShuffleboard();
     }
 
     public static Shuffleboard getInstance(){
@@ -23,7 +26,8 @@ public class Shuffleboard extends SubsystemBase{
 
     @Override
     public void periodic() {
-        
+        drivetrainShuffleboard();
+        clawShuffleboard();
     }
 
     private void drivetrainShuffleboard(){

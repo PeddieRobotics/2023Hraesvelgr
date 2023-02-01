@@ -15,7 +15,7 @@ public class Claw extends SubsystemBase {
 
     public Claw() {
         clawMotor = new CANSparkMax(RobotMapH.kClawMotor, MotorType.kBrushed);
-        clawMotor.setSmartCurrentLimit(ClawConstants.CLAW_MAX_CURRENT);
+        clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kBrake);
     }
     
@@ -41,12 +41,20 @@ public class Claw extends SubsystemBase {
         clawMotor.set(0);
     }
 
-    public void intakeCube(int speed){
-        setSpeed(speed);
+    public void intakeCube(){
+        setSpeed(ClawConstants.kCubeIntakeSpeed);
     }
 
-    public void intakeCone(int speed){
-        setSpeed(speed);
+    public void intakeCone(){
+        setSpeed(ClawConstants.kConeIntakeSpeed);
+    }
+
+    public void outtakeCube(){
+        setSpeed(ClawConstants.kCubeOuttakeSpeed);
+    }
+
+    public void outtakeCone(){
+        setSpeed(ClawConstants.kConeOuttakeSpeed);
     }
 
     public boolean isIntaking(){
