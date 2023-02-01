@@ -21,7 +21,7 @@ public class Shoulder extends SubsystemBase{
 
     private ArmFeedforward armFeedforward;
 
-    double kS, kG, kV, kA;
+    private double kS, kG, kV, kA;
 
     public Shoulder() {
         shoulderMotorMaster = new CANSparkMax(RobotMapH.kShoulderMotorMaster, MotorType.kBrushless);
@@ -85,42 +85,15 @@ public class Shoulder extends SubsystemBase{
         return shoulderMotorMaster.getMotorTemperature();
     }
 
-    public void putSmartDashboardOverrides() {
-        // ArmFeedforward parameters
-        SmartDashboard.putNumber("shoulder kS", Constants.ShoulderConstants.kSVolts);
-        SmartDashboard.putNumber("shoulder kG", Constants.ShoulderConstants.kGVolts);
-        SmartDashboard.putNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
-        SmartDashboard.putNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
-
-        // PID controller parameters
-        SmartDashboard.putNumber("shoulder P", Constants.ShoulderConstants.kP);
-        SmartDashboard.putNumber("shoulder I", Constants.ShoulderConstants.kI);
-        SmartDashboard.putNumber("shoulder D", Constants.ShoulderConstants.kD);
-        SmartDashboard.putNumber("shoulder FF", Constants.ShoulderConstants.kFF);
-
-        SmartDashboard.putBoolean("shoulder toggle pid active", false);
-
-        SmartDashboard.putNumber("shoulder speed % setpoint", 0.0);
-        SmartDashboard.putNumber("shoulder angle setpoint", 0.0);
-        SmartDashboard.putNumber("shoulder velocity setpoint", 0.0);
+    public double getPosition(){
+        return shoulderMotorMaster.getEncoder().getPosition();
     }
 
-    public void updateFromDashboard() {
+    public double getVelocity(){
+        return shoulderMotorMaster.getEncoder().getVelocity();
+    }
 
-        // Update dashboard with robot info during test mode
-        SmartDashboard.putNumber("shoulder encoder", shoulderMotorMaster.getEncoder().getPosition());
-        SmartDashboard.putNumber("shoulder angle", getAngle());
-        SmartDashboard.putNumber("shoulder velocity", shoulderMotorMaster.getEncoder().getVelocity());
-        SmartDashboard.putNumber("shoulder Current", shoulderMotorMaster.getOutputCurrent());
-        SmartDashboard.putNumber("shoulder Bus Voltage", shoulderMotorMaster.getBusVoltage());
-        SmartDashboard.putNumber("shoulder temperature", shoulderMotorMaster.getMotorTemperature());
-
-        // Update kS, kG, kV, kA for ArmFeedforward
-        double dbks = SmartDashboard.getNumber("shoulder kS", kS);
-        double dbkg = SmartDashboard.getNumber("shoulder kG", kG);
-        double dbkv = SmartDashboard.getNumber("shoulder kV", kV);
-        double dbka = SmartDashboard.getNumber("shoulder kA", kA);
-
+    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka){
         if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
             kS = dbks;
             kG = dbkg;
@@ -128,22 +101,17 @@ public class Shoulder extends SubsystemBase{
             kA = dbka;
             armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
         }
+    }
 
-        // Update PID controller
-        pidController.setP(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP));
-        pidController.setI(SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI));
-        pidController.setD(SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD));
-        pidController.setFF(SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF));
+    public void setPidController(double p, double i, double d, double ff){
+        pidController.setP(p);
+        pidController.setI(i);
+        pidController.setD(d);
+        pidController.setFF(ff);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("shoulder encoder", shoulderMotorMaster.getEncoder().getPosition());
-        SmartDashboard.putNumber("shoulder angle", getAngle());
-        SmartDashboard.putNumber("shoulder velocity", shoulderMotorMaster.getEncoder().getVelocity());
-        SmartDashboard.putNumber("shoulder Motor Current", shoulderMotorMaster.getOutputCurrent());
-        SmartDashboard.putNumber("shoulder Motor Bus Voltage", shoulderMotorMaster.getBusVoltage());
-        SmartDashboard.putNumber("shoulder Motor temperature", shoulderMotorMaster.getMotorTemperature());
     }
 
     public static Shoulder getInstance() {

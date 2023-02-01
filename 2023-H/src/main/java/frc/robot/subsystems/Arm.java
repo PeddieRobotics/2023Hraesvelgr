@@ -60,12 +60,10 @@ public class Arm extends SubsystemBase {
 
     public void putSmartDashboardOverrides() {
         wrist.putSmartDashboardOverrides();
-        shoulder.putSmartDashboardOverrides();
     }
 
     public void updateFromDashboard() {
         wrist.updateFromDashboard();
-        shoulder.updateFromDashboard();
     }
 
     @Override
