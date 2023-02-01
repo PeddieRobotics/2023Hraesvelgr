@@ -23,6 +23,7 @@ public class Shoulder extends SubsystemBase{
 
     private double kS, kG, kV, kA;
 
+
     public Shoulder() {
         shoulderMotorMaster = new CANSparkMax(RobotMapH.kShoulderMotorMaster, MotorType.kBrushless);
         shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
@@ -93,8 +94,8 @@ public class Shoulder extends SubsystemBase{
         return shoulderMotorMaster.getEncoder().getVelocity();
     }
 
-    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka){
-        if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
+    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){
+        if (pidActive && (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka)) {
             kS = dbks;
             kG = dbkg;
             kV = dbkv;
@@ -103,11 +104,15 @@ public class Shoulder extends SubsystemBase{
         }
     }
 
-    public void setPidController(double p, double i, double d, double ff){
-        pidController.setP(p);
-        pidController.setI(i);
-        pidController.setD(d);
-        pidController.setFF(ff);
+
+
+    public void setPidController(double p, double i, double d, double ff, boolean pidActive){
+        if(pidActive){
+            pidController.setP(p);
+            pidController.setI(i);
+            pidController.setD(d);
+            pidController.setFF(ff);
+        }
     }
 
     @Override
