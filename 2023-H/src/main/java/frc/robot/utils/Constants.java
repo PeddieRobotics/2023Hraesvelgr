@@ -189,4 +189,12 @@ public final class Constants {
         }
 
         public static final class WristConstants{}
+        public static final class ClawConstants {
+                public static final int kClawMotorCurrentLimit = 35; // AMPS
+
+                public static final double kConeIntakeSpeed = 0.75;
+                public static final double kConeOuttakeSpeed = -0.4;
+                public static final double kCubeIntakeSpeed = 0.75;
+                public static final double kCubeOuttakeSpeed = -0.4;
+        }
 }
