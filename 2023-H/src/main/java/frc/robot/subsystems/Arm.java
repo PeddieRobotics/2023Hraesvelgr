@@ -15,7 +15,7 @@ public class Arm extends SubsystemBase {
     private final Wrist wrist;
 
     public Arm() {
-        shoulder = new Shoulder();
+        shoulder = Shoulder.getInstance();
         wrist = new Wrist();
     }
 
@@ -28,19 +28,19 @@ public class Arm extends SubsystemBase {
     }
 
     public void setShoulderSpeed(double shoulderSpeed) {
-        shoulder.getMotor().set(shoulderSpeed);
+        shoulder.setSpeed(shoulderSpeed);
     }
 
     public double getShoulderSpeed() {
-        return shoulder.getMotor().get();
+        return shoulder.getSpeed();
     }
 
     public double getShoulderOutputCurrent() {
-        return shoulder.getMotor().getOutputCurrent();
+        return shoulder.getOutputCurrent();
     }
 
     public double getShoulderTemperature() {
-        return shoulder.getMotor().getMotorTemperature();
+        return shoulder.getMotorTemperature();
     }
 
     public double getWristOutputCurrent() {

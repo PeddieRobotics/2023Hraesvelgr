@@ -5,65 +5,68 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.Constants;
+import frc.robot.utils.RobotMapH;
+import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
-public class Shoulder {
-    final int motorCanId = 62;
-    final int kMaxCurrent = 10;
+public class Shoulder extends SubsystemBase{
 
-    final double kP = 0.01;
-    final double kI = 0.00000035;
-    final double kD = 0.0;
-    final double kIz = 0.0;
-    final double kFF = 0.0;
-    final double kAngleMin = -30;
-    final double kAngleMax = 120;
+    private static Shoulder shoulder;
 
-    final double kSVolts = 0.0;
-    final double kGVolts = -0.3875;
-    final double kVVoltSecondPerRad = 0.0;
-    final double kAVoltSecondSquaredPerRad = 0.0;
+    private CANSparkMax shoulderMotorMaster, shoulderMotorFollower;
 
-    final double kMaxVelocityRadPerSecond = 1;
-    final double kMaxAccelerationRadPerSecSquared = 3;
+    private SparkMaxPIDController pidController;
 
-    final double kEncoderPPR = 205.12;
-    final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
-
-    final double kSpeedMultiplier = 0.5;
-    final double kTurnMultiplier = 0.25;
-
-    CANSparkMax sparkMax;
-
-    SparkMaxPIDController pidController;
-
-    ArmFeedforward armFeedforward;
+    private ArmFeedforward armFeedforward;
 
     double kS, kG, kV, kA;
 
-    protected Shoulder() {
-        sparkMax = new CANSparkMax(motorCanId, MotorType.kBrushless); // TODO: no idea what brushless means
-        sparkMax.setSmartCurrentLimit(kMaxCurrent);
+    public Shoulder() {
+        shoulderMotorMaster = new CANSparkMax(RobotMapH.kShoulderMotorMaster, MotorType.kBrushless);
+        shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
-        pidController = sparkMax.getPIDController();
+        shoulderMotorFollower = new CANSparkMax(RobotMapH.kShoulderMotorFollower, MotorType.kBrushless);
+        shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
-        kS = kSVolts;
-        kG = kGVolts;
+        shoulderMotorFollower.follow(shoulderMotorMaster);
 
-        kV = kVVoltSecondPerRad;
-        kA = kAVoltSecondSquaredPerRad;
-        armFeedforward = new ArmFeedforward(kSVolts, kGVolts, kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
+        pidController = shoulderMotorMaster.getPIDController();
+
+        kS = ShoulderConstants.kSVolts;
+        kG = ShoulderConstants.kGVolts;
+
+        kV = ShoulderConstants.kVVoltSecondPerRad;
+        kA = ShoulderConstants.kAVoltSecondSquaredPerRad;
+        armFeedforward = new ArmFeedforward(ShoulderConstants.kSVolts, ShoulderConstants.kGVolts, ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
     }
 
     public double getAngle() {
-        return sparkMax.getEncoder().getPosition();
+        return shoulderMotorMaster.getEncoder().getPosition();
     }
 
-    public void setAngle(double setpoint) {
+    public void setSpeed(double speed){
+        shoulderMotorMaster.set(speed);
+    }
+
+    public double getSpeed(){
+        return shoulderMotorMaster.get();
+    }
+
+    public double getOutputCurrent(){
+        return shoulderMotorMaster.getOutputCurrent();
+    }
+
+    public void setAnglePosition(double setpoint) {
         double feedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
         SmartDashboard.putNumber("shoulder Arbitrary FF (Arm FF)", feedforward);
 
         pidController.setReference(setpoint, ControlType.kPosition, 0, feedforward);
+    }
+
+    public void setAngleSmartMotion(double setpoint){
+        pidController.setReference(setpoint, ControlType.kSmartMotion);
     }
 
     public void setVelocity(double setpoint) {
@@ -71,26 +74,29 @@ public class Shoulder {
     }
 
     public void resetEncoder() {
-        sparkMax.getEncoder().setPosition(0);
-        // SmartDashboard.putBoolean("is encoder reset", true);
+        shoulderMotorMaster.getEncoder().setPosition(0);
     }
 
     public void setMotor(double speed) {
-        sparkMax.set(speed);
+        shoulderMotorMaster.set(speed);
+    }
+
+    public double getMotorTemperature(){
+        return shoulderMotorMaster.getMotorTemperature();
     }
 
     public void putSmartDashboardOverrides() {
         // ArmFeedforward parameters
-        SmartDashboard.putNumber("shoulder kS", kSVolts);
-        SmartDashboard.putNumber("shoulder kG", kGVolts);
-        SmartDashboard.putNumber("shoulder kV", kVVoltSecondPerRad);
-        SmartDashboard.putNumber("shoulder kA", kAVoltSecondSquaredPerRad);
+        SmartDashboard.putNumber("shoulder kS", Constants.ShoulderConstants.kSVolts);
+        SmartDashboard.putNumber("shoulder kG", Constants.ShoulderConstants.kGVolts);
+        SmartDashboard.putNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
+        SmartDashboard.putNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         // PID controller parameters
-        SmartDashboard.putNumber("shoulder P", kP);
-        SmartDashboard.putNumber("shoulder I", kI);
-        SmartDashboard.putNumber("shoulder D", kD);
-        SmartDashboard.putNumber("shoulder FF", kFF);
+        SmartDashboard.putNumber("shoulder P", Constants.ShoulderConstants.kP);
+        SmartDashboard.putNumber("shoulder I", Constants.ShoulderConstants.kI);
+        SmartDashboard.putNumber("shoulder D", Constants.ShoulderConstants.kD);
+        SmartDashboard.putNumber("shoulder FF", Constants.ShoulderConstants.kFF);
 
         SmartDashboard.putBoolean("shoulder toggle pid active", false);
 
@@ -102,18 +108,18 @@ public class Shoulder {
     public void updateFromDashboard() {
 
         // Update dashboard with robot info during test mode
-        SmartDashboard.putNumber("shoulder encoder", sparkMax.getEncoder().getPosition());
+        SmartDashboard.putNumber("shoulder encoder", shoulderMotorMaster.getEncoder().getPosition());
         SmartDashboard.putNumber("shoulder angle", getAngle());
-        SmartDashboard.putNumber("shoulder velocity", sparkMax.getEncoder().getVelocity());
-        SmartDashboard.putNumber("shoulder Current", sparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("shoulder Bus Voltage", sparkMax.getBusVoltage());
-        SmartDashboard.putNumber("shoulder temperature", sparkMax.getMotorTemperature());
+        SmartDashboard.putNumber("shoulder velocity", shoulderMotorMaster.getEncoder().getVelocity());
+        SmartDashboard.putNumber("shoulder Current", shoulderMotorMaster.getOutputCurrent());
+        SmartDashboard.putNumber("shoulder Bus Voltage", shoulderMotorMaster.getBusVoltage());
+        SmartDashboard.putNumber("shoulder temperature", shoulderMotorMaster.getMotorTemperature());
 
         // Update kS, kG, kV, kA for ArmFeedforward
-        double dbks = SmartDashboard.getNumber("shoulder kS", kSVolts);
-        double dbkg = SmartDashboard.getNumber("shoulder kG", kGVolts);
-        double dbkv = SmartDashboard.getNumber("shoulder kV", kVVoltSecondPerRad);
-        double dbka = SmartDashboard.getNumber("shoulder kA", kAVoltSecondSquaredPerRad);
+        double dbks = SmartDashboard.getNumber("shoulder kS", kS);
+        double dbkg = SmartDashboard.getNumber("shoulder kG", kG);
+        double dbkv = SmartDashboard.getNumber("shoulder kV", kV);
+        double dbka = SmartDashboard.getNumber("shoulder kA", kA);
 
         if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
             kS = dbks;
@@ -124,22 +130,26 @@ public class Shoulder {
         }
 
         // Update PID controller
-        pidController.setP(SmartDashboard.getNumber("shoulder P", kP));
-        pidController.setI(SmartDashboard.getNumber("shoulder I", kI));
-        pidController.setD(SmartDashboard.getNumber("shoulder D", kD));
-        pidController.setFF(SmartDashboard.getNumber("shoulder FF", kFF));
+        pidController.setP(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP));
+        pidController.setI(SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI));
+        pidController.setD(SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD));
+        pidController.setFF(SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF));
     }
 
+    @Override
     public void periodic() {
-        SmartDashboard.putNumber("shoulder encoder", sparkMax.getEncoder().getPosition());
+        SmartDashboard.putNumber("shoulder encoder", shoulderMotorMaster.getEncoder().getPosition());
         SmartDashboard.putNumber("shoulder angle", getAngle());
-        SmartDashboard.putNumber("shoulder velocity", sparkMax.getEncoder().getVelocity());
-        SmartDashboard.putNumber("shoulder Motor Current", sparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("shoulder Motor Bus Voltage", sparkMax.getBusVoltage());
-        SmartDashboard.putNumber("shoulder Motor temperature", sparkMax.getMotorTemperature());
+        SmartDashboard.putNumber("shoulder velocity", shoulderMotorMaster.getEncoder().getVelocity());
+        SmartDashboard.putNumber("shoulder Motor Current", shoulderMotorMaster.getOutputCurrent());
+        SmartDashboard.putNumber("shoulder Motor Bus Voltage", shoulderMotorMaster.getBusVoltage());
+        SmartDashboard.putNumber("shoulder Motor temperature", shoulderMotorMaster.getMotorTemperature());
     }
 
-    public CANSparkMax getMotor() {
-        return sparkMax;
+    public static Shoulder getInstance() {
+        if(shoulder == null){
+            shoulder = new Shoulder();
+        }
+        return shoulder;
     }
 }
