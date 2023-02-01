@@ -167,4 +167,13 @@ public final class Constants {
                 public static final double kLimeLightAngleBound = 0.5;
                 public static final double kTurningMultiplier = 5.0;
         }
+
+        public static final class ClawConstants {
+                public static final int CLAW_MAX_CURRENT = 35; // AMPS
+
+                public static final double kConeIntakeSpeed = 0.75;
+                public static final double kConeOuttakeSpeed = -0.4;
+                public static final double kCubeIntakeSpeed = 0.75;
+                public static final double kCubeOuttakeSpeed = -0.4;
+        }
 }
