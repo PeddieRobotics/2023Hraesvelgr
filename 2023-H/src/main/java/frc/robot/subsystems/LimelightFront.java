@@ -12,34 +12,37 @@ import frc.robot.utils.Constants.LimelightConstants;
 public class LimelightFront extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
-  private static LimelightFront LimelightBack;
-  private PIDController limelightSecondPIDController;
+  private static LimelightFront LimelightFront;
+  private PIDController limelightFrontPIDController;
   private double ff;
 
+  private RollingAverage txAverage, tyAverage;
+
   private NetworkTableInstance LLtableInst = NetworkTableInstance.getDefault();
-  private NetworkTable limelightTable = LLtableInst.getTable("limelight-second");
+  private NetworkTable limelightTable = LLtableInst.getTable("limelight-front");
   private NetworkTableEntry tx = limelightTable.getEntry("tx");
   private NetworkTableEntry ty = limelightTable.getEntry("ty");
   private NetworkTableEntry thor = limelightTable.getEntry("thor");
   private NetworkTableEntry tvert = limelightTable.getEntry("tvert");
+  private NetworkTableEntry tshort = limelightTable.getEntry("tshort");
+  private NetworkTableEntry tlong = limelightTable.getEntry("tlong");
   private NetworkTableEntry ta = limelightTable.getEntry("ta");
   private NetworkTableEntry tv = limelightTable.getEntry("tv");
   private NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
   private NetworkTableEntry botpose = limelightTable.getEntry("botpose");
 
-  private RollingAverage txAverage = new RollingAverage();
-  private RollingAverage tyAverage = new RollingAverage();
-
   public LimelightFront() {
-    limelightSecondPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
+    limelightFrontPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
     ff = LimelightConstants.kLimelightFF;
+    txAverage = new RollingAverage();
+    tyAverage = new RollingAverage();
   }
 
   public static LimelightFront getInstance() {
-    if (LimelightBack == null) {
-        LimelightBack = new LimelightFront();
+    if (LimelightFront == null) {
+      LimelightFront = new LimelightFront();
     }
-    return LimelightBack;
+    return LimelightFront;
   }
 
   @Override
@@ -56,7 +59,7 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public PIDController getPIDController() {
-    return limelightSecondPIDController;
+    return limelightFrontPIDController;
   }
 
   public double getFF() {
@@ -141,10 +144,10 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public void updateSecondLimelightFromDashboard() {
-    limelightSecondPIDController.setP(SmartDashboard.getNumber("LL P", LimelightConstants.kLimelightP));
-    limelightSecondPIDController.setI(SmartDashboard.getNumber("LL I", LimelightConstants.kLimelightI));
-    limelightSecondPIDController.setD(SmartDashboard.getNumber("LL D", LimelightConstants.kLimelightD));
-    LimelightBack.setFF(SmartDashboard.getNumber("LL FF", LimelightConstants.kLimelightFF));
+    limelightFrontPIDController.setP(SmartDashboard.getNumber("LL P", LimelightConstants.kLimelightP));
+    limelightFrontPIDController.setI(SmartDashboard.getNumber("LL I", LimelightConstants.kLimelightI));
+    limelightFrontPIDController.setD(SmartDashboard.getNumber("LL D", LimelightConstants.kLimelightD));
+    LimelightFront.setFF(SmartDashboard.getNumber("LL FF", LimelightConstants.kLimelightFF));
   }
 
   public void putSmartDashboardOverrides() {

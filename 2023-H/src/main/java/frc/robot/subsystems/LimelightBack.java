@@ -16,14 +16,14 @@ import frc.robot.utils.Constants.LimelightConstants;
 public class LimelightBack extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
-  private static LimelightBack limelight;
-  private PIDController limelightPIDController;
+  private static LimelightBack limelightBack;
+  private PIDController limelightBackPIDController;
   private double ff;
 
   private RollingAverage txAverage, tyAverage;
   private SendableChooser<Integer> targetAprilTagID, targetColumnNumber, targetRow;
 
-  private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
+  private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-back");
   private NetworkTableEntry tx = limelightTable.getEntry("tx");
   private NetworkTableEntry ty = limelightTable.getEntry("ty");
   private NetworkTableEntry thor = limelightTable.getEntry("thor");
@@ -38,7 +38,7 @@ public class LimelightBack extends SubsystemBase {
   private NetworkTableEntry json = limelightTable.getEntry("json");
 
   public LimelightBack() {
-    limelightPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
+    limelightBackPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
     ff = LimelightConstants.kLimelightFF;
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
@@ -51,10 +51,10 @@ public class LimelightBack extends SubsystemBase {
   }
 
   public static LimelightBack getInstance() {
-    if (limelight == null) {
-      limelight = new LimelightBack();
+    if (limelightBack == null) {
+      limelightBack = new LimelightBack();
     }
-    return limelight;
+    return limelightBack;
   }
 
   @Override
@@ -66,7 +66,7 @@ public class LimelightBack extends SubsystemBase {
   }
 
   public PIDController getPIDController() {
-    return limelightPIDController;
+    return limelightBackPIDController;
   }
 
   public double getFF() {
