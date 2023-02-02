@@ -138,11 +138,11 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public boolean targetIsCone(){
-    return getTclass() == 2;
+    return hasTarget() && getTclass() == 2;
   }
 
   public boolean targetIsCube(){
-    return getTclass() == 1;
+    return hasTarget() && getTclass() == 1;
   }
 
   public void updateRollingAverages() {
