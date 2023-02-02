@@ -113,6 +113,8 @@ public class Wrist {
                 SmartDashboard.getNumber("wrist D", Constants.WristConstants.kD),
                 SmartDashboard.getNumber("wrist FF", Constants.WristConstants.kFF),
                 SmartDashboard.getBoolean("wrist toggle pid active", false));
+
+        //setMotor(SmartDashboard.getNumber("wrist speed % setpoint", 0.0));
     }
 
     public CANSparkMax getMotor() {

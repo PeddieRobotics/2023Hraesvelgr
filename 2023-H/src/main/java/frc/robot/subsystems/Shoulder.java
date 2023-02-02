@@ -136,7 +136,7 @@ public class Shoulder extends SubsystemBase{
                 SmartDashboard.getNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad),
                 SmartDashboard.getBoolean("toggle shoulder pid active", false));
         
-        setMotor(SmartDashboard.getNumber("shoulder motor speed setpoint", 0.0));
+        //setMotor(SmartDashboard.getNumber("shoulder speed % setpoint", 0.0));
     }
 
     public static Shoulder getInstance() {
