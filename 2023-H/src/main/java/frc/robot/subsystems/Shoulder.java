@@ -22,7 +22,7 @@ public class Shoulder extends SubsystemBase{
 
     private ArmFeedforward armFeedforward;
 
-    private double kS, kG, kV, kA;
+    private double kS, kG, kV, kA, dynamicFeedforward;
 
 
     public Shoulder() {
@@ -63,11 +63,14 @@ public class Shoulder extends SubsystemBase{
         return shoulderMotorMaster.getOutputCurrent();
     }
 
-    public void setAnglePosition(double setpoint) {
-        double feedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
-        SmartDashboard.putNumber("shoulder Arbitrary FF (Arm FF)", feedforward);
+    public void setPosition(double setpoint) {
+        dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
 
-        pidController.setReference(setpoint, ControlType.kPosition, 0, feedforward);
+        pidController.setReference(setpoint, ControlType.kPosition, 0, dynamicFeedforward);
+    }
+
+    public double getDynamicFeedForward(){
+        return dynamicFeedforward;
     }
 
     public void setAngleSmartMotion(double setpoint){
@@ -127,11 +130,13 @@ public class Shoulder extends SubsystemBase{
                 SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF),
                 SmartDashboard.getBoolean("toggle shoulder pid active", false));
 
-        shoulder.setArmFeedForward(SmartDashboard.getNumber("shoulder kS", Constants.ShoulderConstants.kSVolts),
+        setArmFeedForward(SmartDashboard.getNumber("shoulder kS", Constants.ShoulderConstants.kSVolts),
                 SmartDashboard.getNumber("shoulder kG", Constants.ShoulderConstants.kSVolts), 
                 SmartDashboard.getNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
                 SmartDashboard.getNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad),
                 SmartDashboard.getBoolean("toggle shoulder pid active", false));
+        
+        setMotor(SmartDashboard.getNumber("shoulder motor speed setpoint", 0.0));
     }
 
     public static Shoulder getInstance() {

@@ -188,7 +188,26 @@ public final class Constants {
                 public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
         }
 
-        public static final class WristConstants{}
+        public static final class WristConstants{
+                public static final int kMaxCurrent = 30;
+            
+                public static final double kP = 0.01;
+                public static final double kI = 0.00000035;
+                public static final double kD = 0.0;
+                public static final double kIz = 0.0;
+                public static final double kFF = 0.0;
+                public static final double kAngleMin = -30;
+                public static final double kAngleMax = 120;
+            
+                public static final double kSVolts = 0.0;
+                public static final double kGVolts = -0.3875;
+                public static final double kVVoltSecondPerRad = 0.0;
+                public static final double kAVoltSecondSquaredPerRad = 0.0;
+            
+                public static final double kEncoderPPR = 205.12;
+                public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
+            
+        }
         
         public static final class ClawConstants {
                 public static final int kClawMotorCurrentLimit = 35; // AMPS

@@ -2,68 +2,51 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utils.Constants;
+import frc.robot.utils.RobotMapH;
+import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class Wrist {
-    final int motorCanId = 61;
-    final int kMaxCurrent = 10;
+    private static Wrist wrist;
 
-    final double kP = 0.01;
-    final double kI = 0.00000035;
-    final double kD = 0.0;
-    final double kIz = 0.0;
-    final double kFF = 0.0;
-    final double kAngleMin = -30;
-    final double kAngleMax = 120;
+    private CANSparkMax wristMotor;
 
-    final double kSVolts = 0.0;
-    final double kGVolts = -0.3875;
-    final double kVVoltSecondPerRad = 0.0;
-    final double kAVoltSecondSquaredPerRad = 0.0;
+    private SparkMaxPIDController pidController;
 
-    final double kMaxVelocityRadPerSecond = 1;
-    final double kMaxAccelerationRadPerSecSquared = 3;
+    private ArmFeedforward armFeedforward;
 
-    final double kEncoderPPR = 205.12;
-    final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
-
-    final double kSpeedMultiplier = 0.5;
-    final double kTurnMultiplier = 0.25;
-
-    CANSparkMax sparkMax;
-
-    SparkMaxPIDController pidController;
-
-    ArmFeedforward armFeedforward;
-
-    double kS, kG, kV, kA;
+    private double kS, kG, kV, kA, dynamicFeedforward;
 
     protected Wrist() {
-        sparkMax = new CANSparkMax(motorCanId, MotorType.kBrushless);
-        sparkMax.setSmartCurrentLimit(kMaxCurrent);
+        wristMotor = new CANSparkMax(RobotMapH.kWristMotor, MotorType.kBrushless);
+        wristMotor.setSmartCurrentLimit(WristConstants.kMaxCurrent);
 
-        pidController = sparkMax.getPIDController();
+        wristMotor.setIdleMode(IdleMode.kBrake);
 
-        kS = kSVolts;
-        kG = kGVolts;
+        pidController = wristMotor.getPIDController();
 
-        kV = kVVoltSecondPerRad;
-        kA = kAVoltSecondSquaredPerRad;
-        armFeedforward = new ArmFeedforward(kSVolts, kGVolts, kVVoltSecondPerRad, kAVoltSecondSquaredPerRad);
+        kS = WristConstants.kSVolts;
+        kG = WristConstants.kGVolts;
+
+        kV = WristConstants.kVVoltSecondPerRad;
+        kA = WristConstants.kAVoltSecondSquaredPerRad;
+
+        armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
     }
 
-    public double getAngle() {
-        return sparkMax.getEncoder().getPosition();
+    public void setPosition(double setpoint) {
+        dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
+
+        pidController.setReference(setpoint, ControlType.kPosition, 0, dynamicFeedforward);
     }
 
-    public void setAngle(double setpoint) {
-        double feedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
-        SmartDashboard.putNumber("wrist Arbitrary FF (Arm FF)", feedforward);
-
-        pidController.setReference(setpoint, ControlType.kPosition, 0, feedforward);
+    public double getDynamicFeedForward(){
+        return dynamicFeedforward;
     }
 
     public void setVelocity(double setpoint) {
@@ -71,75 +54,75 @@ public class Wrist {
     }
 
     public void resetEncoder() {
-        sparkMax.getEncoder().setPosition(0);
+        wristMotor.getEncoder().setPosition(0);
         // SmartDashboard.putBoolean("is encoder reset", true);
     }
 
     public void setMotor(double speed) {
-        sparkMax.set(speed);
+        wristMotor.set(speed);
     }
 
-    public void putSmartDashboardOverrides() {
-        // ArmFeedforward parameters
-        SmartDashboard.putNumber("wrist kS", kSVolts);
-        SmartDashboard.putNumber("wrist kG", kGVolts);
-        SmartDashboard.putNumber("wrist kV", kVVoltSecondPerRad);
-        SmartDashboard.putNumber("wrist kA", kAVoltSecondSquaredPerRad);
-
-        // PID controller parameters
-        SmartDashboard.putNumber("wrist P", kP);
-        SmartDashboard.putNumber("wrist I", kI);
-        SmartDashboard.putNumber("wrist D", kD);
-        SmartDashboard.putNumber("wrist FF", kFF);
-
-        SmartDashboard.putBoolean("wrist toggle pid active", false);
-
-        SmartDashboard.putNumber("wrist speed % setpoint", 0.0);
-        SmartDashboard.putNumber("wrist angle setpoint", 0.0);
-        SmartDashboard.putNumber("wrist velocity setpoint", 0.0);
+    public double getMotorTemperature(){
+        return wristMotor.getMotorTemperature();
     }
 
-    public void updateFromDashboard() {
+    public double getSpeed(){
+        return wristMotor.get();
+    }
 
-        // Update dashboard with robot info during test mode
-        SmartDashboard.putNumber("wrist encoder", sparkMax.getEncoder().getPosition());
-        SmartDashboard.putNumber("wrist angle", getAngle());
-        SmartDashboard.putNumber("wrist velocity", sparkMax.getEncoder().getVelocity());
-        SmartDashboard.putNumber("wrist Current", sparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("wrist Bus Voltage", sparkMax.getBusVoltage());
-        SmartDashboard.putNumber("wrist temperature", sparkMax.getMotorTemperature());
+    public double getOutputCurrent(){
+        return wristMotor.getOutputCurrent();
+    }
 
-        // Update kS, kG, kV, kA for ArmFeedforward
-        double dbks = SmartDashboard.getNumber("wrist kS", kSVolts);
-        double dbkg = SmartDashboard.getNumber("wrist kG", kGVolts);
-        double dbkv = SmartDashboard.getNumber("wrist kV", kVVoltSecondPerRad);
-        double dbka = SmartDashboard.getNumber("wrist kA", kAVoltSecondSquaredPerRad);
+    public double getPosition(){
+        return wristMotor.getEncoder().getPosition();
+    }
 
-        if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
+    public double getVelocity(){
+        return wristMotor.getEncoder().getVelocity();
+    }
+
+    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){
+        if (pidActive && (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka)) {
             kS = dbks;
             kG = dbkg;
             kV = dbkv;
             kA = dbka;
             armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
         }
+    }
 
-        // Update PID controller
-        pidController.setP(SmartDashboard.getNumber("wrist P", kP));
-        pidController.setI(SmartDashboard.getNumber("wrist I", kI));
-        pidController.setD(SmartDashboard.getNumber("wrist D", kD));
-        pidController.setFF(SmartDashboard.getNumber("wrist FF", kFF));
+    public void setPidController(double p, double i, double d, double ff,boolean pidActive){
+        if(pidActive){
+            pidController.setP(p);
+            pidController.setI(i);
+            pidController.setD(d);
+            pidController.setFF(ff);
+        }
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("wrist encoder", sparkMax.getEncoder().getPosition());
-        SmartDashboard.putNumber("wrist angle", getAngle());
-        SmartDashboard.putNumber("wrist velocity", sparkMax.getEncoder().getVelocity());
-        SmartDashboard.putNumber("wrist Motor Current", sparkMax.getOutputCurrent());
-        SmartDashboard.putNumber("wrist Motor Bus Voltage", sparkMax.getBusVoltage());
-        SmartDashboard.putNumber("wrist Motor temperature", sparkMax.getMotorTemperature());
+        setArmFeedForward(SmartDashboard.getNumber("wrist kS", Constants.WristConstants.kSVolts),
+                SmartDashboard.getNumber("wrist kG", Constants.WristConstants.kGVolts),
+                SmartDashboard.getNumber("wrist kV", Constants.WristConstants.kVVoltSecondPerRad),
+                SmartDashboard.getNumber("wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad),
+                SmartDashboard.getBoolean("wrist toggle pid active", false));
+
+        setPidController(SmartDashboard.getNumber("wrist P", Constants.WristConstants.kP),
+                SmartDashboard.getNumber("wrist I", Constants.WristConstants.kI),
+                SmartDashboard.getNumber("wrist D", Constants.WristConstants.kD),
+                SmartDashboard.getNumber("wrist FF", Constants.WristConstants.kFF),
+                SmartDashboard.getBoolean("wrist toggle pid active", false));
     }
 
     public CANSparkMax getMotor() {
-        return sparkMax;
+        return wristMotor;
+    }
+
+    public static Wrist getInstance() {
+        if(wrist == null){
+            wrist = new Wrist();
+        }
+        return wrist;
     }
 }

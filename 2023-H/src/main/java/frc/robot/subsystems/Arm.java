@@ -20,11 +20,11 @@ public class Arm extends SubsystemBase {
     }
 
     public void setWristSpeed(double wristSpeed) {
-        wrist.getMotor().set(wristSpeed);
+        wrist.setMotor(wristSpeed);
     }
 
     public double getWristSpeed() {
-        return wrist.getMotor().get();
+        return wrist.getSpeed();
     }
 
     public void setShoulderSpeed(double shoulderSpeed) {
@@ -44,15 +44,19 @@ public class Arm extends SubsystemBase {
     }
 
     public double getWristOutputCurrent() {
-        return wrist.getMotor().getOutputCurrent();
+        return wrist.getOutputCurrent();
     }
 
     public void setShoulderPosition(double setPoint){
-        shoulder.setAnglePosition(setPoint);
+        shoulder.setPosition(setPoint);
+    }
+
+    public void setWristPosition(double setPoint){
+        wrist.setPosition(setPoint);
     }
 
     public double getWristTemperature() {
-        return wrist.getMotor().getMotorTemperature();
+        return wrist.getMotorTemperature();
     }
 
     public static Arm getInstance() {
@@ -60,14 +64,6 @@ public class Arm extends SubsystemBase {
             arm = new Arm();
         }
         return arm;
-    }
-
-    public void putSmartDashboardOverrides() {
-        wrist.putSmartDashboardOverrides();
-    }
-
-    public void updateFromDashboard() {
-        wrist.updateFromDashboard();
     }
 
     @Override

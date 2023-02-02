@@ -36,6 +36,7 @@ public class Shuffleboard extends SubsystemBase{
         drivetrainShuffleboard();
         clawShuffleboard();
         shoulderShuffleboard();
+        wristShuffleboard();
     }
 
     private void drivetrainShuffleboard(){
@@ -58,14 +59,18 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
         SmartDashboard.putNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
 
+        SmartDashboard.putNumber("shoulder Arbitrary FF", shoulder.getDynamicFeedForward());
+
         // PID controller parameters
         SmartDashboard.putNumber("shoulder P", Constants.ShoulderConstants.kP);
         SmartDashboard.putNumber("shoulder I", Constants.ShoulderConstants.kI);
         SmartDashboard.putNumber("shoulder D", Constants.ShoulderConstants.kD);
         SmartDashboard.putNumber("shoulder FF", Constants.ShoulderConstants.kFF);
 
+        //Toggle shoulder pid
         SmartDashboard.putBoolean("shoulder toggle pid active", false);
 
+        //setpoints
         SmartDashboard.putNumber("shoulder speed % setpoint", 0.0);
         SmartDashboard.putNumber("shoulder angle setpoint", 0.0);
         SmartDashboard.putNumber("shoulder velocity setpoint", 0.0);
@@ -75,8 +80,6 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("shoulder encoder", shoulder.getPosition());
         SmartDashboard.putNumber("shoulder angle", shoulder.getAngle());
         SmartDashboard.putNumber("shoulder velocity", shoulder.getVelocity());
-        
-        SmartDashboard.putBoolean("toggle shoulder pid active", false);
     }
     
     private void wristShuffleboard(){
@@ -85,15 +88,19 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("wrist kG", Constants.WristConstants.kGVolts);
         SmartDashboard.putNumber("wrist kV", Constants.WristConstants.kVVoltSecondPerRad);
         SmartDashboard.putNumber("wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad);
-    
+
+        SmartDashboard.putNumber("wrist Arbitrary FF", wrist.getDynamicFeedForward());
+        
         // PID controller parameters
         SmartDashboard.putNumber("wrist P", Constants.WristConstants.kP);
         SmartDashboard.putNumber("wrist I", Constants.WristConstants.kI);
         SmartDashboard.putNumber("wrist D", Constants.WristConstants.kD);
         SmartDashboard.putNumber("wrist FF", Constants.WristConstants.kFF);
-    
+
+        //Toggle wrist pid
         SmartDashboard.putBoolean("wrist toggle pid active", false);
-    
+
+        //setpoints
         SmartDashboard.putNumber("wrist speed % setpoint", 0.0);
         SmartDashboard.putNumber("wrist angle setpoint", 0.0);
         SmartDashboard.putNumber("wrist velocity setpoint", 0.0);
@@ -102,7 +109,5 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("wrist velocity", wrist.getVelocity());
         SmartDashboard.putNumber("wrist Motor Current", wrist.getOutputCurrent());
         SmartDashboard.putNumber("wrist Motor temperature", wrist.getMotorTemperature());
-
-        SmartDashboard.putBoolean("toggle wrist pid active", false);
     }
 }
