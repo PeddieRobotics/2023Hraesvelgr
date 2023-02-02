@@ -121,12 +121,15 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public double getDistance() {
-    if (ty.getDouble(0.0) == 0) {
+    if (!hasTarget()) {
       return 0;
     } else {
-      double targHeight = SmartDashboard.getNumber("TARGET HEIGHT", 112);
-      return (targHeight - LimelightConstants.kLimelightHeight) /
-          (Math.tan(Math.toRadians(LimelightConstants.kLimelightAngle + LimelightConstants.kLimelightPanningAngle + ty.getDouble(0.0))));
+      // a1 = LL panning angle
+      // a2 = additional angle to target
+      // tan(a1 + a2) = h/d
+      // d = h/tan(a1+a2)
+      return (LimelightConstants.kLimelightHeight) /
+          (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + ty.getDouble(0.0))));
     }
   }
 
@@ -153,7 +156,7 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public void updateLimelightInfoOnDashboard() {
-    SmartDashboard.putNumber("LL DISTANCE!!", getDistance() - 10);
+    SmartDashboard.putNumber("LL target distance", getDistance());
     SmartDashboard.putNumber("LL vt error", getTy());
     SmartDashboard.putNumber("LL hz error", getTx());
 
