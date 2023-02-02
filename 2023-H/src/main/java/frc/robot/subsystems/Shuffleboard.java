@@ -9,15 +9,19 @@ public class Shuffleboard extends SubsystemBase{
     private Drivetrain drivetrain;
     private Claw claw;
     private Shoulder shoulder;
+    private Wrist wrist;
 
 
     public Shuffleboard(){
         drivetrain = Drivetrain.getInstance();
         claw = Claw.getInstance();
         shoulder = Shoulder.getInstance();
+        wrist = Wrist.getInstance();
 
         drivetrainShuffleboard();
         clawShuffleboard();
+        shoulderShuffleboard();
+        wristShuffleboard();
     }
 
     public static Shuffleboard getInstance(){
@@ -65,13 +69,40 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("shoulder speed % setpoint", 0.0);
         SmartDashboard.putNumber("shoulder angle setpoint", 0.0);
         SmartDashboard.putNumber("shoulder velocity setpoint", 0.0);
-
+        
         SmartDashboard.putNumber("shoulder Motor Current", shoulder.getOutputCurrent());
         SmartDashboard.putNumber("shoulder Motor Temperature", shoulder.getMotorTemperature());
         SmartDashboard.putNumber("shoulder encoder", shoulder.getPosition());
         SmartDashboard.putNumber("shoulder angle", shoulder.getAngle());
         SmartDashboard.putNumber("shoulder velocity", shoulder.getVelocity());
-
+        
         SmartDashboard.putBoolean("toggle shoulder pid active", false);
+    }
+    
+    private void wristShuffleboard(){
+        //dynamic FF parameters
+        SmartDashboard.putNumber("wrist kS", Constants.WristConstants.kSVolts);
+        SmartDashboard.putNumber("wrist kG", Constants.WristConstants.kGVolts);
+        SmartDashboard.putNumber("wrist kV", Constants.WristConstants.kVVoltSecondPerRad);
+        SmartDashboard.putNumber("wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad);
+    
+        // PID controller parameters
+        SmartDashboard.putNumber("wrist P", Constants.WristConstants.kP);
+        SmartDashboard.putNumber("wrist I", Constants.WristConstants.kI);
+        SmartDashboard.putNumber("wrist D", Constants.WristConstants.kD);
+        SmartDashboard.putNumber("wrist FF", Constants.WristConstants.kFF);
+    
+        SmartDashboard.putBoolean("wrist toggle pid active", false);
+    
+        SmartDashboard.putNumber("wrist speed % setpoint", 0.0);
+        SmartDashboard.putNumber("wrist angle setpoint", 0.0);
+        SmartDashboard.putNumber("wrist velocity setpoint", 0.0);
+
+        SmartDashboard.putNumber("wrist encoder", wrist.getPosition());
+        SmartDashboard.putNumber("wrist velocity", wrist.getVelocity());
+        SmartDashboard.putNumber("wrist Motor Current", wrist.getOutputCurrent());
+        SmartDashboard.putNumber("wrist Motor temperature", wrist.getMotorTemperature());
+
+        SmartDashboard.putBoolean("toggle wrist pid active", false);
     }
 }
