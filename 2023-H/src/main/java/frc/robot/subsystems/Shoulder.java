@@ -110,7 +110,7 @@ public class Shoulder extends SubsystemBase{
 
 
 
-    public void setPidController(double p, double i, double d, double ff, boolean pidActive){
+    public void setPidController(double p, double i, double d, double ff,boolean pidActive){
         if(pidActive){
             pidController.setP(p);
             pidController.setI(i);
@@ -121,6 +121,17 @@ public class Shoulder extends SubsystemBase{
 
     @Override
     public void periodic() {
+        setPidController(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP),
+                SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI),
+                SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD),
+                SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF),
+                SmartDashboard.getBoolean("toggle shoulder pid active", false));
+
+        shoulder.setArmFeedForward(SmartDashboard.getNumber("shoulder kS", Constants.ShoulderConstants.kSVolts),
+                SmartDashboard.getNumber("shoulder kG", Constants.ShoulderConstants.kSVolts), 
+                SmartDashboard.getNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
+                SmartDashboard.getNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad),
+                SmartDashboard.getBoolean("toggle shoulder pid active", false));
     }
 
     public static Shoulder getInstance() {

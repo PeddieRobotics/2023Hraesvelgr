@@ -36,7 +36,7 @@ public class RobotContainer {
   private final Autonomous autonomous;
   private Command autoCommand;
   // private final Claw intake;
-  // private final Arm arm;
+  private final Arm arm;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -47,7 +47,7 @@ public class RobotContainer {
     autonomous = Autonomous.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     // intake = Claw.getInstance();
-    // arm = Arm.getInstance();
+    arm = Arm.getInstance();
   }
 
   public Command getAutonomousCommand() {

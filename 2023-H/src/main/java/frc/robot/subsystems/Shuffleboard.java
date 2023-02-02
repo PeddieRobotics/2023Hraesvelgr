@@ -73,16 +73,5 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("shoulder velocity", shoulder.getVelocity());
 
         SmartDashboard.putBoolean("toggle shoulder pid active", false);
-        shoulder.setArmFeedForward(SmartDashboard.getNumber("shoulder kS", Constants.ShoulderConstants.kSVolts),
-                SmartDashboard.getNumber("shoulder kG", Constants.ShoulderConstants.kSVolts), 
-                SmartDashboard.getNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
-                SmartDashboard.getNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad),
-                SmartDashboard.getBoolean("toggle shoulder pid active", false));
-        
-        shoulder.setPidController(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP),
-                SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI),
-                SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD),
-                SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF),
-                SmartDashboard.getBoolean("toggle shoulder pid active", false));
     }
 }

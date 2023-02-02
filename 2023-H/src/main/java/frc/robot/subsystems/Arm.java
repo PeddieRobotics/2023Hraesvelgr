@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
-    private static Arm instance;
+    private static Arm arm;
 
     private final Shoulder shoulder;
     private final Wrist wrist;
@@ -56,10 +56,10 @@ public class Arm extends SubsystemBase {
     }
 
     public static Arm getInstance() {
-        if (instance == null) {
-            instance = new Arm();
+        if (arm == null) {
+            arm = new Arm();
         }
-        return instance;
+        return arm;
     }
 
     public void putSmartDashboardOverrides() {
