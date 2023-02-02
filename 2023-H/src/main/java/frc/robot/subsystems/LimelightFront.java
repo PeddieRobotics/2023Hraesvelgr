@@ -30,6 +30,9 @@ public class LimelightFront extends SubsystemBase {
   private NetworkTableEntry tv = limelightTable.getEntry("tv");
   private NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
   private NetworkTableEntry botpose = limelightTable.getEntry("botpose");
+  
+  // Class ID of primary neural detector result or neural classifier result
+  private NetworkTableEntry tclass = limelightTable.getEntry("tclass");
 
   public LimelightFront() {
     limelightFrontPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
@@ -82,6 +85,15 @@ public class LimelightFront extends SubsystemBase {
     return thor.getDouble(0.0);
   }
 
+  public double getTshort() {
+    return tshort.getDouble(0.0);
+  }
+
+  public double getTlong() {
+    return tlong.getDouble(0.0);
+  }
+  
+
   // Tx is the Horizontal Offset From Crosshair To Target
   public double getTx() {
     return tx.getDouble(0.0);
@@ -102,6 +114,10 @@ public class LimelightFront extends SubsystemBase {
 
   public double getTyAverage() {
     return tyAverage.getAverage();
+  }
+
+  public double getTclass() {
+    return tclass.getDouble(0.0);
   }
 
   public double getDistance() {
