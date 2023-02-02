@@ -93,7 +93,6 @@ public class LimelightFront extends SubsystemBase {
     return tlong.getDouble(0.0);
   }
   
-
   // Tx is the Horizontal Offset From Crosshair To Target
   public double getTx() {
     return tx.getDouble(0.0);
@@ -116,6 +115,7 @@ public class LimelightFront extends SubsystemBase {
     return tyAverage.getAverage();
   }
 
+  //Class ID of primary neural detector result or neural classifier result
   public double getTclass() {
     return tclass.getDouble(0.0);
   }
