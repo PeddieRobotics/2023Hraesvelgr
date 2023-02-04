@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Autonomous.Autonomous;
 import frc.robot.utils.OI;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
@@ -19,9 +20,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Shuffleboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -37,6 +38,7 @@ public class RobotContainer {
   private Command autoCommand;
   // private final Claw intake;
   private final Arm arm;
+  private final Shuffleboard shuffleboard;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -45,6 +47,7 @@ public class RobotContainer {
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
     autonomous = Autonomous.getInstance();
+    shuffleboard = Shuffleboard.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     // intake = Claw.getInstance();
     arm = Arm.getInstance();
@@ -54,6 +57,38 @@ public class RobotContainer {
     drivetrain.resetGyro();
     drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     return autonomous.getAutonomousCommand();
+  }
+
+  public String getStartingGamePieceCommand() {
+    return shuffleboard.returnStartingGamePieceCommand();
+  }
+
+  public String getStartingColumnCommand() {
+    return shuffleboard.returnStartingColumnCommand();
+  }
+
+  public String getScoringLevelCommand() {
+    return shuffleboard.returnScoringLevelCommand();
+  }
+
+  public boolean getIsInvertedCommand() {
+    return shuffleboard.returnIsInvertedCommand();
+  }
+
+  public String getObjectiveOneCommand() {
+    return shuffleboard.returnObjectiveOneCommand();
+  }
+
+  public String getObjectiveTwoCommand() {
+    return shuffleboard.returnObjectiveTwoCommand();
+  }
+
+  public String getObjectiveThreeCommand() {
+    return shuffleboard.returnObjectiveThreeCommand();
+  }
+
+  public String getObjectiveFourCommand() {
+    return shuffleboard.returnObjectiveFourCommand();
   }
 
   public void resetRobotPosition() {
