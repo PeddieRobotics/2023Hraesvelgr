@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -160,10 +159,6 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double kLimelightP = 0.075;
-                public static final double kLimelightI = 0.0;
-                public static final double kLimelightD = 0.0;
-                public static final double kLimelightFF = 0.15;
                 public static final double kLimeLightAngleBound = 0.5;
                 public static final double kTurningMultiplier = 5.0;
                 public static final double kLimelightHeight = 27.488; //inches
