@@ -38,9 +38,9 @@ public class Autonomous extends SubsystemBase{
 
     private PathPlannerTrajectory OnePieceSkeddadle, OnePieceSkeddadlecol7, OnePieceSkeddadlecol3, OnePieceSkeddadlecol6, OnePieceSkeddadlecol4, OnePieceSkeddadleMid, OnePieceCol3, OnePieceCol7, OnePieceBacksideBridgeCol1, OnePieceBacksideBridgeCol2, OnePieceBacksideBridgeCol8, OnePieceBacksideBridgeCol9;
 
-    private PathPlannerTrajectory TwoPieceFree, TwoPieceBump, TwoPieceFreeBalance_Part2, TwoPieceBumpBalance_Part1, TwoPieceBumpBalance_Part2, TwoPieceFreePrepareCol1, TwoPieceBumpPrepareCol9;
+    private PathPlannerTrajectory TwoPieceFree, TwoPieceBump, TwoPieceFreeBalance, TwoPieceBumpBalance, TwoPieceFreePrepareCol1, TwoPieceBumpPrepareCol9, TwoCenterPieceBalance;
 
-    private PathPlannerTrajectory ThreePieceFree, ThreePieceBumpBalance_Part1, ThreePieceBumpBalance_Part2, ThreePieceBumpBalance_Part3;
+    private PathPlannerTrajectory ThreePieceFree, ThreePieceBumpBalance, ThreePieceEasyLinkBalance;
 
     public Autonomous(){
         drivetrain = Drivetrain.getInstance();
@@ -97,23 +97,22 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("OnePieceBacksideBridgeCol9", autoBuilder.fullAuto((PathPlanner.loadPathGroup("1PieceBacksideBridgeCol9", 0.5, 0.5))));
 
         autoRoutines.put("TwoPieceFree", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceFree", 0.5, 0.5))));
-        autoRoutines.put("TwoPieceFreeBalance_Part2", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceFreeBalance_Part1", 0.5, 0.5))));
+        autoRoutines.put("TwoPieceFreeBalance", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceFreeBalance", 0.5, 0.5))));
         autoRoutines.put("TwoPieceFreePrepareCol1", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceFreePrepareCol1", 0.5, 0.5))));
         autoRoutines.put("TwoPieceBump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5))));
-        autoRoutines.put("TwoPieceBumpBalance_Part1", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceBumpBalance_Part1", 0.5, 0.5))));
-        autoRoutines.put("TwoPieceBumpBalance_Part2", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceBumpBalance_Part1", 0.5, 0.5))));
+        autoRoutines.put("TwoPieceBumpBalance", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceBumpBalance", 0.5, 0.5))));
         autoRoutines.put("TwoPieceBumpPrepareCol9", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2PieceFreePrepareCol9", 0.5, 0.5))));
+        autoRoutines.put("TwoCenterPieceBalance", autoBuilder.fullAuto((PathPlanner.loadPathGroup("2CenterPieceBalance", 0.5, 0.5))));
 
         autoRoutines.put("ThreePieceFree", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceFree", 0.5, 0.5))));
-        autoRoutines.put("ThreePieceBumpBalance_Part1", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceBumpBalance_Part1", 0.5, 0.5))));
-        autoRoutines.put("ThreePieceBumpBalance_Part2", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceBumpBalance_Part2", 0.5, 0.5))));
-        autoRoutines.put("ThreePieceBumpBalance_Part3", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceBumpBalance_Part3", 0.5, 0.5))));
+        autoRoutines.put("ThreePieceBumpBalance", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceBumpBalance", 0.5, 0.5))));
+        autoRoutines.put("ThreePieceEasyLinkBalance", autoBuilder.fullAuto((PathPlanner.loadPathGroup("3PieceEasyLinkBalance", 0.5, 0.5))));
 
     }
 
 
     public void setupAutoRoutines(){
-        //
+        //Test Paths
         autoRoutines.put("1 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraight", 2,2)));
         autoRoutines.put("1 Meter Straight Path Spin", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraightSpin", 0.5, 0.5)));
         autoRoutines.put("U-path", createCommandFromTrajectory(PathPlanner.loadPathGroup("U-path", 0.5, 0.5)));
@@ -137,14 +136,16 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("One Piece Backside Bridge Column 9", createCommandFromTrajectory(PathPlanner.loadPathGroup("1PieceBacksideBridgeCol9", 0.5, 0.5)));
 
         autoRoutines.put("Two Piece Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceFree", 0.5, 0.5)));
-        //
+        autoRoutines.put("Two Piece Free Balance", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceFreeBalance", 0.5, 0.5)));
         autoRoutines.put("Two Piece Free Prepare Column 1", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceFreePrepareCol1", 0.5, 0.5)));
         autoRoutines.put("Two Piece Bump", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
-        //
+        autoRoutines.put("Two Piece Bump Balance", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBumpBalance", 0.5, 0.5)));
         autoRoutines.put("Two Piece Bump Prepare Column 9", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBumpPrepareCol9", 0.5, 0.5)));
+        autoRoutines.put("Two Center Piece Balance", createCommandFromTrajectory(PathPlanner.loadPathGroup("2CenterPieceBalance", 0.5, 0.5)));
 
         autoRoutines.put("Three Piece Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("3PieceFree", 0.5, 0.5)));
-        //
+        autoRoutines.put("Three Piece Bump Balance", createCommandFromTrajectory(PathPlanner.loadPathGroup("3PieceBumpBalance", 0.5, 0.5)));    
+        autoRoutines.put("Three Piece Easy Link Balance", createCommandFromTrajectory(PathPlanner.loadPathGroup("3PieceEasyLinkBalance", 0.5, 0.5)));     
 
     }   
 
