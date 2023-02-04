@@ -18,6 +18,6 @@ public class RobotMapH {
     public static final int kShoulderMotorMaster = 50;
     public static final int kShoulderMotorFollower = 51;
 
-    public static final int kClawMotorMaster = 60;
+    public static final int kClawMotor = 60;
     public static final int kWristMotor = 61;
 }
