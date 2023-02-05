@@ -63,6 +63,10 @@ public class Shoulder extends SubsystemBase{
         return shoulderMotorMaster.getOutputCurrent();
     }
 
+    public void stopShoulder(){
+        shoulderMotorMaster.set(0);
+    }
+
     public void setPosition(double setpoint) {
         dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
 
@@ -99,6 +103,10 @@ public class Shoulder extends SubsystemBase{
 
     public double getVelocity(){
         return shoulderMotorMaster.getEncoder().getVelocity();
+    }
+
+    public boolean isMoving(){
+        return shoulderMotorMaster.get() != 0.0;
     }
 
     public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){

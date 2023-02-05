@@ -19,4 +19,11 @@ public class RobotMapH {
     public static final int kShoulderMotorMaster = 60;
     public static final int kShoulderMotorFollower = 61;
     public static final int kWristMotor = 62;
+
+    //Sensors 
+    //TODO: Currently arbitrary values, update later
+    public static final int kClawConeSensor = 0;
+    public static final int kClawCubeSensor = 1;
+    public static final int kWristLimitSensor = 2;
+    
 }
