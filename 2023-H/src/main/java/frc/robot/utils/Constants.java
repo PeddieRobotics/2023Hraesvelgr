@@ -166,6 +166,9 @@ public final class Constants {
                 public static final double kLimelightFF = 0.15;
                 public static final double kLimeLightAngleBound = 0.5;
                 public static final double kTurningMultiplier = 5.0;
+                public static final double kLimelightHeight = 27.488; //inches
+                public static final double kLimelightPanningAngle = 0;
+                public static final double kLimelightAngle = 0;
         }
 
         public static final class ShoulderConstants{
