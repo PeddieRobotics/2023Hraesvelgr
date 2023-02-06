@@ -1,13 +1,10 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
-import frc.robot.utils.Constants.LimelightConstants;
 
 public class LimelightFront extends SubsystemBase {
   private static LimelightFront limelightFront;
@@ -15,21 +12,6 @@ public class LimelightFront extends SubsystemBase {
   private RollingAverage txAverage, tyAverage;
 
   private LimelightHelper limelightHelper=LimelightHelper.createLimelightHelper("limelight-front");
-
-  // private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
-  // private NetworkTableEntry tx = limelightTable.getEntry("tx");
-  // private NetworkTableEntry ty = limelightTable.getEntry("ty");
-  // private NetworkTableEntry thor = limelightTable.getEntry("thor");
-  // private NetworkTableEntry tvert = limelightTable.getEntry("tvert");
-  // private NetworkTableEntry tshort = limelightTable.getEntry("tshort");
-  // private NetworkTableEntry tlong = limelightTable.getEntry("tlong");
-  // private NetworkTableEntry ta = limelightTable.getEntry("ta");
-  // private NetworkTableEntry tv = limelightTable.getEntry("tv");
-  // private NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
-  // private NetworkTableEntry botpose = limelightTable.getEntry("botpose");
-  
-  // // Class ID of primary neural detector result or neural classifier result
-  // private NetworkTableEntry tclass = limelightTable.getEntry("tclass");
 
   public LimelightFront() {
     txAverage = new RollingAverage();
@@ -48,11 +30,7 @@ public class LimelightFront extends SubsystemBase {
     updateRollingAverages();
     updateLimelightInfoOnDashboard();
     setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
-    SmartDashboard.putNumber("BOTPOSE!", getBotpose());
-  }
-
-  public double getBotpose() {
-    return limelightHelper.getBotpose()[0]; // Might want to make getBotpose return double and not double array
+    SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!", limelightHelper.getBotpose_wpiBlue());
   }
 
   // Tv is whether the limelight has a valid target
@@ -169,9 +147,8 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public void updatePosetoDashboard() {
-    double[] temp = { 0, 0, 0, 0, 0, 0 };
     if (hasTarget()) {
-      double[] result = limelightHelper.getBotpose();
+      double[] result = limelightHelper.getBotpose_wpiBlue();
       SmartDashboard.putNumber("array element count", result.length);
       if (result.length > 0.0) {
         SmartDashboard.putNumber("xCOORD", result[0]); //meters
