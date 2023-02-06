@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
 import frc.robot.utils.RobotMapH;
@@ -15,6 +17,8 @@ public class Wrist {
     private static Wrist wrist;
 
     private CANSparkMax wristMotor;
+
+    private DigitalInput limitSensor;
 
     private SparkMaxPIDController pidController;
 
@@ -37,16 +41,23 @@ public class Wrist {
         kA = WristConstants.kAVoltSecondSquaredPerRad;
 
         armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+
+        limitSensor = new DigitalInput(RobotMapH.kWristLimitSensor);
     }
 
     public void setPosition(double setpoint) {
         dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
+
 
         pidController.setReference(setpoint, ControlType.kPosition, 0, dynamicFeedforward);
     }
 
     public double getDynamicFeedForward(){
         return dynamicFeedforward;
+    }
+
+    public boolean atLimitSensor(){
+        return !limitSensor.get();
     }
 
     public void setVelocity(double setpoint) {
@@ -59,7 +70,15 @@ public class Wrist {
     }
 
     public void setMotor(double speed) {
-        wristMotor.set(speed);
+        if(speed > 0){
+            wristMotor.set(speed);
+        } else {
+            if(!atLimitSensor()){
+                wristMotor.set(speed);
+            } else {
+                wristMotor.set(0);
+            }
+        }
     }
 
     public double getMotorTemperature(){
@@ -82,6 +101,10 @@ public class Wrist {
         return wristMotor.getEncoder().getVelocity();
     }
 
+    public void stopWrist(){
+        wristMotor.set(0);
+    }
+
     public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){
         if (pidActive && (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka)) {
             kS = dbks;
@@ -99,6 +122,10 @@ public class Wrist {
             pidController.setD(d);
             pidController.setFF(ff);
         }
+    }
+
+    public boolean isMoving(){
+        return wristMotor.get() != 0.0;
     }
 
     public void periodic() {

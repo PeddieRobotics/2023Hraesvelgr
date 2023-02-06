@@ -28,7 +28,7 @@ public class ConeIntake extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return claw.hasCone();
     }
 
     

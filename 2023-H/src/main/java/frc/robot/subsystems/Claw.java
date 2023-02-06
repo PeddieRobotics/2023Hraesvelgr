@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.RobotMapH;
@@ -12,11 +13,15 @@ import frc.robot.utils.Constants.ClawConstants;
 public class Claw extends SubsystemBase {
     private static Claw instance;
     private CANSparkMax clawMotor;
+    private DigitalInput coneSensor, cubeSensor;
 
     public Claw() {
         clawMotor = new CANSparkMax(RobotMapH.kClawMotor, MotorType.kBrushed);
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kBrake);
+
+        coneSensor = new DigitalInput(RobotMapH.kClawConeSensor);
+        cubeSensor = new DigitalInput(RobotMapH.kClawCubeSensor);
     }
     
     @Override
@@ -33,6 +38,15 @@ public class Claw extends SubsystemBase {
     public void setSpeed(double clawSpeed){
         clawMotor.set(clawSpeed);
     }
+
+    public boolean hasCone(){
+        return !coneSensor.get();
+    }
+
+    public boolean hasCube(){
+        return !cubeSensor.get();
+    }
+
     public double getClawSpeed(){
         return clawMotor.get();
     }

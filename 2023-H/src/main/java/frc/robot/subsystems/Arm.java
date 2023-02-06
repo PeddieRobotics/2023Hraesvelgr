@@ -55,6 +55,14 @@ public class Arm extends SubsystemBase {
         wrist.setPosition(setPoint);
     }
 
+    public void stopShoulder(){
+        shoulder.stopShoulder();;
+    }
+
+    public void stopWrist(){
+        wrist.stopWrist();
+    }
+
     public double getWristTemperature() {
         return wrist.getMotorTemperature();
     }
