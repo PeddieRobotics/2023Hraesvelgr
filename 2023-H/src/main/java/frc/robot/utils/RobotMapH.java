@@ -13,17 +13,16 @@ public class RobotMapH {
     public static final int kRearLeftTurningCanId = 21;
     public static final int kFrontRightTurningCanId = 31;
     public static final int kRearRightTurningCanId = 41;
-
-    // Arm Motors
-    public static final int kClawMotor = 59;
-    public static final int kShoulderMotorMaster = 60;
-    public static final int kShoulderMotorFollower = 61;
-    public static final int kWristMotor = 62;
-
     //Sensors 
     //TODO: Currently arbitrary values, update later
     public static final int kClawConeSensor = 0;
     public static final int kClawCubeSensor = 1;
     public static final int kWristLimitSensor = 2;
     
+    // Arm Motors
+    public static final int kShoulderMotorMaster = 50;
+    public static final int kShoulderMotorFollower = 51;
+    public static final int kWristMotor = 61;
+
+    public static final int kClawMotor = 60;
 }
