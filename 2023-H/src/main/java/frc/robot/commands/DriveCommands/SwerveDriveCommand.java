@@ -46,7 +46,7 @@ public class SwerveDriveCommand extends CommandBase {
 
     double rotation = -oi.getRotation();
 
-    Translation2d centerOfRotation = new Translation2d(); // oi.getCenterOfRotation();
+    Translation2d centerOfRotation = oi.getCenterOfRotation();
 
     // SmartDashboard.putNumber("position x", position.getX());
     // SmartDashboard.putNumber("position y", position.getY());
