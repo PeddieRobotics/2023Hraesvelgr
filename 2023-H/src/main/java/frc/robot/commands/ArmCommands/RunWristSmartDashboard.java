@@ -23,11 +23,12 @@ public class RunWristSmartDashboard extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+        arm.stopWrist();
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 
 }

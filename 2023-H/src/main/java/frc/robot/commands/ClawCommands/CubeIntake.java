@@ -28,7 +28,7 @@ public class CubeIntake extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return claw.hasCube();
     }
 
     

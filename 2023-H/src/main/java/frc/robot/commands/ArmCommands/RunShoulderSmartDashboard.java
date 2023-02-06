@@ -23,11 +23,12 @@ public class RunShoulderSmartDashboard extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+        arm.stopShoulder();
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 
 }
