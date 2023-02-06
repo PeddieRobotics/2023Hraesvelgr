@@ -34,6 +34,11 @@ public class Autonomous extends SubsystemBase{
     // Auto Builder
     private SwerveAutoBuilder autoBuilder;
 
+    //Hashtable and Sendable Chooser
+    private Hashtable autoRoutines;
+    private SendableChooser autoRoutineSelector;
+    
+
     // Paths
     private PathPlannerTrajectory OneMeterStraight, SwerveTest, SwerveTestRed;
 
@@ -55,8 +60,6 @@ public class Autonomous extends SubsystemBase{
         autoBuilder = new SwerveAutoBuilder(
             drivetrain ::getPose, drivetrain ::resetRobotPosition, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, true, drivetrain
         );
-
-        setupAutoSelector();
     }
 
     @Override
@@ -75,8 +78,8 @@ public class Autonomous extends SubsystemBase{
 
     //Modified methods
 
-    public void configureAutoRoutine(String pathName, String description, double velocity, double acceleration){
-        autonomousDescription = description;
+    public void configureAutoRoutine(String pathName, double velocity, double acceleration){
+        //autonomousDescription = description;
         autonomousRoutine = autoBuilder.fullAuto((PathPlanner.loadPathGroup(pathName, velocity, acceleration)));
     }
 
