@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Autonomous.Autonomous;
+import frc.robot.subsystems.Autonomous;
 import frc.robot.utils.OI;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
@@ -57,38 +57,6 @@ public class RobotContainer {
     drivetrain.resetGyro();
     drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
     return autonomous.getAutonomousCommand();
-  }
-
-  public String getStartingGamePieceCommand() {
-    return shuffleboard.returnStartingGamePieceCommand();
-  }
-
-  public String getStartingColumnCommand() {
-    return shuffleboard.returnStartingColumnCommand();
-  }
-
-  public String getScoringLevelCommand() {
-    return shuffleboard.returnScoringLevelCommand();
-  }
-
-  public boolean getIsInvertedCommand() {
-    return shuffleboard.returnIsInvertedCommand();
-  }
-
-  public String getObjectiveOneCommand() {
-    return shuffleboard.returnObjectiveOneCommand();
-  }
-
-  public String getObjectiveTwoCommand() {
-    return shuffleboard.returnObjectiveTwoCommand();
-  }
-
-  public String getObjectiveThreeCommand() {
-    return shuffleboard.returnObjectiveThreeCommand();
-  }
-
-  public String getObjectiveFourCommand() {
-    return shuffleboard.returnObjectiveFourCommand();
   }
 
   public void resetRobotPosition() {
