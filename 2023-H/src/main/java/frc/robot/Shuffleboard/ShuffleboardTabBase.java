@@ -9,7 +9,7 @@ public abstract class ShuffleboardTabBase {
     public abstract void createEntries();
     
     protected NetworkTableEntry createNumberEntry(String name) {
-        return tab.add(name, 0.0).withSize(2, 1).getEntry();
+        return tab.add(name, 0.0).withSize(2, 1).getDoubleTopic("name").publish();
     }
 
     protected NetworkTableEntry createStringEntry(String name) {
