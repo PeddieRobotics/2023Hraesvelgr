@@ -7,7 +7,7 @@ public abstract class ShuffleboardTabBase {
     protected ShuffleboardTab tab;
 
     public abstract void createEntries();
-    
+
     protected GenericEntry createNumberEntry(String name) {
         return tab.add(name, 0.0).withSize(2, 1).getEntry();
     }
@@ -15,7 +15,6 @@ public abstract class ShuffleboardTabBase {
     protected GenericEntry createStringEntry(String name) {
         return tab.add(name, "").withSize(2, 1).getEntry();
     }
-     
 
     public abstract void update();
 
@@ -23,9 +22,9 @@ public abstract class ShuffleboardTabBase {
     protected double truncate(double number) {
         return Math.floor(number * 100) / 100;
     }
-    
+
     public ShuffleboardTab getTab() {
         return tab;
     }
-    
+
 }

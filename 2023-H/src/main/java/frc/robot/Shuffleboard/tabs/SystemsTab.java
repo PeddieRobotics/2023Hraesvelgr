@@ -1,17 +1,21 @@
 package frc.robot.Shuffleboard.tabs;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
-public class SystemsTab extends ShuffleboardTabBase{
+public class SystemsTab extends ShuffleboardTabBase {
+    private Claw claw = Claw.getInstance();
     private LimelightFront LLFront = LimelightFront.getInstance();
     private LimelightBack LLBack = LimelightBack.getInstance();
     private GenericEntry mOperatorHasCube;
     private GenericEntry mOperatorHasCone;
     private GenericEntry mLimelightHasTarget;
     private GenericEntry mPrimaryTagID;
+
     public void createEntries() {
         tab = Shuffleboard.getTab("System");
 
@@ -39,8 +43,8 @@ public class SystemsTab extends ShuffleboardTabBase{
 
     @Override
     public void update() {
-        mOperatorHasCube.setBoolean(LLFront.targetIsCube());
-        mOperatorHasCone.setBoolean(LLFront.targetIsCone());
+        mOperatorHasCube.setBoolean(claw.hasCube());
+        mOperatorHasCone.setBoolean(claw.hasCone());
         mLimelightHasTarget.setBoolean(LLFront.hasTarget());
         mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
     }
