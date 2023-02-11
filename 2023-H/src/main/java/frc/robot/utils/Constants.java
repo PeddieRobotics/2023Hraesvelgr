@@ -189,6 +189,21 @@ public final class Constants {
             
                 public static final double kEncoderPPR = 205.12;
                 public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
+
+                public static final double kShoulderStowedAngle = -75.0;
+                public static final double kShoulderTransitionAngle = -63.0;
+                public static final double kShoulderLevelOneAngle = -75.0;
+
+                public static final double kShoulderFloorConeAngle = -33.24;
+                public static final double kShoulderLevelTwoConeAngle = 5.0;
+                public static final double kShoulderLevelThreeConeAngle = 153.0;
+                public static final double kShoulderHumanPlayerConeAngle = 20.77;
+
+                public static final double kShoulderFloorCubeAngle = -53.39;
+                public static final double kShoulderLevelTwoCubeAngle = 0.0;
+                public static final double kShoulderLevelThreeCubeLobAngle = 5.0;
+                public static final double kShoulderLevelThreeCubeDunkAngle = 150.0;
+                public static final double kShoulderHumanPlayerCubeAngle = -5.0;
         }
 
         public static final class WristConstants{
@@ -209,6 +224,20 @@ public final class Constants {
             
                 public static final double kEncoderPPR = 205.12;
                 public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
+
+                public static final double kWristStowedPositionAngle = 135.0;
+                public static final double kWristLevelOneAngle = 25.0;
+
+                public static final double kWristFloorConeAngle = 0.0;
+                public static final double kWristLevelTwoConeAngle = -34.0;
+                public static final double kWristLevelThreeConeAngle = 72.0;
+                public static final double kWristHumanPlayerConeAngle = 49.64;
+
+                public static final double kWristFloorCubeAngle = -7.26;
+                public static final double kWristLevelTwoCubeAngle = -43.87;
+                public static final double kWristLevelThreeCubeLobAngle = 26.1;
+                public static final double kWristLevelThreeCubeDunkAngle = 104.0;
+                public static final double kWristHumanPlayerCubeAngle = 21.3;
             
         }
         
