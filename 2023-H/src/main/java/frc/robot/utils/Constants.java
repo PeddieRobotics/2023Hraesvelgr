@@ -37,15 +37,10 @@ public final class Constants {
                 public static final double TRACKWIDTH_M = Units.inchesToMeters(24);
                 // Distance between the front and back wheels on the robot
                 public static final double WHEELBASE_M = Units.inchesToMeters(28);
-                public static final double WHEELDIAMETER_IN = 3.0;
-                public static final double WHEELRADIUS_M = Units.inchesToMeters(WHEELDIAMETER_IN / 2);
-                public static final double METERS_PER_SEC_TO_RPM = 30 / (Math.PI * WHEELRADIUS_M);
-                public static final double DRIVE_GEAR_RATIO = 6.75;
-                public static final double ANGLE_GEAR_RATIO = 21.428571428571427;
         }
 
         public static class OIConstants {
-                public static final double JOYSTICK_THRESHHOLE = 0.05;
+                public static final double JOYSTICK_THRESHHOLD = 0.05;
                 public static final double kDrivingDeadband = 0.05;
         }
 
