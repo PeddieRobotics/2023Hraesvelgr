@@ -5,15 +5,18 @@ import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
-public class SystemsTab extends ShuffleboardTabBase{
+public class LimelightTab extends ShuffleboardTabBase{
     private LimelightFront LLFront = LimelightFront.getInstance();
     private LimelightBack LLBack = LimelightBack.getInstance();
     private GenericEntry mOperatorHasCube;
     private GenericEntry mOperatorHasCone;
     private GenericEntry mLimelightHasTarget;
     private GenericEntry mPrimaryTagID;
+    private GenericEntry mDistToTarget;
+    private GenericEntry mPipelineFront;
+    private GenericEntry mPipelineBack;
     public void createEntries() {
-        tab = Shuffleboard.getTab("System");
+        tab = Shuffleboard.getTab("Operator");
 
         mOperatorHasCube = tab
                 .add("hasCube", false)
@@ -35,6 +38,21 @@ public class SystemsTab extends ShuffleboardTabBase{
                 .withSize(3, 2)
                 .withPosition(3, 2)
                 .getEntry();
+        mDistToTarget = tab
+                .add("distanceToTarget", 0.0)
+                .withSize(3, 2)
+                .withPosition(3, 2)
+                .getEntry();
+        mPipelineFront = tab
+                .add("pipeline", 0)
+                .withSize(3, 2)
+                .withPosition(3, 2)
+                .getEntry();
+        mPipelineBack = tab
+                .add("pipeline", 0)
+                .withSize(3, 2)
+                .withPosition(3, 2)
+                .getEntry();
     }
 
     @Override
@@ -43,5 +61,8 @@ public class SystemsTab extends ShuffleboardTabBase{
         mOperatorHasCone.setBoolean(LLFront.targetIsCone());
         mLimelightHasTarget.setBoolean(LLFront.hasTarget());
         mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
+        mPipelineFront.setDouble(LLFront.getPipeline());
+        mPipelineBack.setDouble(LLBack.getPipeline());
+        mDistToTarget.setDouble(LLFront.getDistance());
     }
 }
