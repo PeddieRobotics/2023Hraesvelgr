@@ -20,7 +20,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
-
+import frc.robot.commands.ArmCommands.SetHumanPlayerPose;
+import frc.robot.commands.ArmCommands.SetLevelOnePose;
+import frc.robot.commands.ArmCommands.SetLevelThreePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoPose;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.subsystems.Claw;
 
@@ -67,16 +70,22 @@ public class OI {
 
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
         // TODO: ejects game piece
-        xButton.onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", true)));
-        xButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", false)));
+        xButton.onTrue(new SetLevelOnePose());
+        xButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("xButton Pressed", false)));
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
+        circleButton.onTrue(new SetLevelTwoPose());
+        circleButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", false)));
         // TODO: runs level 2 scoring pose function
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
+        squareButton.onTrue(new SetHumanPlayerPose());
+        squareButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Square Pressed", false)));
         // TODO: runs human station intake pose function
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
+        triangleButton.onTrue(new SetLevelThreePose());
+        triangleButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Triangle Pressed", false)));
         // TODO: runs level 3 scoring pose function
 
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
