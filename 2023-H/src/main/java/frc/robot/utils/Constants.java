@@ -184,6 +184,8 @@ public final class Constants {
             
                 public static final double kEncoderPPR = 205.12;
                 public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
+
+                public static final double kShoulderMotorReduction = 0; // 10368:35;
         }
 
         public static final class WristConstants{
