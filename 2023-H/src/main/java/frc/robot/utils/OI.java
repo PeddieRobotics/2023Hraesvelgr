@@ -113,13 +113,13 @@ public class OI {
     }
 
     public double getForward() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return 0;
     }
 
     public double getStrafe() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -228,7 +228,7 @@ public class OI {
 
     public double getArmSpeed(){
         if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)) > 0.1){
-            return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)*0.5;
+            // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)*0.5;
         }
         return 0;
     }
