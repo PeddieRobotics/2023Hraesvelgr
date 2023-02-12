@@ -154,7 +154,7 @@ public final class Constants {
                  // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 30; // 40;
             
-                public static final double kP = 0.0;
+                public static final double kP = 0.1;
                 public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
@@ -163,9 +163,9 @@ public final class Constants {
                 public static final double kAngleMax = 135;
             
                 public static final double kSVolts = 0.0;
-                public static final double kGVolts = 0.0;
-                public static final double kVVoltSecondPerRad = 0.0;
-                public static final double kAVoltSecondSquaredPerRad = 0.0;
+                public static final double kGVolts = 0.3;
+                public static final double kVVoltSecondPerRad = 5.77;
+                public static final double kAVoltSecondSquaredPerRad = 0.05;
             
                 // these numbers below appear just copied from 2019 Dimo code, reconsider
                 public static final double kEncoderPPR = 205.12;

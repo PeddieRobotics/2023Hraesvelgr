@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.lang.reflect.Executable;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -52,6 +54,8 @@ public class Shoulder{
         shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
         shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
         setEncoder(-75.0);
+
+        shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
         shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
         shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
@@ -153,9 +157,11 @@ public class Shoulder{
     }
 
     public void testPeriodic(){
+        
 
         if(SmartDashboard.getBoolean("Toggle open loop shoulder control", false)){
                 setPercentOutput(OI.getInstance().getArmSpeed());
+                arbitraryFF = 0;
 
         }
         else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
@@ -170,7 +176,7 @@ public class Shoulder{
                 SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
 
             double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg)",0);
-            if(shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 145.0){
+            if(shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 145.0 && SmartDashboard.getBoolean("Execute", false)){
                 setPosition(shoulderPIDSetpoint);
             }
         }
