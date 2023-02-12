@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
+import frc.robot.utils.OI;
 import frc.robot.utils.RobotMapH;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -27,7 +28,7 @@ public class Shoulder extends SubsystemBase{
 
     public Shoulder() {
         shoulderMotorMaster = new CANSparkMax(RobotMapH.kShoulderMotorMaster, MotorType.kBrushless);
-        shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
+        shoulderMotorMaster.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
         shoulderMotorFollower = new CANSparkMax(RobotMapH.kShoulderMotorFollower, MotorType.kBrushless);
         shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
@@ -132,6 +133,12 @@ public class Shoulder extends SubsystemBase{
 
     @Override
     public void periodic() {
+
+        if(!SmartDashboard.getBoolean("toggle shoulder pid active", false)){
+            setMotor(OI.getInstance().getArmSpeed());
+        }
+
+
         setPidController(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP),
                 SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI),
                 SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD),

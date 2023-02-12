@@ -45,10 +45,11 @@ public final class Constants {
         }
 
         public static class DriveConstants {
-                public static final double kMaxSpeedMetersPerSecond = 1.5;
-                public static final double kMaxAcceleration = 1.50;
-                public static final double kMaxAngularSpeed = Math.PI/2;
-                public static final double kMaxAngularAcceleration = Math.PI / 2;
+                public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
+                public static final double kMaxFloorSpeed = 0.75 * kRealMaxSpeedMetersPerSecond;
+                public static final double kMaxAcceleration = 3;
+                public static final double kMaxAngularSpeed = 2*Math.PI;
+                public static final double kMaxAngularAcceleration = 2*Math.PI / 3;
 
                 public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
                                 new Translation2d(MeasurementConstants.WHEELBASE_M / 2.0,
@@ -67,10 +68,10 @@ public final class Constants {
                 public static final double kBackRightChassisAngularOffset = Math.PI/2;
 
                 // Translation and Rotation Slew Rates
-                public static final double kTranslationSlewRate = 4.5; // meters per second
-                public static final double kRotationSlewRate = 4.5; // radians per second
+                public static final double kTranslationSlewRate = 4; // meters per second
+                public static final double kRotationSlewRate = 4; // radians per second
 
-                public static final double kMinTranslationCommand = DriveConstants.kMaxSpeedMetersPerSecond
+                public static final double kMinTranslationCommand = DriveConstants.kMaxFloorSpeed
                                 * Math.pow(OIConstants.kDrivingDeadband, 3);
                 public static final double kMinRotationCommand = DriveConstants.kMaxAngularSpeed
                                 * Math.pow(OIConstants.kDrivingDeadband, 3);
@@ -167,7 +168,7 @@ public final class Constants {
         }
 
         public static final class ShoulderConstants{
-                public static final int kMaxCurrent = 40;
+                public static final int kMaxCurrent = 30; // 40;
             
                 public static final double kP = 0.01;
                 public static final double kI = 0.00000035;

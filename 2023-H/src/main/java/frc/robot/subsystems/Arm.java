@@ -16,7 +16,7 @@ public class Arm extends SubsystemBase {
 
     public Arm() {
         shoulder = Shoulder.getInstance();
-        wrist = new Wrist();
+        wrist = Wrist.getInstance();
     }
 
     public void setWristSpeed(double wristSpeed) {

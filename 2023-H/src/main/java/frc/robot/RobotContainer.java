@@ -36,7 +36,7 @@ public class RobotContainer {
   private final OI oi;
   private final Autonomous autonomous;
   private Command autoCommand;
-  // private final Claw intake;
+  private final Claw intake;
   private final Arm arm;
   private final Shuffleboard shuffleboard;
 
@@ -49,7 +49,7 @@ public class RobotContainer {
     autonomous = Autonomous.getInstance();
     shuffleboard = Shuffleboard.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
-    // intake = Claw.getInstance();
+    intake = Claw.getInstance();
     arm = Arm.getInstance();
   }
 
