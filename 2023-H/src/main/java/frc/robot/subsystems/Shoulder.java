@@ -107,7 +107,7 @@ public class Shoulder{
         return shoulderMotorMaster.get() != 0.0;
     }
 
-    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka){
+    public void setShoulderFeedforward(double dbks, double dbkg, double dbkv, double dbka){
         kS = dbks;
         kG = dbkg;
         kV = dbkv;
@@ -138,7 +138,7 @@ public class Shoulder{
                 SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
                 SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF));
 
-            setArmFeedForward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
+            setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
                 SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts), 
                 SmartDashboard.getNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
                 SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));

@@ -22,7 +22,6 @@ public class RobotMapH {
     // Arm Motors
     public static final int kShoulderMotorMaster = 50;
     public static final int kShoulderMotorFollower = 51;
-    public static final int kWristMotor = 61;
-
     public static final int kClawMotor = 60;
+    public static final int kWristMotor = 61;
 }

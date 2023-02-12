@@ -108,11 +108,13 @@ public class OI {
     }
 
     public double getForward() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        return 0;
     }
 
     public double getStrafe() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        return 0;
     }
 
     /* DRIVER METHODS */
@@ -134,8 +136,8 @@ public class OI {
             double new_translation_x = next_translation.getX() - (deadband_vector.getX()) / (1 - deadband_vector.getX());
             double new_translation_y = next_translation.getY() - (deadband_vector.getY()) / (1 - deadband_vector.getY());
 
-            next_translation = new Translation2d(new_translation_x * getTranslationSpeedCoeff() * DriveConstants.kMaxSpeedMetersPerSecond,
-            new_translation_y * getTranslationSpeedCoeff()  * DriveConstants.kMaxSpeedMetersPerSecond);
+            next_translation = new Translation2d(new_translation_x * getTranslationSpeedCoeff() * DriveConstants.kMaxFloorSpeed,
+            new_translation_y * getTranslationSpeedCoeff()  * DriveConstants.kMaxFloorSpeed);
             
             SmartDashboard.putNumber("field relative input forward axis", next_translation.getX());
             SmartDashboard.putNumber("field relative input strafe axis", next_translation.getY());
@@ -206,17 +208,24 @@ public class OI {
         // Need to switch out "kMaxSpeedMetersPerSecond" for max real floor speed when merged
         switch (getDriverDPadInput()) {
             case FORWARDS:
-                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond, 0.0);
+                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             case RIGHT:
-                return new Translation2d(0.0, -0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, -0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case LEFT:
-                return new Translation2d(0.0, 0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, 0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case BACKWARDS:
-                return new Translation2d(-0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond, 0.0);
+                return new Translation2d(-0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             default:
                 return new Translation2d(0.0, 0.0);
         }
 
+    }
+
+    public double getArmSpeed(){
+        if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)) > 0.1){
+            return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)*0.5;
+        }
+        return 0;
     }
 
     public double signedSquared(double input) {
