@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
+import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -129,7 +130,7 @@ public class Shoulder{
     public void testPeriodic(){
 
         if(SmartDashboard.getBoolean("Allow open loop shoulder control", false)){
-            // Put controller code here - LEFT STICK
+            setPercentOutput(OI.getInstance().getArmSpeed());
         }
         else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
 
