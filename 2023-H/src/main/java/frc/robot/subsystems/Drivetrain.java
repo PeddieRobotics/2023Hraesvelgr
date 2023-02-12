@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.utils.Constants;
-import frc.robot.utils.RobotMapH;
+import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.DriveConstants;
 
 public class Drivetrain extends SubsystemBase {
@@ -61,23 +61,23 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     // Initialize Swerve Modules
     frontLeftSwerveModule = new MAXSwerveModule(
-      RobotMapH.kFrontLeftDrivingCanId,
-      RobotMapH.kFrontLeftTurningCanId,
+      RobotMap.kFrontLeftDrivingCanId,
+      RobotMap.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
     frontRightSwerveModule = new MAXSwerveModule(
-      RobotMapH.kFrontRightDrivingCanId,
-      RobotMapH.kFrontRightTurningCanId,
+      RobotMap.kFrontRightDrivingCanId,
+      RobotMap.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
   
     backLeftSwerveModule = new MAXSwerveModule(
-      RobotMapH.kRearLeftDrivingCanId,
-      RobotMapH.kRearLeftTurningCanId,
+      RobotMap.kRearLeftDrivingCanId,
+      RobotMap.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
   
     backRightSwerveModule = new MAXSwerveModule(
-      RobotMapH.kRearRightDrivingCanId,
-      RobotMapH.kRearRightTurningCanId,
+      RobotMap.kRearRightDrivingCanId,
+      RobotMap.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
     
