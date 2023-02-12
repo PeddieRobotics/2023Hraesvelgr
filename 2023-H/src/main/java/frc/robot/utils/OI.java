@@ -108,13 +108,11 @@ public class OI {
     }
 
     public double getForward() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
     }
 
     public double getStrafe() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
     }
 
     /* DRIVER METHODS */
@@ -176,17 +174,18 @@ public class OI {
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
-        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
+        // double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
+        // double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
 
-        if (rotX * rotY > 0) {
-            rotX = -rotX;
-            rotY = -rotY;
-        }
-        rotX *= 0.75;
-        rotY *= 0.75;
-        Translation2d output = new Translation2d(rotX, rotY);
-        return output;
+        // if (rotX * rotY > 0) {
+        //     rotX = -rotX;
+        //     rotY = -rotY;
+        // }
+        // rotX *= 0.75;
+        // rotY *= 0.75;
+        // Translation2d output = new Translation2d(rotX, rotY);
+        // return output;
+        return new Translation2d(0, 0);
     }
 
     public DPadDirection getDriverDPadInput(){
@@ -222,8 +221,8 @@ public class OI {
     }
 
     public double getArmSpeed(){
-        if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)) > 0.1){
-            return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value)*0.5;
+        if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01){
+            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.5;
         }
         return 0;
     }

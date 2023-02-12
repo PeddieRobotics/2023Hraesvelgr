@@ -4,26 +4,26 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.commands.DriveCommands.SwerveDriveCommand;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Autonomous;
-import frc.robot.utils.OI;
 // import frc.robot.utils.UpdateLogs;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Autonomous;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shuffleboard;
+import frc.robot.utils.OI;
 
 public class RobotContainer {
   private final Drivetrain drivetrain;
 
   // private final Claw intake;
   private final Arm arm;
-
   private final OI oi;
   private final Shuffleboard shuffleboard;
-
   private final Autonomous autonomous;
   private Command autoCommand;
 
@@ -57,6 +57,10 @@ public class RobotContainer {
 
   public void setupAngleOffsetFromAuto(double target) {
     drivetrain.setTeleOpAngleOffset(target);
+  }
+
+  public void setArmMode(IdleMode mode){
+    arm.setShoulderMode(mode);
   }
 
   public void testAllSystems(){

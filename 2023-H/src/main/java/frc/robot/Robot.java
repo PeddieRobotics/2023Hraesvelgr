@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 // import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
@@ -15,10 +16,9 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     robotContainer.resetRobotPosition();
+    robotContainer.setArmMode(IdleMode.kCoast);
     // robotContainer.stopLogging();
   }
 
@@ -124,6 +125,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetRobotPosition();
+    robotContainer.setArmMode(IdleMode.kBrake);
     LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
   }
 

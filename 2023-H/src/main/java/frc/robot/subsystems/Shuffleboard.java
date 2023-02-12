@@ -20,7 +20,7 @@ public class Shuffleboard extends SubsystemBase{
 
         drivetrainShuffleboard();
         clawShuffleboard();
-        shoulderShuffleboard();
+        setupShoulderShuffleboard();
         wristShuffleboard();
     }
 
@@ -35,7 +35,7 @@ public class Shuffleboard extends SubsystemBase{
     public void periodic() {
         drivetrainShuffleboard();
         clawShuffleboard();
-        shoulderShuffleboard();
+        updateShoulderShuffleboard();
         wristShuffleboard();
     }
 
@@ -52,7 +52,7 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Claw current", claw.getCurrent());
     }
 
-    private void shoulderShuffleboard(){
+    private void setupShoulderShuffleboard(){
         //dynamic FF parameters
         SmartDashboard.putNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts);
         SmartDashboard.putNumber("Shoulder kG", Constants.ShoulderConstants.kGVolts);
@@ -70,10 +70,17 @@ public class Shuffleboard extends SubsystemBase{
         // Toggle shoulder pid
         SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);
 
+        // Toggle open loop shoulder control
+        SmartDashboard.putBoolean("Toggle open loop shoulder control", false);
+
         // Setpoints for test mode
         SmartDashboard.putNumber("Shoulder speed % setpoint", 0.0);
         SmartDashboard.putNumber("Shoulder PID setpoint (deg)", 0.0);
         
+        
+    }
+
+    private void updateShoulderShuffleboard(){
         // Auxiliary information
         SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
         SmartDashboard.putNumber("Shoulder temperature", shoulder.getMotorTemperature());
