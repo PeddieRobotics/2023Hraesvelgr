@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Autonomous;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.utils.OI;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
@@ -24,33 +25,33 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shuffleboard;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a "declarative" paradigm, very little robot logic should
- * actually be handled in the {@link Robot} periodic methods (other than the
- * scheduler calls). Instead, the structure of the robot (including subsystems,
- * commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
   private final Drivetrain drivetrain;
-  private final OI oi;
-  private final Autonomous autonomous;
-  private Command autoCommand;
+
   // private final Claw intake;
   private final Arm arm;
+
+  private final OI oi;
   private final Shuffleboard shuffleboard;
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  private final Autonomous autonomous;
+  private Command autoCommand;
+
+  // private final Blinkin blinkin;
+
   public RobotContainer() {
     drivetrain = Drivetrain.getInstance();
-    oi = OI.getInstance();
-    autonomous = Autonomous.getInstance();
-    shuffleboard = Shuffleboard.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
+
     // intake = Claw.getInstance();
     arm = Arm.getInstance();
+
+
+    oi = OI.getInstance();
+    shuffleboard = Shuffleboard.getInstance();
+
+    autonomous = Autonomous.getInstance();
+    // blinkin = Blinkin.getInstance();
   }
 
   public Command getAutonomousCommand() {
@@ -66,6 +67,15 @@ public class RobotContainer {
 
   public void setupAngleOffsetFromAuto(double target) {
     drivetrain.setTeleOpAngleOffset(target);
+  }
+
+  public void testAllSystems(){
+    // claw.testPeriodic();
+    // limelightFront.testPeriodic();
+    // limelightBack.testPeriodic();
+    arm.testPeriodic();
+    // blinkin.testPeriodic();
+    
   }
 
   // public void startLogging(){

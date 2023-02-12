@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
-import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
 
 import frc.robot.commands.DriveCommands.LockDrivetrain;
@@ -27,16 +26,12 @@ import frc.robot.subsystems.Claw;
 public class OI {
     public static OI instance;
     private Drivetrain drivetrain;
-    private Claw intake;
-    // private Joystick leftJoystick = new Joystick(0);
-    // private Joystick rightJoystick = new Joystick(1);
 
     private PS4Controller driverController = new PS4Controller(0);
 
     private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
-    private double rotation;
 
     public enum DPadDirection {NONE, FORWARDS, LEFT, RIGHT, BACKWARDS};
     public enum DriveSpeedMode{NORMAL, SLOW};
@@ -151,19 +146,19 @@ public class OI {
 
     public double getTranslationSpeedCoeff(){
         if(driveSpeedMode == DriveSpeedMode.SLOW){
-            return 0.25;
+            return DriveConstants.kSlowModeTranslationSpeedScale;
         }
         else{
-            return 0.7;
+            return DriveConstants.kNormalModeTranslationSpeedScale;
         }
     }
 
     public double getRotationSpeedCoeff(){
         if(driveSpeedMode == DriveSpeedMode.SLOW){
-            return 0.55;
+            return DriveConstants.kSlowModeRotationSpeedScale;
         }
         else{
-            return 0.75;
+            return DriveConstants.kNormalModeRotationSpeedScale;
         }
     }
 
@@ -179,8 +174,9 @@ public class OI {
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverController.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
-        double rotY = driverController.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
+        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
+        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
+
         if (rotX * rotY > 0) {
             rotX = -rotX;
             rotY = -rotY;
@@ -207,19 +203,18 @@ public class OI {
     }
 
     public Translation2d getCardinalDirection(){
-        double translation_speed_coeff = getTranslationSpeedCoeff();
-
+        // Need to switch out "kMaxSpeedMetersPerSecond" for max real floor speed when merged
         switch (getDriverDPadInput()) {
             case FORWARDS:
-                return new Translation2d(0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond, 0.0);
             case RIGHT:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, -0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, -0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond);
             case LEFT:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, 0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond);
             case BACKWARDS:
-                return new Translation2d(-0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(-0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxSpeedMetersPerSecond, 0.0);
             default:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, 0.0);
         }
 
     }

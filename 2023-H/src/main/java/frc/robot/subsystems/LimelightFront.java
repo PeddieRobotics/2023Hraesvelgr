@@ -10,10 +10,9 @@ import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.LimelightConstants;
 
 public class LimelightFront extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
 
   private static LimelightFront LimelightFront;
-  private PIDController limelightFrontPIDController;
+
   private double ff;
 
   private RollingAverage txAverage, tyAverage;
@@ -35,8 +34,6 @@ public class LimelightFront extends SubsystemBase {
   private NetworkTableEntry tclass = limelightTable.getEntry("tclass");
 
   public LimelightFront() {
-    limelightFrontPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
-    ff = LimelightConstants.kLimelightFF;
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
   }
@@ -54,15 +51,10 @@ public class LimelightFront extends SubsystemBase {
     updateLimelightInfoOnDashboard();
     setPipeline(SmartDashboard.getNumber("pipeline", 0));
     SmartDashboard.putNumber("BOTPOSE!", botpose());
-    updateSecondLimelightFromDashboard();
   }
 
   public double botpose() {
     return botpose.getDouble(0.0);
-  }
-
-  public PIDController getPIDController() {
-    return limelightFrontPIDController;
   }
 
   public double getFF() {
@@ -168,26 +160,6 @@ public class LimelightFront extends SubsystemBase {
     updatePosetoDashboard();
 
     SmartDashboard.putNumber("tx", getTx());
-  }
-
-  public void updateSecondLimelightFromDashboard() {
-    limelightFrontPIDController.setP(SmartDashboard.getNumber("LL P", LimelightConstants.kLimelightP));
-    limelightFrontPIDController.setI(SmartDashboard.getNumber("LL I", LimelightConstants.kLimelightI));
-    limelightFrontPIDController.setD(SmartDashboard.getNumber("LL D", LimelightConstants.kLimelightD));
-    LimelightFront.setFF(SmartDashboard.getNumber("LL FF", LimelightConstants.kLimelightFF));
-  }
-
-  public void putSmartDashboardOverrides() {
-    SmartDashboard.putNumber("LL P", LimelightConstants.kLimelightP);
-    SmartDashboard.putNumber("LL I", LimelightConstants.kLimelightI);
-    SmartDashboard.putNumber("LL D", LimelightConstants.kLimelightD);
-    SmartDashboard.putNumber("LL FF", LimelightConstants.kLimelightFF);
-    SmartDashboard.putNumber("LL ANGLE BOUND", LimelightConstants.kLimeLightAngleBound);
-  }
-
-  public void setFF(double feedforward) {
-
-    ff = feedforward;
   }
 
   public void setPipeline(double pipelineNum) {

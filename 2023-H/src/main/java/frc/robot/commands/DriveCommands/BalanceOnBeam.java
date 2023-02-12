@@ -27,8 +27,8 @@ public class BalanceOnBeam extends CommandBase{
     public void execute(){
         this.rotation = drivetrain.getRotation2d();
 
-        error = DriveConstants.BEAM_BALANCED_GOAL_DEGREES -currentTheta;
-        drivePower = -Math.min(DriveConstants.BEAM_BALANCED_DRIVE_kP * error, 1);
+        error = DriveConstants.kBeamBalanceGoalDegrees -currentTheta;
+        drivePower = -Math.min(DriveConstants.kPBeamBalanceDrive * error, 1);
 
         //limit max power 
         if (Math.abs(drivePower) > 0.4) {
@@ -50,6 +50,6 @@ public class BalanceOnBeam extends CommandBase{
     //Returns true when the command should end
     @Override
     public boolean isFinished(){
-        return Math.abs(error) < DriveConstants.BEAM_BALANCED_ANGLE_THRESHOLD_DEGREES; //Ends when we are in a specific interval
+        return Math.abs(error) < DriveConstants.kBeamBalanceAngleThresholdDegrees; //Ends when we are in a specific interval
     }
 }

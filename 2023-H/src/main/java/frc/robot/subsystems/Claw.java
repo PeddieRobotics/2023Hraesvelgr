@@ -28,6 +28,10 @@ public class Claw extends SubsystemBase {
     public void periodic(){
     }
 
+    public void testPeriodic(){
+        
+    }
+
     public static Claw getInstance(){
         if(instance == null){
             instance = new Claw();

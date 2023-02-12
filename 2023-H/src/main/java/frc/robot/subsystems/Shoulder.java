@@ -6,13 +6,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
-import frc.robot.utils.RobotMapH;
+import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
-public class Shoulder extends SubsystemBase{
+public class Shoulder{
 
     private static Shoulder shoulder;
 
@@ -20,16 +19,15 @@ public class Shoulder extends SubsystemBase{
 
     private SparkMaxPIDController pidController;
 
-    private ArmFeedforward armFeedforward;
+    private ArmFeedforward shoulderFeedforward;
 
-    private double kS, kG, kV, kA, dynamicFeedforward;
-
+    private double kS, kG, kV, kA, arbitraryFF;
 
     public Shoulder() {
-        shoulderMotorMaster = new CANSparkMax(RobotMapH.kShoulderMotorMaster, MotorType.kBrushless);
+        shoulderMotorMaster = new CANSparkMax(RobotMap.kShoulderMotorMaster, MotorType.kBrushless);
         shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
-        shoulderMotorFollower = new CANSparkMax(RobotMapH.kShoulderMotorFollower, MotorType.kBrushless);
+        shoulderMotorFollower = new CANSparkMax(RobotMap.kShoulderMotorFollower, MotorType.kBrushless);
         shoulderMotorFollower.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
         shoulderMotorFollower.follow(shoulderMotorMaster);
@@ -44,7 +42,7 @@ public class Shoulder extends SubsystemBase{
 
         kV = ShoulderConstants.kVVoltSecondPerRad;
         kA = ShoulderConstants.kAVoltSecondSquaredPerRad;
-        armFeedforward = new ArmFeedforward(ShoulderConstants.kSVolts, ShoulderConstants.kGVolts, ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
+        shoulderFeedforward = new ArmFeedforward(ShoulderConstants.kSVolts, ShoulderConstants.kGVolts, ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
     }
 
     public double getAngle() {
@@ -67,29 +65,29 @@ public class Shoulder extends SubsystemBase{
         shoulderMotorMaster.set(0);
     }
 
-    public void setPosition(double setpoint) {
-        dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
+    public void setPosition(double setpointDeg) {
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        pidController.setReference(setpoint, ControlType.kPosition, 0, dynamicFeedforward);
+        pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
     }
 
-    public double getDynamicFeedForward(){
-        return dynamicFeedforward;
+    public double getArbitraryFF(){
+        return arbitraryFF;
     }
 
     public void setAngleSmartMotion(double setpoint){
         pidController.setReference(setpoint, ControlType.kSmartMotion);
     }
 
-    public void setVelocity(double setpoint) {
-        pidController.setReference(setpoint, ControlType.kVelocity);
-    }
-
     public void resetEncoder() {
-        shoulderMotorMaster.getEncoder().setPosition(0);
+        setEncoder(0);
     }
 
-    public void setMotor(double speed) {
+    public void setEncoder(double newEncoderValue){
+        shoulderMotorMaster.getEncoder().setPosition(newEncoderValue);
+    }
+
+    public void setPercentOutput(double speed) {
         shoulderMotorMaster.set(speed);
     }
 
@@ -109,42 +107,46 @@ public class Shoulder extends SubsystemBase{
         return shoulderMotorMaster.get() != 0.0;
     }
 
-    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){
-        if (pidActive && (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka)) {
-            kS = dbks;
-            kG = dbkg;
-            kV = dbkv;
-            kA = dbka;
-            armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
-        }
+    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka){
+        kS = dbks;
+        kG = dbkg;
+        kV = dbkv;
+        kA = dbka;
+        shoulderFeedforward = new ArmFeedforward(kS, kG, kV, kA);
     }
 
-
-
-    public void setPidController(double p, double i, double d, double ff,boolean pidActive){
-        if(pidActive){
-            pidController.setP(p);
-            pidController.setI(i);
-            pidController.setD(d);
-            pidController.setFF(ff);
-        }
+    public void setPidController(double p, double i, double d, double ff){
+        pidController.setP(p);
+        pidController.setI(i);
+        pidController.setD(d);
+        pidController.setFF(ff);
     }
 
-    @Override
     public void periodic() {
-        setPidController(SmartDashboard.getNumber("shoulder P", Constants.ShoulderConstants.kP),
-                SmartDashboard.getNumber("shoulder I", Constants.ShoulderConstants.kI),
-                SmartDashboard.getNumber("shoulder D", Constants.ShoulderConstants.kD),
-                SmartDashboard.getNumber("shoulder FF", Constants.ShoulderConstants.kFF),
-                SmartDashboard.getBoolean("toggle shoulder pid active", false));
 
-        setArmFeedForward(SmartDashboard.getNumber("shoulder kS", Constants.ShoulderConstants.kSVolts),
-                SmartDashboard.getNumber("shoulder kG", Constants.ShoulderConstants.kSVolts), 
-                SmartDashboard.getNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
-                SmartDashboard.getNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad),
-                SmartDashboard.getBoolean("toggle shoulder pid active", false));
+    }
+
+    public void testPeriodic(){
+
+        if(SmartDashboard.getBoolean("Allow open loop shoulder control", false)){
+            // Put controller code here - LEFT STICK
+        }
+        else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
+
+            setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
+                SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
+                SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
+                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF));
+
+            setArmFeedForward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
+                SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts), 
+                SmartDashboard.getNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
+                SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
+
+            setPosition(SmartDashboard.getNumber("Shoulder PID setpoint (deg)",0));
         
-        //setMotor(SmartDashboard.getNumber("shoulder speed % setpoint", 0.0));
+        }
+
     }
 
     public static Shoulder getInstance() {
