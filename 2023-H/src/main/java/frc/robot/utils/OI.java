@@ -222,7 +222,7 @@ public class OI {
 
     public double getArmSpeed(){
         if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01){
-            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.5;
+            // return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.5;
         }
         return 0;
     }
