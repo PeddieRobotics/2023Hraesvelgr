@@ -11,26 +11,44 @@ public class SystemsTab extends ShuffleboardTabBase {
     private Claw claw = Claw.getInstance();
     private LimelightFront LLFront = LimelightFront.getInstance();
     private LimelightBack LLBack = LimelightBack.getInstance();
-    private GenericEntry mOperatorHasCube;
-    private GenericEntry mOperatorHasCone;
+    private GenericEntry mTx;
+    private GenericEntry mTy;
+    private GenericEntry mTa;
+    private GenericEntry mHasCube;
+    private GenericEntry mHasCone;
     private GenericEntry mLimelightHasTarget;
     private GenericEntry mPrimaryTagID;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("System");
 
-        mOperatorHasCube = tab
+        mHasCube = tab
                 .add("hasCube", false)
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
-        mOperatorHasCone = tab
+        mHasCone = tab
                 .add("hasCone", false)
                 .withSize(3, 2)
                 .withPosition(2, 2)
                 .getEntry();
         mLimelightHasTarget = tab
                 .add("hasCube", false)
+                .withSize(3, 2)
+                .withPosition(2, 1)
+                .getEntry();
+        mTx = tab
+                .add("tx", 0.0)
+                .withSize(3, 2)
+                .withPosition(2, 1)
+                .getEntry();
+        mTy = tab
+                .add("ty", 0.0)
+                .withSize(3, 2)
+                .withPosition(2, 1)
+                .getEntry();
+        mTa = tab
+                .add("ta", 0.0)
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
@@ -43,8 +61,11 @@ public class SystemsTab extends ShuffleboardTabBase {
 
     @Override
     public void update() {
-        mOperatorHasCube.setBoolean(claw.hasCube());
-        mOperatorHasCone.setBoolean(claw.hasCone());
+        mHasCube.setBoolean(claw.hasCube());
+        mHasCone.setBoolean(claw.hasCone());
+        mTx.setDouble(LLFront.getTx());
+        mTy.setDouble(LLFront.getTy());
+        mTa.setDouble(LLFront.getTa());
         mLimelightHasTarget.setBoolean(LLFront.hasTarget());
         mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
     }

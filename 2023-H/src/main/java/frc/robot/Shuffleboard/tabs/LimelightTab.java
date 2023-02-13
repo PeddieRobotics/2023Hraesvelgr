@@ -1,35 +1,43 @@
 package frc.robot.Shuffleboard.tabs;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
-public class LimelightTab extends ShuffleboardTabBase{
+public class LimelightTab extends ShuffleboardTabBase {
     private LimelightFront LLFront = LimelightFront.getInstance();
     private LimelightBack LLBack = LimelightBack.getInstance();
-    private GenericEntry mOperatorHasCube;
-    private GenericEntry mOperatorHasCone;
+    private GenericEntry mTx;
+    private GenericEntry mTy;
+    private GenericEntry mTa;
     private GenericEntry mLimelightHasTarget;
     private GenericEntry mPrimaryTagID;
     private GenericEntry mDistToTarget;
     private GenericEntry mPipelineFront;
     private GenericEntry mPipelineBack;
+
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
 
-        mOperatorHasCube = tab
+        mLimelightHasTarget = tab
                 .add("hasCube", false)
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
-        mOperatorHasCone = tab
-                .add("hasCone", false)
+        mTx = tab
+                .add("tx", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 2)
+                .withPosition(2, 1)
                 .getEntry();
-        mLimelightHasTarget = tab
-                .add("hasCube", false)
+        mTy = tab
+                .add("ty", 0.0)
+                .withSize(3, 2)
+                .withPosition(2, 1)
+                .getEntry();
+        mTa = tab
+                .add("ta", 0.0)
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
@@ -57,12 +65,14 @@ public class LimelightTab extends ShuffleboardTabBase{
 
     @Override
     public void update() {
-        mOperatorHasCube.setBoolean(LLFront.targetIsCube());
-        mOperatorHasCone.setBoolean(LLFront.targetIsCone());
         mLimelightHasTarget.setBoolean(LLFront.hasTarget());
-        mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
-        mPipelineFront.setDouble(LLFront.getPipeline());
-        mPipelineBack.setDouble(LLBack.getPipeline());
+        mTx.setDouble(LLFront.getTx());
+        mTy.setDouble(LLFront.getTy());
+        mTa.setDouble(LLFront.getTa());
         mDistToTarget.setDouble(LLFront.getDistance());
+        mPipelineFront.setDouble(LLFront.getPipeline());
+
+        mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
+        mPipelineBack.setDouble(LLBack.getPipeline());
     }
 }

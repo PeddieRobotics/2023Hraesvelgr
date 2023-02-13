@@ -12,11 +12,14 @@ public class ArmTab extends ShuffleboardTabBase {
     private Claw claw = Claw.getInstance();
     private GenericEntry mOperatorHasCube;
     private GenericEntry mOperatorHasCone;
+
     private GenericEntry mWristSpeed;
     private GenericEntry mShoulderSpeed;
+    private GenericEntry mClawSpeed;
+
+    private GenericEntry mSetClawSpeed;
     private GenericEntry mSetShoulderPos;
     private GenericEntry mSetWristPos;
-    private GenericEntry mSetClawSpeed;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
@@ -41,6 +44,11 @@ public class ArmTab extends ShuffleboardTabBase {
                 .withSize(3, 2)
                 .withPosition(2, 4)
                 .getEntry();
+        mClawSpeed = tab
+                .add("clawSpeed", 0.0)
+                .withSize(3, 2)
+                .withPosition(2, 4)
+                .getEntry();
         mSetShoulderPos = tab
                 .add("setShoulderPosition", 0.0)
                 .withSize(3, 2)
@@ -62,8 +70,11 @@ public class ArmTab extends ShuffleboardTabBase {
     public void update() {
         mOperatorHasCube.setBoolean(claw.hasCube());
         mOperatorHasCone.setBoolean(claw.hasCone());
+
         mWristSpeed.setDouble(arm.getWristSpeed());
         mShoulderSpeed.setDouble(arm.getShoulderSpeed());
+        mClawSpeed.setDouble(claw.getClawSpeed());
+
         arm.setShoulderPosition(mSetShoulderPos.getDouble(0.0));
         arm.setWristPosition(mSetWristPos.getDouble(0.0));
         claw.setSpeed(mSetClawSpeed.getDouble(0.0));

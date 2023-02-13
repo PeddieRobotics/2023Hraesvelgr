@@ -15,6 +15,11 @@ public class OperatorTab extends ShuffleboardTabBase {
     private GenericEntry mShoulderSpeed;
     private GenericEntry mClawSpeed;
 
+    private GenericEntry mOperatorConeIntake;
+    private GenericEntry mOperatorConeOuttake;
+    private GenericEntry mOperatorCubeIntake;
+    private GenericEntry mOperatorCubeOuttake;
+
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
 
@@ -43,6 +48,14 @@ public class OperatorTab extends ShuffleboardTabBase {
                 .withSize(3, 2)
                 .withPosition(2, 4)
                 .getEntry();
+
+        // TODO
+        // ArmState
+        // IntakeSTate
+        // robotState
+        // ShoudlerState
+        // balancing
+
     }
 
     @Override
