@@ -1,18 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.sql.rowset.spi.TransactionalWriter;
-
-import com.ctre.phoenix.GadgeteerUartClient.GadgeteerProxyType;
-// import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxLimitSwitch;
-// import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,12 +9,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.DriveCommands.SwerveDriveCommand;
-import frc.robot.utils.Constants;
-import frc.robot.utils.RobotMapH;
 import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.RobotMap;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -61,23 +47,23 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     // Initialize Swerve Modules
     frontLeftSwerveModule = new MAXSwerveModule(
-      RobotMapH.kFrontLeftDrivingCanId,
-      RobotMapH.kFrontLeftTurningCanId,
+      RobotMap.kFrontLeftDrivingCanId,
+      RobotMap.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
     frontRightSwerveModule = new MAXSwerveModule(
-      RobotMapH.kFrontRightDrivingCanId,
-      RobotMapH.kFrontRightTurningCanId,
+      RobotMap.kFrontRightDrivingCanId,
+      RobotMap.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
   
     backLeftSwerveModule = new MAXSwerveModule(
-      RobotMapH.kRearLeftDrivingCanId,
-      RobotMapH.kRearLeftTurningCanId,
+      RobotMap.kRearLeftDrivingCanId,
+      RobotMap.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
   
     backRightSwerveModule = new MAXSwerveModule(
-      RobotMapH.kRearRightDrivingCanId,
-      RobotMapH.kRearRightTurningCanId,
+      RobotMap.kRearRightDrivingCanId,
+      RobotMap.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
     
@@ -175,7 +161,7 @@ public class Drivetrain extends SubsystemBase {
 
     swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(speeds, centerOfRotation);
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kRealMaxSpeedMetersPerSecond);
 
     setSwerveModuleStates(swerveModuleStates);
 

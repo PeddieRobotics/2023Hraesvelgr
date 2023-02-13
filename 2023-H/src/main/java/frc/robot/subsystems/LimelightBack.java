@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,13 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.RollingAverage;
-import frc.robot.utils.Constants.LimelightConstants;
 
 public class LimelightBack extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
 
   private static LimelightBack limelightBack;
-  private PIDController limelightBackPIDController;
+
   private double ff;
 
   private RollingAverage txAverage, tyAverage;
@@ -38,8 +35,6 @@ public class LimelightBack extends SubsystemBase {
   private NetworkTableEntry json = limelightTable.getEntry("json");
 
   public LimelightBack() {
-    limelightBackPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
-    ff = LimelightConstants.kLimelightFF;
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
 
@@ -63,10 +58,6 @@ public class LimelightBack extends SubsystemBase {
     updateLimelightInfoOnDashboard();
     updateCoordstoDashboard();
     setPipeline(SmartDashboard.getNumber("pipeline", 0));
-  }
-
-  public PIDController getPIDController() {
-    return limelightBackPIDController;
   }
 
   public double getFF() {
@@ -147,14 +138,6 @@ public class LimelightBack extends SubsystemBase {
     SmartDashboard.putNumber("angle off limelight", getTx());
     SmartDashboard.putNumber("MAIN TAG ID", getTID());
     updateCoordstoDashboard();
-  }
-
-  public void putSmartDashboardOverrides() {
-    SmartDashboard.putNumber("LL P", LimelightConstants.kLimelightP);
-    SmartDashboard.putNumber("LL I", LimelightConstants.kLimelightI);
-    SmartDashboard.putNumber("LL D", LimelightConstants.kLimelightD);
-    SmartDashboard.putNumber("LL FF", LimelightConstants.kLimelightFF);
-    SmartDashboard.putNumber("LL ANGLE BOUND", LimelightConstants.kLimeLightAngleBound);
   }
 
   public void setFF(double feedforward) {

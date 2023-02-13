@@ -9,11 +9,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
-import frc.robot.utils.RobotMapH;
+import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
-public class Wrist {
+public class Wrist{
     private static Wrist wrist;
 
     private CANSparkMax wristMotor;
@@ -22,14 +22,13 @@ public class Wrist {
 
     private SparkMaxPIDController pidController;
 
-    private ArmFeedforward armFeedforward;
+    private ArmFeedforward wristFeedforward;
 
-    private double kS, kG, kV, kA, dynamicFeedforward;
+    private double kS, kG, kV, kA, arbitraryFF;
 
     protected Wrist() {
-        wristMotor = new CANSparkMax(RobotMapH.kWristMotor, MotorType.kBrushless);
+        wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
         wristMotor.setSmartCurrentLimit(WristConstants.kMaxCurrent);
-
         wristMotor.setIdleMode(IdleMode.kBrake);
 
         pidController = wristMotor.getPIDController();
@@ -40,36 +39,34 @@ public class Wrist {
         kV = WristConstants.kVVoltSecondPerRad;
         kA = WristConstants.kAVoltSecondSquaredPerRad;
 
-        armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+        wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
-        limitSensor = new DigitalInput(RobotMapH.kWristLimitSensor);
+        limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
     }
 
-    public void setPosition(double setpoint) {
-        dynamicFeedforward = armFeedforward.calculate(Math.toRadians(90.0 - setpoint), 0);
+    public void setPosition(double setpointDeg) {
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-
-        pidController.setReference(setpoint, ControlType.kPosition, 0, dynamicFeedforward);
+        pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
     }
 
     public double getDynamicFeedForward(){
-        return dynamicFeedforward;
+        return arbitraryFF;
     }
 
     public boolean atLimitSensor(){
         return !limitSensor.get();
     }
 
-    public void setVelocity(double setpoint) {
-        pidController.setReference(setpoint, ControlType.kVelocity);
-    }
-
     public void resetEncoder() {
-        wristMotor.getEncoder().setPosition(0);
-        // SmartDashboard.putBoolean("is encoder reset", true);
+        setEncoder(0);
     }
 
-    public void setMotor(double speed) {
+    public void setEncoder(double newEncoderValue){
+        wristMotor.getEncoder().setPosition(newEncoderValue);
+    }
+
+    public void setPercentOutput(double speed) {
         if(speed > 0){
             wristMotor.set(speed);
         } else {
@@ -105,23 +102,21 @@ public class Wrist {
         wristMotor.set(0);
     }
 
-    public void setArmFeedForward(double dbks, double dbkg, double dbkv, double dbka, boolean pidActive){
-        if (pidActive && (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka)) {
+    public void setWristFeedForward(double dbks, double dbkg, double dbkv, double dbka){
+        if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
             kS = dbks;
             kG = dbkg;
             kV = dbkv;
             kA = dbka;
-            armFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+            wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
         }
     }
 
-    public void setPidController(double p, double i, double d, double ff,boolean pidActive){
-        if(pidActive){
-            pidController.setP(p);
-            pidController.setI(i);
-            pidController.setD(d);
-            pidController.setFF(ff);
-        }
+    public void setPidController(double p, double i, double d, double ff){
+        pidController.setP(p);
+        pidController.setI(i);
+        pidController.setD(d);
+        pidController.setFF(ff);
     }
 
     public boolean isMoving(){
@@ -129,23 +124,28 @@ public class Wrist {
     }
 
     public void periodic() {
-        setArmFeedForward(SmartDashboard.getNumber("wrist kS", Constants.WristConstants.kSVolts),
-                SmartDashboard.getNumber("wrist kG", Constants.WristConstants.kGVolts),
-                SmartDashboard.getNumber("wrist kV", Constants.WristConstants.kVVoltSecondPerRad),
-                SmartDashboard.getNumber("wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad),
-                SmartDashboard.getBoolean("wrist toggle pid active", false));
 
-        setPidController(SmartDashboard.getNumber("wrist P", Constants.WristConstants.kP),
-                SmartDashboard.getNumber("wrist I", Constants.WristConstants.kI),
-                SmartDashboard.getNumber("wrist D", Constants.WristConstants.kD),
-                SmartDashboard.getNumber("wrist FF", Constants.WristConstants.kFF),
-                SmartDashboard.getBoolean("wrist toggle pid active", false));
-
-        //setMotor(SmartDashboard.getNumber("wrist speed % setpoint", 0.0));
     }
 
-    public CANSparkMax getMotor() {
-        return wristMotor;
+    public void testPeriodic(){
+        if(SmartDashboard.getBoolean("Allow open loop wrist control", false)){
+            // Put controller code here - RIGHT STICK
+        }
+        else if(SmartDashboard.getBoolean("Toggle wrist PID tuning mode", false)){
+
+            setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
+                SmartDashboard.getNumber("Wrist I", WristConstants.kI),
+                SmartDashboard.getNumber("Wrist D", WristConstants.kD),
+                SmartDashboard.getNumber("Wrist FF", WristConstants.kFF));
+
+            setWristFeedForward(SmartDashboard.getNumber("Wrist kS", Constants.WristConstants.kSVolts),
+                SmartDashboard.getNumber("Wrist kG", WristConstants.kSVolts), 
+                SmartDashboard.getNumber("Wrist kV", WristConstants.kVVoltSecondPerRad),
+                SmartDashboard.getNumber("Wrist kA", WristConstants.kAVoltSecondSquaredPerRad));
+
+            setPosition(SmartDashboard.getNumber("Wrist PID setpoint (deg)",0));
+        
+        }
     }
 
     public static Wrist getInstance() {

@@ -1,6 +1,6 @@
 package frc.robot.utils;
 
-public class RobotMapH {
+public class RobotMap{
 
     // Drive Motors
     public static final int kFrontLeftDrivingCanId = 10;

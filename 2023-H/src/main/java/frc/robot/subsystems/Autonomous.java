@@ -9,15 +9,12 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.AutoCommands.TestPath;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
 
