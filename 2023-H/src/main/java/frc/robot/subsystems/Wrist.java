@@ -3,12 +3,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
+import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -18,7 +20,7 @@ public class Wrist{
 
     private CANSparkMax wristMotor;
 
-    private DigitalInput limitSensor;
+    // private DigitalInput limitSensor;
 
     private SparkMaxPIDController pidController;
 
@@ -41,7 +43,15 @@ public class Wrist{
 
         wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
-        limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
+        wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kWristEncoderConversionFactor);
+        setEncoder(109.4);
+
+        // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
+
+        wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
+        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
+        wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
     }
 
     public void setPosition(double setpointDeg) {
@@ -54,9 +64,9 @@ public class Wrist{
         return arbitraryFF;
     }
 
-    public boolean atLimitSensor(){
-        return !limitSensor.get();
-    }
+    // public boolean atLimitSensor(){
+        // return !limitSensor.get();
+    // }
 
     public void resetEncoder() {
         setEncoder(0);
@@ -67,15 +77,16 @@ public class Wrist{
     }
 
     public void setPercentOutput(double speed) {
-        if(speed > 0){
-            wristMotor.set(speed);
-        } else {
-            if(!atLimitSensor()){
-                wristMotor.set(speed);
-            } else {
-                wristMotor.set(0);
-            }
-        }
+        // if(speed > 0){
+        //     wristMotor.set(speed);
+        // } else {
+        //     if(!atLimitSensor()){
+        //         wristMotor.set(speed);
+        //     } else {
+        //         wristMotor.set(0);
+        //     }
+        // }
+        wristMotor.set(speed);
     }
 
     public double getMotorTemperature(){
@@ -128,11 +139,12 @@ public class Wrist{
     }
 
     public void testPeriodic(){
-        if(SmartDashboard.getBoolean("Allow open loop wrist control", false)){
-            // Put controller code here - RIGHT STICK
+        if(SmartDashboard.getBoolean("Toggle open loop wrist control", false)){
+            SmartDashboard.putNumber("Wrist Speed", OI.getInstance().getArmSpeed());
+            setPercentOutput(OI.getInstance().getArmSpeed());
+            arbitraryFF = 0;
         }
         else if(SmartDashboard.getBoolean("Toggle wrist PID tuning mode", false)){
-
             setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
                 SmartDashboard.getNumber("Wrist I", WristConstants.kI),
                 SmartDashboard.getNumber("Wrist D", WristConstants.kD),
@@ -146,6 +158,10 @@ public class Wrist{
             setPosition(SmartDashboard.getNumber("Wrist PID setpoint (deg)",0));
         
         }
+    }
+
+    public void setMode(IdleMode mode){
+        wristMotor.setIdleMode(mode);
     }
 
     public static Wrist getInstance() {

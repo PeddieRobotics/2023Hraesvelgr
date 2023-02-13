@@ -166,10 +166,6 @@ public final class Constants {
                 public static final double kGVolts = 0.3;
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.05;
-            
-                // these numbers below appear just copied from 2019 Dimo code, reconsider
-                public static final double kEncoderPPR = 205.12;
-                public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
 
                 public static final double kShoulderMotorReduction = 0; // 10368:35;
 
@@ -178,9 +174,9 @@ public final class Constants {
 
         public static final class WristConstants{
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 30;
+                public static final int kMaxCurrent = 25;
             
-                public static final double kP = 0.0;
+                public static final double kP = 0.01;
                 public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
@@ -192,15 +188,14 @@ public final class Constants {
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
-            
-                // these numbers below appear just copied from 2019 Dimo code, reconsider
-                public static final double kEncoderPPR = 205.12;
-                public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
+
+                public static final double kWristMotorReduction =  160; // 160:1
+                public static final double kWristEncoderConversionFactor = 151.8/65.0;
             
         }
         
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 35;
+                public static final int kClawMotorCurrentLimit = 30;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
                 public static final double kConeIntakeSpeed = 0.75;

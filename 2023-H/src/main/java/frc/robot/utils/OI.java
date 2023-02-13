@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
-
+import frc.robot.commands.ClawCommands.ConeIntake;
+import frc.robot.commands.ClawCommands.CubeIntake;
+import frc.robot.commands.ClawCommands.RunClawSmartDashboard;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.subsystems.Claw;
 
@@ -53,6 +55,12 @@ public class OI {
 
         Trigger lockWheels = new JoystickButton(driverController, 2);
         lockWheels.whileTrue(new LockDrivetrain());
+
+        Trigger coneIntake = new JoystickButton(driverController, 3);
+        coneIntake.whileTrue(new ConeIntake());
+
+        Trigger cubeIntake = new JoystickButton(driverController, 4);
+        cubeIntake.whileTrue(new CubeIntake());
 
         Trigger slowMode = new JoystickButton(driverController, 5);
         slowMode.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)));
@@ -108,11 +116,13 @@ public class OI {
     }
 
     public double getForward() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        return 0;
     }
 
     public double getStrafe() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        return 0;
     }
 
     /* DRIVER METHODS */
@@ -167,10 +177,11 @@ public class OI {
     }
 
     public double getRotation() {
-        double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
-        double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
-        double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
-        return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        // double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
+        // double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
+        // double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
+        // return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        return 0;
     }
 
     public Translation2d getCenterOfRotation() {
@@ -222,7 +233,7 @@ public class OI {
 
     public double getArmSpeed(){
         if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01){
-            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.5;
+            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.6;
         }
         return 0;
     }

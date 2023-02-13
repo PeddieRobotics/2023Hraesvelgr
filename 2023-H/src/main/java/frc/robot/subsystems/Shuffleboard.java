@@ -19,9 +19,9 @@ public class Shuffleboard extends SubsystemBase{
         wrist = Wrist.getInstance();
 
         drivetrainShuffleboard();
-        clawShuffleboard();
+        setupClawShuffleboard();
         setupShoulderShuffleboard();
-        wristShuffleboard();
+        setupWristShuffleboard();
     }
 
     public static Shuffleboard getInstance(){
@@ -34,9 +34,9 @@ public class Shuffleboard extends SubsystemBase{
     @Override
     public void periodic() {
         drivetrainShuffleboard();
-        clawShuffleboard();
+        updateClawShuffleboard();
         updateShoulderShuffleboard();
-        wristShuffleboard();
+        updateWristShuffleboard();
     }
 
     private void drivetrainShuffleboard(){
@@ -46,10 +46,14 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }
 
-    private void clawShuffleboard(){
-        SmartDashboard.putNumber("OR: Claw speed", 0.0);
+    private void updateClawShuffleboard(){
+        
         SmartDashboard.putNumber("Claw speed", claw.getClawSpeed());
         SmartDashboard.putNumber("Claw current", claw.getCurrent());
+    }
+
+    private void setupClawShuffleboard(){
+        SmartDashboard.putNumber("OR: Claw speed", 0.0);
     }
 
     private void setupShoulderShuffleboard(){
@@ -92,7 +96,7 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Shoulder Arbitrary FF", shoulder.getArbitraryFF());
     }
     
-    private void wristShuffleboard(){
+    private void setupWristShuffleboard(){
         //dynamic FF parameters
         SmartDashboard.putNumber("Wrist kS", Constants.WristConstants.kSVolts);
         SmartDashboard.putNumber("Wrist kG", Constants.WristConstants.kGVolts);
@@ -110,10 +114,17 @@ public class Shuffleboard extends SubsystemBase{
         //Toggle wrist pid
         SmartDashboard.putBoolean("Toggle wrist PID tuning mode", false);
 
+        //Toggle open loop wrist control
+        SmartDashboard.putBoolean("Toggle open loop wrist control", false);
+
         //setpoints
         SmartDashboard.putNumber("Wrist speed % setpoint", 0.0);
         SmartDashboard.putNumber("Wrist PID setpoint (deg)", 0.0);
 
+
+    }
+
+    private void updateWristShuffleboard(){
         SmartDashboard.putNumber("Wrist encoder pos", wrist.getPosition());
         SmartDashboard.putNumber("Wrist velocity", wrist.getVelocity());
         SmartDashboard.putNumber("Wrist current", wrist.getOutputCurrent());

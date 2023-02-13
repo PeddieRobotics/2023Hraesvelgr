@@ -160,9 +160,8 @@ public class Shoulder{
         
 
         if(SmartDashboard.getBoolean("Toggle open loop shoulder control", false)){
-                setPercentOutput(OI.getInstance().getArmSpeed());
-                arbitraryFF = 0;
-
+                // setPercentOutput(OI.getInstance().getArmSpeed());
+                // arbitraryFF = 0;
         }
         else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),

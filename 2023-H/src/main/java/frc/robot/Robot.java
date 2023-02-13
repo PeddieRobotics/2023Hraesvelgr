@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     robotContainer.resetRobotPosition();
     robotContainer.setArmMode(IdleMode.kCoast);
+    robotContainer.setWristMode(IdleMode.kCoast);
     // robotContainer.stopLogging();
   }
 
@@ -126,6 +127,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetRobotPosition();
     robotContainer.setArmMode(IdleMode.kBrake);
+    robotContainer.setWristMode(IdleMode.kBrake);
     LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
   }
 
