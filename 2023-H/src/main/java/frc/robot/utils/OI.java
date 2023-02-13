@@ -116,13 +116,13 @@ public class OI {
     }
 
     public double getForward() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return 0;
     }
 
     public double getStrafe() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -177,11 +177,11 @@ public class OI {
     }
 
     public double getRotation() {
-        // double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
-        // double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
-        // double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
-        // return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
-        return 0;
+        double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
+        double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
+        double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
+        return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {
