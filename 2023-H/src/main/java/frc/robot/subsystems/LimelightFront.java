@@ -1,110 +1,74 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.LimelightConstants;
+import frc.robot.utils.LimelightHelper;
+import frc.robot.utils.RollingAverage;
 
 public class LimelightFront extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-
-  private static LimelightFront LimelightFront;
-  private PIDController limelightFrontPIDController;
-  private double ff;
+  private static LimelightFront limelightFront;
 
   private RollingAverage txAverage, tyAverage;
 
-  private NetworkTableInstance LLtableInst = NetworkTableInstance.getDefault();
-  private NetworkTable limelightTable = LLtableInst.getTable("limelight-front");
-  private NetworkTableEntry tx = limelightTable.getEntry("tx");
-  private NetworkTableEntry ty = limelightTable.getEntry("ty");
-  private NetworkTableEntry thor = limelightTable.getEntry("thor");
-  private NetworkTableEntry tvert = limelightTable.getEntry("tvert");
-  private NetworkTableEntry tshort = limelightTable.getEntry("tshort");
-  private NetworkTableEntry tlong = limelightTable.getEntry("tlong");
-  private NetworkTableEntry ta = limelightTable.getEntry("ta");
-  private NetworkTableEntry tv = limelightTable.getEntry("tv");
-  private NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
-  private NetworkTableEntry botpose = limelightTable.getEntry("botpose");
-  
-  // Class ID of primary neural detector result or neural classifier result
-  private NetworkTableEntry tclass = limelightTable.getEntry("tclass");
+  private LimelightHelper limelightHelper=LimelightHelper.createLimelightHelper("limelight-front");
 
   public LimelightFront() {
-    limelightFrontPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
-    ff = LimelightConstants.kLimelightFF;
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
   }
 
   public static LimelightFront getInstance() {
-    if (LimelightFront == null) {
-      LimelightFront = new LimelightFront();
+    if (limelightFront == null) {
+      limelightFront = new LimelightFront();
     }
-    return LimelightFront;
+    return limelightFront;
   }
 
   @Override
   public void periodic() {
     updateRollingAverages();
     updateLimelightInfoOnDashboard();
-    setPipeline(SmartDashboard.getNumber("pipeline", 0));
-    SmartDashboard.putNumber("BOTPOSE!", botpose());
-    updateSecondLimelightFromDashboard();
-  }
-
-  public double botpose() {
-    return botpose.getDouble(0.0);
-  }
-
-  public PIDController getPIDController() {
-    return limelightFrontPIDController;
-  }
-
-  public double getFF() {
-    return ff;
+    setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
+    SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!", limelightHelper.getBotpose_wpiBlue());
   }
 
   // Tv is whether the limelight has a valid target
   // 1 is true, 0 is false
   public double getTv() {
-    return tv.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tv");
   }
 
   // Tvert is the vertical sidelength of the rough bounding box (0 - 320 pixels)
   public double getTvert() {
-    return tvert.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tvert");
   }
 
   // Thor is the horizontal sidelength of the rough bounding box (0 - 320 pixels)
   public double getThor() {
-    return thor.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("thor");
   }
 
   public double getTshort() {
-    return tshort.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tshort");
   }
 
   public double getTlong() {
-    return tlong.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tlong");
   }
   
   // Tx is the Horizontal Offset From Crosshair To Target
   public double getTx() {
-    return tx.getDouble(0.0);
+    return limelightHelper.getTX();
   }
 
   // Ty is the Vertical Offset From Crosshair To Target
   public double getTy() {
-    return ty.getDouble(0.0);
+    return limelightHelper.getTY();
   }
 
   public double getTa() {
-    return ta.getDouble(0.0);
+    return limelightHelper.getTA();
   }
 
   public double getTxAverage() {
@@ -117,7 +81,7 @@ public class LimelightFront extends SubsystemBase {
 
   //Class ID of primary neural detector result or neural classifier result
   public double getTclass() {
-    return tclass.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tclass");
   }
 
   public double getDistance() {
@@ -129,12 +93,12 @@ public class LimelightFront extends SubsystemBase {
       // tan(a1 + a2) = h/d
       // d = h/tan(a1+a2)
       return (LimelightConstants.kLimelightHeight) /
-          (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + ty.getDouble(0.0))));
+          (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
     }
   }
 
   public boolean hasTarget() {
-    if (tv.getDouble(0.0) == 1) {
+    if (getTv() == 1) {
       return true;
     } else
       return false;
@@ -164,34 +128,14 @@ public class LimelightFront extends SubsystemBase {
     SmartDashboard.putBoolean("LL has target", hasTarget());
     SmartDashboard.putNumber("LL tx avg", getTxAverage());
 
-    pipeline.setNumber((int) SmartDashboard.getNumber("pipeline", 0));
+    limelightHelper.setPipelineIndex((int) SmartDashboard.getNumber("pipeline", 0));
     updatePosetoDashboard();
 
     SmartDashboard.putNumber("tx", getTx());
   }
 
-  public void updateSecondLimelightFromDashboard() {
-    limelightFrontPIDController.setP(SmartDashboard.getNumber("LL P", LimelightConstants.kLimelightP));
-    limelightFrontPIDController.setI(SmartDashboard.getNumber("LL I", LimelightConstants.kLimelightI));
-    limelightFrontPIDController.setD(SmartDashboard.getNumber("LL D", LimelightConstants.kLimelightD));
-    LimelightFront.setFF(SmartDashboard.getNumber("LL FF", LimelightConstants.kLimelightFF));
-  }
-
-  public void putSmartDashboardOverrides() {
-    SmartDashboard.putNumber("LL P", LimelightConstants.kLimelightP);
-    SmartDashboard.putNumber("LL I", LimelightConstants.kLimelightI);
-    SmartDashboard.putNumber("LL D", LimelightConstants.kLimelightD);
-    SmartDashboard.putNumber("LL FF", LimelightConstants.kLimelightFF);
-    SmartDashboard.putNumber("LL ANGLE BOUND", LimelightConstants.kLimeLightAngleBound);
-  }
-
-  public void setFF(double feedforward) {
-
-    ff = feedforward;
-  }
-
-  public void setPipeline(double pipelineNum) {
-    pipeline.setNumber(pipelineNum);
+  public void setPipeline(int pipelineNum) {
+    limelightHelper.setPipelineIndex(pipelineNum);
   }
 
   public double getPipeline() {
@@ -199,9 +143,8 @@ public class LimelightFront extends SubsystemBase {
   }
 
   public void updatePosetoDashboard() {
-    double[] temp = { 0, 0, 0, 0, 0, 0 };
     if (hasTarget()) {
-      double[] result = botpose.getDoubleArray(temp);
+      double[] result = limelightHelper.getBotpose_wpiBlue();
       SmartDashboard.putNumber("array element count", result.length);
       if (result.length > 0.0) {
         SmartDashboard.putNumber("xCOORD", result[0]); //meters
