@@ -5,23 +5,23 @@ import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetLevelOnePose extends CommandBase{
+public class SetLevelThreeCubePose extends CommandBase{
     private Arm arm;
 
-    public SetLevelOnePose() {
+    public SetLevelThreeCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderLevelOneAngle);
+        arm.setShoulderPosition(ShoulderConstants.kShoulderLevelThreeCubeLobAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle)){
-            arm.setWristPosition(WristConstants.kWristLevelOneAngle);
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelThreeCubeLobAngle)){
+            arm.setWristPosition(WristConstants.kWristLevelThreeCubeLobAngle);
         }
     }
 
@@ -31,7 +31,7 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle) && arm.isWristAtAngle(WristConstants.kWristLevelOneAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelThreeCubeLobAngle) && arm.isWristAtAngle(WristConstants.kWristLevelThreeCubeLobAngle);
     }
 
 

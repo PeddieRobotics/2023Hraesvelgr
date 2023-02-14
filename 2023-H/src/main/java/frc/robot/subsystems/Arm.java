@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.Constants.ShoulderConstants;
+import frc.robot.utils.Constants.WristConstants;
 
 public class Arm extends SubsystemBase {
     private static Arm arm;
@@ -77,6 +79,14 @@ public class Arm extends SubsystemBase {
 
     public double getWristTemperature() {
         return wrist.getMotorTemperature();
+    }
+
+    public boolean isShoulderAtAngle(double angle){
+        return Math.abs(getShoulderPosition() - angle) < ShoulderConstants.kShoulderSetpointTolerance;
+    }
+
+    public boolean isWristAtAngle(double angle){
+        return Math.abs(getWristPosition() - angle) < WristConstants.kWristSetpointTolerance;
     }
 
     public static Arm getInstance() {

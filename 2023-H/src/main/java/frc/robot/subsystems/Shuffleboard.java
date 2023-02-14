@@ -6,11 +6,11 @@ import frc.robot.utils.Constants;
 
 public class Shuffleboard extends SubsystemBase{
     public static Shuffleboard shuffleboard;
+
     private Drivetrain drivetrain;
     private Claw claw;
     private Shoulder shoulder;
     private Wrist wrist;
-
 
     public Shuffleboard() {
         drivetrain = Drivetrain.getInstance();
@@ -18,7 +18,8 @@ public class Shuffleboard extends SubsystemBase{
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
 
-        drivetrainShuffleboard();
+        setupMiscShuffleboard();
+        setupDrivetrainShuffleboard();
         setupClawShuffleboard();
         setupShoulderShuffleboard();
         setupWristShuffleboard();
@@ -33,27 +34,43 @@ public class Shuffleboard extends SubsystemBase{
 
     @Override
     public void periodic() {
-        drivetrainShuffleboard();
+        updateMiscShuffleboard();
+        updateDrivetrainShuffleboard();
         updateClawShuffleboard();
         updateShoulderShuffleboard();
         updateWristShuffleboard();
     }
 
-    private void drivetrainShuffleboard(){
+    private void setupMiscShuffleboard(){
+        SmartDashboard.putBoolean("Objective cone?", false);
+        SmartDashboard.putBoolean("Has cone?", false);
+
+    }
+
+    private void updateMiscShuffleboard(){
+    }
+
+    private void setupDrivetrainShuffleboard(){
         SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Heading", drivetrain.getHeading());
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }
 
-    private void updateClawShuffleboard(){
-        
-        SmartDashboard.putNumber("Claw speed", claw.getClawSpeed());
-        SmartDashboard.putNumber("Claw current", claw.getCurrent());
+    private void updateDrivetrainShuffleboard(){
+        SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
+        SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
+        SmartDashboard.putNumber("Heading", drivetrain.getHeading());
+        SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }
 
     private void setupClawShuffleboard(){
         SmartDashboard.putNumber("OR: Claw speed", 0.0);
+    }
+
+    private void updateClawShuffleboard(){
+        SmartDashboard.putNumber("Claw speed", claw.getClawSpeed());
+        SmartDashboard.putNumber("Claw current", claw.getCurrent());
     }
 
     private void setupShoulderShuffleboard(){
@@ -121,7 +138,6 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Wrist speed % setpoint", 0.0);
         SmartDashboard.putNumber("Wrist PID setpoint (deg)", 0.0);
 
-
     }
 
     private void updateWristShuffleboard(){
@@ -129,5 +145,13 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Wrist velocity", wrist.getVelocity());
         SmartDashboard.putNumber("Wrist current", wrist.getOutputCurrent());
         SmartDashboard.putNumber("Wrist temperature", wrist.getMotorTemperature());
+    }
+
+    public boolean isCurrentObjectiveCone(){
+        return SmartDashboard.getBoolean("Objective cone?", false);
+    }
+
+    public boolean hasCone(){
+        return SmartDashboard.getBoolean("Has cone?", false);
     }
 }

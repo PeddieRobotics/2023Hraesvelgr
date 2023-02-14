@@ -52,6 +52,10 @@ public class Claw extends SubsystemBase {
         return !cubeSensor.get();
     }
 
+    public boolean hasGamepiece(){
+        return hasCone() || hasCube();
+    }
+
     public double getClawSpeed(){
         return clawMotor.get();
     }

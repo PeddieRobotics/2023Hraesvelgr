@@ -13,8 +13,12 @@ public class SetTransitionPose extends CommandBase{
 
     public SetTransitionPose() {
         arm = Arm.getInstance();
-        new ParallelCommandGroup(new SetShoulderPosition(ShoulderConstants.kShoulderTransitionAngle));
         addRequirements(arm);
+    }
+
+    @Override
+    public void initialize() {
+        arm.setShoulderPosition(ShoulderConstants.kShoulderTransitionAngle);
     }
 
     @Override
@@ -27,9 +31,6 @@ public class SetTransitionPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(arm.getShoulderPosition() == ShoulderConstants.kShoulderTransitionAngle) 
-            return true;
-        else
-            return false;
+        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderTransitionAngle);
     }
 }

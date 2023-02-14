@@ -177,6 +177,8 @@ public final class Constants {
                 public static final double kShoulderLevelThreeCubeDunkAngle = 150.0;
                 public static final double kShoulderHumanPlayerCubeAngle = -5.0;
 
+                public static final double kShoulderSetpointTolerance = 1.0; // degrees
+
                 public static final double kSVolts = 0.0;
                 public static final double kGVolts = 0.3;
                 public static final double kVVoltSecondPerRad = 5.77;
@@ -204,7 +206,7 @@ public final class Constants {
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
-                public static final double kWristStowedPositionAngle = 135.0;
+                public static final double kWristStowedAngle = 135.0;
                 public static final double kWristLevelOneAngle = 25.0;
 
                 public static final double kWristFloorConeAngle = 0.0;
@@ -217,6 +219,8 @@ public final class Constants {
                 public static final double kWristLevelThreeCubeLobAngle = 26.1;
                 public static final double kWristLevelThreeCubeDunkAngle = 104.0;
                 public static final double kWristHumanPlayerCubeAngle = 21.3;
+
+                public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
                 public static final double kWristEncoderConversionFactor = 151.8/65.0;

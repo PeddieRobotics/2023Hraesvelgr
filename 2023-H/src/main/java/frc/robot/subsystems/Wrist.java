@@ -52,6 +52,9 @@ public class Wrist{
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        wristMotor.setClosedLoopRampRate(0.01);
+
     }
 
     public void setPosition(double setpointDeg) {

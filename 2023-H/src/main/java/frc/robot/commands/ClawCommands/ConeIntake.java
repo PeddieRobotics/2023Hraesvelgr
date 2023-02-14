@@ -1,6 +1,9 @@
 package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ArmCommands.SetLevelOnePose;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.utils.Constants.ClawConstants;
 
@@ -9,12 +12,21 @@ public class ConeIntake extends CommandBase{
 
     public ConeIntake(){
         claw = Claw.getInstance();
+
         addRequirements(claw);
     }
 
     @Override
     public void initialize() {
-        claw.intakeCone();
+        // If we have any gamepiece, this command functions as a L1 pose button
+        if(claw.hasCone() || claw.hasCube()){
+            CommandScheduler.getInstance().schedule(new SetLevelOnePose());
+        }
+        // If we don't have any game pieces, we must be intaking a cone
+        else{
+            claw.intakeCone();
+        }
+        
     }
 
     @Override

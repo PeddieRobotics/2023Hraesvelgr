@@ -5,23 +5,23 @@ import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetLevelOnePose extends CommandBase{
+public class SetFloorConePose extends CommandBase{
     private Arm arm;
 
-    public SetLevelOnePose() {
+    public SetFloorConePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderLevelOneAngle);
+        arm.setShoulderPosition(ShoulderConstants.kShoulderFloorConeAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle)){
-            arm.setWristPosition(WristConstants.kWristLevelOneAngle);
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle)){
+            arm.setWristPosition(WristConstants.kWristFloorConeAngle);
         }
     }
 
