@@ -19,6 +19,10 @@ public class Arm extends SubsystemBase {
         shoulder.setMode(mode);
     }
 
+    public void setWristMode(IdleMode mode){
+        wrist.setMode(mode);
+    }
+
     public void setWristSpeed(double wristSpeed) {
         wrist.setPercentOutput(wristSpeed);
     }

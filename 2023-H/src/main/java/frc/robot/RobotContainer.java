@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.OI;
@@ -20,7 +21,7 @@ import frc.robot.utils.OI;
 public class RobotContainer {
   private final Drivetrain drivetrain;
 
-  // private final Claw intake;
+  private final Claw claw;
   private final Arm arm;
   private final OI oi;
   private final Shuffleboard shuffleboard;
@@ -33,7 +34,7 @@ public class RobotContainer {
     drivetrain = Drivetrain.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-    // intake = Claw.getInstance();
+    claw = Claw.getInstance();
     arm = Arm.getInstance();
 
 
@@ -63,8 +64,12 @@ public class RobotContainer {
     arm.setShoulderMode(mode);
   }
 
+  public void setWristMode(IdleMode mode){
+    arm.setWristMode(mode);
+  }
+
   public void testAllSystems(){
-    // claw.testPeriodic();
+    claw.testPeriodic();
     // limelightFront.testPeriodic();
     // limelightBack.testPeriodic();
     arm.testPeriodic();

@@ -157,11 +157,11 @@ public class Shoulder {
 
     public void testPeriodic() {
 
-        if (SmartDashboard.getBoolean("Toggle open loop shoulder control", false)) {
-            setPercentOutput(OI.getInstance().getArmSpeed());
-            arbitraryFF = 0;
-
-        } else if (SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)) {
+        if(SmartDashboard.getBoolean("Toggle open loop shoulder control", false)){
+                // setPercentOutput(OI.getInstance().getArmSpeed());
+                // arbitraryFF = 0;
+        }
+        else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
                     SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
                     SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),

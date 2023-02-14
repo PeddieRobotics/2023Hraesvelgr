@@ -78,6 +78,7 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         robotContainer.resetRobotPosition();
         robotContainer.setArmMode(IdleMode.kCoast);
+        robotContainer.setWristMode(IdleMode.kCoast);
         // robotContainer.stopLogging();
     }
 
@@ -102,9 +103,14 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+        robotContainer.resetRobotPosition();
+        robotContainer.setArmMode(IdleMode.kBrake);
+        robotContainer.setWristMode(IdleMode.kBrake);
+        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
     }
 
     @Override
@@ -122,15 +128,6 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-    }
-
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
-        robotContainer.resetRobotPosition();
-        robotContainer.setArmMode(IdleMode.kBrake);
-        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
     }
 
     /** This function is called periodically during test mode. */
