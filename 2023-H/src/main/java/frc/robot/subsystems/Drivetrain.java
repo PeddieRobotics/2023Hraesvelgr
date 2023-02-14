@@ -181,7 +181,7 @@ public class Drivetrain extends SubsystemBase {
     ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     ChassisSpeeds robotRelativeSpeeds;
 
-    if(SmartDashboard.putBoolean("Use heading correction?", false)){
+    if(SmartDashboard.getBoolean("Use heading correction?", false)){
       fieldRelativeSpeeds = correctHeading(fieldRelativeSpeeds);
     }
 
