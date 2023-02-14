@@ -50,7 +50,7 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasCube(){
-        return !Shuffleboard.getInstance().hasCone(); // temporary until we get banner sensor installed
+        return Shuffleboard.getInstance().hasCube(); // temporary until we get banner sensor installed
         // return !cubeSensor.get();
     }
 

@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
 
 public class Shuffleboard extends SubsystemBase{
     public static Shuffleboard shuffleboard;
+
+    private SendableChooser<String> objectiveChooser, gamepieceChooser;
 
     private Drivetrain drivetrain;
     private Claw claw;
@@ -42,8 +45,16 @@ public class Shuffleboard extends SubsystemBase{
     }
 
     private void setupMiscShuffleboard(){
-        SmartDashboard.putBoolean("Objective cone?", false);
-        SmartDashboard.putBoolean("Has cone?", false);
+         // Choosers below are for testing purposes, should be removed when full logic /sensors are available
+        objectiveChooser = new SendableChooser<String>();
+        objectiveChooser.addOption("Cone", "Cone");
+        objectiveChooser.addOption("Cube", "Cube");
+        objectiveChooser.addOption("None", "None");
+
+        gamepieceChooser = new SendableChooser<String>();
+        gamepieceChooser.addOption("Cone", "Cone");
+        gamepieceChooser.addOption("Cube", "Cube");
+        gamepieceChooser.addOption("None", "None");
 
     }
 
@@ -149,11 +160,16 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Wrist temperature", wrist.getMotorTemperature());
     }
 
+    // Choosers below are for testing purposes, should be removed when full logic /sensors are available
     public boolean isCurrentObjectiveCone(){
-        return SmartDashboard.getBoolean("Objective cone?", false);
+        return objectiveChooser.getSelected().equals("Cone");
     }
 
     public boolean hasCone(){
-        return SmartDashboard.getBoolean("Has cone?", false);
+        return gamepieceChooser.getSelected().equals("Cone");
+    }
+
+    public boolean hasCube(){
+        return gamepieceChooser.getSelected().equals("Cube");
     }
 }
