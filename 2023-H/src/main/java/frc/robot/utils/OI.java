@@ -57,19 +57,19 @@ public class OI {
     public void setupControls(){
 
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new EjectGamepiece());
+        // xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
+        // squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        leftBumperButton.whileTrue(new SetDriveSpeedMode(DriveSpeedMode.SLOW));
+        // leftBumperButton.whileTrue(new SetDriveSpeedMode(DriveSpeedMode.SLOW));
 
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         // TODO: runs auto-aligner/driver assist
@@ -89,7 +89,7 @@ public class OI {
 
         // Clears all current pose commands and returns the arm to a neutral, stowed pose.
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new SetStowedPose());
+        // touchpadButton.onTrue(new SetStowedPose());
 
         // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);

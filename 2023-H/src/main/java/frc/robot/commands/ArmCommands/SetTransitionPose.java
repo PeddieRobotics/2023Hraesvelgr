@@ -1,12 +1,8 @@
 package frc.robot.commands.ArmCommands;
 
-import javax.xml.stream.events.EndDocument;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ArmCommands.SetShoulderPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class SetTransitionPose extends CommandBase{
     private Arm arm;

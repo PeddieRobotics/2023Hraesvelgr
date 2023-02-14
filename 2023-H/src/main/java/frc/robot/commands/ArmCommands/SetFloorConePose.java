@@ -31,7 +31,7 @@ public class SetFloorConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle) && arm.isWristAtAngle(WristConstants.kWristLevelOneAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle) && arm.isWristAtAngle(WristConstants.kWristFloorConeAngle);
     }
 
 

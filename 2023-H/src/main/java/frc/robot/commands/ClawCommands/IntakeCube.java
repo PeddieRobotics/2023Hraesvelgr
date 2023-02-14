@@ -3,10 +3,10 @@ package frc.robot.commands.ClawCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
-public class CubeIntake extends CommandBase{
+public class IntakeCube extends CommandBase{
     private Claw claw;
 
-    public CubeIntake(){
+    public IntakeCube(){
         claw = Claw.getInstance();
 
         addRequirements(claw);

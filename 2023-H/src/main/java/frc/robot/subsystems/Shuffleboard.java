@@ -55,6 +55,8 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Heading", drivetrain.getHeading());
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
+        SmartDashboard.putBoolean("Use heading correction?", false);
+
     }
 
     private void updateDrivetrainShuffleboard(){
