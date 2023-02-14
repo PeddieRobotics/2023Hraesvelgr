@@ -49,7 +49,7 @@ public class Wrist{
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
-        // 
+        
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
