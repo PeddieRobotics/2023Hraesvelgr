@@ -5,20 +5,20 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 
 public class OperatorTab extends ShuffleboardTabBase {
     private Claw claw = Claw.getInstance();
+    private Wrist wrist = Wrist.getInstance();
+    private Shoulder shoulder = Shoulder.getInstance();
     private Arm arm = Arm.getInstance();
     private GenericEntry mOperatorHasCube;
     private GenericEntry mOperatorHasCone;
-    private GenericEntry mWristSpeed;
-    private GenericEntry mShoulderSpeed;
-    private GenericEntry mClawSpeed;
 
-    private GenericEntry mOperatorConeIntake;
-    private GenericEntry mOperatorConeOuttake;
-    private GenericEntry mOperatorCubeIntake;
-    private GenericEntry mOperatorCubeOuttake;
+    private GenericEntry mClawIsIntaking;
+    private GenericEntry mWristIsMoving;
+    private GenericEntry mShoulderIsMoving;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
@@ -33,37 +33,29 @@ public class OperatorTab extends ShuffleboardTabBase {
                 .withSize(3, 2)
                 .withPosition(2, 2)
                 .getEntry();
-        mWristSpeed = tab
-                .add("wristSpeed", 0.0)
+        mClawIsIntaking = tab
+                .add("isIntaking", false)
                 .withSize(3, 2)
-                .withPosition(2, 3)
+                .withPosition(2, 2)
                 .getEntry();
-        mShoulderSpeed = tab
-                .add("shoulderSpeed", 0.0)
+        mWristIsMoving = tab
+                .add("wristIsMoving", false)
                 .withSize(3, 2)
-                .withPosition(2, 4)
+                .withPosition(2, 2)
                 .getEntry();
-        mClawSpeed = tab
-                .add("clawSpeed", 0.0)
+        mShoulderIsMoving = tab
+                .add("shoulderIsMoving", false)
                 .withSize(3, 2)
-                .withPosition(2, 4)
+                .withPosition(2, 2)
                 .getEntry();
-
-        // TODO
-        // ArmState
-        // IntakeSTate
-        // robotState
-        // ShoudlerState
-        // balancing
-
     }
 
     @Override
     public void update() {
         mOperatorHasCube.setBoolean(claw.hasCube());
         mOperatorHasCone.setBoolean(claw.hasCone());
-        mWristSpeed.setDouble(arm.getWristSpeed());
-        mShoulderSpeed.setDouble(arm.getShoulderSpeed());
-        mClawSpeed.setDouble(claw.getClawSpeed());
+        mClawIsIntaking.setBoolean(claw.isIntaking());
+        mWristIsMoving.setBoolean(wrist.isMoving());
+        mShoulderIsMoving.setBoolean(shoulder.isMoving());
     }
 }
