@@ -25,7 +25,7 @@ public class RunClawSmartDashboard extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.stopClaw();
+        // claw.stopClaw();
     }
 
     @Override

@@ -1,11 +1,6 @@
 package frc.robot.subsystems;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
 
@@ -24,9 +19,9 @@ public class Shuffleboard extends SubsystemBase{
         wrist = Wrist.getInstance();
 
         drivetrainShuffleboard();
-        clawShuffleboard();
-        shoulderShuffleboard();
-        wristShuffleboard();
+        setupClawShuffleboard();
+        setupShoulderShuffleboard();
+        setupWristShuffleboard();
     }
 
     public static Shuffleboard getInstance(){
@@ -39,9 +34,9 @@ public class Shuffleboard extends SubsystemBase{
     @Override
     public void periodic() {
         drivetrainShuffleboard();
-        clawShuffleboard();
-        shoulderShuffleboard();
-        wristShuffleboard();
+        updateClawShuffleboard();
+        updateShoulderShuffleboard();
+        updateWristShuffleboard();
     }
 
     private void drivetrainShuffleboard(){
@@ -51,68 +46,88 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }
 
-    private void clawShuffleboard(){
-        SmartDashboard.putNumber("OR: Claw speed", 0.0);
+    private void updateClawShuffleboard(){
+        
         SmartDashboard.putNumber("Claw speed", claw.getClawSpeed());
-        SmartDashboard.putNumber("Claw Current", claw.getCurrent());
+        SmartDashboard.putNumber("Claw current", claw.getCurrent());
     }
 
-    private void shoulderShuffleboard(){
-        //dynamic FF parameters
-        SmartDashboard.putNumber("shoulder kS", Constants.ShoulderConstants.kSVolts);
-        SmartDashboard.putNumber("shoulder kG", Constants.ShoulderConstants.kGVolts);
-        SmartDashboard.putNumber("shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
-        SmartDashboard.putNumber("shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
+    private void setupClawShuffleboard(){
+        SmartDashboard.putNumber("OR: Claw speed", 0.0);
+    }
 
-        SmartDashboard.putNumber("shoulder Arbitrary FF", shoulder.getDynamicFeedForward());
+    private void setupShoulderShuffleboard(){
+        //dynamic FF parameters
+        SmartDashboard.putNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts);
+        SmartDashboard.putNumber("Shoulder kG", Constants.ShoulderConstants.kGVolts);
+        SmartDashboard.putNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
+        SmartDashboard.putNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         // PID controller parameters
-        SmartDashboard.putNumber("shoulder P", Constants.ShoulderConstants.kP);
-        SmartDashboard.putNumber("shoulder I", Constants.ShoulderConstants.kI);
-        SmartDashboard.putNumber("shoulder D", Constants.ShoulderConstants.kD);
-        SmartDashboard.putNumber("shoulder FF", Constants.ShoulderConstants.kFF);
+        SmartDashboard.putNumber("Shoulder P", Constants.ShoulderConstants.kP);
+        SmartDashboard.putNumber("Shoulder I", Constants.ShoulderConstants.kI);
+        SmartDashboard.putNumber("Shoulder D", Constants.ShoulderConstants.kD);
+        SmartDashboard.putNumber("Shoulder FF", Constants.ShoulderConstants.kFF);
 
-        //Toggle shoulder pid
-        SmartDashboard.putBoolean("shoulder toggle pid active", false);
+        // Toggle shoulder pid
+        SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);
 
-        //setpoints
-        SmartDashboard.putNumber("shoulder speed % setpoint", 0.0);
-        SmartDashboard.putNumber("shoulder angle setpoint", 0.0);
-        SmartDashboard.putNumber("shoulder velocity setpoint", 0.0);
+        // Toggle open loop shoulder control
+        SmartDashboard.putBoolean("Toggle open loop shoulder control", false);
+
+        // Setpoints for test mode
+        SmartDashboard.putNumber("Shoulder speed % setpoint", 0.0);
+        SmartDashboard.putNumber("Shoulder PID setpoint (deg)", 0.0);
+
+        // Execute button
+        SmartDashboard.putBoolean("Execute", false);
         
-        SmartDashboard.putNumber("shoulder Motor Current", shoulder.getOutputCurrent());
-        SmartDashboard.putNumber("shoulder Motor Temperature", shoulder.getMotorTemperature());
-        SmartDashboard.putNumber("shoulder encoder", shoulder.getPosition());
-        SmartDashboard.putNumber("shoulder angle", shoulder.getAngle());
-        SmartDashboard.putNumber("shoulder velocity", shoulder.getVelocity());
+        
+    }
+
+    private void updateShoulderShuffleboard(){
+        // Auxiliary information
+        SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
+        SmartDashboard.putNumber("Shoulder temperature", shoulder.getMotorTemperature());
+        SmartDashboard.putNumber("Shoulder encoder pos", shoulder.getPosition());
+        SmartDashboard.putNumber("Shoulder % output", shoulder.getSpeed());
+        SmartDashboard.putNumber("Shoulder angle", shoulder.getAngle());
+        SmartDashboard.putNumber("Shoulder velocity/100", shoulder.getVelocity()/100.0);
+        SmartDashboard.putNumber("Shoulder Arbitrary FF", shoulder.getArbitraryFF());
     }
     
-    private void wristShuffleboard(){
+    private void setupWristShuffleboard(){
         //dynamic FF parameters
-        SmartDashboard.putNumber("wrist kS", Constants.WristConstants.kSVolts);
-        SmartDashboard.putNumber("wrist kG", Constants.WristConstants.kGVolts);
-        SmartDashboard.putNumber("wrist kV", Constants.WristConstants.kVVoltSecondPerRad);
-        SmartDashboard.putNumber("wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad);
+        SmartDashboard.putNumber("Wrist kS", Constants.WristConstants.kSVolts);
+        SmartDashboard.putNumber("Wrist kG", Constants.WristConstants.kGVolts);
+        SmartDashboard.putNumber("Wrist kV", Constants.WristConstants.kVVoltSecondPerRad);
+        SmartDashboard.putNumber("Wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad);
 
-        SmartDashboard.putNumber("wrist Arbitrary FF", wrist.getDynamicFeedForward());
+        SmartDashboard.putNumber("Wrist Arbitrary FF", wrist.getDynamicFeedForward());
         
         // PID controller parameters
-        SmartDashboard.putNumber("wrist P", Constants.WristConstants.kP);
-        SmartDashboard.putNumber("wrist I", Constants.WristConstants.kI);
-        SmartDashboard.putNumber("wrist D", Constants.WristConstants.kD);
-        SmartDashboard.putNumber("wrist FF", Constants.WristConstants.kFF);
+        SmartDashboard.putNumber("Wrist P", Constants.WristConstants.kP);
+        SmartDashboard.putNumber("Wrist I", Constants.WristConstants.kI);
+        SmartDashboard.putNumber("Wrist D", Constants.WristConstants.kD);
+        SmartDashboard.putNumber("Wrist FF", Constants.WristConstants.kFF);
 
         //Toggle wrist pid
-        SmartDashboard.putBoolean("wrist toggle pid active", false);
+        SmartDashboard.putBoolean("Toggle wrist PID tuning mode", false);
+
+        //Toggle open loop wrist control
+        SmartDashboard.putBoolean("Toggle open loop wrist control", false);
 
         //setpoints
-        SmartDashboard.putNumber("wrist speed % setpoint", 0.0);
-        SmartDashboard.putNumber("wrist angle setpoint", 0.0);
-        SmartDashboard.putNumber("wrist velocity setpoint", 0.0);
+        SmartDashboard.putNumber("Wrist speed % setpoint", 0.0);
+        SmartDashboard.putNumber("Wrist PID setpoint (deg)", 0.0);
 
-        SmartDashboard.putNumber("wrist encoder", wrist.getPosition());
-        SmartDashboard.putNumber("wrist velocity", wrist.getVelocity());
-        SmartDashboard.putNumber("wrist Motor Current", wrist.getOutputCurrent());
-        SmartDashboard.putNumber("wrist Motor temperature", wrist.getMotorTemperature());
+
+    }
+
+    private void updateWristShuffleboard(){
+        SmartDashboard.putNumber("Wrist encoder pos", wrist.getPosition());
+        SmartDashboard.putNumber("Wrist velocity", wrist.getVelocity());
+        SmartDashboard.putNumber("Wrist current", wrist.getOutputCurrent());
+        SmartDashboard.putNumber("Wrist temperature", wrist.getMotorTemperature());
     }
 }

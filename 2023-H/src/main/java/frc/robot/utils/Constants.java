@@ -10,60 +10,50 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean
- * constants. This class should not be used for any other purpose. All constants
- * should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
 
         public static class GlobalConstants {
                 public static final double kVoltCompensation = 12.6;
         }
 
-        public static class MeasurementConstants {
-                // Chassis Configuration
-                // Distance between the centers of left and right wheels on the robot
-                public static final double TRACKWIDTH_M = Units.inchesToMeters(24);
-                // Distance between the front and back wheels on the robot
-                public static final double WHEELBASE_M = Units.inchesToMeters(28);
-                public static final double WHEELDIAMETER_IN = 3.0;
-                public static final double WHEELRADIUS_M = Units.inchesToMeters(WHEELDIAMETER_IN / 2);
-                public static final double METERS_PER_SEC_TO_RPM = 30 / (Math.PI * WHEELRADIUS_M);
-                public static final double DRIVE_GEAR_RATIO = 6.75;
-                public static final double ANGLE_GEAR_RATIO = 21.428571428571427;
-        }
-
         public static class OIConstants {
-                public static final double JOYSTICK_THRESHHOLE = 0.05;
                 public static final double kDrivingDeadband = 0.05;
         }
 
+        public static class BlinkinConstants {
+                public static final int kPwmPort = 1; // DETERMINE REAL PWM PORT FOR BLINKIN CONTROLLER!!! 1 is an arbitrary filler value
+        }
+
         public static class DriveConstants {
-                public static final double kMaxSpeedMetersPerSecond = 1.5;
-                public static final double kMaxAcceleration = 1.50;
-                public static final double kMaxAngularSpeed = Math.PI/2;
-                public static final double kMaxAngularAcceleration = Math.PI / 2;
+                // Chassis Configuration
+                // Distance between the centers of left and right wheels on the robot
+                public static final double kTrackwidth = Units.inchesToMeters(24);
+                // Distance between the front and back wheels on the robot
+                public static final double kWheelbase = Units.inchesToMeters(28);
+
+                public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
+                public static final double kMaxFloorSpeed = 0.75 * kRealMaxSpeedMetersPerSecond;
+                public static final double kMaxAcceleration = 3;
+                public static final double kMaxAngularSpeed = 2*Math.PI;
+                public static final double kMaxAngularAcceleration = 2*Math.PI / 3;
+
+                public static final double kNormalModeTranslationSpeedScale = 1.0;
+                public static final double kNormalModeRotationSpeedScale = 1.0;
+                public static final double kSlowModeTranslationSpeedScale = 0.25;
+                public static final double kSlowModeRotationSpeedScale = 0.55;
+                public static final double kCardinalDirectionSpeedScale = 0.3;
 
                 public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-                                new Translation2d(MeasurementConstants.WHEELBASE_M / 2.0,
-                                                MeasurementConstants.TRACKWIDTH_M / 2.0),
-                                new Translation2d(MeasurementConstants.WHEELBASE_M / 2.0,
-                                                -MeasurementConstants.TRACKWIDTH_M / 2.0),
-                                new Translation2d(-MeasurementConstants.WHEELBASE_M / 2.0,
-                                                MeasurementConstants.TRACKWIDTH_M / 2.0),
-                                new Translation2d(-MeasurementConstants.WHEELBASE_M / 2.0,
-                                                -MeasurementConstants.TRACKWIDTH_M / 2.0));
+                                new Translation2d(kWheelbase / 2.0,
+                                                kTrackwidth / 2.0),
+                                new Translation2d(kWheelbase / 2.0,
+                                                -kTrackwidth / 2.0),
+                                new Translation2d(-kWheelbase / 2.0,
+                                                kTrackwidth / 2.0),
+                                new Translation2d(-kWheelbase/ 2.0,
+                                                -kTrackwidth / 2.0));
 
                 // Angular offsets of the modules relative to the chassis in radians
                 public static final double kFrontLeftChassisAngularOffset = 3*Math.PI/2;
@@ -72,13 +62,8 @@ public final class Constants {
                 public static final double kBackRightChassisAngularOffset = Math.PI/2;
 
                 // Translation and Rotation Slew Rates
-                public static final double kTranslationSlewRate = 4.5; // meters per second
-                public static final double kRotationSlewRate = 4.5; // radians per second
-
-                public static final double kMinTranslationCommand = DriveConstants.kMaxSpeedMetersPerSecond
-                                * Math.pow(OIConstants.kDrivingDeadband, 3);
-                public static final double kMinRotationCommand = DriveConstants.kMaxAngularSpeed
-                                * Math.pow(OIConstants.kDrivingDeadband, 3);
+                public static final double kTranslationSlewRate = 4; // meters per second
+                public static final double kRotationSlewRate = 4; // radians per second
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
                 public final static int kFrontRightTurningEncoderChannel = 2;
@@ -87,9 +72,9 @@ public final class Constants {
 
                 public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
 
-                public static final double BEAM_BALANCED_DRIVE_kP = 0; // starting value for p
-                public static final double BEAM_BALANCED_GOAL_DEGREES = 0;
-                public static final double BEAM_BALANCED_ANGLE_THRESHOLD_DEGREES = -1;
+                public static final double kPBeamBalanceDrive = 0; // starting value for p
+                public static final double kBeamBalanceGoalDegrees = 0;
+                public static final double kBeamBalanceAngleThresholdDegrees = -1;
         }
 
         public static final class ModuleConstants {
@@ -160,36 +145,23 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double kLimelightP = 0.075;
-                public static final double kLimelightI = 0.0;
-                public static final double kLimelightD = 0.0;
-                public static final double kLimelightFF = 0.15;
-                public static final double kLimeLightAngleBound = 0.5;
-                public static final double kTurningMultiplier = 5.0;
                 public static final double kLimelightHeight = 27.488; //inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
         }
 
         public static final class ShoulderConstants{
-                public static final int kMaxCurrent = 40;
+                 // Do not change the below numbers without consultation, extremely dangerous!
+                public static final int kMaxCurrent = 30; // 40;
             
-                public static final double kP = 0.01;
-                public static final double kI = 0.00000035;
+                public static final double kP = 0.1;
+                public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
                 public static final double kFF = 0.0;
-                public static final double kAngleMin = -30;
-                public static final double kAngleMax = 120;
+                public static final double kAngleMin = -75;
+                public static final double kAngleMax = 135;
             
-                public static final double kSVolts = 0.0;
-                public static final double kGVolts = -0.3875;
-                public static final double kVVoltSecondPerRad = 0.0;
-                public static final double kAVoltSecondSquaredPerRad = 0.0;
-            
-                public static final double kEncoderPPR = 205.12;
-                public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
-
                 public static final double kShoulderStowedAngle = -75.0;
                 public static final double kShoulderTransitionAngle = -63.0;
                 public static final double kShoulderLevelOneAngle = -75.0;
@@ -204,27 +176,34 @@ public final class Constants {
                 public static final double kShoulderLevelThreeCubeLobAngle = 5.0;
                 public static final double kShoulderLevelThreeCubeDunkAngle = 150.0;
                 public static final double kShoulderHumanPlayerCubeAngle = -5.0;
+
+                public static final double kSVolts = 0.0;
+                public static final double kGVolts = 0.3;
+                public static final double kVVoltSecondPerRad = 5.77;
+                public static final double kAVoltSecondSquaredPerRad = 0.05;
+
+                public static final double kShoulderMotorReduction = 296; // 10368:35 or approximately 296:1;
+
+                public static final double kShoulderEncoderConversionFactor = 225.0/185.0;
         }
 
         public static final class WristConstants{
-                public static final int kMaxCurrent = 30;
+                // Do not change the below numbers without consultation, extremely dangerous!
+                public static final int kMaxCurrent = 25;
             
                 public static final double kP = 0.01;
-                public static final double kI = 0.00000035;
+                public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
                 public static final double kFF = 0.0;
-                public static final double kAngleMin = -30;
-                public static final double kAngleMax = 120;
+                public static final double kAngleMin = -75;
+                public static final double kAngleMax = 135;
             
                 public static final double kSVolts = 0.0;
-                public static final double kGVolts = -0.3875;
+                public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
-                public static final double kEncoderPPR = 205.12;
-                public static final double kEncoderDistancePerPulse = 360.0 / kEncoderPPR;
-
                 public static final double kWristStowedPositionAngle = 135.0;
                 public static final double kWristLevelOneAngle = 25.0;
 
@@ -238,12 +217,16 @@ public final class Constants {
                 public static final double kWristLevelThreeCubeLobAngle = 26.1;
                 public static final double kWristLevelThreeCubeDunkAngle = 104.0;
                 public static final double kWristHumanPlayerCubeAngle = 21.3;
+
+                public static final double kWristMotorReduction =  160; // 160:1
+                public static final double kWristEncoderConversionFactor = 151.8/65.0;
             
         }
         
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 35; // AMPS
+                public static final int kClawMotorCurrentLimit = 30;
 
+                // Below intake/outtake speeds need fixing (made up placeholders)
                 public static final double kConeIntakeSpeed = 0.75;
                 public static final double kConeOuttakeSpeed = -0.4;
                 public static final double kCubeIntakeSpeed = 0.75;

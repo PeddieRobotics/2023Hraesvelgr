@@ -1,45 +1,23 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.LimelightConstants;
+import frc.robot.utils.LimelightHelper;
+import frc.robot.utils.RollingAverage;
 
 public class LimelightBack extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-
   private static LimelightBack limelightBack;
-  private PIDController limelightBackPIDController;
-  private double ff;
+  private LimelightHelper limelightHelper=LimelightHelper.createLimelightHelper("limelight-back");
 
   private RollingAverage txAverage, tyAverage;
   private SendableChooser<Integer> targetAprilTagID, targetColumnNumber, targetRow;
 
-  private NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight-back");
-  private NetworkTableEntry tx = limelightTable.getEntry("tx");
-  private NetworkTableEntry ty = limelightTable.getEntry("ty");
-  private NetworkTableEntry thor = limelightTable.getEntry("thor");
-  private NetworkTableEntry tvert = limelightTable.getEntry("tvert");
-  private NetworkTableEntry tshort = limelightTable.getEntry("tshort");
-  private NetworkTableEntry tlong = limelightTable.getEntry("tlong");
-  private NetworkTableEntry ta = limelightTable.getEntry("ta");
-  private NetworkTableEntry tv = limelightTable.getEntry("tv");
-  private NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
-  private NetworkTableEntry botpose = limelightTable.getEntry("botpose_wpiblue");
-  private NetworkTableEntry mainID = limelightTable.getEntry("tid");
-  private NetworkTableEntry json = limelightTable.getEntry("json");
-
   public LimelightBack() {
-    limelightBackPIDController = new PIDController(LimelightConstants.kLimelightP, LimelightConstants.kLimelightI, LimelightConstants.kLimelightD);
-    ff = LimelightConstants.kLimelightFF;
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
 
@@ -62,57 +40,49 @@ public class LimelightBack extends SubsystemBase {
     updateRollingAverages();
     updateLimelightInfoOnDashboard();
     updateCoordstoDashboard();
-    setPipeline(SmartDashboard.getNumber("pipeline", 0));
-  }
-
-  public PIDController getPIDController() {
-    return limelightBackPIDController;
-  }
-
-  public double getFF() {
-    return ff;
+    setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
   }
 
   // Tv is whether the limelight has a valid target
   // 1 is true, 0 is false
   public double getTv() {
-    return tv.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tv");
   }
 
   public String getJson(){
-    return json.getString("");
+    return limelightHelper.getJSONDump();
   }
 
   // Tvert is the vertical sidelength of the rough bounding box (0 - 320 pixels)
   public double getTvert() {
-    return tvert.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tvert");
   }
 
   // Thor is the horizontal sidelength of the rough bounding box (0 - 320 pixels)
   public double getThor() {
-    return thor.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("thor");
   }
 
   public double getTshort() {
-    return tshort.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tshort");
   }
 
   public double getTlong() {
-    return tlong.getDouble(0.0);
+    return limelightHelper.getLimelightNTDouble("tlong");
   }
   
   // Tx is the Horizontal Offset From Crosshair To Target
   public double getTx() {
-    return tx.getDouble(0.0);
+    return limelightHelper.getTX();
   }
 
   // Ty is the Vertical Offset From Crosshair To Target
   public double getTy() {
-    return ty.getDouble(0.0);
+    return limelightHelper.getTY();
   }
 
   public double getTa() {
-    return ta.getDouble(0.0);
+    return limelightHelper.getTA();
   }
 
   public double getTxAverage() {
@@ -124,11 +94,11 @@ public class LimelightBack extends SubsystemBase {
   }
 
   public double getTID() {
-    return mainID.getDouble(0);
+    return limelightHelper.getFiducialID();
   }
 
   public boolean hasTarget() {
-    if (tv.getDouble(0.0) == 1) {
+    if (getTv() == 1) {
       return true;
     } else
       return false;
@@ -149,21 +119,8 @@ public class LimelightBack extends SubsystemBase {
     updateCoordstoDashboard();
   }
 
-  public void putSmartDashboardOverrides() {
-    SmartDashboard.putNumber("LL P", LimelightConstants.kLimelightP);
-    SmartDashboard.putNumber("LL I", LimelightConstants.kLimelightI);
-    SmartDashboard.putNumber("LL D", LimelightConstants.kLimelightD);
-    SmartDashboard.putNumber("LL FF", LimelightConstants.kLimelightFF);
-    SmartDashboard.putNumber("LL ANGLE BOUND", LimelightConstants.kLimeLightAngleBound);
-  }
-
-  public void setFF(double feedforward) {
-
-    ff = feedforward;
-  }
-
-  public void setPipeline(double pipelineNum) {
-    pipeline.setNumber(pipelineNum);
+  public void setPipeline(int pipelineNum) {
+    limelightHelper.setPipelineIndex(pipelineNum);
   }
 
   public double getPipeline() {
@@ -171,9 +128,8 @@ public class LimelightBack extends SubsystemBase {
   }
 
   public void updateCoordstoDashboard() {
-    double[] temp = { 0, 0, 0, 0, 0, 0 };
     if (hasTarget()) {
-      double[] result = botpose.getDoubleArray(temp);
+      double[] result = limelightHelper.getBotpose_wpiBlue(); // don't make this getBotpose()
       SmartDashboard.putNumber("array element count", result.length);
       if (result.length > 0.0) {
         SmartDashboard.putNumber("xCOORD", result[0]); // meters
@@ -184,9 +140,8 @@ public class LimelightBack extends SubsystemBase {
   }
   
   public Translation2d getBotXY() {
-    double[] temp = { 0, 0, 0, 0, 0, 0 };
     if (hasTarget()) {
-      double[] result = botpose.getDoubleArray(temp);
+      double[] result = limelightHelper.getBotpose_wpiBlue();
       if (result.length > 0.0) {
         return new Translation2d(result[0], result[1]);
       }
@@ -195,9 +150,8 @@ public class LimelightBack extends SubsystemBase {
   }
 
   public Pose2d getBotpose() {
-    double[] temp = { 0, 0, 0, 0, 0, 0 };
     if (hasTarget()) {
-      double[] result = botpose.getDoubleArray(temp);
+      double[] result = limelightHelper.getBotpose_wpiBlue();
       if (result.length > 0.0) {
         return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
       }

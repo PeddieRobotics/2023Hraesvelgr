@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
-import frc.robot.utils.RobotMapH;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
@@ -16,11 +12,19 @@ public class Arm extends SubsystemBase {
 
     public Arm() {
         shoulder = Shoulder.getInstance();
-        wrist = new Wrist();
+        wrist = Wrist.getInstance();
+    }
+
+    public void setShoulderMode(IdleMode mode){
+        shoulder.setMode(mode);
+    }
+
+    public void setWristMode(IdleMode mode){
+        wrist.setMode(mode);
     }
 
     public void setWristSpeed(double wristSpeed) {
-        wrist.setMotor(wristSpeed);
+        wrist.setPercentOutput(wristSpeed);
     }
 
     public double getWristSpeed() {
@@ -84,7 +88,12 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wrist.periodic();
         shoulder.periodic();
+        wrist.periodic();
+    }
+
+    public void testPeriodic(){
+        shoulder.testPeriodic();
+        wrist.testPeriodic();
     }
 }

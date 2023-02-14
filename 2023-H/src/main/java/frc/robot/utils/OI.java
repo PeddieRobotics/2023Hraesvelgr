@@ -18,28 +18,24 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
-import frc.robot.utils.Constants.MeasurementConstants;
 import frc.robot.utils.Constants.OIConstants;
 import frc.robot.commands.ArmCommands.SetHumanPlayerPose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoPose;
+import frc.robot.commands.ClawCommands.ConeIntake;
+import frc.robot.commands.ClawCommands.CubeIntake;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
-import frc.robot.subsystems.Claw;
 
 public class OI {
     public static OI instance;
     private Drivetrain drivetrain;
-    private Claw intake;
-    // private Joystick leftJoystick = new Joystick(0);
-    // private Joystick rightJoystick = new Joystick(1);
 
     private PS4Controller driverController = new PS4Controller(0);
 
     private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
     private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
-    private double rotation;
 
     public enum DPadDirection {NONE, FORWARDS, LEFT, RIGHT, BACKWARDS};
     public enum DriveSpeedMode{NORMAL, SLOW};
@@ -61,6 +57,12 @@ public class OI {
 
         Trigger lockWheels = new JoystickButton(driverController, 2);
         lockWheels.whileTrue(new LockDrivetrain());
+
+        Trigger coneIntake = new JoystickButton(driverController, 3);
+        coneIntake.whileTrue(new ConeIntake());
+
+        Trigger cubeIntake = new JoystickButton(driverController, 4);
+        cubeIntake.whileTrue(new CubeIntake());
 
         Trigger slowMode = new JoystickButton(driverController, 5);
         slowMode.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)));
@@ -123,10 +125,12 @@ public class OI {
 
     public double getForward() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return 0;
     }
 
     public double getStrafe() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -148,8 +152,8 @@ public class OI {
             double new_translation_x = next_translation.getX() - (deadband_vector.getX()) / (1 - deadband_vector.getX());
             double new_translation_y = next_translation.getY() - (deadband_vector.getY()) / (1 - deadband_vector.getY());
 
-            next_translation = new Translation2d(new_translation_x * getTranslationSpeedCoeff() * DriveConstants.kMaxSpeedMetersPerSecond,
-            new_translation_y * getTranslationSpeedCoeff()  * DriveConstants.kMaxSpeedMetersPerSecond);
+            next_translation = new Translation2d(new_translation_x * getTranslationSpeedCoeff() * DriveConstants.kMaxFloorSpeed,
+            new_translation_y * getTranslationSpeedCoeff()  * DriveConstants.kMaxFloorSpeed);
             
             SmartDashboard.putNumber("field relative input forward axis", next_translation.getX());
             SmartDashboard.putNumber("field relative input strafe axis", next_translation.getY());
@@ -160,19 +164,19 @@ public class OI {
 
     public double getTranslationSpeedCoeff(){
         if(driveSpeedMode == DriveSpeedMode.SLOW){
-            return 0.25;
+            return DriveConstants.kSlowModeTranslationSpeedScale;
         }
         else{
-            return 0.7;
+            return DriveConstants.kNormalModeTranslationSpeedScale;
         }
     }
 
     public double getRotationSpeedCoeff(){
         if(driveSpeedMode == DriveSpeedMode.SLOW){
-            return 0.55;
+            return DriveConstants.kSlowModeRotationSpeedScale;
         }
         else{
-            return 0.75;
+            return DriveConstants.kNormalModeRotationSpeedScale;
         }
     }
 
@@ -185,11 +189,13 @@ public class OI {
         double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
         double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
         return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverController.getRawAxis(2) * MeasurementConstants.WHEELBASE_M;
-        double rotY = driverController.getRawAxis(5) * MeasurementConstants.TRACKWIDTH_M;
+        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
+        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
+
         if (rotX * rotY > 0) {
             rotX = -rotX;
             rotY = -rotY;
@@ -216,21 +222,27 @@ public class OI {
     }
 
     public Translation2d getCardinalDirection(){
-        double translation_speed_coeff = getTranslationSpeedCoeff();
-
+        // Need to switch out "kMaxSpeedMetersPerSecond" for max real floor speed when merged
         switch (getDriverDPadInput()) {
             case FORWARDS:
-                return new Translation2d(0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             case RIGHT:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, -0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, -0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case LEFT:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, 0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case BACKWARDS:
-                return new Translation2d(-0.3 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(-0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             default:
-                return new Translation2d(0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond, 0.0 * translation_speed_coeff * DriveConstants.kMaxSpeedMetersPerSecond);
+                return new Translation2d(0.0, 0.0);
         }
 
+    }
+
+    public double getArmSpeed(){
+        if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01){
+            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.6;
+        }
+        return 0;
     }
 
     public double signedSquared(double input) {
