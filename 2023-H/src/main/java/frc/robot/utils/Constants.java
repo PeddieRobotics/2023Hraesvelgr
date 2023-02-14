@@ -229,7 +229,7 @@ public final class Constants {
                 public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor = 151.8/65.0; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kWristEncoderConversionFactor =  99.1/39.2; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         

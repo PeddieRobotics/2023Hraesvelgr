@@ -8,6 +8,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
+import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -156,8 +157,8 @@ public class Shoulder{
         
 
         if(SmartDashboard.getBoolean("Toggle open loop shoulder control", false)){
-                // setPercentOutput(OI.getInstance().getArmSpeed());
-                // arbitraryFF = 0;
+                setPercentOutput(OI.getInstance().getArmSpeed());
+                arbitraryFF = 0;
         }
         else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
