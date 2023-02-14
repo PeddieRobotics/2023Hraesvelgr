@@ -1,16 +1,16 @@
 package frc.robot.Shuffleboard;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Shuffleboard.tabs.OperatorTab;
-import frc.robot.Shuffleboard.tabs.SystemsTab;
+import frc.robot.Shuffleboard.tabs.*;
 
 public class Shuffleboard {
     private static Shuffleboard shuffleboard;
     public final boolean isTestMode = true;
 
-    public static Shuffleboard getInstance(){
+    public static Shuffleboard getInstance() {
         if (shuffleboard == null) {
             shuffleboard = new Shuffleboard();
         }
@@ -24,16 +24,19 @@ public class Shuffleboard {
     public Shuffleboard() {
         operatorTab = new OperatorTab();
         tabs.add(operatorTab);
-        if (isTestMode){
+        if (isTestMode) {
             List<ShuffleboardTabBase> optionalTabs = List.of(
-            );
+                    new ArmTab(),
+                    new LimelightTab(),
+                    new OperatorTab(),
+                    new SystemsTab());
             tabs.addAll(optionalTabs);
 
-        }else{
+        } else {
             tabs.add(new SystemsTab());
         }
-        
-        for(ShuffleboardTabBase tab: tabs) {
+
+        for (ShuffleboardTabBase tab : tabs) {
             tab.createEntries();
         }
     }

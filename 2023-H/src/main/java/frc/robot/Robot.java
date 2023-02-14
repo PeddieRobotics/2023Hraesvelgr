@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Shuffleboard.Shuffleboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,109 +31,112 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command autonomousCommand;
-  private static RobotContainer robotContainer;
+    private Command autonomousCommand;
+    private static RobotContainer robotContainer;
+    private Shuffleboard mShuffleboard;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
-  @Override
-  public void robotInit() {
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    /**
+     * This function is run when the robot is first started up and should be used
+     * for any initialization code.
+     */
+    @Override
+    public void robotInit() {
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        mShuffleboard = Shuffleboard.getInstance();
 
-    robotContainer = new RobotContainer();
-    PathPlannerServer.startServer(5985);
-    SmartDashboard.putData(CommandScheduler.getInstance());
-  }
-
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for
-   * items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and
-   * test.
-   *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and
-   * SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-  }
-
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {
-    robotContainer.resetRobotPosition();
-    robotContainer.setArmMode(IdleMode.kCoast);
-    // robotContainer.stopLogging();
-  }
-
-  @Override
-  public void disabledPeriodic() {
-  }
-
-  /**
-   * This autonomous runs the autonomous command selected by your
-   * {@link RobotContainer} class.
-   */
-  @Override
-  public void autonomousInit() {
-    robotContainer.resetRobotPosition();
-    robotContainer.setupAngleOffsetFromAuto(0);
-
-    autonomousCommand = robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
+        robotContainer = new RobotContainer();
+        PathPlannerServer.startServer(5985);
+        SmartDashboard.putData(CommandScheduler.getInstance());
     }
-  }
 
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {
-  }
-
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    robotContainer.resetRobotPosition();
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
+    /**
+     * This function is called every robot packet, no matter the mode. Use this for
+     * items like
+     * diagnostics that you want ran during disabled, autonomous, teleoperated and
+     * test.
+     *
+     * <p>
+     * This runs after the mode specific periodic functions, but before LiveWindow
+     * and
+     * SmartDashboard integrated updating.
+     */
+    @Override
+    public void robotPeriodic() {
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled
+        // commands, running already-scheduled commands, removing finished or
+        // interrupted commands,
+        // and running subsystem periodic() methods. This must be called from the
+        // robot's periodic
+        // block in order for anything in the Command-based framework to work.
+        CommandScheduler.getInstance().run();
+        mShuffleboard.update();
     }
-  }
 
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {
-  }
+    /** This function is called once each time the robot enters Disabled mode. */
+    @Override
+    public void disabledInit() {
+        robotContainer.resetRobotPosition();
+        robotContainer.setArmMode(IdleMode.kCoast);
+        // robotContainer.stopLogging();
+    }
 
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-    robotContainer.resetRobotPosition();
-    robotContainer.setArmMode(IdleMode.kBrake);
-    LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
-  }
+    @Override
+    public void disabledPeriodic() {
+    }
 
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {
-    robotContainer.testAllSystems();
-  }
+    /**
+     * This autonomous runs the autonomous command selected by your
+     * {@link RobotContainer} class.
+     */
+    @Override
+    public void autonomousInit() {
+        robotContainer.resetRobotPosition();
+        robotContainer.setupAngleOffsetFromAuto(0);
+
+        autonomousCommand = robotContainer.getAutonomousCommand();
+
+        // schedule the autonomous command (example)
+        if (autonomousCommand != null) {
+            autonomousCommand.schedule();
+        }
+    }
+
+    /** This function is called periodically during autonomous. */
+    @Override
+    public void autonomousPeriodic() {
+    }
+
+    @Override
+    public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        robotContainer.resetRobotPosition();
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
+    }
+
+    /** This function is called periodically during operator control. */
+    @Override
+    public void teleopPeriodic() {
+    }
+
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+        robotContainer.resetRobotPosition();
+        robotContainer.setArmMode(IdleMode.kBrake);
+        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
+    }
+
+    /** This function is called periodically during test mode. */
+    @Override
+    public void testPeriodic() {
+        robotContainer.testAllSystems();
+    }
 
 }

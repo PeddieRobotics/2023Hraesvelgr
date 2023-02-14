@@ -17,6 +17,11 @@ public class ArmTab extends ShuffleboardTabBase {
     private GenericEntry mShoulderSpeed;
     private GenericEntry mClawSpeed;
 
+    private GenericEntry shoulderPos;
+    private GenericEntry wristPos;
+    private GenericEntry shoulderIsMoving;
+    private GenericEntry wristIsMoving;
+
     private GenericEntry mSetClawSpeed;
     private GenericEntry mSetShoulderPos;
     private GenericEntry mSetWristPos;
