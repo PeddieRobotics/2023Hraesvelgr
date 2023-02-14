@@ -37,7 +37,6 @@ public class RobotContainer {
     claw = Claw.getInstance();
     arm = Arm.getInstance();
 
-
     oi = OI.getInstance();
     shuffleboard = Shuffleboard.getInstance();
 

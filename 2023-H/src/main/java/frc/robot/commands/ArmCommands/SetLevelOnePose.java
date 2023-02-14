@@ -15,13 +15,13 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderLevelOneAngle);
+        arm.setWristPosition(WristConstants.kWristLevelOneAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle)){
-            arm.setWristPosition(WristConstants.kWristLevelOneAngle);
+        if(arm.isWristAtAngle(WristConstants.kWristLevelOneAngle)){
+            arm.setShoulderPosition(ShoulderConstants.kShoulderLevelOneAngle);
         }
     }
 
@@ -31,7 +31,7 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle) && arm.isWristAtAngle(WristConstants.kWristLevelOneAngle);
+        return arm.isWristAtAngle(WristConstants.kWristLevelOneAngle) && arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelOneAngle);
     }
 
 

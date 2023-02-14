@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.lang.reflect.Executable;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -10,11 +8,9 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
-import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 
 public class Shoulder{
 

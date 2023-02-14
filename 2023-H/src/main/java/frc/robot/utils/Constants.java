@@ -70,11 +70,17 @@ public final class Constants {
                 public final static int kBackLeftTurningEncoderChannel = 1;
                 public final static int kBackRightTurningEncoderChannel = 0;
 
+                // "Snap to angle" algorithm parameters
                 public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
 
+                // "Beam balance" algorithm parameters
                 public static final double kPBeamBalanceDrive = 0; // starting value for p
                 public static final double kBeamBalanceGoalDegrees = 0;
                 public static final double kBeamBalanceAngleThresholdDegrees = -1;
+
+                // "Correct heading" algorithm parameters
+                public static final double kHeadingCorrectionP = 0.05;
+                public static final double kHeadingCorrectionTolerance = 2.0;
         }
 
         public static final class ModuleConstants {
@@ -186,7 +192,7 @@ public final class Constants {
 
                 public static final double kShoulderMotorReduction = 296; // 10368:35 or approximately 296:1;
 
-                public static final double kShoulderEncoderConversionFactor = 225.0/185.0;
+                public static final double kShoulderEncoderConversionFactor = 225.0/185.0; // angular delta in degrees divided by encoder delta in native rotations
         }
 
         public static final class WristConstants{
@@ -223,7 +229,7 @@ public final class Constants {
                 public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor = 151.8/65.0;
+                public static final double kWristEncoderConversionFactor = 151.8/65.0; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         

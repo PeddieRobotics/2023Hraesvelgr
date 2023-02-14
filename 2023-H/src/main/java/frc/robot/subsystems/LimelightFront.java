@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
 
-public class LimelightFront extends SubsystemBase {
+public class LimelightFront extends Limelight {
   private static LimelightFront limelightFront;
 
   private RollingAverage txAverage, tyAverage;
@@ -31,6 +33,26 @@ public class LimelightFront extends SubsystemBase {
     updateLimelightInfoOnDashboard();
     setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
     SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!", limelightHelper.getBotpose_wpiBlue());
+  }
+
+  public Translation2d getBotXY() {
+    if (hasTarget()) {
+      double[] result = limelightHelper.getBotpose_wpiBlue();
+      if (result.length > 0.0) {
+        return new Translation2d(result[0], result[1]);
+      }
+    }
+    return new Translation2d(0, 0);
+  }
+
+  public Pose2d getBotpose() {
+    if (hasTarget()) {
+      double[] result = limelightHelper.getBotpose_wpiBlue();
+      if (result.length > 0.0) {
+        return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+      }
+    }
+    return null;
   }
 
   // Tv is whether the limelight has a valid target
@@ -153,4 +175,9 @@ public class LimelightFront extends SubsystemBase {
       }
     }
   }
+
+  public String getJSONDump(){
+    return limelightHelper.getJSONDump();
+  }
+
 }

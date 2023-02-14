@@ -43,7 +43,7 @@ public class Autonomous extends SubsystemBase{
         HashMap<String, Command> eventMap = new HashMap<>();
 
         autoBuilder = new SwerveAutoBuilder(
-            drivetrain ::getPose, drivetrain ::resetRobotPosition, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, true, drivetrain
+            drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, true, drivetrain
         );
 
         defineAutoPaths();

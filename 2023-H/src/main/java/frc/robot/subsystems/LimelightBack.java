@@ -5,12 +5,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
 
-public class LimelightBack extends SubsystemBase {
+public class LimelightBack extends Limelight {
   private static LimelightBack limelightBack;
   private LimelightHelper limelightHelper=LimelightHelper.createLimelightHelper("limelight-back");
 
@@ -232,4 +230,9 @@ public class LimelightBack extends SubsystemBase {
   public Translation2d getTargetColumnCoord(){
     return getDestinationCoord(getTargetColumnNumber());
   }
+
+  public String getJSONDump(){
+    return limelightHelper.getJSONDump();
+  }
+
 }

@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
@@ -15,20 +14,16 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
-import frc.robot.commands.ArmCommands.SetFloorConePose;
-import frc.robot.commands.ArmCommands.SetFloorCubePose;
 import frc.robot.commands.ArmCommands.SetHumanPlayerConePose;
 import frc.robot.commands.ArmCommands.SetHumanPlayerCubePose;
-import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ClawCommands.ConeIntake;
-import frc.robot.commands.ClawCommands.CubeIntake;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.commands.DriveCommands.SetDriveSpeedMode;
 
 public class OI {
     public static OI instance;
@@ -65,16 +60,16 @@ public class OI {
         xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), shuffleboard::hasCone));
+        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
         squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), shuffleboard::hasCone));
+        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        leftBumperButton.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)));
+        leftBumperButton.whileTrue(new SetDriveSpeedMode(DriveSpeedMode.SLOW));
 
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         // TODO: runs auto-aligner/driver assist
