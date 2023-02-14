@@ -57,7 +57,7 @@ public class OI {
     public void setupControls(){
 
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        // xButton.onTrue(new EjectGamepiece());
+        xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
         // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
