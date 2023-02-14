@@ -32,7 +32,7 @@ public class ArmTab extends ShuffleboardTabBase {
     private GenericEntry mSetWristPos;
 
     public void createEntries() {
-        tab = Shuffleboard.getTab("Operator");
+        tab = Shuffleboard.getTab("Arm");
 
         mOperatorHasCube = tab
                 .add("hasCube", false)

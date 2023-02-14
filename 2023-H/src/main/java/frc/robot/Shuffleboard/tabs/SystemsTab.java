@@ -33,9 +33,9 @@ public class SystemsTab extends ShuffleboardTabBase {
                 .withPosition(2, 2)
                 .getEntry();
         mLimelightHasTarget = tab
-                .add("hasCube", false)
+                .add("hasTarget", false)
                 .withSize(3, 2)
-                .withPosition(2, 1)
+                .withPosition(2, 2)
                 .getEntry();
         mTx = tab
                 .add("tx", 0.0)
@@ -52,11 +52,11 @@ public class SystemsTab extends ShuffleboardTabBase {
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
-        mPrimaryTagID = tab
-                .add("primaryTagID", 1)
-                .withSize(3, 2)
-                .withPosition(3, 2)
-                .getEntry();
+        // mPrimaryTagID = tab
+        //         .add("primaryTagID", 1)
+        //         .withSize(3, 2)
+        //         .withPosition(3, 2)
+        //         .getEntry();
     }
 
     @Override
@@ -67,6 +67,6 @@ public class SystemsTab extends ShuffleboardTabBase {
         mTy.setDouble(LLFront.getTy());
         mTa.setDouble(LLFront.getTa());
         mLimelightHasTarget.setBoolean(LLFront.hasTarget());
-        mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
+        //mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
     }
 }

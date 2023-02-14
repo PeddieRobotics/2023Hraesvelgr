@@ -15,74 +15,70 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.OI;
 
 public class RobotContainer {
-  private final Drivetrain drivetrain;
+    private final Drivetrain drivetrain;
 
-  private final Claw claw;
-  private final Arm arm;
-  private final OI oi;
-  private final Shuffleboard shuffleboard;
-  private final Autonomous autonomous;
-  private Command autoCommand;
+    private final Claw claw;
+    private final Arm arm;
+    private final OI oi;
+    private final Autonomous autonomous;
+    private Command autoCommand;
 
-  // private final Blinkin blinkin;
+    // private final Blinkin blinkin;
 
-  public RobotContainer() {
-    drivetrain = Drivetrain.getInstance();
-    drivetrain.setDefaultCommand(new SwerveDriveCommand());
+    public RobotContainer() {
+        drivetrain = Drivetrain.getInstance();
+        drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-    claw = Claw.getInstance();
-    arm = Arm.getInstance();
+        claw = Claw.getInstance();
+        arm = Arm.getInstance();
 
+        oi = OI.getInstance();
 
-    oi = OI.getInstance();
-    shuffleboard = Shuffleboard.getInstance();
+        autonomous = Autonomous.getInstance();
+        // blinkin = Blinkin.getInstance();
+    }
 
-    autonomous = Autonomous.getInstance();
-    // blinkin = Blinkin.getInstance();
-  }
+    public Command getAutonomousCommand() {
+        drivetrain.resetGyro();
+        drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        return autonomous.getAutonomousCommand();
+    }
 
-  public Command getAutonomousCommand() {
-    drivetrain.resetGyro();
-    drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-    return autonomous.getAutonomousCommand();
-  }
+    public void resetRobotPosition() {
+        drivetrain.resetGyro();
+        drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+    }
 
-  public void resetRobotPosition() {
-    drivetrain.resetGyro();
-    drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
-  }
+    public void setupAngleOffsetFromAuto(double target) {
+        drivetrain.setTeleOpAngleOffset(target);
+    }
 
-  public void setupAngleOffsetFromAuto(double target) {
-    drivetrain.setTeleOpAngleOffset(target);
-  }
+    public void setArmMode(IdleMode mode) {
+        arm.setShoulderMode(mode);
+    }
 
-  public void setArmMode(IdleMode mode){
-    arm.setShoulderMode(mode);
-  }
+    public void setWristMode(IdleMode mode) {
+        arm.setWristMode(mode);
+    }
 
-  public void setWristMode(IdleMode mode){
-    arm.setWristMode(mode);
-  }
+    public void testAllSystems() {
+        claw.testPeriodic();
+        // limelightFront.testPeriodic();
+        // limelightBack.testPeriodic();
+        arm.testPeriodic();
+        // blinkin.testPeriodic();
 
-  public void testAllSystems(){
-    claw.testPeriodic();
-    // limelightFront.testPeriodic();
-    // limelightBack.testPeriodic();
-    arm.testPeriodic();
-    // blinkin.testPeriodic();
-    
-  }
+    }
 
-  // public void startLogging(){
-  // logs.startLogging();
-  // }
+    // public void startLogging(){
+    // logs.startLogging();
+    // }
 
-  // public void stopLogging(){
-  // logs.stopLogging();;
-  // }
+    // public void stopLogging(){
+    // logs.stopLogging();;
+    // }
 
 }

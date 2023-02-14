@@ -19,10 +19,10 @@ public class LimelightTab extends ShuffleboardTabBase {
     private GenericEntry mPipelineBack;
 
     public void createEntries() {
-        tab = Shuffleboard.getTab("Operator");
+        tab = Shuffleboard.getTab("Limelight");
 
         mLimelightHasTarget = tab
-                .add("hasCube", false)
+                .add("hasTarget", false)
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
@@ -41,23 +41,23 @@ public class LimelightTab extends ShuffleboardTabBase {
                 .withSize(3, 2)
                 .withPosition(2, 1)
                 .getEntry();
-        mPrimaryTagID = tab
-                .add("primaryTagID", 1)
-                .withSize(3, 2)
-                .withPosition(3, 2)
-                .getEntry();
+        // mPrimaryTagID = tab TODO
+        // .add("primaryTagID", 1)
+        // .withSize(3, 2)
+        // .withPosition(3, 2)
+        // .getEntry();
         mDistToTarget = tab
                 .add("distanceToTarget", 0.0)
                 .withSize(3, 2)
                 .withPosition(3, 2)
                 .getEntry();
         mPipelineFront = tab
-                .add("pipeline", 0)
+                .add("pipelineFront", 0)
                 .withSize(3, 2)
                 .withPosition(3, 2)
                 .getEntry();
         mPipelineBack = tab
-                .add("pipeline", 0)
+                .add("pipelineBack", 0)
                 .withSize(3, 2)
                 .withPosition(3, 2)
                 .getEntry();
@@ -72,7 +72,7 @@ public class LimelightTab extends ShuffleboardTabBase {
         mDistToTarget.setDouble(LLFront.getDistance());
         mPipelineFront.setDouble(LLFront.getPipeline());
 
-        mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
+        // mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
         mPipelineBack.setDouble(LLBack.getPipeline());
     }
 }

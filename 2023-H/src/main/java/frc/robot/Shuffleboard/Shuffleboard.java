@@ -27,9 +27,7 @@ public class Shuffleboard {
         if (isTestMode) {
             List<ShuffleboardTabBase> optionalTabs = List.of(
                     new ArmTab(),
-                    new LimelightTab(),
-                    new OperatorTab(),
-                    new SystemsTab());
+                    new LimelightTab());
             tabs.addAll(optionalTabs);
 
         } else {
