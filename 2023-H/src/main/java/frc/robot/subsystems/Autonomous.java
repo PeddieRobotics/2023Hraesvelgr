@@ -33,6 +33,11 @@ public class Autonomous extends SubsystemBase{
     // Paths
     private PathPlannerTrajectory OneMeterStraight, SwerveTest, SwerveTestRed;
 
+
+    private PathPlannerTrajectory OnePieceBalanceCol3, OnePieceBalanceCol7, OnePieceSkedaddleMid, OnePiecePrepareCol9;
+    private PathPlannerTrajectory TwoPieceFree, TwoPieceBump, TwoPieceFreeBalance, TwoPieceFreePrepareCol1, TwoPieceBumpPrepareCol9;
+    private PathPlannerTrajectory ThreePieceFree;
+
     public Autonomous(){
         drivetrain = Drivetrain.getInstance();
         
@@ -43,7 +48,13 @@ public class Autonomous extends SubsystemBase{
         HashMap<String, Command> eventMap = new HashMap<>();
 
         autoBuilder = new SwerveAutoBuilder(
-            drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, DriveConstants.kinematics, new PIDConstants(AutoConstants.kPTranslationController, 0, 0), new PIDConstants(AutoConstants.kPThetaController, 0, 0), drivetrain::setSwerveModuleStates, eventMap, true, drivetrain
+            drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, 
+            DriveConstants.kinematics, 
+            new PIDConstants(AutoConstants.kPTranslationController, 0, 0), 
+            new PIDConstants(AutoConstants.kPThetaController, 0, 0), 
+            drivetrain::setSwerveModuleStates, 
+            eventMap, true, 
+            drivetrain
         );
 
         defineAutoPaths();
@@ -70,7 +81,17 @@ public class Autonomous extends SubsystemBase{
         SwerveTest = PathPlanner.loadPath("SwerveTest", 1, 1);
         SwerveTestRed = PathPlanner.loadPath("SwerveTestRed", 0.5, 0.5);
 
+        OnePieceBalanceCol3 = PathPlanner.loadPath("1PieceBalanceCol3", 0.5, 0.5);
+        OnePieceBalanceCol7 = PathPlanner.loadPath("1PieceBalanceCol7", 0.5, 0.5);
+        OnePieceSkedaddleMid = PathPlanner.loadPath("1PieceSkedaddleMid", 0.5, 0.5);
+        OnePiecePrepareCol9 = PathPlanner.loadPath("1PiecePrepareCol9", 0.5, 0.5);
 
+        TwoPieceFree = PathPlanner.loadPath("2PieceFree", 0.5, 0.5);
+        TwoPieceBump = PathPlanner.loadPath("2PieceBump", 0.5, 0.5);
+        TwoPieceFreeBalance = PathPlanner.loadPath("2PieceFreeBalance", 0.5, 0.5);
+        TwoPieceFreePrepareCol1 = PathPlanner.loadPath("2PieceFreePrepareCol1", 0.5, 0.5);
+        TwoPieceBumpPrepareCol9 = PathPlanner.loadPath("2PieceBumpPrepareCol9", 0.5, 0.5);
+        ThreePieceFree = PathPlanner.loadPath("3PieceFree", 0.5, 0.5);
     }
 
 
@@ -84,16 +105,17 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("2 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("2MeterStraight", 1.5, 1.5)));
 
         //Mock competition paths
-        autoRoutines.put("1 Cone Skedaddle", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeSkedaddle", 1,1)));
-        autoRoutines.put("1 Cone Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeFree", 1,1)));
-        autoRoutines.put("1 Cone Block", createCommandFromTrajectory(PathPlanner.loadPathGroup("1ConeBlock", 1,1)));
-        autoRoutines.put("2 Piece Free", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceFree", 1,1)));
-        autoRoutines.put("2 Piece Block", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBlock", 1,1)));
-        autoRoutines.put("2 Piece Bridge Left", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBridgeL", 1,1)));
-        autoRoutines.put("2 Piece Bridge Right", createCommandFromTrajectory(PathPlanner.loadPathGroup("2PieceBridgeR", 1,1)));
-        autoRoutines.put("3 Link Scatter Left", createCommandFromTrajectory(PathPlanner.loadPathGroup("3LinkScatterL", 1,1)));
-        autoRoutines.put("3 Link Scatter Right", createCommandFromTrajectory(PathPlanner.loadPathGroup("3LinkScatterR", 1,1)));
-        autoRoutines.put("254", createCommandFromTrajectory(PathPlanner.loadPathGroup("254", 1,1)));
+        autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 0.5, 0.5)));
+        autoRoutines.put("1 Piece Balance Column 7", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol7", 0.5, 0.5)));
+        autoRoutines.put("1 Piece Skedaddle Mid", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceSkeddadleMid", 0.5, 0.5)));
+        autoRoutines.put("1 Piece Prepare Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PiecePrepareCol9", 0.5, 0.5)));
+
+        autoRoutines.put("2 Piece Free", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceFree", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Bump", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Free Balance", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceFreeBalance", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Free Prepare Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceFreePrepareCol1", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Bump Prepare Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBumpPrepareCol9", 0.5, 0.5)));
+        autoRoutines.put("3 Piece Free", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceFree", 0.5, 0.5)));
     }   
 
 
