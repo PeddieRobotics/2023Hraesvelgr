@@ -14,7 +14,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -89,7 +91,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     robotContainer.resetRobotPosition();
-    robotContainer.setupAngleOffsetFromAuto(0);
 
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -111,6 +112,9 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     robotContainer.resetRobotPosition();
+
+    robotContainer.setupAngleOffsetFromAuto(180);
+
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }

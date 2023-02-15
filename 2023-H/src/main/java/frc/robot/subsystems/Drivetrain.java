@@ -149,25 +149,9 @@ public class Drivetrain extends SubsystemBase {
   public void updateOdometry() {
     odometry.updateWithTime(Timer.getFPGATimestamp(),getHeadingAsRotation2d(), swerveModulePositions);
 
-    checkForAprilTagUpdates(limelightFront);
-    checkForAprilTagUpdates(limelightBack);
-  }
+    limelightFront.checkForAprilTagUpdates(odometry);
+    limelightBack.checkForAprilTagUpdates(odometry);
 
-  private void checkForAprilTagUpdates(Limelight limelight){
-    int tagsSeen = 0;
-    String json = limelight.getJSONDump();
-
-    if (json.length() != 0) {
-      for (int index = json.indexOf("Fiducial") + 10; index < json.indexOf("Retro"); index++) {
-        if (json.charAt(index) == '}') {
-          tagsSeen++;
-        }
-      }
-      if (tagsSeen > 1 && limelight.hasTarget()) {
-        odometry.addVisionMeasurement(limelight.getBotpose(), Timer.getFPGATimestamp());
-        return;
-      }
-    }   
   }
 
   // Drive algorithm
@@ -244,18 +228,8 @@ public class Drivetrain extends SubsystemBase {
       correctHeadingTargetHeading = correctHeadingTargetHeading.plus(new Rotation2d(vr * dt));
       Rotation2d currentHeading = getHeadingAsRotation2d();
 
-      SmartDashboard.putNumber("CorrectHeading currentT", correctHeadingCurrentTime);
-      SmartDashboard.putNumber("CorrectHeading previousT", correctHeadingPreviousTime);
-      SmartDashboard.putNumber("CorrectHeading dt", dt);
-      SmartDashboard.putNumber("CorrectHeading vr", vr);
-      SmartDashboard.putNumber("CorrectHeading v", v);
-
-      SmartDashboard.putNumber("CorrectHeading targetHeading", correctHeadingTargetHeading.getDegrees());
-      SmartDashboard.putNumber("CorrectHeading currentHeading", currentHeading.getDegrees());
-
       // Calculate the change in heading that is needed to achieve the target
       Rotation2d deltaHeading = correctHeadingTargetHeading.minus(currentHeading);
-      SmartDashboard.putNumber("CorrectHeading deltaHeading", deltaHeading.getDegrees());
 
       if (Math.abs(deltaHeading.getDegrees()) < DriveConstants.kHeadingCorrectionTolerance){
           return desiredSpeed;

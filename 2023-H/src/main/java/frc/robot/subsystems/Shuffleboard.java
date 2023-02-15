@@ -64,6 +64,7 @@ public class Shuffleboard extends SubsystemBase{
     private void setupDrivetrainShuffleboard(){
         SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
+        SmartDashboard.putNumber("Odometry theta", drivetrain.getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Heading", drivetrain.getHeading());
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
         SmartDashboard.putBoolean("Use heading correction?", false);
@@ -73,6 +74,7 @@ public class Shuffleboard extends SubsystemBase{
     private void updateDrivetrainShuffleboard(){
         SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
+        SmartDashboard.putNumber("Odometry theta", drivetrain.getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("Heading", drivetrain.getHeading());
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }

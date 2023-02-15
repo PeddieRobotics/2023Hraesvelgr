@@ -1,29 +1,25 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
 
 public class LimelightBack extends Limelight {
   private static LimelightBack limelightBack;
-  private LimelightHelper limelightHelper=LimelightHelper.createLimelightHelper("limelight-back");
 
   private RollingAverage txAverage, tyAverage;
-  private SendableChooser<Integer> targetAprilTagID, targetColumnNumber, targetRow;
+
+  private String limelightName = "limelight-back";
 
   public LimelightBack() {
     txAverage = new RollingAverage();
     tyAverage = new RollingAverage();
-
-    targetAprilTagID = new SendableChooser<>();
-    targetColumnNumber = new SendableChooser<>();
-    targetRow = new SendableChooser<>();
-
-    addDropdownOptions();
   }
 
   public static LimelightBack getInstance() {
@@ -36,51 +32,41 @@ public class LimelightBack extends Limelight {
   @Override
   public void periodic() {
     updateRollingAverages();
-    updateLimelightInfoOnDashboard();
-    updateCoordstoDashboard();
-    setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
   }
+
+  public Translation2d getBotXY() {
+    double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+    if (result.length > 0.0) {
+      return new Translation2d(result[0], result[1]);
+    }
+  return new Translation2d(0, 0);
+}
+
+public Pose2d getBotpose() {
+    double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+    if (result.length > 0.0) {
+      return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+    }
+    return new Pose2d(); 
+}
 
   // Tv is whether the limelight has a valid target
-  // 1 is true, 0 is false
-  public double getTv() {
-    return limelightHelper.getLimelightNTDouble("tv");
-  }
-
-  public String getJson(){
-    return limelightHelper.getJSONDump();
-  }
-
-  // Tvert is the vertical sidelength of the rough bounding box (0 - 320 pixels)
-  public double getTvert() {
-    return limelightHelper.getLimelightNTDouble("tvert");
-  }
-
-  // Thor is the horizontal sidelength of the rough bounding box (0 - 320 pixels)
-  public double getThor() {
-    return limelightHelper.getLimelightNTDouble("thor");
-  }
-
-  public double getTshort() {
-    return limelightHelper.getLimelightNTDouble("tshort");
-  }
-
-  public double getTlong() {
-    return limelightHelper.getLimelightNTDouble("tlong");
+  public boolean getTv() {
+    return LimelightHelper.getTV(limelightName);
   }
   
   // Tx is the Horizontal Offset From Crosshair To Target
   public double getTx() {
-    return limelightHelper.getTX();
+    return LimelightHelper.getTX(limelightName);
   }
 
   // Ty is the Vertical Offset From Crosshair To Target
   public double getTy() {
-    return limelightHelper.getTY();
+    return LimelightHelper.getTY(limelightName);
   }
 
   public double getTa() {
-    return limelightHelper.getTA();
+    return LimelightHelper.getTA(limelightName);
   }
 
   public double getTxAverage() {
@@ -91,15 +77,34 @@ public class LimelightBack extends Limelight {
     return tyAverage.getAverage();
   }
 
-  public double getTID() {
-    return limelightHelper.getFiducialID();
+  //Class ID of primary neural detector result or neural classifier result
+  public double getNeuralClassID() {
+    return LimelightHelper.getNeuralClassID(limelightName);
+  }
+
+  public double getDistance() {
+    if (!hasTarget()) {
+      return 0;
+    } else {
+      // a1 = LL panning angle
+      // a2 = additional angle to target
+      // tan(a1 + a2) = h/d
+      // d = h/tan(a1+a2)
+      return (LimelightConstants.kLimelightHeight) /
+          (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
+    }
   }
 
   public boolean hasTarget() {
-    if (getTv() == 1) {
-      return true;
-    } else
-      return false;
+    return getTv();
+  }
+
+  public boolean targetIsCone(){
+    return hasTarget() && getNeuralClassID() == 2;
+  }
+
+  public boolean targetIsCube(){
+    return hasTarget() && getNeuralClassID() == 1;
   }
 
   public void updateRollingAverages() {
@@ -109,130 +114,26 @@ public class LimelightBack extends Limelight {
     }
   }
 
-  public void updateLimelightInfoOnDashboard() {
-    SmartDashboard.putBoolean("LL has target", hasTarget());
-    SmartDashboard.putNumber("LL tx avg", getTxAverage());
-    SmartDashboard.putNumber("angle off limelight", getTx());
-    SmartDashboard.putNumber("MAIN TAG ID", getTID());
-    updateCoordstoDashboard();
-  }
 
   public void setPipeline(int pipelineNum) {
-    limelightHelper.setPipelineIndex(pipelineNum);
+    LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
   }
 
-  public double getPipeline() {
-    return SmartDashboard.getNumber("pipeline", 0);
-  }
-
-  public void updateCoordstoDashboard() {
-    if (hasTarget()) {
-      double[] result = limelightHelper.getBotpose_wpiBlue(); // don't make this getBotpose()
-      SmartDashboard.putNumber("array element count", result.length);
-      if (result.length > 0.0) {
-        SmartDashboard.putNumber("xCOORD", result[0]); // meters
-        SmartDashboard.putNumber("yCOORD", result[1]); // meters
-        SmartDashboard.putNumber("zCOORD", result[2]); // meters
-      }
-    }
-  }
-  
-  public Translation2d getBotXY() {
-    if (hasTarget()) {
-      double[] result = limelightHelper.getBotpose_wpiBlue();
-      if (result.length > 0.0) {
-        return new Translation2d(result[0], result[1]);
-      }
-    }
-    return new Translation2d(0, 0);
-  }
-
-  public Pose2d getBotpose() {
-    if (hasTarget()) {
-      double[] result = limelightHelper.getBotpose_wpiBlue();
-      if (result.length > 0.0) {
-        return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
-      }
-    }
-    return null;
-  }
-
-  private void addDropdownOptions() {
-    // april tag id
-    for (int i = 1; i < 9; i++) {
-      targetAprilTagID.addOption("April Tag " + i, i);
-    }
-    SmartDashboard.putData(targetAprilTagID);
-    //column number 
-    for (int i = 1; i <= 9; i++) {
-      targetColumnNumber.addOption("Column " + i, i);
-    }
-    SmartDashboard.putData(targetColumnNumber);
-    //row number
-    for (int i = 1; i <= 3; i++) {
-      targetRow.addOption("Level " + i, i);
-    }
-    SmartDashboard.putData(targetRow);
-  }
-
-  public Translation2d getAprilTagCoordinates(int tagNumber) {
-    final double add = 0.37 + .4;
-    switch (tagNumber) {
-      case 1:
-        return new Translation2d(7.2431 - add, -2.93659);
-      case 2:
-        return new Translation2d(7.2431 - add, -1.26019);
-      case 3:
-        return new Translation2d(7.2431 - add, 0.41621);
-      case 4:
-        return new Translation2d(7.90832 - add, 2.74161);
-      case 5:
-        return new Translation2d(-7.90832 + add, 2.74161);
-      case 6:
-        return new Translation2d(-7.2431 + add, 0.41621);
-      case 7:
-        return new Translation2d(-7.2431 + add, -1.26019);
-      case 8:
-        return new Translation2d(-7.2431 + add, -2.93659);
-    }
-    return new Translation2d(0,0);
-  }
-
-  public Translation2d getDestinationCoord(int column) {
-    final double add = 0.37 + .4; //gets you to the edge of l1
-    switch (column) {
-      case 8: //april tag 6
-        return new Translation2d(-7.2431 + add, 0.41621);
-      case 5: //april tag 7
-        return new Translation2d(-7.2431 + add, -1.26019);
-      case 2: //april tag 8
-        return new Translation2d(-7.2431 + add, -2.93659);
-    }
-    return new Translation2d(0,0);
-  }
-
-  public int getTargetAprilTagID(){
-    return targetAprilTagID.getSelected();
-  }
-
-  public Translation2d getTargetAprilTagCoord(){
-    return getAprilTagCoordinates(getTargetAprilTagID());
-  }
-
-  public int getTargetColumnNumber(){
-    return targetColumnNumber.getSelected();
-  }
-
-  public int getTargetRow(){
-    return targetRow.getSelected();
-  }
-
-  public Translation2d getTargetColumnCoord(){
-    return getDestinationCoord(getTargetColumnNumber());
-  }
 
   public String getJSONDump(){
-    return limelightHelper.getJSONDump();
+    return LimelightHelper.getJSONDump(limelightName);
+  }
+
+  public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry){
+    int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
+    SmartDashboard.putNumber("Tags seen BACK", tagsSeen);
+    SmartDashboard.putBoolean("hasTarget BACK", this.hasTarget());
+      SmartDashboard.putNumber("BOTPOSE BACK X", this.getBotpose().getX());
+      SmartDashboard.putNumber("BOTPOSE BACK Y", this.getBotpose().getY());
+      SmartDashboard.putNumber("BOTPOSE BACK THETA", this.getBotpose().getRotation().getDegrees());
+      if(tagsSeen > 1){
+        odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+      }
   }
 
 }
