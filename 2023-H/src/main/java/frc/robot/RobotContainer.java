@@ -59,8 +59,11 @@ public class RobotContainer {
     return autonomous.getAutonomousCommand();
   }
 
-  public void resetRobotPosition() {
+  public void resetGyro(){
     drivetrain.resetGyro();
+  }
+
+  public void resetPoseToFaceOtherAlliance() {
     if(DriverStation.getAlliance() == Alliance.Blue){
       drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(0))));
     }
@@ -71,6 +74,10 @@ public class RobotContainer {
 
   public void setupAngleOffsetFromAuto(double target) {
     drivetrain.setTeleOpAngleOffset(target);
+  }
+
+  public double getAngleOffsetFromAuto(){
+    return autonomous.getAngleOffsetFromAuto();
   }
 
   public void setArmMode(IdleMode mode){
