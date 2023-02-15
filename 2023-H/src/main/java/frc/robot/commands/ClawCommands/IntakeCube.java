@@ -2,19 +2,20 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
-import frc.robot.utils.Constants.ClawConstants;
 
-public class ConeOuttake extends CommandBase{
+public class IntakeCube extends CommandBase{
     private Claw claw;
 
-    public ConeOuttake(){
+    public IntakeCube(){
         claw = Claw.getInstance();
+
         addRequirements(claw);
     }
 
     @Override
     public void initialize() {
-        claw.outtakeCone();
+        claw.intakeCube();
+        
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ConeOuttake extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return !claw.hasCone();
+        return claw.hasCube();
     }
 
     

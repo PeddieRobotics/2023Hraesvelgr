@@ -1,16 +1,19 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.RobotMap;
@@ -18,6 +21,9 @@ import frc.robot.utils.RobotMap;
 public class Drivetrain extends SubsystemBase {
 
   private static Drivetrain drivetrain;
+
+  private final LimelightFront limelightFront;
+  private final LimelightBack limelightBack;
 
   // Swerve Modules
   private final MAXSwerveModule[] swerveModules;
@@ -31,10 +37,7 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModuleState[] swerveModuleStates;
   private SwerveModulePosition[] swerveModulePositions;
 
-  private final SwerveDriveOdometry odometry;
-
-  // Limelight
-  private boolean targeted;
+  private final SwerveDrivePoseEstimator odometry;
 
   // Snap To Angle Algorithm Variables
   private final PIDController snapToAnglePID;
@@ -44,7 +47,16 @@ public class Drivetrain extends SubsystemBase {
   // Autonomous
   private double teleOpAngleOffset;
 
+  // Correct angle algorithm variables
+  private Rotation2d correctHeadingTargetHeading;
+  private Timer correctHeadingTimer;
+  private double correctHeadingPreviousTime;
+  private double correctHeadingOffTime;
+
   public Drivetrain() {
+    limelightFront = LimelightFront.getInstance();
+    limelightBack = LimelightBack.getInstance();
+
     // Initialize Swerve Modules
     frontLeftSwerveModule = new MAXSwerveModule(
       RobotMap.kFrontLeftDrivingCanId,
@@ -66,7 +78,6 @@ public class Drivetrain extends SubsystemBase {
       RobotMap.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
-    
     swerveModules = new MAXSwerveModule[] { frontLeftSwerveModule, frontRightSwerveModule, backLeftSwerveModule, backRightSwerveModule };
     swerveModulePositions = new SwerveModulePosition[] { frontLeftSwerveModule.getPosition(), frontRightSwerveModule.getPosition(), backLeftSwerveModule.getPosition(),
       backRightSwerveModule.getPosition() };
@@ -82,18 +93,22 @@ public class Drivetrain extends SubsystemBase {
     snapped = false;
     snapToAnglePID = new PIDController(DriveConstants.kSnapToAnglePID[0], DriveConstants.kSnapToAnglePID[1], DriveConstants.kSnapToAnglePID[2]);
 
+    // Correct heading algorithm
+    correctHeadingTimer = new Timer();
+    correctHeadingTimer.start();
+    correctHeadingPreviousTime = 0.0;
+    correctHeadingOffTime = 0.0;
 
     // Swerve drive odometry
-    odometry = new SwerveDriveOdometry(DriveConstants.kinematics, getRotation2d(), 
+    odometry = new SwerveDrivePoseEstimator(DriveConstants.kinematics, getHeadingAsRotation2d(),
     new SwerveModulePosition[] {
-      frontLeftSwerveModule.getPosition(),
-      frontRightSwerveModule.getPosition(),
-      backLeftSwerveModule.getPosition(),
-      backRightSwerveModule.getPosition()
-    }, new Pose2d(0,0, new Rotation2d()));
-      
-    // Limelight
-    targeted = false;
+        frontLeftSwerveModule.getPosition(),
+        frontRightSwerveModule.getPosition(),
+        backLeftSwerveModule.getPosition(),
+        backRightSwerveModule.getPosition()},
+        new Pose2d(),
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(0.4, 0.4, 0.4));
 
   }
 
@@ -105,9 +120,6 @@ public class Drivetrain extends SubsystemBase {
     }
     updateOdometry();
 
-    // for (MAXSwerveModule module : swerveModules) {
-    //   module.putSmartDashboard();
-    // }
   }
 
   public static Drivetrain getInstance() {
@@ -119,24 +131,27 @@ public class Drivetrain extends SubsystemBase {
 
   // Returns the current pose of the robot
   public Pose2d getPose() {
-    Pose2d pose = odometry.getPoseMeters();
-    return pose;
+    return odometry.getEstimatedPosition();
   }
 
   // Resets the current pose of the robot
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(getRotation2d(), swerveModulePositions, pose);
+    odometry.resetPosition(getHeadingAsRotation2d(), swerveModulePositions, pose);
   }
 
   // Resets the current pose and heading of the robot
-  public void resetRobotPosition(Pose2d pose){
+  public void resetRobotPoseAndGyro(Pose2d pose){
     resetGyro();
-    odometry.resetPosition(getRotation2d(), swerveModulePositions, pose);
+    odometry.resetPosition(getHeadingAsRotation2d(), swerveModulePositions, pose);
   }
 
   // Odometry
   public void updateOdometry() {
-    odometry.update(getRotation2d(), swerveModulePositions);
+    odometry.updateWithTime(Timer.getFPGATimestamp(),getHeadingAsRotation2d(), swerveModulePositions);
+
+    limelightFront.checkForAprilTagUpdates(odometry);
+    limelightBack.checkForAprilTagUpdates(odometry);
+
   }
 
   // Drive algorithm
@@ -147,19 +162,24 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerOfRotation) {
-    ChassisSpeeds speeds;
+    ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds robotRelativeSpeeds;
+
+    if(SmartDashboard.getBoolean("Use heading correction?", false)){
+      fieldRelativeSpeeds = correctHeading(fieldRelativeSpeeds);
+    }
 
     if(snapped){
-      rotation = snapToAngle();
+      fieldRelativeSpeeds.omegaRadiansPerSecond = snapToAngle();
     }
 
     if (fieldOriented) {
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(translation.getX(), translation.getY(), rotation, Rotation2d.fromDegrees(teleOpAngleOffset + getHeading()));
+      robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, Rotation2d.fromDegrees(teleOpAngleOffset + getHeading()));
     } else {
-      speeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+      robotRelativeSpeeds = fieldRelativeSpeeds;
     }
 
-    swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(speeds, centerOfRotation);
+    swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerOfRotation);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kRealMaxSpeedMetersPerSecond);
 
@@ -171,6 +191,57 @@ public class Drivetrain extends SubsystemBase {
     for(MAXSwerveModule module: swerveModules){
       module.stop();
     }
+  }
+
+   /**
+     * This function optimizes the chassis speed that is put into the kinematics object to allow the robot to hold its heading
+     * when no angular velocity is input. The robot will therefore correct itself when it turns without us telling it to do so.
+     *
+     * @param desiredSpeed Desired chassis speed that is input by the controller
+     * @return {@code correctedChassisSpeed} which takes into account that the robot needs to have the same heading when no rotational speed is input
+     */
+    private ChassisSpeeds correctHeading(ChassisSpeeds desiredSpeed){
+
+      //Determine time interval
+      double correctHeadingCurrentTime = correctHeadingTimer.get();
+      double dt = correctHeadingCurrentTime - correctHeadingPreviousTime;
+
+      //Get desired rotational speed in radians per second and absolute translational speed in m/s
+      double vr = desiredSpeed.omegaRadiansPerSecond;
+      double v = Math.sqrt(Math.pow(desiredSpeed.vxMetersPerSecond, 2) + Math.pow(desiredSpeed.vxMetersPerSecond, 2));
+
+      if (vr > 0.01 || vr < -0.01){
+          correctHeadingOffTime = correctHeadingCurrentTime;
+          correctHeadingTargetHeading = getHeadingAsRotation2d();
+          return desiredSpeed;
+      }
+      if (correctHeadingCurrentTime - correctHeadingOffTime < 0.5){
+          correctHeadingTargetHeading = getHeadingAsRotation2d();
+          return desiredSpeed;
+      }
+      if (v < 0.05){
+          correctHeadingTargetHeading = getHeadingAsRotation2d();
+          return desiredSpeed;
+      }
+
+      // Determine target and current heading
+      correctHeadingTargetHeading = correctHeadingTargetHeading.plus(new Rotation2d(vr * dt));
+      Rotation2d currentHeading = getHeadingAsRotation2d();
+
+      // Calculate the change in heading that is needed to achieve the target
+      Rotation2d deltaHeading = correctHeadingTargetHeading.minus(currentHeading);
+
+      if (Math.abs(deltaHeading.getDegrees()) < DriveConstants.kHeadingCorrectionTolerance){
+          return desiredSpeed;
+      }
+      double correctedVr = deltaHeading.getRadians() / dt * DriveConstants.kHeadingCorrectionP;
+
+      correctHeadingPreviousTime = correctHeadingCurrentTime;
+
+      return new ChassisSpeeds(
+              desiredSpeed.vxMetersPerSecond,
+              desiredSpeed.vyMetersPerSecond,
+              correctedVr);
   }
 
   public void resetEncoders() {
@@ -190,12 +261,14 @@ public class Drivetrain extends SubsystemBase {
     return Math.IEEEremainder(heading, 360);
   }
 
-  public Rotation2d getRotation2d() {
+  public Rotation2d getHeadingAsRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
 
   public void resetGyro() {
     gyro.reset();
+    correctHeadingTimer.reset();
+    correctHeadingTimer.start();
   }
   
   public double getGyroRate(){
@@ -217,10 +290,10 @@ public class Drivetrain extends SubsystemBase {
 
   // Snap to angle algorithm
   private double snapToAngle(){
-    // If a button is pressed, use the keepAngle pid contrller to calculate a rotational output so that the robot stays at snapAngle heading
+    // If a button is pressed, use the snapToAngle pid controller to calculate a rotational output so that the robot stays at snapAngle heading
     // If the button is not pressed, use the normal rotation controller
     double output = 0;
-    if (Math.abs(getRotation2d().getDegrees() - snapToAngleHeading) > 1) {
+    if (Math.abs(getHeadingAsRotation2d().getDegrees() - snapToAngleHeading) > 1) {
       output = snapToAnglePID.calculate(getHeading(), snapToAngleHeading);
     }
     return output;
@@ -232,15 +305,6 @@ public class Drivetrain extends SubsystemBase {
 
   public void setSnapped(boolean snapped){
     this.snapped = snapped;
-  }
-
-  // Limelight
-  public boolean isTargeted(){
-    return targeted;
-  }
-
-  public void setTargeted(boolean lockedOn){
-    targeted = lockedOn;
   }
 
   public void lock(){

@@ -1,12 +1,8 @@
 package frc.robot.commands.DriveCommands;
 
-import frc.robot.Robot;
-import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class BalanceOnBeam extends CommandBase{
@@ -25,7 +21,7 @@ public class BalanceOnBeam extends CommandBase{
 
     @Override
     public void execute(){
-        this.rotation = drivetrain.getRotation2d();
+        this.rotation = drivetrain.getHeadingAsRotation2d();
 
         error = DriveConstants.kBeamBalanceGoalDegrees -currentTheta;
         drivePower = -Math.min(DriveConstants.kPBeamBalanceDrive * error, 1);

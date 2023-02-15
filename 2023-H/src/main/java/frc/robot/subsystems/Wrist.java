@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
 import frc.robot.utils.OI;
@@ -44,14 +43,18 @@ public class Wrist{
         wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kWristEncoderConversionFactor);
-        setEncoder(109.4);
+        setEncoder(103.77);
 
         // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
+        
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        wristMotor.setClosedLoopRampRate(0.01);
+
     }
 
     public void setPosition(double setpointDeg) {

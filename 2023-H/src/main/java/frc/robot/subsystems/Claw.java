@@ -30,7 +30,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void testPeriodic(){
-        setSpeed(SmartDashboard.getNumber("OR: Claw speed", 0));
+        // setSpeed(SmartDashboard.getNumber("OR: Claw speed", 0));
     }
 
     public static Claw getInstance(){
@@ -45,11 +45,17 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasCone(){
-        return !coneSensor.get();
+        return Shuffleboard.getInstance().hasCone(); // temporary until we get banner sensors installed
+        // return !coneSensor.get();
     }
 
     public boolean hasCube(){
-        return !cubeSensor.get();
+        return Shuffleboard.getInstance().hasCube(); // temporary until we get banner sensor installed
+        // return !cubeSensor.get();
+    }
+
+    public boolean hasGamepiece(){
+        return hasCone() || hasCube();
     }
 
     public double getClawSpeed(){

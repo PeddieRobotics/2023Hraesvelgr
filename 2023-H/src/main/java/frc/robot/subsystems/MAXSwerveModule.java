@@ -110,6 +110,10 @@ public class MAXSwerveModule {
     m_drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_turningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
+    // Ramp rates
+    m_drivingSparkMax.setClosedLoopRampRate(0.01);
+    m_turningSparkMax.setClosedLoopRampRate(0.01);
+
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
     m_drivingSparkMax.burnFlash();

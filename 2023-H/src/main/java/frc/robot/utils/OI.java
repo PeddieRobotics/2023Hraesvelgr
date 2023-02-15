@@ -1,33 +1,36 @@
 package frc.robot.utils;
 
-import javax.sql.rowset.spi.TransactionalWriter;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
-import frc.robot.commands.ClawCommands.ConeIntake;
-import frc.robot.commands.ClawCommands.CubeIntake;
-import frc.robot.commands.ClawCommands.RunClawSmartDashboard;
+import frc.robot.commands.ArmCommands.SetHumanPlayerConePose;
+import frc.robot.commands.ArmCommands.SetHumanPlayerCubePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
-import frc.robot.subsystems.Claw;
+import frc.robot.commands.DriveCommands.SetDriveSpeedMode;
 
 public class OI {
     public static OI instance;
+
     private Drivetrain drivetrain;
+    private Claw claw;
+    private Shuffleboard shuffleboard;
 
     private PS4Controller driverController = new PS4Controller(0);
 
@@ -42,6 +45,8 @@ public class OI {
 
     public OI() {
         drivetrain = Drivetrain.getInstance();
+        claw = Claw.getInstance();
+        shuffleboard = Shuffleboard.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 
@@ -50,56 +55,43 @@ public class OI {
     }
 
     public void setupControls(){
-        Trigger resetGyroButton = new JoystickButton(driverController, 1);
-        resetGyroButton.whileTrue(new InstantCommand(() -> drivetrain.resetGyro()));
-
-        Trigger lockWheels = new JoystickButton(driverController, 2);
-        lockWheels.whileTrue(new LockDrivetrain());
-
-        Trigger coneIntake = new JoystickButton(driverController, 3);
-        coneIntake.whileTrue(new ConeIntake());
-
-        Trigger cubeIntake = new JoystickButton(driverController, 4);
-        cubeIntake.whileTrue(new CubeIntake());
-
-        Trigger slowMode = new JoystickButton(driverController, 5);
-        slowMode.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)));
-
-        // Trigger snapToAngle = new JoystickButton(driverPs4Controller, 5);
-        // snapToAngle.whileTrue(new SnapToAngle());
 
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        // TODO: ejects game piece
-        xButton.onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", true)));
-        xButton.onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("Circle Pressed", false)));
+        // xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        // TODO: runs level 2 scoring pose function
+        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        // TODO: runs human station intake pose function
+        // squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        // TODO: runs level 3 scoring pose function
+        // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        // TODO: changes to slow mode
+        // leftBumperButton.whileTrue(new SetDriveSpeedMode(DriveSpeedMode.SLOW));
 
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         // TODO: runs auto-aligner/driver assist
 
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
-        // TODO: runs X lock (safe pose)
+        // leftStickButton.toggleOnTrue(new LockDrivetrain());
 
-        Trigger rightStickButton = new JoystickButton(driverController, PS4Controller.Button.kR3.value);
-        // TODO: runs rotations lock
+        // Cone intake / score L1 with any gamepiece
+        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
+        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(),
+        // new SequentialCommandGroup(new SetFloorConePose(), new ConeIntake()), claw::hasGamepiece));
 
-        Trigger backButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
-        // TODO: runs cone floor intake/level 1 scoring pose
+        // Cube intake / score L1 with any gamepiece
+        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
+        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(),
+        // new SequentialCommandGroup(new SetFloorCubePose(), new CubeIntake()), claw::hasGamepiece));
 
-        Trigger startButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
-        // TODO: runs cube floor intake/level 1 scoring pose
+        // Clears all current pose commands and returns the arm to a neutral, stowed pose.
+        Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
+        // touchpadButton.onTrue(new SetStowedPose());
 
+        // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);
         ps4Button.onTrue(new InstantCommand(() -> drivetrain.resetGyro()));
     }
@@ -117,12 +109,10 @@ public class OI {
 
     public double getForward() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        // return 0;
     }
 
     public double getStrafe() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -179,24 +169,24 @@ public class OI {
     public double getRotation() {
         double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
         double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
+
         double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
+        
         return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
-        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {
-        // double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
-        // double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
+        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
+        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
 
-        // if (rotX * rotY > 0) {
-        //     rotX = -rotX;
-        //     rotY = -rotY;
-        // }
-        // rotX *= 0.75;
-        // rotY *= 0.75;
-        // Translation2d output = new Translation2d(rotX, rotY);
-        // return output;
-        return new Translation2d(0, 0);
+        if (rotX * rotY > 0) {
+            rotX = -rotX;
+            rotY = -rotY;
+        }
+        rotX *= 0.75;
+        rotY *= 0.75;
+        Translation2d output = new Translation2d(rotX, rotY);
+        return output;
     }
 
     public DPadDirection getDriverDPadInput(){
@@ -215,16 +205,15 @@ public class OI {
     }
 
     public Translation2d getCardinalDirection(){
-        // Need to switch out "kMaxSpeedMetersPerSecond" for max real floor speed when merged
         switch (getDriverDPadInput()) {
             case FORWARDS:
                 return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             case RIGHT:
-                return new Translation2d(0.0, -0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
+                return new Translation2d(0.0, -DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case LEFT:
-                return new Translation2d(0.0, 0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
+                return new Translation2d(0.0, DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case BACKWARDS:
-                return new Translation2d(-0.3 * DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
+                return new Translation2d(-DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed, 0.0);
             default:
                 return new Translation2d(0.0, 0.0);
         }

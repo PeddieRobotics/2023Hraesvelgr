@@ -29,9 +29,9 @@ public final class Constants {
         public static class DriveConstants {
                 // Chassis Configuration
                 // Distance between the centers of left and right wheels on the robot
-                public static final double kTrackwidth = Units.inchesToMeters(24);
+                public static final double kTrackwidth = Units.inchesToMeters(20.5);
                 // Distance between the front and back wheels on the robot
-                public static final double kWheelbase = Units.inchesToMeters(28);
+                public static final double kWheelbase = Units.inchesToMeters(24.5);
 
                 public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
                 public static final double kMaxFloorSpeed = 0.75 * kRealMaxSpeedMetersPerSecond;
@@ -70,11 +70,17 @@ public final class Constants {
                 public final static int kBackLeftTurningEncoderChannel = 1;
                 public final static int kBackRightTurningEncoderChannel = 0;
 
+                // "Snap to angle" algorithm parameters
                 public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
 
+                // "Beam balance" algorithm parameters
                 public static final double kPBeamBalanceDrive = 0; // starting value for p
                 public static final double kBeamBalanceGoalDegrees = 0;
                 public static final double kBeamBalanceAngleThresholdDegrees = -1;
+
+                // "Correct heading" algorithm parameters
+                public static final double kHeadingCorrectionP = 0.05;
+                public static final double kHeadingCorrectionTolerance = 2.0;
         }
 
         public static final class ModuleConstants {
@@ -145,7 +151,7 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double kLimelightHeight = 27.488; //inches
+                public static final double kLimelightHeight = 22.8346; // inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
         }
@@ -162,14 +168,31 @@ public final class Constants {
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 135;
             
+                public static final double kShoulderStowedAngle = -75.0;
+                public static final double kShoulderTransitionAngle = -63.0;
+                public static final double kShoulderLevelOneAngle = -75.0;
+
+                public static final double kShoulderFloorConeAngle = -33.24;
+                public static final double kShoulderLevelTwoConeAngle = 5.0;
+                public static final double kShoulderLevelThreeConeAngle = 153.0;
+                public static final double kShoulderHumanPlayerConeAngle = 20.77;
+
+                public static final double kShoulderFloorCubeAngle = -53.39;
+                public static final double kShoulderLevelTwoCubeAngle = 0.0;
+                public static final double kShoulderLevelThreeCubeLobAngle = 5.0;
+                public static final double kShoulderLevelThreeCubeDunkAngle = 150.0;
+                public static final double kShoulderHumanPlayerCubeAngle = -5.0;
+
+                public static final double kShoulderSetpointTolerance = 1.0; // degrees
+
                 public static final double kSVolts = 0.0;
                 public static final double kGVolts = 0.3;
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.05;
 
-                public static final double kShoulderMotorReduction = 0; // 10368:35;
+                public static final double kShoulderMotorReduction = 296; // 10368:35 or approximately 296:1;
 
-                public static final double kShoulderEncoderConversionFactor = 225.0/185.0;
+                public static final double kShoulderEncoderConversionFactor = 225.0/185.0; // angular delta in degrees divided by encoder delta in native rotations
         }
 
         public static final class WristConstants{
@@ -188,9 +211,25 @@ public final class Constants {
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
+            
+                public static final double kWristStowedAngle = 135.0;
+                public static final double kWristLevelOneAngle = 25.0;
+
+                public static final double kWristFloorConeAngle = 0.0;
+                public static final double kWristLevelTwoConeAngle = -34.0;
+                public static final double kWristLevelThreeConeAngle = 72.0;
+                public static final double kWristHumanPlayerConeAngle = 49.64;
+
+                public static final double kWristFloorCubeAngle = -7.26;
+                public static final double kWristLevelTwoCubeAngle = -43.87;
+                public static final double kWristLevelThreeCubeLobAngle = 26.1;
+                public static final double kWristLevelThreeCubeDunkAngle = 104.0;
+                public static final double kWristHumanPlayerCubeAngle = 21.3;
+
+                public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor = 151.8/65.0;
+                public static final double kWristEncoderConversionFactor =  99.1/39.2; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         

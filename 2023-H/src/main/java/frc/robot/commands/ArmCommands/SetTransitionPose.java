@@ -1,20 +1,20 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.utils.Constants.ShoulderConstants;
 
-public class RunShoulderSmartDashboard extends CommandBase{
+public class SetTransitionPose extends CommandBase{
     private Arm arm;
 
-    public RunShoulderSmartDashboard(){
+    public SetTransitionPose() {
         arm = Arm.getInstance();
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderSpeed(SmartDashboard.getNumber("shoulder speed % setpoint", 0.0));
+        arm.setShoulderPosition(ShoulderConstants.kShoulderTransitionAngle);
     }
 
     @Override
@@ -23,12 +23,10 @@ public class RunShoulderSmartDashboard extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        arm.stopShoulder();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderTransitionAngle);
     }
-
 }

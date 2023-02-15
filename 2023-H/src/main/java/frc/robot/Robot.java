@@ -14,7 +14,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private static RobotContainer robotContainer;
     private Shuffleboard mShuffleboard;
+    private boolean ranAutonomousRoutine;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -45,8 +48,10 @@ public class Robot extends TimedRobot {
         mShuffleboard = Shuffleboard.getInstance();
 
         robotContainer = new RobotContainer();
-        PathPlannerServer.startServer(5985);
+        PathPlannerServer.startServer(5895);
         SmartDashboard.putData(CommandScheduler.getInstance());
+
+        ranAutonomousRoutine = false;
     }
 
     /**
@@ -70,13 +75,11 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        mShuffleboard.update();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        robotContainer.resetRobotPosition();
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
         // robotContainer.stopLogging();
@@ -92,8 +95,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        robotContainer.resetRobotPosition();
-        robotContainer.setupAngleOffsetFromAuto(0);
+        robotContainer.resetGyro();
+
+        ranAutonomousRoutine = true;
 
         autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -103,26 +107,47 @@ public class Robot extends TimedRobot {
         }
     }
 
+    /** This function is called periodically during autonomous. */
     @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
-        robotContainer.resetRobotPosition();
-        robotContainer.setArmMode(IdleMode.kBrake);
-        robotContainer.setWristMode(IdleMode.kBrake);
-        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
+    public void autonomousPeriodic() {
     }
 
     @Override
     public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        robotContainer.resetRobotPosition();
+
+        // If we are transitioning from autonomous,
+        // load in the correct angle offset compared
+        // to the initial pose of the path.
+        // (Tells us how the robot was setup).
+        if (ranAutonomousRoutine) {
+            double angle = robotContainer.getAngleOffsetFromAuto();
+            robotContainer.setupAngleOffsetFromAuto(angle);
+        } else {
+            // Always assume field orientation should be opposite
+            // where the gyro is zeroed.
+            robotContainer.setupAngleOffsetFromAuto(180);
+
+            // For the sake of calculating odometry correctly,
+            // make our initial pose on the field such that
+            // our robot faces the other alliance.
+            // This is only correct if you actually start
+            // the robot facing the other alliance!
+            robotContainer.resetPoseToFaceOtherAlliance();
+        }
+
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+    }
+
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+        robotContainer.resetGyro();
+        robotContainer.setArmMode(IdleMode.kBrake);
+        robotContainer.setWristMode(IdleMode.kBrake);
+        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
     }
 
     /** This function is called periodically during operator control. */

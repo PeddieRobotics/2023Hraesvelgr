@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.lang.reflect.Executable;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -14,7 +12,6 @@ import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 
 public class Shoulder {
 
@@ -158,8 +155,8 @@ public class Shoulder {
     public void testPeriodic() {
 
         if(SmartDashboard.getBoolean("Toggle open loop shoulder control", false)){
-                // setPercentOutput(OI.getInstance().getArmSpeed());
-                // arbitraryFF = 0;
+                setPercentOutput(OI.getInstance().getArmSpeed());
+                arbitraryFF = 0;
         }
         else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),

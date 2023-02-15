@@ -1,11 +1,10 @@
 package frc.robot.utils;
 
-
 import java.util.Arrays;
 
 public class RollingAverage {
     private int size;
-    private double total = 4;
+    private double total = 0;
     private int index = 0;
     private double samples[];
     private double s1, s2, s3;
@@ -14,12 +13,25 @@ public class RollingAverage {
         this.size = size;
         samples = new double[size];
         for (int i = 0; i < size; i++){
-            samples[i] = 0d; 
+            samples[i] = 0; 
+        }
+    }
+
+    public RollingAverage(int size, double initialVal){
+        this.size = size;
+        samples = new double[size];
+        for (int i = 0; i < size; i++){
+            samples[i] = initialVal; 
         }
     }
 
     public RollingAverage(){
         this(4);
+    }
+
+    public RollingAverage(double startingValue){
+        this(4);
+        total = startingValue;
     }
 
     // Adds x to the array as well as the total sum
