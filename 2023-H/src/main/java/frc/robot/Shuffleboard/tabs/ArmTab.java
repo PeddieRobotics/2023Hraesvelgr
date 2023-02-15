@@ -37,67 +37,54 @@ public class ArmTab extends ShuffleboardTabBase {
         mOperatorHasCube = tab
                 .add("hasCube", false)
                 .withSize(3, 2)
-                .withPosition(2, 1)
                 .getEntry();
         mOperatorHasCone = tab
                 .add("hasCone", false)
                 .withSize(3, 2)
-                .withPosition(2, 2)
                 .getEntry();
         mWristSpeed = tab
                 .add("wristSpeed", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 3)
                 .getEntry();
         mShoulderSpeed = tab
                 .add("shoulderSpeed", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mClawSpeed = tab
                 .add("clawSpeed", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mShoulderPos = tab
                 .add("shoulderPosition", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mWristPos = tab
                 .add("wristPosition", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mShoulderIsMoving = tab
                 .add("shoulderIsMoving", false)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mWristIsMoving = tab
                 .add("wristisMoving", false)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mSetShoulderPos = tab
                 .add("setShoulderPosition", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mSetWristPos = tab
                 .add("setWristPosition", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mSetClawSpeed = tab
                 .add("setClawSpeed", 0.0)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
         mClawIsIntaking = tab
                 .add("clawIsIntaking", false)
                 .withSize(3, 2)
-                .withPosition(2, 4)
                 .getEntry();
     }
 
