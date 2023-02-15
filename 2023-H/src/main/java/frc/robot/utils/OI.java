@@ -57,7 +57,7 @@ public class OI {
     public void setupControls(){
 
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new EjectGamepiece());
+        // xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
         // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
@@ -75,7 +75,7 @@ public class OI {
         // TODO: runs auto-aligner/driver assist
 
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
-        leftStickButton.toggleOnTrue(new LockDrivetrain());
+        // leftStickButton.toggleOnTrue(new LockDrivetrain());
 
         // Cone intake / score L1 with any gamepiece
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
