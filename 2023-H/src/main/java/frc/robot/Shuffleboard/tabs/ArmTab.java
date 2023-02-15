@@ -7,6 +7,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
+import frc.robot.utils.Constants;
 
 public class ArmTab extends ShuffleboardTabBase {
     private Arm arm = Arm.getInstance();
@@ -36,19 +37,15 @@ public class ArmTab extends ShuffleboardTabBase {
 
         mOperatorHasCube = tab
                 .add("hasCube", false)
-                .withSize(3, 2)
                 .getEntry();
         mOperatorHasCone = tab
                 .add("hasCone", false)
-                .withSize(3, 2)
                 .getEntry();
         mWristSpeed = tab
                 .add("wristSpeed", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mShoulderSpeed = tab
                 .add("shoulderSpeed", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mClawSpeed = tab
                 .add("clawSpeed", 0.0)
@@ -56,35 +53,77 @@ public class ArmTab extends ShuffleboardTabBase {
                 .getEntry();
         mShoulderPos = tab
                 .add("shoulderPosition", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mWristPos = tab
                 .add("wristPosition", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mShoulderIsMoving = tab
                 .add("shoulderIsMoving", false)
-                .withSize(3, 2)
                 .getEntry();
         mWristIsMoving = tab
                 .add("wristisMoving", false)
-                .withSize(3, 2)
                 .getEntry();
         mSetShoulderPos = tab
                 .add("setShoulderPosition", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mSetWristPos = tab
                 .add("setWristPosition", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mSetClawSpeed = tab
                 .add("setClawSpeed", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mClawIsIntaking = tab
                 .add("clawIsIntaking", false)
-                .withSize(3, 2)
+                .getEntry();
+
+        tab
+                .add("Shoulder kS", Constants.ShoulderConstants.kSVolts)
+                .getEntry();
+        tab
+                .add("Shoulder kG", Constants.ShoulderConstants.kGVolts)
+                .getEntry();
+        tab
+                .add("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad)
+                .getEntry();
+        tab
+                .add("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad)
+                .getEntry();
+        tab
+                .add("Shoulder P", Constants.ShoulderConstants.kP)
+                .getEntry();
+        tab
+                .add("Shoulder I", Constants.ShoulderConstants.kI)
+                .getEntry();
+        tab
+                .add("Shoulder D", Constants.ShoulderConstants.kD)
+                .getEntry();
+        tab
+                .add("Shoulder FF", Constants.ShoulderConstants.kFF)
+                .getEntry();
+
+        tab
+                .add("Wrist kS", Constants.ShoulderConstants.kSVolts)
+                .getEntry();
+        tab
+                .add("Wrist kG", Constants.ShoulderConstants.kGVolts)
+                .getEntry();
+        tab
+                .add("Wrist kV", Constants.ShoulderConstants.kVVoltSecondPerRad)
+                .getEntry();
+        tab
+                .add("Wrist kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad)
+                .getEntry();
+        tab
+                .add("Wrist P", Constants.ShoulderConstants.kP)
+                .getEntry();
+        tab
+                .add("Wrist I", Constants.ShoulderConstants.kI)
+                .getEntry();
+        tab
+                .add("Wrist D", Constants.ShoulderConstants.kD)
+                .getEntry();
+        tab
+                .add("Wrist FF", Constants.ShoulderConstants.kFF)
                 .getEntry();
     }
 

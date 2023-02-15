@@ -89,17 +89,6 @@ public class Shuffleboard extends SubsystemBase{
     }
 
     private void setupShoulderShuffleboard(){
-        //dynamic FF parameters
-        SmartDashboard.putNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts);
-        SmartDashboard.putNumber("Shoulder kG", Constants.ShoulderConstants.kGVolts);
-        SmartDashboard.putNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
-        SmartDashboard.putNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
-
-        // PID controller parameters
-        SmartDashboard.putNumber("Shoulder P", Constants.ShoulderConstants.kP);
-        SmartDashboard.putNumber("Shoulder I", Constants.ShoulderConstants.kI);
-        SmartDashboard.putNumber("Shoulder D", Constants.ShoulderConstants.kD);
-        SmartDashboard.putNumber("Shoulder FF", Constants.ShoulderConstants.kFF);
 
         // Toggle shoulder pid
         SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);
@@ -129,19 +118,7 @@ public class Shuffleboard extends SubsystemBase{
     }
     
     private void setupWristShuffleboard(){
-        //dynamic FF parameters
-        SmartDashboard.putNumber("Wrist kS", Constants.WristConstants.kSVolts);
-        SmartDashboard.putNumber("Wrist kG", Constants.WristConstants.kGVolts);
-        SmartDashboard.putNumber("Wrist kV", Constants.WristConstants.kVVoltSecondPerRad);
-        SmartDashboard.putNumber("Wrist kA", Constants.WristConstants.kAVoltSecondSquaredPerRad);
-
         SmartDashboard.putNumber("Wrist Arbitrary FF", wrist.getDynamicFeedForward());
-        
-        // PID controller parameters
-        SmartDashboard.putNumber("Wrist P", Constants.WristConstants.kP);
-        SmartDashboard.putNumber("Wrist I", Constants.WristConstants.kI);
-        SmartDashboard.putNumber("Wrist D", Constants.WristConstants.kD);
-        SmartDashboard.putNumber("Wrist FF", Constants.WristConstants.kFF);
 
         //Toggle wrist pid
         SmartDashboard.putBoolean("Toggle wrist PID tuning mode", false);

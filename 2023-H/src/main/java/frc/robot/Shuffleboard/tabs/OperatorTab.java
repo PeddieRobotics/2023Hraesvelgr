@@ -25,23 +25,18 @@ public class OperatorTab extends ShuffleboardTabBase {
 
         mOperatorHasCube = tab
                 .add("hasCube", false)
-                .withSize(1, 1)
                 .getEntry();
         mOperatorHasCone = tab
                 .add("hasCone", false)
-                .withSize(1, 1)
                 .getEntry();
         mClawIsIntaking = tab
                 .add("isIntaking", false)
-                .withSize(3, 2)
                 .getEntry();
         mWristIsMoving = tab
                 .add("wristIsMoving", false)
-                .withSize(3, 2)
                 .getEntry();
         mShoulderIsMoving = tab
                 .add("shoulderIsMoving", false)
-                .withSize(3, 2)
                 .getEntry();
     }
 

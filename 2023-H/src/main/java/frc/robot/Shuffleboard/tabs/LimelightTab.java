@@ -23,19 +23,15 @@ public class LimelightTab extends ShuffleboardTabBase {
 
         mLimelightHasTarget = tab
                 .add("hasTarget", false)
-                .withSize(3, 2)
                 .getEntry();
         mTx = tab
                 .add("tx", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mTy = tab
                 .add("ty", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mTa = tab
                 .add("ta", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         // mPrimaryTagID = tab TODO
         // .add("primaryTagID", 1)
@@ -43,15 +39,12 @@ public class LimelightTab extends ShuffleboardTabBase {
         // .getEntry();
         mDistToTarget = tab
                 .add("distanceToTarget", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mPipelineFront = tab
                 .add("pipelineFront", 0)
-                .withSize(3, 2)
                 .getEntry();
         mPipelineBack = tab
                 .add("pipelineBack", 0)
-                .withSize(3, 2)
                 .getEntry();
     }
 

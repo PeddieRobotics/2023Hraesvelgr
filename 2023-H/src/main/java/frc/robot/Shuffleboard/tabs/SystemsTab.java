@@ -24,27 +24,21 @@ public class SystemsTab extends ShuffleboardTabBase {
 
         mHasCube = tab
                 .add("hasCube", false)
-                .withSize(3, 2)
                 .getEntry();
         mHasCone = tab
                 .add("hasCone", false)
-                .withSize(3, 2)
                 .getEntry();
         mLimelightHasTarget = tab
                 .add("hasTarget", false)
-                .withSize(3, 2)
                 .getEntry();
         mTx = tab
                 .add("tx", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mTy = tab
                 .add("ty", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         mTa = tab
                 .add("ta", 0.0)
-                .withSize(3, 2)
                 .getEntry();
         // mPrimaryTagID = tab
         // .add("primaryTagID", 1)
