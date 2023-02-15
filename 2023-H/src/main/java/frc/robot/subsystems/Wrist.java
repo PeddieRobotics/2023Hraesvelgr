@@ -47,11 +47,11 @@ public class Wrist{
 
         // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
-        wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
-        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
+        // wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
+        // wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
         
-        wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-        wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
         wristMotor.setClosedLoopRampRate(0.01);
 
