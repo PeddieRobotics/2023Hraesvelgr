@@ -70,9 +70,6 @@ public class LimelightTab extends ShuffleboardTabBase {
         mTy.setDouble(LLFront.getTy());
         mTa.setDouble(LLFront.getTa());
         mDistToTarget.setDouble(LLFront.getDistance());
-        mPipelineFront.setDouble(LLFront.getPipeline());
-
         // mPrimaryTagID.setInteger(LLBack.getTargetAprilTagID());
-        mPipelineBack.setDouble(LLBack.getPipeline());
     }
 }
