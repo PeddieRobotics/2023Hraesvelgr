@@ -31,9 +31,6 @@ public class Autonomous extends SubsystemBase{
     private SwerveAutoBuilder autoBuilder;
 
     // Paths
-    private PathPlannerTrajectory OneMeterStraight, SwerveTest, SwerveTestRed;
-
-
     private PathPlannerTrajectory OnePieceBalanceCol3, OnePieceBalanceCol7, OnePieceSkedaddleMid, OnePiecePrepareCol9;
     private PathPlannerTrajectory TwoPieceFree, TwoPieceBump, TwoPieceFreeBalance, TwoPieceFreePrepareCol1, TwoPieceBumpPrepareCol9;
     private PathPlannerTrajectory ThreePieceFree;
@@ -77,9 +74,6 @@ public class Autonomous extends SubsystemBase{
     }
 
     public void defineAutoPaths(){
-        OneMeterStraight = PathPlanner.loadPath("1MeterStraight", 0.5, 0.5);
-        SwerveTest = PathPlanner.loadPath("SwerveTest", 1, 1);
-        SwerveTestRed = PathPlanner.loadPath("SwerveTestRed", 0.5, 0.5);
 
         OnePieceBalanceCol3 = PathPlanner.loadPath("1PieceBalanceCol3", 0.5, 0.5);
         OnePieceBalanceCol7 = PathPlanner.loadPath("1PieceBalanceCol7", 0.5, 0.5);
@@ -96,13 +90,6 @@ public class Autonomous extends SubsystemBase{
 
 
     public void setupAutoRoutines(){
-        autoRoutines.put("1 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraight", 2,2)));
-        autoRoutines.put("1 Meter Straight Path Spin", createCommandFromTrajectory(PathPlanner.loadPathGroup("1MeterStraightSpin", 0.5, 0.5)));
-        autoRoutines.put("U-path", createCommandFromTrajectory(PathPlanner.loadPathGroup("U-path", 0.5, 0.5)));
-        autoRoutines.put("Star", createCommandFromTrajectory(PathPlanner.loadPathGroup("Star", 0.5, 0.5)));
-        autoRoutines.put("ShootingStar", createCommandFromTrajectory(PathPlanner.loadPathGroup("ShootingStar", 0.5, 0.5)));
-        autoRoutines.put("SwerveTest", createCommandFromTrajectory(PathPlanner.loadPathGroup("SwerveTest", 0.3, 0.3)));
-        autoRoutines.put("2 Meter Straight Path", createCommandFromTrajectory(PathPlanner.loadPathGroup("2MeterStraight", 1.5, 1.5)));
 
         //Mock competition paths
         autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 0.5, 0.5)));
