@@ -81,6 +81,7 @@ public class Shuffleboard extends SubsystemBase{
 
     private void setupClawShuffleboard(){
         SmartDashboard.putNumber("OR: Claw speed", 0.0);
+        SmartDashboard.putData("Game Piece", gamepieceChooser);
     }
 
     private void updateClawShuffleboard(){

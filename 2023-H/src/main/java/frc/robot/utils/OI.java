@@ -66,7 +66,7 @@ public class OI {
         xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
         // squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
@@ -112,13 +112,13 @@ public class OI {
     }
 
     public double getForward() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return 0;
     }
 
     public double getStrafe() {
-        // return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        return 0;
+        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -173,13 +173,13 @@ public class OI {
     }
 
     public double getRotation() {
-        // double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
-        // double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
+        double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
+        double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
 
-        // double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
+        double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
         
-        // return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
-        return 0;
+        return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {
