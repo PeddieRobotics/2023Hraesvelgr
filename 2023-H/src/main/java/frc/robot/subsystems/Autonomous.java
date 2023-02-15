@@ -139,6 +139,8 @@ public class Autonomous extends SubsystemBase{
         return autoBuilder.fullAuto(trajectory);
     }
 
-
+    public double getAngleOffsetFromAuto(){
+        return 180.0; // NEED TO IMPLEMENT BY RETURNING INITIAL POSE FROM AUTO. Defaulting to 180 degrees.
+    }
 
 }
