@@ -18,7 +18,6 @@ import frc.robot.utils.Constants.OIConstants;
 import frc.robot.commands.ArmCommands.SetFloorConePose;
 import frc.robot.commands.ArmCommands.SetFloorCubePose;
 import frc.robot.commands.ArmCommands.SetHumanPlayerConePose;
-import frc.robot.commands.ArmCommands.SetHumanPlayerCubePose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
@@ -69,7 +68,7 @@ public class OI {
         circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        // squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
+        // squareButton.onTrue(new SetHumanPlayerConePone());
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));

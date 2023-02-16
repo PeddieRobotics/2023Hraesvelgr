@@ -169,19 +169,20 @@ public final class Constants {
                 public static final double kAngleMax = 135;
             
                 public static final double kShoulderStowedAngle = -75.0;
-                public static final double kShoulderTransitionAngle = -45.0;
-                public static final double kShoulderLevelOneAngle = -33.0;
+                public static final double kShoulderSeekAngle = -75.0;
+                public static final double kShoulderLevelOneAngle = -75.0;
 
-                public static final double kShoulderFloorConeAngle = -33;
+                public static final double kShoulderFloorConeAngle = -59.0;
+                public static final double kShoulderFloorCubeAngle = -59.0;
                 public static final double kShoulderLevelTwoConeAngle = 5.0;
-                public static final double kShoulderLevelThreeConeAngle = 153.0;
-                public static final double kShoulderHumanPlayerConeAngle = 20.77;
+                public static final double kShoulderLevelTwoCubeAngle = 5.0;
 
-                public static final double kShoulderFloorCubeAngle = -36.0;
-                public static final double kShoulderLevelTwoCubeAngle = 0.0;
-                public static final double kShoulderLevelThreeCubeLobAngle = 5.0;
-                public static final double kShoulderLevelThreeCubeDunkAngle = 144.0;
-                public static final double kShoulderHumanPlayerCubeAngle = -5.0;
+                public static final double kShoulderLevelThreeTransition = 90.0;
+                public static final double kShoulderLevelThreeCubeLobAngle = 10.0;
+                public static final double kShoulderLevelThreeCubeDunkAngle = 155.0;
+                public static final double kShoulderLevelThreeConeAngle = 155.0;
+                public static final double kShoulderHumanPlayerConeAngle = 20.0;
+                public static final double kShoulderHumanPlayerSingleSS = -75.0;
 
                 public static final double kShoulderSetpointTolerance = 1.0; // degrees
 
@@ -212,19 +213,21 @@ public final class Constants {
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
-                public static final double kWristStowedAngle = 135.0;
-                public static final double kWristLevelOneAngle = 25.0;
+                public static final double kWristStowedAngle = 70.0;
+                public static final double kWristSeekAngle = -10.0;
+                public static final double kWristLevelOneAngle = -10.0;
 
-                public static final double kWristFloorConeAngle = -60.0;
-                public static final double kWristLevelTwoConeAngle = -34.0;
-                public static final double kWristLevelThreeConeAngle = 72.0;
-                public static final double kWristHumanPlayerConeAngle = -120;
+                public static final double kWristFloorConeAngle = -62.0;
+                public static final double kWristFloorCubeAngle = -75.0;
+                public static final double kWristLevelTwoConeAngle = -87.4;
+                public static final double kWristLevelTwoCubeAngle = -87.4;
 
-                public static final double kWristFloorCubeAngle = -76;
-                public static final double kWristLevelTwoCubeAngle = -43.87;
-                public static final double kWristLevelThreeCubeLobAngle = 26.1;
-                public static final double kWristLevelThreeCubeDunkAngle = 104.0;
-                public static final double kWristHumanPlayerCubeAngle = 21.3;
+                public static final double kWristLevelThreeCubeTransition = 103.0;
+                public static final double kWristLevelThreeCubeLobAngle = -29.4;
+                public static final double kWristLevelThreeCubeDunkAngle = 30.0;
+                public static final double kWristLevelThreeConeAngle = 30.0;
+                public static final double kWristHumanPlayerConeAngle = 30.0;
+                public static final double kWristHumanPlayerSingleSS = -80.0;
 
                 public static final double kWristSetpointTolerance = 1.0; // degrees
 
