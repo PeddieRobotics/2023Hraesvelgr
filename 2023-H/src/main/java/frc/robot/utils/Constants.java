@@ -174,6 +174,7 @@ public final class Constants {
 
                 public static final double kShoulderFloorConeAngle = -59.0;
                 public static final double kShoulderFloorCubeAngle = -59.0;
+
                 public static final double kShoulderLevelTwoConeAngle = 5.0;
                 public static final double kShoulderLevelTwoCubeAngle = 5.0;
 
@@ -219,6 +220,7 @@ public final class Constants {
 
                 public static final double kWristFloorConeAngle = -62.0;
                 public static final double kWristFloorCubeAngle = -75.0;
+                
                 public static final double kWristLevelTwoConeAngle = -87.4;
                 public static final double kWristLevelTwoCubeAngle = -87.4;
 
@@ -226,22 +228,22 @@ public final class Constants {
                 public static final double kWristLevelThreeCubeLobAngle = -29.4;
                 public static final double kWristLevelThreeCubeDunkAngle = 30.0;
                 public static final double kWristLevelThreeConeAngle = 30.0;
-                public static final double kWristHumanPlayerConeAngle = 30.0;
-                public static final double kWristHumanPlayerSingleSS = -80.0;
+                public static final double kWristHumanPlayerConeAngle = -80.0;
+                public static final double kWristHumanPlayerSingleSS = 30.0;
 
                 public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor =  99.1/39.2; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kWristEncoderConversionFactor =  103/41.761; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 30;
+                public static final int kClawMotorCurrentLimit = 40;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
-                public static final double kConeIntakeSpeed = 0.75;
-                public static final double kConeOuttakeSpeed = -0.4;
+                public static final double kConeIntakeSpeed = -0.75;
+                public static final double kConeOuttakeSpeed = 0.4;
                 public static final double kCubeIntakeSpeed = -0.75;
                 public static final double kCubeOuttakeSpeed = 0.4;
         }

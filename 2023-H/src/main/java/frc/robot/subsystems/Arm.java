@@ -70,7 +70,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void stopShoulder(){
-        shoulder.stopShoulder();;
+        shoulder.stopShoulder();
     }
 
     public void stopWrist(){

@@ -14,7 +14,7 @@ public class SetTransitionPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderTransitionAngle);
+        // arm.setShoulderPosition(ShoulderConstants.kShoulderTransitionAngle);
     }
 
     @Override
@@ -27,6 +27,7 @@ public class SetTransitionPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderTransitionAngle);
+        // return arm.isShoulderAtAngle(ShoulderConstants.kShoulderTransitionAngle);
+        return false;
     }
 }

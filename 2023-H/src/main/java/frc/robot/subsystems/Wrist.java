@@ -43,11 +43,11 @@ public class Wrist{
         wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kWristEncoderConversionFactor);
-        setEncoder(103.77);
+        setEncoder(103);
 
         // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
-        wristMotor.setSoftLimit(SoftLimitDirection.kForward, 140);
+        wristMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -140);
         
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
