@@ -180,8 +180,8 @@ public final class Constants {
 
                 public static final double kShoulderLevelThreeTransition = 90.0;
                 public static final double kShoulderLevelThreeCubeLobAngle = 10.0;
-                public static final double kShoulderLevelThreeCubeDunkAngle = 155.0;
-                public static final double kShoulderLevelThreeConeAngle = 155.0;
+                public static final double kShoulderLevelThreeCubeDunkAngle = 157.0;
+                public static final double kShoulderLevelThreeConeAngle = 157.0;
                 public static final double kShoulderHumanPlayerConeAngle = 20.0;
                 public static final double kShoulderHumanPlayerSingleSS = -75.0;
 
@@ -226,8 +226,8 @@ public final class Constants {
 
                 public static final double kWristLevelThreeCubeTransition = 103.0;
                 public static final double kWristLevelThreeCubeLobAngle = -29.4;
-                public static final double kWristLevelThreeCubeDunkAngle = 30.0;
-                public static final double kWristLevelThreeConeAngle = 30.0;
+                public static final double kWristLevelThreeCubeDunkAngle = 2.5;
+                public static final double kWristLevelThreeConeAngle = 2.5;
                 public static final double kWristHumanPlayerConeAngle = -80.0;
                 public static final double kWristHumanPlayerSingleSS = 30.0;
 
