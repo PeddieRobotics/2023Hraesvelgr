@@ -14,7 +14,7 @@ import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
-public class Wrist{
+public class Wrist {
     private static Wrist wrist;
 
     private CANSparkMax wristMotor;
@@ -49,7 +49,7 @@ public class Wrist{
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, 155);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -120);
-        
+
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
@@ -63,60 +63,60 @@ public class Wrist{
         pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
     }
 
-    public double getDynamicFeedForward(){
+    public double getArbitraryFF() {
         return arbitraryFF;
     }
 
     // public boolean atLimitSensor(){
-        // return !limitSensor.get();
+    // return !limitSensor.get();
     // }
 
     public void resetEncoder() {
         setEncoder(0);
     }
 
-    public void setEncoder(double newEncoderValue){
+    public void setEncoder(double newEncoderValue) {
         wristMotor.getEncoder().setPosition(newEncoderValue);
     }
 
     public void setPercentOutput(double speed) {
         // if(speed > 0){
-        //     wristMotor.set(speed);
+        // wristMotor.set(speed);
         // } else {
-        //     if(!atLimitSensor()){
-        //         wristMotor.set(speed);
-        //     } else {
-        //         wristMotor.set(0);
-        //     }
+        // if(!atLimitSensor()){
+        // wristMotor.set(speed);
+        // } else {
+        // wristMotor.set(0);
+        // }
         // }
         wristMotor.set(speed);
     }
 
-    public double getMotorTemperature(){
+    public double getMotorTemperature() {
         return wristMotor.getMotorTemperature();
     }
 
-    public double getSpeed(){
+    public double getSpeed() {
         return wristMotor.get();
     }
 
-    public double getOutputCurrent(){
+    public double getOutputCurrent() {
         return wristMotor.getOutputCurrent();
     }
 
-    public double getPosition(){
+    public double getPosition() {
         return wristMotor.getEncoder().getPosition();
     }
 
-    public double getVelocity(){
+    public double getVelocity() {
         return wristMotor.getEncoder().getVelocity();
     }
 
-    public void stopWrist(){
+    public void stopWrist() {
         wristMotor.set(0);
     }
 
-    public void setWristFeedForward(double dbks, double dbkg, double dbkv, double dbka){
+    public void setWristFeedForward(double dbks, double dbkg, double dbkv, double dbka) {
         if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
             kS = dbks;
             kG = dbkg;
@@ -126,14 +126,14 @@ public class Wrist{
         }
     }
 
-    public void setPidController(double p, double i, double d, double ff){
+    public void setPidController(double p, double i, double d, double ff) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(ff);
     }
 
-    public boolean isMoving(){
+    public boolean isMoving() {
         return wristMotor.get() != 0.0;
     }
 
@@ -141,34 +141,33 @@ public class Wrist{
 
     }
 
-    public void testPeriodic(){
-        if(SmartDashboard.getBoolean("Toggle open loop wrist control", false)){
+    public void testPeriodic() {
+        if (SmartDashboard.getBoolean("Toggle open loop wrist control", false)) {
             SmartDashboard.putNumber("Wrist Speed", OI.getInstance().getArmSpeed());
             setPercentOutput(OI.getInstance().getArmSpeed());
             arbitraryFF = 0;
-        }
-        else if(SmartDashboard.getBoolean("Toggle wrist PID tuning mode", false)){
+        } else if (SmartDashboard.getBoolean("Toggle wrist PID tuning mode", false)) {
             setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
-                SmartDashboard.getNumber("Wrist I", WristConstants.kI),
-                SmartDashboard.getNumber("Wrist D", WristConstants.kD),
-                SmartDashboard.getNumber("Wrist FF", WristConstants.kFF));
+                    SmartDashboard.getNumber("Wrist I", WristConstants.kI),
+                    SmartDashboard.getNumber("Wrist D", WristConstants.kD),
+                    SmartDashboard.getNumber("Wrist FF", WristConstants.kFF));
 
             setWristFeedForward(SmartDashboard.getNumber("Wrist kS", Constants.WristConstants.kSVolts),
-                SmartDashboard.getNumber("Wrist kG", WristConstants.kSVolts), 
-                SmartDashboard.getNumber("Wrist kV", WristConstants.kVVoltSecondPerRad),
-                SmartDashboard.getNumber("Wrist kA", WristConstants.kAVoltSecondSquaredPerRad));
+                    SmartDashboard.getNumber("Wrist kG", WristConstants.kSVolts),
+                    SmartDashboard.getNumber("Wrist kV", WristConstants.kVVoltSecondPerRad),
+                    SmartDashboard.getNumber("Wrist kA", WristConstants.kAVoltSecondSquaredPerRad));
 
-            setPosition(SmartDashboard.getNumber("Wrist PID setpoint (deg)",0));
-        
+            setPosition(SmartDashboard.getNumber("Wrist PID setpoint (deg)", 0));
+
         }
     }
 
-    public void setMode(IdleMode mode){
+    public void setMode(IdleMode mode) {
         wristMotor.setIdleMode(mode);
     }
 
     public static Wrist getInstance() {
-        if(wrist == null){
+        if (wrist == null) {
             wrist = new Wrist();
         }
         return wrist;

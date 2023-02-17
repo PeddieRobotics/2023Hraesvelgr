@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
 
-public class Shuffleboard extends SubsystemBase{
+public class Shuffleboard extends SubsystemBase {
     public static Shuffleboard shuffleboard;
 
     private SendableChooser<String> objectiveChooser, gamepieceChooser;
@@ -28,8 +28,8 @@ public class Shuffleboard extends SubsystemBase{
         setupWristShuffleboard();
     }
 
-    public static Shuffleboard getInstance(){
-        if(shuffleboard == null){
+    public static Shuffleboard getInstance() {
+        if (shuffleboard == null) {
             shuffleboard = new Shuffleboard();
         }
         return shuffleboard;
@@ -44,8 +44,9 @@ public class Shuffleboard extends SubsystemBase{
         updateWristShuffleboard();
     }
 
-    private void setupMiscShuffleboard(){
-         // Choosers below are for testing purposes, should be removed when full logic /sensors are available
+    private void setupMiscShuffleboard() {
+        // Choosers below are for testing purposes, should be removed when full logic
+        // /sensors are available
         objectiveChooser = new SendableChooser<String>();
         objectiveChooser.addOption("Cone", "Cone");
         objectiveChooser.addOption("Cube", "Cube");
@@ -58,10 +59,10 @@ public class Shuffleboard extends SubsystemBase{
 
     }
 
-    private void updateMiscShuffleboard(){
+    private void updateMiscShuffleboard() {
     }
 
-    private void setupDrivetrainShuffleboard(){
+    private void setupDrivetrainShuffleboard() {
         SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Odometry theta", drivetrain.getPose().getRotation().getDegrees());
@@ -71,7 +72,7 @@ public class Shuffleboard extends SubsystemBase{
 
     }
 
-    private void updateDrivetrainShuffleboard(){
+    private void updateDrivetrainShuffleboard() {
         SmartDashboard.putNumber("Odometry X", drivetrain.getPose().getX());
         SmartDashboard.putNumber("Odometry Y", drivetrain.getPose().getY());
         SmartDashboard.putNumber("Odometry theta", drivetrain.getPose().getRotation().getDegrees());
@@ -79,16 +80,16 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Snap To Angle Heading", 0);
     }
 
-    private void setupClawShuffleboard(){
+    private void setupClawShuffleboard() {
         SmartDashboard.putNumber("OR: Claw speed", 0.0);
     }
 
-    private void updateClawShuffleboard(){
+    private void updateClawShuffleboard() {
         SmartDashboard.putNumber("Claw speed", claw.getClawSpeed());
         SmartDashboard.putNumber("Claw current", claw.getCurrent());
     }
 
-    private void setupShoulderShuffleboard(){
+    private void setupShoulderShuffleboard() {
 
         // Toggle shoulder pid
         SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);
@@ -102,53 +103,53 @@ public class Shuffleboard extends SubsystemBase{
 
         // Execute button
         SmartDashboard.putBoolean("Execute", false);
-        
-        
+
     }
 
-    private void updateShoulderShuffleboard(){
+    private void updateShoulderShuffleboard() {
         // Auxiliary information
         SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
         SmartDashboard.putNumber("Shoulder temperature", shoulder.getMotorTemperature());
         SmartDashboard.putNumber("Shoulder encoder pos", shoulder.getPosition());
         SmartDashboard.putNumber("Shoulder % output", shoulder.getSpeed());
         SmartDashboard.putNumber("Shoulder angle", shoulder.getAngle());
-        SmartDashboard.putNumber("Shoulder velocity/100", shoulder.getVelocity()/100.0);
+        SmartDashboard.putNumber("Shoulder velocity/100", shoulder.getVelocity() / 100.0);
         SmartDashboard.putNumber("Shoulder Arbitrary FF", shoulder.getArbitraryFF());
     }
-    
-    private void setupWristShuffleboard(){
-        SmartDashboard.putNumber("Wrist Arbitrary FF", wrist.getDynamicFeedForward());
 
-        //Toggle wrist pid
+    private void setupWristShuffleboard() {
+        SmartDashboard.putNumber("Wrist Arbitrary FF", wrist.getArbitraryFF());
+
+        // Toggle wrist pid
         SmartDashboard.putBoolean("Toggle wrist PID tuning mode", false);
 
-        //Toggle open loop wrist control
+        // Toggle open loop wrist control
         SmartDashboard.putBoolean("Toggle open loop wrist control", false);
 
-        //setpoints
+        // setpoints
         SmartDashboard.putNumber("Wrist speed % setpoint", 0.0);
         SmartDashboard.putNumber("Wrist PID setpoint (deg)", 0.0);
 
     }
 
-    private void updateWristShuffleboard(){
+    private void updateWristShuffleboard() {
         SmartDashboard.putNumber("Wrist encoder pos", wrist.getPosition());
         SmartDashboard.putNumber("Wrist velocity", wrist.getVelocity());
         SmartDashboard.putNumber("Wrist current", wrist.getOutputCurrent());
         SmartDashboard.putNumber("Wrist temperature", wrist.getMotorTemperature());
     }
 
-    // Choosers below are for testing purposes, should be removed when full logic /sensors are available
-    public boolean isCurrentObjectiveCone(){
+    // Choosers below are for testing purposes, should be removed when full logic
+    // /sensors are available
+    public boolean isCurrentObjectiveCone() {
         return objectiveChooser.getSelected().equals("Cone");
     }
 
-    public boolean hasCone(){
+    public boolean hasCone() {
         return gamepieceChooser.getSelected().equals("Cone");
     }
 
-    public boolean hasCube(){
+    public boolean hasCube() {
         return gamepieceChooser.getSelected().equals("Cube");
     }
 }

@@ -33,10 +33,10 @@ public class OperatorTab extends ShuffleboardTabBase {
                 .add("isIntaking", false)
                 .getEntry();
         mWristIsMoving = tab
-                .add("wristIsMoving", false)
+                .add("wrist isMoving", false)
                 .getEntry();
         mShoulderIsMoving = tab
-                .add("shoulderIsMoving", false)
+                .add("shoulder isMoving", false)
                 .getEntry();
     }
 
