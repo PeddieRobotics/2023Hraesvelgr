@@ -7,38 +7,43 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetFloorCubePose extends CommandBase{
     private Arm arm;
-    private boolean hasStowed;
+    private boolean shoulderStowed, shoulderStowing;
 
     public SetFloorCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
-
-        hasStowed = false;
+        shoulderStowed = false;
+        shoulderStowing = false;
     }
 
     @Override
     public void initialize() {
+        shoulderStowed = false;
+        shoulderStowing = false;
         arm.setWristPosition(WristConstants.kWristStowedAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(-10)){
+        if(arm.isWristAboveAngle(-10) && !shoulderStowing){
             arm.setShoulderPosition(ShoulderConstants.kShoulderStowedAngle);
+            shoulderStowing = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle)){
-            hasStowed = true;
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle) && shoulderStowing){
             arm.setShoulderPosition(ShoulderConstants.kShoulderFloorCubeAngle);
+            shoulderStowed = true;
         }
 
-        if(hasStowed && arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle)){
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle) && shoulderStowed){
             arm.setWristPosition(WristConstants.kWristFloorCubeAngle);
         }
     }
 
     @Override
     public void end(boolean interrupted){
+        shoulderStowed = false;
+        shoulderStowing = false;
     }
 
     @Override

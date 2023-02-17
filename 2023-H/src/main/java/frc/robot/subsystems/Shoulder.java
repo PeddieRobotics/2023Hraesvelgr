@@ -132,7 +132,7 @@ public class Shoulder{
 
     public void disablePIDController(){
         setShoulderFeedforward(0, 0, 0, 0);
-        setPidController(0, 0, 0, 0);
+        setPidController(0, 0, 0, 0, 0);
     }
 
     public void setShoulderFeedforward(double dbks, double dbkg, double dbkv, double dbka){
@@ -143,11 +143,12 @@ public class Shoulder{
         shoulderFeedforward = new ArmFeedforward(kS, kG, kV, kA);
     }
 
-    public void setPidController(double p, double i, double d, double ff){
+    public void setPidController(double p, double i, double d, double ff, double izone){
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(ff);
+        pidController.setIZone(izone);
     }
 
     public void periodic() {
@@ -164,7 +165,8 @@ public class Shoulder{
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
                 SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
                 SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
-                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF));
+                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
+                SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
 
             setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
                 SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts), 

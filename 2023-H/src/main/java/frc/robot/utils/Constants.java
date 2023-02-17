@@ -160,13 +160,13 @@ public final class Constants {
                  // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 30; // 40;
             
-                public static final double kP = 0.015;
-                public static final double kI = 0.0;
-                public static final double kD = 0.0;
-                public static final double kIz = 0.0;
+                public static final double kP = 0.013;
+                public static final double kI = 0.000002;    
+                public static final double kD = 0.00003;
+                public static final double kIz = 7;
                 public static final double kFF = 0.0;
                 public static final double kAngleMin = -75;
-                public static final double kAngleMax = 135;
+                public static final double kAngleMax = 155;
             
                 public static final double kShoulderStowedAngle = -75.0;
                 public static final double kShoulderSeekAngle = -75.0;
@@ -201,7 +201,7 @@ public final class Constants {
                 // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 25;
             
-                public static final double kP = 0.01;
+                public static final double kP = 0.005;
                 public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
@@ -242,9 +242,9 @@ public final class Constants {
                 public static final int kClawMotorCurrentLimit = 40;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
-                public static final double kConeIntakeSpeed = -0.75;
-                public static final double kConeOuttakeSpeed = 0.4;
-                public static final double kCubeIntakeSpeed = -0.75;
-                public static final double kCubeOuttakeSpeed = 0.4;
+                public static final double kConeIntakeSpeed = -1;
+                public static final double kConeOuttakeSpeed = 1;
+                public static final double kCubeIntakeSpeed = -1;
+                public static final double kCubeOuttakeSpeed = 1;
         }
 }

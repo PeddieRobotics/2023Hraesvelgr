@@ -61,11 +61,21 @@ public class OI {
 
     public void setupControls(){
 
+        // Manual gamepiece eject
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new EjectGamepiece());
+        // xButton.onTrue(new EjectGamepiece());
 
+        // Cone intake / score L1 with any gamepiece
+        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
+        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+
+        // Cube intake / score L1 with any gamepiece
+        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
+        // optionsButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+
+        // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
         // squareButton.onTrue(new SetHumanPlayerConePone());
@@ -81,14 +91,6 @@ public class OI {
 
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
         // leftStickButton.toggleOnTrue(new LockDrivetrain());
-
-        // Cone intake / score L1 with any gamepiece
-        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
-        shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
-
-        // Cube intake / score L1 with any gamepiece
-        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
-        optionsButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Clears all current pose commands and returns the arm to a neutral, stowed pose.
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);

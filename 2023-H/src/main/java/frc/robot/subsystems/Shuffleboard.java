@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
+import frc.robot.utils.Constants.ShoulderConstants;
 
 public class Shuffleboard extends SubsystemBase{
     public static Shuffleboard shuffleboard;
@@ -99,6 +100,7 @@ public class Shuffleboard extends SubsystemBase{
         // PID controller parameters
         SmartDashboard.putNumber("Shoulder P", Constants.ShoulderConstants.kP);
         SmartDashboard.putNumber("Shoulder I", Constants.ShoulderConstants.kI);
+        SmartDashboard.putNumber("Shoulder IZone", Constants.ShoulderConstants.kIz);
         SmartDashboard.putNumber("Shoulder D", Constants.ShoulderConstants.kD);
         SmartDashboard.putNumber("Shoulder FF", Constants.ShoulderConstants.kFF);
 
