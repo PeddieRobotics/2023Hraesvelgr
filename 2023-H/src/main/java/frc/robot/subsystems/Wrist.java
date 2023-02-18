@@ -126,11 +126,12 @@ public class Wrist{
         }
     }
 
-    public void setPidController(double p, double i, double d, double ff){
+    public void setPidController(double p, double i, double d, double ff, double izone){
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
         pidController.setFF(ff);
+        pidController.setIZone(izone);
     }
 
     public boolean isMoving(){
@@ -151,7 +152,8 @@ public class Wrist{
             setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
                 SmartDashboard.getNumber("Wrist I", WristConstants.kI),
                 SmartDashboard.getNumber("Wrist D", WristConstants.kD),
-                SmartDashboard.getNumber("Wrist FF", WristConstants.kFF));
+                SmartDashboard.getNumber("Wrist FF", WristConstants.kFF),
+                SmartDashboard.getNumber("Wrist Izone", WristConstants.kIz));
 
             setWristFeedForward(SmartDashboard.getNumber("Wrist kS", Constants.WristConstants.kSVolts),
                 SmartDashboard.getNumber("Wrist kG", WristConstants.kSVolts), 

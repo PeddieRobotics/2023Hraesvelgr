@@ -33,12 +33,14 @@ public class SetFloorConePose extends CommandBase{
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle) && shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderFloorConeAngle);
+            // arm.setShoulderPosition(ShoulderConstants.kShoulderFloorConeAngle);
+            arm.setShoulderPosition(ShoulderConstants.kShoulderExtendedFloorConeAngle);
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kWristFloorConeAngle);
+        // if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle) && shoulderStowed){
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderExtendedFloorConeAngle) && shoulderStowed){
+            arm.setWristPosition(WristConstants.kWristExtendedFloorConeAngle);
         }
     
     }

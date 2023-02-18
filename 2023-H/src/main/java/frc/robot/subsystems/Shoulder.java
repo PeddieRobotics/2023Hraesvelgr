@@ -50,15 +50,15 @@ public class Shoulder{
 
         shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
         shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
-        setEncoder(-75.0);
+        setEncoder(0.0);
 
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 45);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -45);
         
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 45);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -45);
 
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -174,7 +174,7 @@ public class Shoulder{
                 SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
 
             double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg)",0);
-            if(shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 145.0 && SmartDashboard.getBoolean("Execute", false)){
+            if(shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 155.0 && SmartDashboard.getBoolean("Execute", false)){
                 setPosition(shoulderPIDSetpoint);
             }
         }

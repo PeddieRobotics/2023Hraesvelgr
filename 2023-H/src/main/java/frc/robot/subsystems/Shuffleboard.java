@@ -145,6 +145,7 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Wrist I", Constants.WristConstants.kI);
         SmartDashboard.putNumber("Wrist D", Constants.WristConstants.kD);
         SmartDashboard.putNumber("Wrist FF", Constants.WristConstants.kFF);
+        SmartDashboard.putNumber("Wrist Izone", Constants.WristConstants.kIz);
 
         //Toggle wrist pid
         SmartDashboard.putBoolean("Toggle wrist PID tuning mode", false);

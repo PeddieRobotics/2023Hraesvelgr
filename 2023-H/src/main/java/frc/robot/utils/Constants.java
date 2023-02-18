@@ -172,8 +172,14 @@ public final class Constants {
                 public static final double kShoulderLLSeekAngle = -75.0;
                 public static final double kShoulderLevelOneAngle = -75.0;
 
+                // Shoulder is not fully extended out
                 public static final double kShoulderFloorConeAngle = -59.0;
                 public static final double kShoulderFloorCubeAngle = -59.0;
+
+                // Shoudler is fully extended out
+                public static final double kShoulderExtendedFloorConeAngle = -30.0;
+                public static final double kShoulderExtendedFloorCubeAngle = -37.0;
+
 
                 public static final double kShoulderLevelTwoConeAngle = 5.0;
                 public static final double kShoulderLevelTwoCubeAngle = 5.0;
@@ -202,12 +208,12 @@ public final class Constants {
                 public static final int kMaxCurrent = 25;
             
                 public static final double kP = 0.005;
-                public static final double kI = 0.0;
-                public static final double kD = 0.0;
-                public static final double kIz = 0.0;
+                public static final double kI = 0.000005;
+                public static final double kD = 0.0001;
+                public static final double kIz = 4.0;
                 public static final double kFF = 0.0;
-                public static final double kAngleMin = -75;
-                public static final double kAngleMax = 135;
+                public static final double kAngleMin = 103;
+                public static final double kAngleMax = -140;
             
                 public static final double kSVolts = 0.0;
                 public static final double kGVolts = 0.0;
@@ -218,8 +224,14 @@ public final class Constants {
                 public static final double kWristLLSeekAngle = -10.0;
                 public static final double kWristLevelOneAngle = -10.0;
 
+                
+                // Shoudler is not fully extended out
                 public static final double kWristFloorConeAngle = -62.0;
                 public static final double kWristFloorCubeAngle = -75.0;
+
+                // Shoudler is fully extended out
+                public static final double kWristExtendedFloorConeAngle = -35.0;
+                public static final double kWristExtendedFloorCubeAngle = -20.0;
                 
                 public static final double kWristLevelTwoConeAngle = -87.4;
                 public static final double kWristLevelTwoCubeAngle = -87.4;

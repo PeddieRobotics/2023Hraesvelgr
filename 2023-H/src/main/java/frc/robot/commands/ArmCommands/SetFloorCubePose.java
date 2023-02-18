@@ -31,12 +31,14 @@ public class SetFloorCubePose extends CommandBase{
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle) && shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderFloorCubeAngle);
+            // arm.setShoulderPosition(ShoulderConstants.kShoulderFloorCubeAngle);
+            arm.setShoulderPosition(ShoulderConstants.kShoulderExtendedFloorCubeAngle);
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kWristFloorCubeAngle);
+        // if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle) && shoulderStowed){
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderExtendedFloorCubeAngle) && shoulderStowed){
+            arm.setWristPosition(WristConstants.kWristExtendedFloorCubeAngle);
         }
     }
 
