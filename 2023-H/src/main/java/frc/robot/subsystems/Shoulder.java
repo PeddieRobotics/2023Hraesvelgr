@@ -7,11 +7,13 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Shuffleboard.tabs.ArmTab;
 import frc.robot.utils.Constants;
 import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ShoulderConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
 
 public class Shoulder {
 
@@ -23,8 +25,12 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private double kS, kG, kV, kA, arbitraryFF;
+    private ArmTab armTab;
+    private GenericEntry mShoulderTogglePID;
+    private GenericEntry mShoulderToggleOpenLoop;
 
     public Shoulder() {
+
         shoulderMotorMaster = new CANSparkMax(RobotMap.kShoulderMotorMaster, MotorType.kBrushless);
         shoulderMotorMaster.setSmartCurrentLimit(ShoulderConstants.kMaxCurrent);
 
@@ -67,6 +73,11 @@ public class Shoulder {
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
         shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        armTab = new ArmTab();
+        mShoulderToggleOpenLoop = armTab.getTab().add("Toggle Shoulder Open Loop Control", false).getEntry();
+        mShoulderTogglePID = armTab.getTab().add("Toggle Shoulder PID Tuning Mode", false).getEntry();
+
     }
 
     public double getAngle() {
@@ -146,7 +157,7 @@ public class Shoulder {
         shoulderFeedforward = new ArmFeedforward(kS, kG, kV, kA);
     }
 
-    public void setPidController(double p, double i, double d, double ff, double izone){
+    public void setPidController(double p, double i, double d, double ff, double izone) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
@@ -159,15 +170,15 @@ public class Shoulder {
 
     public void testPeriodic() {
 
-        if (SmartDashboard.getBoolean("Toggle open loop shoulder control", false)) {
+        if (mShoulderToggleOpenLoop.getBoolean(false)) {
             setPercentOutput(OI.getInstance().getArmSpeed());
             arbitraryFF = 0;
-        } else if (SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)) {
+        } else if (mShoulderTogglePID.getBoolean(false)) {
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
-                SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
-                SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
-                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
-                SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
+                    SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
+                    SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
+                    SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
+                    SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
 
             setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
                     SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts),

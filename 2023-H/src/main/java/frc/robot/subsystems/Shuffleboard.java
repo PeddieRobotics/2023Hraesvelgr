@@ -52,11 +52,12 @@ public class Shuffleboard extends SubsystemBase {
         objectiveChooser.addOption("Cone", "Cone");
         objectiveChooser.addOption("Cube", "Cube");
         objectiveChooser.addOption("None", "None");
-
+        objectiveChooser.setDefaultOption("None", "None");
         gamepieceChooser = new SendableChooser<String>();
         gamepieceChooser.addOption("Cone", "Cone");
         gamepieceChooser.addOption("Cube", "Cube");
         gamepieceChooser.addOption("None", "None");
+        gamepieceChooser.setDefaultOption("None", "None");
 
     }
 

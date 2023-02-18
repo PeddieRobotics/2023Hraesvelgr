@@ -13,6 +13,8 @@ import frc.robot.utils.OI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.networktables.GenericEntry;
+import frc.robot.Shuffleboard.tabs.ArmTab;
 
 public class Wrist {
     private static Wrist wrist;
@@ -26,6 +28,9 @@ public class Wrist {
     private ArmFeedforward wristFeedforward;
 
     private double kS, kG, kV, kA, arbitraryFF;
+    private ArmTab armTab;
+    private GenericEntry mWristTogglePID;
+    private GenericEntry mWristToggleOpenLoop;
 
     protected Wrist() {
         wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
@@ -49,12 +54,15 @@ public class Wrist {
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -140);
-        
+
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-// 
+        //
         wristMotor.setClosedLoopRampRate(0.01);
 
+        armTab = new ArmTab();
+        mWristToggleOpenLoop = armTab.getTab().add("Toggle Open Loop Control", false).getEntry();
+        mWristTogglePID = armTab.getTab().add("Toggle PID Tuning Mode", false).getEntry();
     }
 
     public void setPosition(double setpointDeg) {
@@ -142,11 +150,11 @@ public class Wrist {
     }
 
     public void testPeriodic() {
-        if (SmartDashboard.getBoolean("Toggle open loop wrist control", false)) {
+        if (mWristToggleOpenLoop.getBoolean(false)) {
             SmartDashboard.putNumber("Wrist Speed", OI.getInstance().getArmSpeed());
             setPercentOutput(OI.getInstance().getArmSpeed());
             arbitraryFF = 0;
-        } else if (SmartDashboard.getBoolean("Toggle wrist PID tuning mode", false)) {
+        } else if (mWristTogglePID.getBoolean(false)) {
             setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
                     SmartDashboard.getNumber("Wrist I", WristConstants.kI),
                     SmartDashboard.getNumber("Wrist D", WristConstants.kD),

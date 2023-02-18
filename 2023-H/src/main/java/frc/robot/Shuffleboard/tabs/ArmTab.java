@@ -1,5 +1,7 @@
 package frc.robot.Shuffleboard.tabs;
 
+import javax.swing.text.TabExpander;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
@@ -23,8 +25,6 @@ public class ArmTab extends ShuffleboardTabBase {
     private GenericEntry mWristCurrent;
     private GenericEntry mWristTemp;
     private GenericEntry mWristArbitraryFF;
-    private GenericEntry mWristTogglePID;
-    private GenericEntry mWristToggleOpenLoop;
 
     private GenericEntry mClawSpeed;
     private GenericEntry mClawCurrent;
@@ -36,8 +36,6 @@ public class ArmTab extends ShuffleboardTabBase {
     private GenericEntry mShoulderCurrent;
     private GenericEntry mShoulderTemp;
     private GenericEntry mShoulderArbitraryFF;
-    private GenericEntry mShoulderTogglePID;
-    private GenericEntry mShoulderToggleOpenLoop;
 
     private GenericEntry mSetClawSpeed;
     private GenericEntry mSetShoulderPos;
@@ -68,6 +66,9 @@ public class ArmTab extends ShuffleboardTabBase {
         mWristTemp = tab
                 .add("Wrist Temp", 0.0)
                 .getEntry();
+        mWristArbitraryFF = tab
+                .add("Wrist Arbitrary FF", 0.0)
+                .getEntry();
 
         mShoulderSpeed = tab
                 .add("Shoulder Speed", 0.0)
@@ -86,12 +87,6 @@ public class ArmTab extends ShuffleboardTabBase {
                 .getEntry();
         mShoulderArbitraryFF = tab
                 .add("Shoulder FF", 0.0)
-                .getEntry();
-        mShoulderTogglePID = tab
-                .add("Shoulder Toggle PID Tuning Mode", 0.0)
-                .getEntry();
-        mShoulderToggleOpenLoop = tab
-                .add("Shoulder Toggle Open Loop Control", 0.0)
                 .getEntry();
 
         mClawSpeed = tab
@@ -191,5 +186,6 @@ public class ArmTab extends ShuffleboardTabBase {
         arm.setShoulderPosition(mSetShoulderPos.getDouble(0.0));
         arm.setWristPosition(mSetWristPos.getDouble(0.0));
         claw.setSpeed(mSetClawSpeed.getDouble(0.0));
+
     }
 }
