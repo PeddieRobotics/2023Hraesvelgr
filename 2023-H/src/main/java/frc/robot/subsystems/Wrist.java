@@ -40,6 +40,7 @@ public class Wrist {
     private GenericEntry mG;
     private GenericEntry mV;
     private GenericEntry mA;
+    private GenericEntry mWristSpeed;
 
     private GenericEntry WristPIDsetpoint;
 
@@ -80,8 +81,14 @@ public class Wrist {
         mWristI = armTab.getTab().add("Wrist I", WristConstants.kI).getEntry();
         mWristD = armTab.getTab().add("Wrist D", WristConstants.kD).getEntry();
         mWristFF = armTab.getTab().add("Wrist FF", WristConstants.kFF).getEntry();
+        mWristSpeed = armTab.getTab().add("Wrist Speed", 0.0).getEntry();
 
         mS = armTab.getTab().add("Wrist S", Constants.WristConstants.kSVolts).getEntry();
+        mG = armTab.getTab().add("Wrist G", Constants.WristConstants.kGVolts).getEntry();
+        mV = armTab.getTab().add("Wrist V", Constants.WristConstants.kVVoltSecondPerRad).getEntry();
+        mA = armTab.getTab().add("Wrist A", Constants.WristConstants.kAVoltSecondSquaredPerRad).getEntry();
+
+        WristPIDsetpoint = armTab.getTab().add("Wrist PID setpoint (deg)", 0).getEntry();
     }
 
     public void setPosition(double setpointDeg) {
@@ -170,21 +177,22 @@ public class Wrist {
 
     public void testPeriodic() {
         if (mWristToggleOpenLoop.getBoolean(false)) {
-            SmartDashboard.putNumber("Wrist Speed", OI.getInstance().getArmSpeed());
+            mWristSpeed.setDouble(OI.getInstance().getArmSpeed());
             setPercentOutput(OI.getInstance().getArmSpeed());
             arbitraryFF = 0;
         } else if (mWristTogglePID.getBoolean(false)) {
-            setPidController(SmartDashboard.getNumber("Wrist P", WristConstants.kP),
-                    SmartDashboard.getNumber("Wrist I", WristConstants.kI),
-                    SmartDashboard.getNumber("Wrist D", WristConstants.kD),
-                    SmartDashboard.getNumber("Wrist FF", WristConstants.kFF));
+            setPidController(mWristP.getDouble(0.0),
+                    mWristI.getDouble(0.0),
+                    mWristP.getDouble(0.0),
+                    mWristFF.getDouble(0.0));
 
-            setWristFeedForward(SmartDashboard.getNumber("Wrist kS", Constants.WristConstants.kSVolts),
-                    SmartDashboard.getNumber("Wrist kG", WristConstants.kSVolts),
-                    SmartDashboard.getNumber("Wrist kV", WristConstants.kVVoltSecondPerRad),
-                    SmartDashboard.getNumber("Wrist kA", WristConstants.kAVoltSecondSquaredPerRad));
+            setWristFeedForward(
+                    mS.getDouble(0.0),
+                    mG.getDouble(0.0),
+                    mV.getDouble(0.0),
+                    mA.getDouble(0.0));
 
-            setPosition(SmartDashboard.getNumber("Wrist PID setpoint (deg)", 0));
+            setPosition(WristPIDsetpoint.getDouble(0.0));
 
         }
     }
