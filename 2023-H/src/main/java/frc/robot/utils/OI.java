@@ -28,7 +28,6 @@ import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
-import frc.robot.commands.DriveCommands.SetDriveSpeedMode;
 
 public class OI {
     public static OI instance;
@@ -61,17 +60,17 @@ public class OI {
 
     public void setupControls(){
 
-        // Manual gamepiece eject
+        // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        // xButton.onTrue(new EjectGamepiece());
+        //xButton.onTrue(new SetLevelOnePose());
 
-        // Cone intake / score L1 with any gamepiece
+        // Currently no function.
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
-        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         // Cube intake / score L1 with any gamepiece
         Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
-        // optionsButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+        optionsButton.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)))
+        .onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
@@ -84,17 +83,20 @@ public class OI {
         // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        // leftBumperButton.whileTrue(new SetDriveSpeedMode(DriveSpeedMode.SLOW));
+        // leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
-        // TODO: runs auto-aligner/driver assist
+        // rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
         // leftStickButton.toggleOnTrue(new LockDrivetrain());
 
-        // Clears all current pose commands and returns the arm to a neutral, stowed pose.
+        Trigger rightStickButton = new JoystickButton(driverController, PS4Controller.Button.kR3.value);
+        // TODO: runs auto-align/driver assist
+
+        // LL seek pose
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
-        // touchpadButton.onTrue(new SetStowedPose());
+        //touchpadButton.onTrue(new SetLLSeek());
 
         // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);
@@ -129,6 +131,8 @@ public class OI {
 
         Translation2d next_translation = new Translation2d(slewX.calculate(forwardAxis), slewY.calculate(strafeAxis));
 
+        SmartDashboard.putNumber("raw input forward", forwardAxis);
+        SmartDashboard.putNumber("raw input strafe", strafeAxis);
         SmartDashboard.putString("Drive mode", driveSpeedMode.toString());
 
         double norm = next_translation.getNorm();
@@ -144,9 +148,6 @@ public class OI {
             next_translation = new Translation2d(new_translation_x * getTranslationSpeedCoeff() * DriveConstants.kMaxFloorSpeed,
             new_translation_y * getTranslationSpeedCoeff()  * DriveConstants.kMaxFloorSpeed);
             
-            SmartDashboard.putNumber("field relative input forward axis", next_translation.getX());
-            SmartDashboard.putNumber("field relative input strafe axis", next_translation.getY());
-    
             return next_translation;
         }
     }

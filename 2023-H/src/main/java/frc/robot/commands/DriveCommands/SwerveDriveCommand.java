@@ -4,6 +4,7 @@ package frc.robot.commands.DriveCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.OI;
 import frc.robot.utils.OI.DPadDirection;
@@ -34,6 +35,9 @@ public class SwerveDriveCommand extends CommandBase {
     }
     else{
       position = oi.getSwerveTranslation();
+      SmartDashboard.putNumber("field relative input forward axis", position.getX());
+      SmartDashboard.putNumber("field relative input strafe axis", position.getY());
+
     }
 
     double rotation = -oi.getRotation();
