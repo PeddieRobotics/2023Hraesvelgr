@@ -1,5 +1,6 @@
 package frc.robot.commands.ArmCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
@@ -7,26 +8,46 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetFloorConePose extends CommandBase{
     private Arm arm;
+    private boolean shoulderStowed, shoulderStowing;
 
     public SetFloorConePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
+        shoulderStowed = false;
+        shoulderStowing = false;
+        
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderFloorConeAngle);
+        shoulderStowed = false;
+        shoulderStowing = false;
+        arm.setWristPosition(WristConstants.kWristStowedAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle)){
+        if(arm.isWristAboveAngle(-10) && !shoulderStowing){
+            arm.setShoulderPosition(ShoulderConstants.kShoulderStowedAngle);
+            shoulderStowing = true;
+        }
+
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle) && shoulderStowing){
+            arm.setShoulderPosition(ShoulderConstants.kShoulderFloorConeAngle);
+            shoulderStowed = true;
+        }
+
+        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorConeAngle) && shoulderStowed){
             arm.setWristPosition(WristConstants.kWristFloorConeAngle);
         }
+    
     }
 
+
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
+        shoulderStowed = false;
+        shoulderStowing = false;
     }
 
     @Override

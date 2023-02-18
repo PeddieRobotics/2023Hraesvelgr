@@ -20,13 +20,13 @@ public class SetHumanPlayerConePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderHumanPlayerConeAngle)){
+        if(arm.isShoulderAboveAngle(-30)){
             arm.setWristPosition(WristConstants.kWristHumanPlayerConeAngle);
         }
     }
 
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
     }
 
     @Override

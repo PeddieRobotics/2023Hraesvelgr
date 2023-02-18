@@ -89,6 +89,22 @@ public class Arm extends SubsystemBase {
         return Math.abs(getWristPosition() - angle) < WristConstants.kWristSetpointTolerance;
     }
 
+    public boolean isShoulderAboveAngle(double angle){
+        return getShoulderPosition() > angle;
+    }
+
+    public boolean isShoulderBelowAngle(double angle){
+        return getShoulderPosition() < angle;
+    }
+
+    public boolean isWristAboveAngle(double angle){
+        return getWristPosition() > angle;
+    }
+
+    public boolean isWristBelowAngle(double angle){
+        return getWristPosition() < angle;
+    }
+
     public static Arm getInstance() {
         if (arm == null) {
             arm = new Arm();

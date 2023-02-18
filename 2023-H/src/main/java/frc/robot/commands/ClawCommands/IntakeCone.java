@@ -8,7 +8,6 @@ public class IntakeCone extends CommandBase{
 
     public IntakeCone(){
         claw = Claw.getInstance();
-
         addRequirements(claw);
     }
 

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
+import frc.robot.utils.Constants.ShoulderConstants;
 
 public class Shuffleboard extends SubsystemBase {
     public static Shuffleboard shuffleboard;
@@ -82,6 +83,7 @@ public class Shuffleboard extends SubsystemBase {
 
     private void setupClawShuffleboard() {
         SmartDashboard.putNumber("OR: Claw speed", 0.0);
+        SmartDashboard.putData("Game Piece", gamepieceChooser);
     }
 
     private void updateClawShuffleboard() {
@@ -90,6 +92,18 @@ public class Shuffleboard extends SubsystemBase {
     }
 
     private void setupShoulderShuffleboard() {
+        // dynamic FF parameters
+        SmartDashboard.putNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts);
+        SmartDashboard.putNumber("Shoulder kG", Constants.ShoulderConstants.kGVolts);
+        SmartDashboard.putNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad);
+        SmartDashboard.putNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
+
+        // PID controller parameters
+        SmartDashboard.putNumber("Shoulder P", Constants.ShoulderConstants.kP);
+        SmartDashboard.putNumber("Shoulder I", Constants.ShoulderConstants.kI);
+        SmartDashboard.putNumber("Shoulder IZone", Constants.ShoulderConstants.kIz);
+        SmartDashboard.putNumber("Shoulder D", Constants.ShoulderConstants.kD);
+        SmartDashboard.putNumber("Shoulder FF", Constants.ShoulderConstants.kFF);
 
         // Toggle shoulder pid
         SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);

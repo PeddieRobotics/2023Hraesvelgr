@@ -26,7 +26,7 @@ public class SetStowedPose extends CommandBase{
     }
 
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
     }
 
     @Override

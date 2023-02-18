@@ -160,28 +160,30 @@ public final class Constants {
                  // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 30; // 40;
             
-                public static final double kP = 0.1;
-                public static final double kI = 0.0;
-                public static final double kD = 0.0;
-                public static final double kIz = 0.0;
+                public static final double kP = 0.013;
+                public static final double kI = 0.000002;    
+                public static final double kD = 0.00003;
+                public static final double kIz = 7;
                 public static final double kFF = 0.0;
                 public static final double kAngleMin = -75;
-                public static final double kAngleMax = 135;
+                public static final double kAngleMax = 155;
             
                 public static final double kShoulderStowedAngle = -75.0;
-                public static final double kShoulderTransitionAngle = -63.0;
+                public static final double kShoulderSeekAngle = -75.0;
                 public static final double kShoulderLevelOneAngle = -75.0;
 
-                public static final double kShoulderFloorConeAngle = -33.24;
-                public static final double kShoulderLevelTwoConeAngle = 5.0;
-                public static final double kShoulderLevelThreeConeAngle = 153.0;
-                public static final double kShoulderHumanPlayerConeAngle = 20.77;
+                public static final double kShoulderFloorConeAngle = -59.0;
+                public static final double kShoulderFloorCubeAngle = -59.0;
 
-                public static final double kShoulderFloorCubeAngle = -53.39;
-                public static final double kShoulderLevelTwoCubeAngle = 0.0;
-                public static final double kShoulderLevelThreeCubeLobAngle = 5.0;
-                public static final double kShoulderLevelThreeCubeDunkAngle = 150.0;
-                public static final double kShoulderHumanPlayerCubeAngle = -5.0;
+                public static final double kShoulderLevelTwoConeAngle = 5.0;
+                public static final double kShoulderLevelTwoCubeAngle = 5.0;
+
+                public static final double kShoulderLevelThreeTransition = 90.0;
+                public static final double kShoulderLevelThreeCubeLobAngle = 10.0;
+                public static final double kShoulderLevelThreeCubeDunkAngle = 157.0;
+                public static final double kShoulderLevelThreeConeAngle = 157.0;
+                public static final double kShoulderHumanPlayerConeAngle = 20.0;
+                public static final double kShoulderHumanPlayerSingleSS = -75.0;
 
                 public static final double kShoulderSetpointTolerance = 1.0; // degrees
 
@@ -199,7 +201,7 @@ public final class Constants {
                 // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 25;
             
-                public static final double kP = 0.01;
+                public static final double kP = 0.005;
                 public static final double kI = 0.0;
                 public static final double kD = 0.0;
                 public static final double kIz = 0.0;
@@ -212,34 +214,37 @@ public final class Constants {
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
-                public static final double kWristStowedAngle = 135.0;
-                public static final double kWristLevelOneAngle = 25.0;
+                public static final double kWristStowedAngle = 70.0;
+                public static final double kWristSeekAngle = -10.0;
+                public static final double kWristLevelOneAngle = -10.0;
 
-                public static final double kWristFloorConeAngle = 0.0;
-                public static final double kWristLevelTwoConeAngle = -34.0;
-                public static final double kWristLevelThreeConeAngle = 72.0;
-                public static final double kWristHumanPlayerConeAngle = 49.64;
+                public static final double kWristFloorConeAngle = -62.0;
+                public static final double kWristFloorCubeAngle = -75.0;
+                
+                public static final double kWristLevelTwoConeAngle = -87.4;
+                public static final double kWristLevelTwoCubeAngle = -87.4;
 
-                public static final double kWristFloorCubeAngle = -7.26;
-                public static final double kWristLevelTwoCubeAngle = -43.87;
-                public static final double kWristLevelThreeCubeLobAngle = 26.1;
-                public static final double kWristLevelThreeCubeDunkAngle = 104.0;
-                public static final double kWristHumanPlayerCubeAngle = 21.3;
+                public static final double kWristLevelThreeCubeTransition = 103.0;
+                public static final double kWristLevelThreeCubeLobAngle = -29.4;
+                public static final double kWristLevelThreeCubeDunkAngle = 2.5;
+                public static final double kWristLevelThreeConeAngle = 2.5;
+                public static final double kWristHumanPlayerConeAngle = -80.0;
+                public static final double kWristHumanPlayerSingleSS = 30.0;
 
                 public static final double kWristSetpointTolerance = 1.0; // degrees
 
                 public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor =  99.1/39.2; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kWristEncoderConversionFactor =  103/41.761; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 30;
+                public static final int kClawMotorCurrentLimit = 40;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
-                public static final double kConeIntakeSpeed = 0.75;
-                public static final double kConeOuttakeSpeed = -0.4;
-                public static final double kCubeIntakeSpeed = 0.75;
-                public static final double kCubeOuttakeSpeed = -0.4;
+                public static final double kConeIntakeSpeed = -1;
+                public static final double kConeOuttakeSpeed = 1;
+                public static final double kCubeIntakeSpeed = -1;
+                public static final double kCubeOuttakeSpeed = 1;
         }
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
@@ -14,14 +15,18 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
+import frc.robot.commands.ArmCommands.SetFloorConePose;
+import frc.robot.commands.ArmCommands.SetFloorCubePose;
 import frc.robot.commands.ArmCommands.SetHumanPlayerConePose;
-import frc.robot.commands.ArmCommands.SetHumanPlayerCubePose;
+import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
+import frc.robot.commands.ClawCommands.IntakeCone;
+import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.SetDriveSpeedMode;
 
@@ -56,14 +61,24 @@ public class OI {
 
     public void setupControls(){
 
+        // Manual gamepiece eject
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
         // xButton.onTrue(new EjectGamepiece());
 
+        // Cone intake / score L1 with any gamepiece
+        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
+        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+
+        // Cube intake / score L1 with any gamepiece
+        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
+        // optionsButton.onTrue(new ConditionalCommand(new SetLevelOnePose(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+
+        // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
         // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        // squareButton.onTrue(new ConditionalCommand(new SetHumanPlayerConePose(), new SetHumanPlayerCubePose(), shuffleboard::isCurrentObjectiveCone));
+        // squareButton.onTrue(new SetHumanPlayerConePone());
 
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
@@ -76,16 +91,6 @@ public class OI {
 
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
         // leftStickButton.toggleOnTrue(new LockDrivetrain());
-
-        // Cone intake / score L1 with any gamepiece
-        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
-        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(),
-        // new SequentialCommandGroup(new SetFloorConePose(), new ConeIntake()), claw::hasGamepiece));
-
-        // Cube intake / score L1 with any gamepiece
-        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
-        // shareButton.onTrue(new ConditionalCommand(new SetLevelOnePose(),
-        // new SequentialCommandGroup(new SetFloorCubePose(), new CubeIntake()), claw::hasGamepiece));
 
         // Clears all current pose commands and returns the arm to a neutral, stowed pose.
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
@@ -109,10 +114,12 @@ public class OI {
 
     public double getForward() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        // return 0;
     }
 
     public double getStrafe() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -173,6 +180,7 @@ public class OI {
         double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
         
         return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
+        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {

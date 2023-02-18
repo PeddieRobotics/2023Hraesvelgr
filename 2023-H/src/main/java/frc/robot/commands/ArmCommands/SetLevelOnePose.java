@@ -20,13 +20,13 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAtAngle(WristConstants.kWristLevelOneAngle)){
+        if(arm.isWristAboveAngle(-30)){
             arm.setShoulderPosition(ShoulderConstants.kShoulderLevelOneAngle);
         }
     }
 
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
     }
 
     @Override

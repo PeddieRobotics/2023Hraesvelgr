@@ -30,7 +30,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void testPeriodic(){
-        // setSpeed(SmartDashboard.getNumber("OR: Claw speed", 0));
+        setSpeed(SmartDashboard.getNumber("OR: Claw speed", 0));
     }
 
     public static Claw getInstance(){

@@ -16,17 +16,18 @@ public class SetLevelTwoConePose extends CommandBase{
     @Override
     public void initialize() {
         arm.setShoulderPosition(ShoulderConstants.kShoulderLevelTwoConeAngle);
+        
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelTwoConeAngle)){
+        if(arm.isShoulderAboveAngle(-30)){
             arm.setWristPosition(WristConstants.kWristLevelTwoConeAngle);
         }
     }
 
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
     }
 
     @Override

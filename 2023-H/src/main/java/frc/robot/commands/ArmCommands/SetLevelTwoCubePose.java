@@ -20,13 +20,13 @@ public class SetLevelTwoCubePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelTwoCubeAngle)){
+        if(arm.isShoulderAboveAngle(-30)){
             arm.setWristPosition(WristConstants.kWristLevelTwoCubeAngle);
         }
     }
 
     @Override
-    public void end(boolean interupted){
+    public void end(boolean interrupted){
     }
 
     @Override
