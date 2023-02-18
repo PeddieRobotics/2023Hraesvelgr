@@ -131,7 +131,7 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Shoulder encoder pos", shoulder.getPosition());
         SmartDashboard.putNumber("Shoulder % output", shoulder.getSpeed());
         SmartDashboard.putNumber("Shoulder angle", shoulder.getAngle());
-        SmartDashboard.putNumber("Shoulder velocity/100", shoulder.getVelocity()/100.0);
+        SmartDashboard.putNumber("Shoulder velocity", shoulder.getVelocity());
         SmartDashboard.putNumber("Shoulder Arbitrary FF", shoulder.getArbitraryFF());
     }
     

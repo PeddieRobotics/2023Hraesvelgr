@@ -160,10 +160,10 @@ public final class Constants {
                  // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 30; // 40;
             
-                public static final double kP = 0.0;
-                public static final double kI = 0.0;    
-                public static final double kD = 0.0;
-                public static final double kIz = 7;
+                public static final double kP = 0.0015;
+                public static final double kI = 0.000002;    
+                public static final double kD = 0.00004;
+                public static final double kIz = 5;
                 public static final double kFF = 0.0;
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
@@ -194,7 +194,7 @@ public final class Constants {
                 public static final double kShoulderSetpointTolerance = 1.0; // degrees
 
                 public static final double kSVolts = 0.0;
-                public static final double kGVolts = 0.3;
+                public static final double kGVolts = 0.4;
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.06;
 

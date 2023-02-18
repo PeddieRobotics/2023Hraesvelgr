@@ -52,12 +52,15 @@ public class Shoulder{
         shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
         setEncoder(-47.0);
 
+        shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor/60.0);
+        shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor/60.0);
+
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 45);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 90);
         shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -45);
         
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 45);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 90);
         shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -45);
 
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
@@ -94,7 +97,7 @@ public class Shoulder{
     }
 
     public void setVelocity(double setpointVel){
-        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointVel), 0);
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), Math.toRadians(setpointVel));
 
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
@@ -202,7 +205,7 @@ public class Shoulder{
                 SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
 
             double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg/sec)",0);
-            if(shoulderPIDSetpoint >= -45.0 && shoulderPIDSetpoint <= 45.0 && SmartDashboard.getBoolean("Execute", false)){
+            if(shoulderPIDSetpoint >= -90.0 && shoulderPIDSetpoint <= 90.0 && SmartDashboard.getBoolean("Execute", false)){
                 setVelocity(shoulderPIDSetpoint);
             } 
         }
