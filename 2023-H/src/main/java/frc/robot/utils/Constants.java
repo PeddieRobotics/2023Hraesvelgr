@@ -19,7 +19,7 @@ public final class Constants {
         }
 
         public static class OIConstants {
-                public static final double kDrivingDeadband = 0.05;
+                public static final double kDrivingDeadband = 0.1;
         }
 
         public static class BlinkinConstants {
@@ -118,7 +118,7 @@ public final class Constants {
                 public static final double kDrivingMinOutput = -1;
                 public static final double kDrivingMaxOutput = 1;
 
-                public static final double kTurningP = 1;
+                public static final double kTurningP = 0.5;
                 public static final double kTurningI = 0;
                 public static final double kTurningD = 0;
                 public static final double kTurningFF = 0;
@@ -169,7 +169,7 @@ public final class Constants {
                 public static final double kAngleMax = 155;
             
                 public static final double kShoulderStowedAngle = -75.0;
-                public static final double kShoulderSeekAngle = -75.0;
+                public static final double kShoulderLLSeekAngle = -75.0;
                 public static final double kShoulderLevelOneAngle = -75.0;
 
                 public static final double kShoulderFloorConeAngle = -59.0;
@@ -215,7 +215,7 @@ public final class Constants {
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
                 public static final double kWristStowedAngle = 70.0;
-                public static final double kWristSeekAngle = -10.0;
+                public static final double kWristLLSeekAngle = -10.0;
                 public static final double kWristLevelOneAngle = -10.0;
 
                 public static final double kWristFloorConeAngle = -62.0;
