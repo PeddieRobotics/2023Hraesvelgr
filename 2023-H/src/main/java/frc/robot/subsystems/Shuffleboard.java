@@ -98,6 +98,8 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         // PID controller parameters
+
+        
         SmartDashboard.putNumber("Shoulder P", Constants.ShoulderConstants.kP);
         SmartDashboard.putNumber("Shoulder I", Constants.ShoulderConstants.kI);
         SmartDashboard.putNumber("Shoulder IZone", Constants.ShoulderConstants.kIz);
@@ -105,7 +107,8 @@ public class Shuffleboard extends SubsystemBase{
         SmartDashboard.putNumber("Shoulder FF", Constants.ShoulderConstants.kFF);
 
         // Toggle shoulder pid
-        SmartDashboard.putBoolean("Toggle shoulder PID tuning mode", false);
+        SmartDashboard.putBoolean("Toggle shoulder position PID tuning mode", false);
+        SmartDashboard.putBoolean("Toggle shoulder velocity PID tuning mode", false);
 
         // Toggle open loop shoulder control
         SmartDashboard.putBoolean("Toggle open loop shoulder control", false);
@@ -113,6 +116,7 @@ public class Shuffleboard extends SubsystemBase{
         // Setpoints for test mode
         SmartDashboard.putNumber("Shoulder speed % setpoint", 0.0);
         SmartDashboard.putNumber("Shoulder PID setpoint (deg)", 0.0);
+        SmartDashboard.putNumber("Shoulder PID setpoint (deg/sec)", 0.0);
 
         // Execute button
         SmartDashboard.putBoolean("Execute", false);

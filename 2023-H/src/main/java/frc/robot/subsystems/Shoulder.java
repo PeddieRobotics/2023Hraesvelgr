@@ -50,7 +50,7 @@ public class Shoulder{
 
         shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
         shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
-        setEncoder(0.0);
+        setEncoder(-47.0);
 
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
@@ -91,6 +91,18 @@ public class Shoulder{
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
         pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
+    }
+
+    public void setVelocity(double setpointVel){
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointVel), 0);
+
+        pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
+    }
+
+    public void setSmartMotion(double setpointDeg){
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointDeg), 0);
+
+        pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
     }
 
     public double getArbitraryFF(){
@@ -161,7 +173,7 @@ public class Shoulder{
                 setPercentOutput(OI.getInstance().getArmSpeed());
                 arbitraryFF = 0;
         }
-        else if(SmartDashboard.getBoolean("Toggle shoulder PID tuning mode", false)){
+        else if(SmartDashboard.getBoolean("Toggle shoulder position PID tuning mode", false)){
             setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
                 SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
                 SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
@@ -174,9 +186,25 @@ public class Shoulder{
                 SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
 
             double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg)",0);
-            if(shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 155.0 && SmartDashboard.getBoolean("Execute", false)){
+            if(shoulderPIDSetpoint >= -45.0 && shoulderPIDSetpoint <= 45.0 && SmartDashboard.getBoolean("Execute", false)){
                 setPosition(shoulderPIDSetpoint);
-            }
+            } 
+        } else if(SmartDashboard.getBoolean("Toggle shoulder velocity PID tuning mode", false)){
+            setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
+                SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
+                SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
+                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
+                SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
+
+            setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
+                SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts), 
+                SmartDashboard.getNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
+                SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
+
+            double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg/sec)",0);
+            if(shoulderPIDSetpoint >= -45.0 && shoulderPIDSetpoint <= 45.0 && SmartDashboard.getBoolean("Execute", false)){
+                setVelocity(shoulderPIDSetpoint);
+            } 
         }
 
     }
