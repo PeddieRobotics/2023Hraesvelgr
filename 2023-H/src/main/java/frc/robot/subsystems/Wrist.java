@@ -31,8 +31,20 @@ public class Wrist {
     private ArmTab armTab;
     private GenericEntry mWristTogglePID;
     private GenericEntry mWristToggleOpenLoop;
+    private GenericEntry mWristP;
+    private GenericEntry mWristI;
+    private GenericEntry mWristD;
+    private GenericEntry mWristFF;
+
+    private GenericEntry mS;
+    private GenericEntry mG;
+    private GenericEntry mV;
+    private GenericEntry mA;
+
+    private GenericEntry WristPIDsetpoint;
 
     protected Wrist() {
+
         wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
         wristMotor.setSmartCurrentLimit(WristConstants.kMaxCurrent);
         wristMotor.setIdleMode(IdleMode.kBrake);
@@ -63,6 +75,13 @@ public class Wrist {
         armTab = new ArmTab();
         mWristToggleOpenLoop = armTab.getTab().add("Toggle Open Loop Control", false).getEntry();
         mWristTogglePID = armTab.getTab().add("Toggle PID Tuning Mode", false).getEntry();
+
+        mWristP = armTab.getTab().add("Wrist P", WristConstants.kP).getEntry();
+        mWristI = armTab.getTab().add("Wrist I", WristConstants.kI).getEntry();
+        mWristD = armTab.getTab().add("Wrist D", WristConstants.kD).getEntry();
+        mWristFF = armTab.getTab().add("Wrist FF", WristConstants.kFF).getEntry();
+
+        mS = armTab.getTab().add("Wrist S", Constants.WristConstants.kSVolts).getEntry();
     }
 
     public void setPosition(double setpointDeg) {
