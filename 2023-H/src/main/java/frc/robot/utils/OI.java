@@ -3,6 +3,7 @@ package frc.robot.utils;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -38,9 +39,14 @@ public class OI {
 
     private PS4Controller driverController = new PS4Controller(0);
 
-    private final SlewRateLimiter slewX = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
-    private final SlewRateLimiter slewY = new SlewRateLimiter(DriveConstants.kTranslationSlewRate);
-    private final SlewRateLimiter slewRot = new SlewRateLimiter(DriveConstants.kRotationSlewRate);
+    // Slew rate filter variables for controlling lateral acceleration
+    private double m_currentRotation = 0.0;
+    private double m_currentTranslationDir = 0.0;
+    private double m_currentTranslationMag = 0.0;
+
+    private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+    private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
+    private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
     public enum DPadDirection {NONE, FORWARDS, LEFT, RIGHT, BACKWARDS};
     public enum DriveSpeedMode{NORMAL, SLOW};
@@ -59,12 +65,7 @@ public class OI {
     }
 
     public void setupControls(){
-
-
-
         // Drive & Scoring Controls
-
-
 
         // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
@@ -92,11 +93,7 @@ public class OI {
         Trigger rightStickButton = new JoystickButton(driverController, PS4Controller.Button.kR3.value);
         // TODO: runs auto-align/driver assist
 
-
-
         // MISC CONTROLS
-
-
 
         // Lock Drivetrain
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
@@ -142,14 +139,61 @@ public class OI {
 
     /* DRIVER METHODS */
     public Translation2d getSwerveTranslation() {
-        double forwardAxis = getForward();
-        double strafeAxis = getStrafe();
+        double xSpeed = getForward();
+        double ySpeed = getStrafe();
 
-        Translation2d next_translation = new Translation2d(slewX.calculate(forwardAxis), slewY.calculate(strafeAxis));
-
-        SmartDashboard.putNumber("raw input forward", forwardAxis);
-        SmartDashboard.putNumber("raw input strafe", strafeAxis);
+        SmartDashboard.putNumber("raw input forward", xSpeed);
+        SmartDashboard.putNumber("raw input strafe", ySpeed);
         SmartDashboard.putString("Drive mode", driveSpeedMode.toString());
+
+        double xSpeedCommanded;
+        double ySpeedCommanded;
+    
+        if (DriveConstants.kUseRateLimit) {
+          // Convert XY to polar for rate limiting
+          double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
+          double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+    
+          // Calculate the direction slew rate based on an estimate of the lateral acceleration
+          double directionSlewRate;
+          if (m_currentTranslationMag != 0.0) {
+            directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
+          } else {
+            directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
+          }
+          
+          double currentTime = WPIUtilJNI.now() * 1e-6;
+          double elapsedTime = currentTime - m_prevTime;
+          double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
+          if (angleDif < 0.45*Math.PI) {
+            m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+            m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+          }
+          else if (angleDif > 0.85*Math.PI) {
+            if (m_currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
+              // keep currentTranslationDir unchanged
+              m_currentTranslationMag = m_magLimiter.calculate(0.0);
+            }
+            else {
+              m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
+              m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+            }
+          }
+          else {
+            m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
+            m_currentTranslationMag = m_magLimiter.calculate(0.0);
+          }
+          m_prevTime = currentTime;
+          
+          xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
+          ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);    
+    
+        } else {
+          xSpeedCommanded = xSpeed;
+          ySpeedCommanded = ySpeed;
+        }
+
+        Translation2d next_translation = new Translation2d(xSpeedCommanded, ySpeedCommanded);
 
         double norm = next_translation.getNorm();
         if (norm < OIConstants.kDrivingDeadband) {
@@ -194,10 +238,15 @@ public class OI {
         double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
         double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
 
-        double combinedRotation = slewRot.calculate((rightRotation-leftRotation)/2.0);
-        
+        double combinedRotation;
+        if(DriveConstants.kUseRateLimit){
+            combinedRotation = m_rotLimiter.calculate((rightRotation-leftRotation)/2.0);
+        }
+        else{
+            combinedRotation = (rightRotation-leftRotation)/2.0;
+        }
+
         return combinedRotation * getRotationSpeedCoeff() * DriveConstants.kMaxAngularSpeed;
-        // return 0;
     }
 
     public Translation2d getCenterOfRotation() {
@@ -245,6 +294,7 @@ public class OI {
 
     }
 
+    // For testing purposes/ open loop mode.
     public double getArmSpeed(){
         if(Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01){
             return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value)*0.6;

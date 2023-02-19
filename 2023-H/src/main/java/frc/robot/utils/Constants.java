@@ -62,8 +62,10 @@ public final class Constants {
                 public static final double kBackRightChassisAngularOffset = Math.PI/2;
 
                 // Translation and Rotation Slew Rates
-                public static final double kTranslationSlewRate = 4; // meters per second
-                public static final double kRotationSlewRate = 4; // radians per second
+                public static final boolean kUseRateLimit = true;
+                public static final double kDirectionSlewRate = 1.2; // radians per second
+                public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+                public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
                 public final static int kFrontRightTurningEncoderChannel = 2;
