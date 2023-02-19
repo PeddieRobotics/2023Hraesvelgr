@@ -23,83 +23,82 @@ import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.OI;
 
 public class RobotContainer {
-  private final Drivetrain drivetrain;
+    private final Drivetrain drivetrain;
 
-  private final Claw claw;
-  private final Arm arm;
+    private final Claw claw;
+    private final Arm arm;
 
-  private final OI oi;
-  private final Shuffleboard shuffleboard;
-  private final Autonomous autonomous;
-  private final LimelightFront limelightFront;
-  private final LimelightBack limelightBack;
+    private final OI oi;
+    private final Shuffleboard shuffleboard;
+    private final Autonomous autonomous;
+    private final LimelightFront limelightFront;
+    private final LimelightBack limelightBack;
 
-  private Command autoCommand;
+    private Command autoCommand;
 
-  // private final Blinkin blinkin;
+    // private final Blinkin blinkin;
 
-  public RobotContainer() {
-    drivetrain = Drivetrain.getInstance();
-    drivetrain.setDefaultCommand(new SwerveDriveCommand());
+    public RobotContainer() {
+        drivetrain = Drivetrain.getInstance();
+        drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-    claw = Claw.getInstance();
-    arm = Arm.getInstance();
+        claw = Claw.getInstance();
+        arm = Arm.getInstance();
 
-    oi = OI.getInstance();
-    shuffleboard = Shuffleboard.getInstance();
+        oi = OI.getInstance();
+        shuffleboard = Shuffleboard.getInstance();
 
-    autonomous = Autonomous.getInstance();
-    limelightFront = LimelightFront.getInstance();
-    limelightBack = LimelightBack.getInstance();
-    // blinkin = Blinkin.getInstance();
-  }
-
-  public Command getAutonomousCommand() {
-    drivetrain.resetGyro();
-    return autonomous.getAutonomousCommand();
-  }
-
-  public void resetGyro(){
-    drivetrain.resetGyro();
-  }
-
-  public void resetPoseToFaceOtherAlliance() {
-    if(DriverStation.getAlliance() == Alliance.Blue){
-      drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(0))));
+        autonomous = Autonomous.getInstance();
+        limelightFront = LimelightFront.getInstance();
+        limelightBack = LimelightBack.getInstance();
+        // blinkin = Blinkin.getInstance();
     }
-    else{
-      drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(180))));
+
+    public Command getAutonomousCommand() {
+        drivetrain.resetGyro();
+        return autonomous.getAutonomousCommand();
     }
-  }
 
-  public void setupAngleOffsetFromAuto(double target) {
-    drivetrain.setTeleOpAngleOffset(target);
-  }
+    public void resetGyro() {
+        drivetrain.resetGyro();
+    }
 
-  public double getAngleOffsetFromAuto(){
-    return autonomous.getAngleOffsetFromAuto();
-  }
+    public void resetPoseToFaceOtherAlliance() {
+        if (DriverStation.getAlliance() == Alliance.Blue) {
+            drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(0))));
+        } else {
+            drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(180))));
+        }
+    }
 
-  public void setArmMode(IdleMode mode){
-    arm.setShoulderMode(mode);
-  }
+    public void setWristMode(IdleMode mode) {
+        arm.setWristMode(mode);
+    }
 
-  public void setWristMode(IdleMode mode){
-    arm.setWristMode(mode);
-  }
+    public void setArmMode(IdleMode mode) {
+        arm.setShoulderMode(mode);
+    }
 
-  public void testAllSystems(){
-    claw.testPeriodic();
-    arm.testPeriodic();
-    
-  }
+    public void setupAngleOffsetFromAuto(double target) {
+        drivetrain.setTeleOpAngleOffset(target);
+    }
 
-  // public void startLogging(){
-  // logs.startLogging();
-  // }
+    public double getAngleOffsetFromAuto() {
+        return autonomous.getAngleOffsetFromAuto();
+    }
 
-  // public void stopLogging(){
-  // logs.stopLogging();;
-  // }
+    public void testAllSystems() {
+        claw.testPeriodic();
+        arm.testPeriodic();
+
+    }
+
+    // public void startLogging(){
+    // logs.startLogging();
+    // }
+
+    // public void stopLogging(){
+    // logs.stopLogging();;
+    // }
 
 }

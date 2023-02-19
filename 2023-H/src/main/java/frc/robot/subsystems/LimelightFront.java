@@ -11,130 +11,135 @@ import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
 
 public class LimelightFront extends Limelight {
-  private static LimelightFront limelightFront;
+    private static LimelightFront limelightFront;
 
-  private RollingAverage txAverage, tyAverage;
+    private RollingAverage txAverage, tyAverage;
 
-  private String limelightName = "limelight-front";
+    private String limelightName = "limelight-front";
 
-  public LimelightFront() {
-    txAverage = new RollingAverage();
-    tyAverage = new RollingAverage();
-  }
-
-  public static LimelightFront getInstance() {
-    if (limelightFront == null) {
-      limelightFront = new LimelightFront();
+    public LimelightFront() {
+        txAverage = new RollingAverage();
+        tyAverage = new RollingAverage();
     }
-    return limelightFront;
-  }
 
-  @Override
-  public void periodic() {
-    updateRollingAverages();
-    // updateLimelightInfoOnDashboard();
-    // // setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
-    // SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!", LimelightHelper.getBotPose_wpiBlue(limelightName));
-  }
-
-  public Translation2d getBotXY() {
-      double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
-      if (result.length > 0.0) {
-        return new Translation2d(result[0], result[1]);
-      }
-    return new Translation2d(0, 0);
-  }
-
-  public Pose2d getBotpose() {
-      double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
-      if (result.length > 0.0) {
-        return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
-      }
-      return new Pose2d(); 
-  }
-
-  // Tv is whether the limelight has a valid target
-  public boolean getTv() {
-    return LimelightHelper.getTV(limelightName);
-  }
-  
-  // Tx is the Horizontal Offset From Crosshair To Target
-  public double getTx() {
-    return LimelightHelper.getTX(limelightName);
-  }
-
-  // Ty is the Vertical Offset From Crosshair To Target
-  public double getTy() {
-    return LimelightHelper.getTY(limelightName);
-  }
-
-  public double getTa() {
-    return LimelightHelper.getTA(limelightName);
-  }
-
-  public double getTxAverage() {
-    return txAverage.getAverage();
-  }
-
-  public double getTyAverage() {
-    return tyAverage.getAverage();
-  }
-
-  //Class ID of primary neural detector result or neural classifier result
-  public double getNeuralClassID() {
-    return LimelightHelper.getNeuralClassID(limelightName);
-  }
-
-  public double getDistance() {
-    if (!hasTarget()) {
-      return 0;
-    } else {
-      // a1 = LL panning angle
-      // a2 = additional angle to target
-      // tan(a1 + a2) = h/d
-      // d = h/tan(a1+a2)
-      return (LimelightConstants.kLimelightHeight) /
-          (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
+    public static LimelightFront getInstance() {
+        if (limelightFront == null) {
+            limelightFront = new LimelightFront();
+        }
+        return limelightFront;
     }
-  }
 
-  public boolean hasTarget() {
-    return getTv();
-  }
-
-  public boolean targetIsCone(){
-    return hasTarget() && getNeuralClassID() == 2;
-  }
-
-  public boolean targetIsCube(){
-    return hasTarget() && getNeuralClassID() == 1;
-  }
-
-  public void updateRollingAverages() {
-    if (hasTarget()) {
-      txAverage.add(getTx());
-      tyAverage.add(getTy());
+    @Override
+    public void periodic() {
+        updateRollingAverages();
+        // updateLimelightInfoOnDashboard();
+        // // setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
+        // SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!",
+        // LimelightHelper.getBotPose_wpiBlue(limelightName));
     }
-  }
 
-  public void setPipeline(int pipelineNum) {
-    LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
-  }
+    public Translation2d getBotXY() {
+        double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        if (result.length > 0.0) {
+            return new Translation2d(result[0], result[1]);
+        }
+        return new Translation2d(0, 0);
+    }
 
-  public String getJSONDump(){
-    return LimelightHelper.getJSONDump(limelightName);
-  }
+    public Pose2d getBotpose() {
+        double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        if (result.length > 0.0) {
+            return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+        }
+        return new Pose2d();
+    }
 
-  public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry){
-    int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-    SmartDashboard.putNumber("Tags seen FRONT", tagsSeen);
-    SmartDashboard.putBoolean("hasTarget FRONT", this.hasTarget());
-      SmartDashboard.putNumber("BOTPOSE FRONT X", this.getBotpose().getX());
-      SmartDashboard.putNumber("BOTPOSE FRONT Y", this.getBotpose().getY());
-      SmartDashboard.putNumber("BOTPOSE FRONT THETA", this.getBotpose().getRotation().getDegrees());
-      if(tagsSeen > 1){
-        odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
-      }
-  }
+    // Tv is whether the limelight has a valid target
+    public boolean getTv() {
+        return LimelightHelper.getTV(limelightName);
+    }
+
+    // Tx is the Horizontal Offset From Crosshair To Target
+    public double getTx() {
+        return LimelightHelper.getTX(limelightName);
+    }
+
+    // Ty is the Vertical Offset From Crosshair To Target
+    public double getTy() {
+        return LimelightHelper.getTY(limelightName);
+    }
+
+    public double getTa() {
+        return LimelightHelper.getTA(limelightName);
+    }
+
+    public double getTxAverage() {
+        return txAverage.getAverage();
+    }
+
+    public double getTyAverage() {
+        return tyAverage.getAverage();
+    }
+
+    // Class ID of primary neural detector result or neural classifier result
+    public double getNeuralClassID() {
+        return LimelightHelper.getNeuralClassID(limelightName);
+    }
+
+    public double getDistance() {
+        if (!hasTarget()) {
+            return 0;
+        } else {
+            // a1 = LL panning angle
+            // a2 = additional angle to target
+            // tan(a1 + a2) = h/d
+            // d = h/tan(a1+a2)
+            return (LimelightConstants.kLimelightHeight) /
+                    (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
+        }
+    }
+
+    public int getTagsSeen() {
+        return LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
+    }
+
+    public boolean hasTarget() {
+        return getTv();
+    }
+
+    public boolean targetIsCone() {
+        return hasTarget() && getNeuralClassID() == 2;
+    }
+
+    public boolean targetIsCube() {
+        return hasTarget() && getNeuralClassID() == 1;
+    }
+
+    public void updateRollingAverages() {
+        if (hasTarget()) {
+            txAverage.add(getTx());
+            tyAverage.add(getTy());
+        }
+    }
+
+    public void setPipeline(int pipelineNum) {
+        LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
+    }
+
+    public String getJSONDump() {
+        return LimelightHelper.getJSONDump(limelightName);
+    }
+
+    public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
+        int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
+        SmartDashboard.putNumber("Tags seen FRONT", tagsSeen);
+        SmartDashboard.putBoolean("hasTarget FRONT", this.hasTarget());
+        SmartDashboard.putNumber("BOTPOSE FRONT X", this.getBotpose().getX());
+        SmartDashboard.putNumber("BOTPOSE FRONT Y", this.getBotpose().getY());
+        SmartDashboard.putNumber("BOTPOSE FRONT THETA", this.getBotpose().getRotation().getDegrees());
+        if (tagsSeen > 1) {
+            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        }
+    }
 
 }
