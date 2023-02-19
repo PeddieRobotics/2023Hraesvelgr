@@ -158,7 +158,7 @@ public final class Constants {
 
         public static final class ShoulderConstants{
                  // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 30; // 40;
+                public static final int kMaxCurrent = 60;
             
                 public static final double kP = 0.0015;
                 public static final double kI = 0.000002;    
