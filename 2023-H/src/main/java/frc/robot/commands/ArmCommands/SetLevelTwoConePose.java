@@ -15,14 +15,14 @@ public class SetLevelTwoConePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderLevelTwoConeAngle);
+        arm.setShoulderPosition(ShoulderConstants.kL2ConeAngle);
         
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(WristConstants.kWristLevelTwoConeAngle);
+            arm.setWristPosition(WristConstants.kL2ConeAngle);
         }
     }
 
@@ -32,7 +32,7 @@ public class SetLevelTwoConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelTwoConeAngle) && arm.isWristAtAngle(WristConstants.kWristLevelTwoConeAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kL2ConeAngle) && arm.isWristAtAngle(WristConstants.kL2ConeAngle);
     }
 
 

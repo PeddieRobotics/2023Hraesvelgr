@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-// import frc.robot.utils.UpdateLogs;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
@@ -19,7 +18,6 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
-import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.OI;
 
 public class RobotContainer {
@@ -29,10 +27,9 @@ public class RobotContainer {
     private final Arm arm;
 
     private final OI oi;
-    private final Shuffleboard shuffleboard;
     private final Autonomous autonomous;
-    private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    // private final LimelightFront limelightFront;
+    // private final LimelightBack limelightBack;
 
     private Command autoCommand;
 
@@ -46,11 +43,10 @@ public class RobotContainer {
         arm = Arm.getInstance();
 
         oi = OI.getInstance();
-        shuffleboard = Shuffleboard.getInstance();
 
         autonomous = Autonomous.getInstance();
-        limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        // limelightFront = LimelightFront.getInstance();
+        // limelightBack = LimelightBack.getInstance();
         // blinkin = Blinkin.getInstance();
     }
 
@@ -86,19 +82,5 @@ public class RobotContainer {
     public double getAngleOffsetFromAuto() {
         return autonomous.getAngleOffsetFromAuto();
     }
-
-    public void testAllSystems() {
-        claw.testPeriodic();
-        arm.testPeriodic();
-
-    }
-
-    // public void startLogging(){
-    // logs.startLogging();
-    // }
-
-    // public void stopLogging(){
-    // logs.stopLogging();;
-    // }
 
 }

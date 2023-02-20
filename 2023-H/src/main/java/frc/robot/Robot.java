@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Shuffleboard.Shuffleboard;
+import frc.robot.Shuffleboard.ShuffleboardMain;
+import frc.robot.utils.Constants.OIConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,36 +37,27 @@ import frc.robot.Shuffleboard.Shuffleboard;
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private static RobotContainer robotContainer;
-    private Shuffleboard mShuffleboard;
+    private ShuffleboardMain shuffleboard;
     private boolean ranAutonomousRoutine;
 
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any initialization code.
-     */
     @Override
     public void robotInit() {
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        mShuffleboard = Shuffleboard.getInstance();
-
         robotContainer = new RobotContainer();
+
+        shuffleboard = ShuffleboardMain.getInstance();
+        if(OIConstants.kUseTestModeLayout){
+            shuffleboard.setupTestMode();
+        }
+        else{
+            shuffleboard.setupTeleop();
+        }
+
         PathPlannerServer.startServer(5895);
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
     }
 
-    /**
-     * This function is called every robot packet, no matter the mode. Use this for
-     * items like
-     * diagnostics that you want ran during disabled, autonomous, teleoperated and
-     * test.
-     *
-     * <p>
-     * This runs after the mode specific periodic functions, but before LiveWindow
-     * and
-     * SmartDashboard integrated updating.
-     */
     @Override
     public void robotPeriodic() {
         // Runs the Scheduler. This is responsible for polling buttons, adding
@@ -75,10 +68,13 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        mShuffleboard.update();
+
+        // Update all tabs on shuffleboard, reading/writing as applicable to each field.
+        // This controls both keeping track of key information, as well as updating key parameters
+        // from Shuffleboard.
+        shuffleboard.update();
     }
 
-    /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
         robotContainer.setArmMode(IdleMode.kCoast);
@@ -90,10 +86,6 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
     }
 
-    /**
-     * This autonomous runs the autonomous command selected by your
-     * {@link RobotContainer} class.
-     */
     @Override
     public void autonomousInit() {
         robotContainer.resetGyro();
@@ -108,14 +100,12 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
     }
 
     @Override
     public void teleopInit() {
-
         // If we are transitioning from autonomous,
         // load in the correct angle offset compared
         // to the initial pose of the path.
@@ -148,18 +138,15 @@ public class Robot extends TimedRobot {
         robotContainer.resetGyro();
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
-        LiveWindow.setEnabled(false); // recommended by WPILib documentation for teams with their own test code
+        LiveWindow.setEnabled(false);
     }
 
-    /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
     }
 
-    /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
-        robotContainer.testAllSystems();
     }
 
 }

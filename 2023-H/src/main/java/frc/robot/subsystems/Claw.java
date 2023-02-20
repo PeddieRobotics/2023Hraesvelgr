@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.RobotMap;
@@ -15,22 +16,35 @@ public class Claw extends SubsystemBase {
     private CANSparkMax clawMotor;
     private DigitalInput coneSensor, cubeSensor;
 
+    private SendableChooser<String> gamepieceChooser;
+
+    private double cubeIntakeSpeed, coneIntakeSpeed, cubeOuttakeSpeed, coneOuttakeSpeed;
+
     public Claw() {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
-        coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
-        cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
+        // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
+        // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
+
+        cubeIntakeSpeed = ClawConstants.kCubeIntakeSpeed;
+        coneIntakeSpeed = ClawConstants.kConeIntakeSpeed;
+        cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
+        coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
+
+        gamepieceChooser = new SendableChooser<String>();
+        gamepieceChooser.addOption("Cone", "Cone");
+        gamepieceChooser.addOption("Cube", "Cube");
+        gamepieceChooser.addOption("None", "None");
+        gamepieceChooser.setDefaultOption("None", "None");
+
+        SmartDashboard.putData(gamepieceChooser);
     }
     
     @Override
     public void periodic(){
         
-    }
-
-    public void testPeriodic(){
-        setSpeed(SmartDashboard.getNumber("OR: Claw speed", 0));
     }
 
     public static Claw getInstance(){
@@ -45,12 +59,12 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasCone(){
-        return Shuffleboard.getInstance().hasCone(); // temporary until we get banner sensors installed
+        return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
         // return !coneSensor.get();
     }
 
     public boolean hasCube(){
-        return Shuffleboard.getInstance().hasCube(); // temporary until we get banner sensor installed
+        return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
         // return !cubeSensor.get();
     }
 
@@ -67,26 +81,31 @@ public class Claw extends SubsystemBase {
     }
 
     public void intakeCube(){
-        setSpeed(ClawConstants.kCubeIntakeSpeed);
+        setSpeed(cubeIntakeSpeed);
     }
 
     public void intakeCone(){
-        setSpeed(ClawConstants.kConeIntakeSpeed);
+        setSpeed(coneIntakeSpeed);
     }
 
     public void outtakeCube(){
-        setSpeed(ClawConstants.kCubeOuttakeSpeed);
+        setSpeed(cubeOuttakeSpeed);
     }
 
     public void outtakeCone(){
-        setSpeed(ClawConstants.kConeOuttakeSpeed);
+        setSpeed(coneOuttakeSpeed);
     }
 
-    public boolean isIntaking(){
-        return clawMotor.get() != 0.0;
+    public double getMotorTemperature() {
+        return clawMotor.getMotorTemperature();
     }
 
-    public double getCurrent(){
+    public double getSpeed() {
+        return clawMotor.get();
+    }
+
+    public double getOutputCurrent() {
         return clawMotor.getOutputCurrent();
     }
+
 }

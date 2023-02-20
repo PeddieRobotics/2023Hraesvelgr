@@ -25,20 +25,20 @@ public class Arm extends SubsystemBase {
         wrist.setMode(mode);
     }
 
-    public void setWristSpeed(double wristSpeed) {
+    public void setWristPercentOutput(double wristSpeed) {
         wrist.setPercentOutput(wristSpeed);
     }
 
-    public double getWristSpeed() {
+    public double getWristPercentOutput() {
         return wrist.getSpeed();
     }
 
-    public void setShoulderSpeed(double shoulderSpeed) {
-        shoulder.setSpeed(shoulderSpeed);
+    public void setShoulderPercentOutput(double shoulderSpeed) {
+        shoulder.setPercentOutput(shoulderSpeed);
     }
 
-    public double getShoulderSpeed() {
-        return shoulder.getSpeed();
+    public double getShoulderPercentOutput() {
+        return shoulder.getPercentOutput();
     }
 
     public double getShoulderOutputCurrent() {
@@ -82,11 +82,11 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isShoulderAtAngle(double angle){
-        return Math.abs(getShoulderPosition() - angle) < ShoulderConstants.kShoulderSetpointTolerance;
+        return Math.abs(getShoulderPosition() - angle) < ShoulderConstants.kSetpointTolerance;
     }
 
     public boolean isWristAtAngle(double angle){
-        return Math.abs(getWristPosition() - angle) < WristConstants.kWristSetpointTolerance;
+        return Math.abs(getWristPosition() - angle) < WristConstants.kSetpointTolerance;
     }
 
     public boolean isShoulderAboveAngle(double angle){
@@ -118,8 +118,4 @@ public class Arm extends SubsystemBase {
         wrist.periodic();
     }
 
-    public void testPeriodic(){
-        shoulder.testPeriodic();
-        wrist.testPeriodic();
-    }
 }

@@ -28,7 +28,7 @@ public class Wrist {
 
     private double kS, kG, kV, kA, arbitraryFF;
 
-    protected Wrist() {
+    public Wrist() {
 
         wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
         wristMotor.setSmartCurrentLimit(WristConstants.kMaxCurrent);
@@ -36,7 +36,6 @@ public class Wrist {
 
         pidController = wristMotor.getPIDController();
 
-        kS = WristConstants.kSVolts;
         kG = WristConstants.kGVolts;
 
         kV = WristConstants.kVVoltSecondPerRad;
@@ -44,13 +43,13 @@ public class Wrist {
 
         wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
 
-        wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kWristEncoderConversionFactor);
+        wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kEncoderConversionFactor);
         setEncoder(103);
 
         // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
-        wristMotor.setSoftLimit(SoftLimitDirection.kForward, 100);
-        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, -140);
+        wristMotor.setSoftLimit(SoftLimitDirection.kForward, WristConstants.kAngleMax);
+        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, WristConstants.kAngleMin);
 
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -109,31 +108,26 @@ public class Wrist {
         wristMotor.set(0);
     }
 
-    public void setWristFeedForward(double dbks, double dbkg, double dbkv, double dbka) {
-        if (kS != dbks || kG != dbkg || kV != dbkv || kA != dbka) {
-            kS = dbks;
+    public void setWristFeedforward(double dbkg, double dbkv, double dbka) {
+        if (kG != dbkg || kV != dbkv || kA != dbka) {
             kG = dbkg;
             kV = dbkv;
             kA = dbka;
-            wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+            wristFeedforward = new ArmFeedforward(0, kG, kV, kA);
         }
     }
 
-    public void setPidController(double p, double i, double d, double ff, double izone){
+    public void setPIDController(double p, double i, double d, double izone){
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
-        pidController.setFF(ff);
         pidController.setIZone(izone);
-    }
-
-    public boolean isMoving() {
-        return wristMotor.get() != 0.0;
     }
 
     public void periodic() {
 
     }
+
 
     public void setMode(IdleMode mode) {
         wristMotor.setIdleMode(mode);

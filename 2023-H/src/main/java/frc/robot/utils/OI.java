@@ -13,29 +13,24 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Shuffleboard;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
-import frc.robot.commands.ArmCommands.SetFloorConePose;
-import frc.robot.commands.ArmCommands.SetFloorCubePose;
-import frc.robot.commands.ArmCommands.SetHumanPlayerConePose;
+import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
-import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
-import frc.robot.commands.DriveCommands.LockDrivetrain;
 
 public class OI {
     public static OI instance;
 
     private Drivetrain drivetrain;
     private Claw claw;
-    private Shuffleboard shuffleboard;
 
     private PS4Controller driverController = new PS4Controller(0);
 
@@ -56,7 +51,6 @@ public class OI {
     public OI() {
         drivetrain = Drivetrain.getInstance();
         claw = Claw.getInstance();
-        shuffleboard = Shuffleboard.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 
@@ -69,18 +63,20 @@ public class OI {
 
         // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SetLevelOnePose());
+        // xButton.onTrue(new SetLevelOnePose());
 
         // Cube intake / score L1 with any gamepiece
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(), new SequentialCommandGroup(new SetFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+        // leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        // new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(), new SequentialCommandGroup(new SetFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+        // rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        // new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
@@ -129,12 +125,10 @@ public class OI {
 
     public double getForward() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
-        // return 0;
     }
 
     public double getStrafe() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
-        // return 0;
     }
 
     /* DRIVER METHODS */
@@ -250,8 +244,8 @@ public class OI {
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelbase;
-        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackwidth;
+        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelBase;
+        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackWidth;
 
         if (rotX * rotY > 0) {
             rotX = -rotX;

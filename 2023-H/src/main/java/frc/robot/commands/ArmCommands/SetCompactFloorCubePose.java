@@ -5,11 +5,11 @@ import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetFloorCubePose extends CommandBase{
+public class SetCompactFloorCubePose extends CommandBase{
     private Arm arm;
     private boolean shoulderStowed, shoulderStowing;
 
-    public SetFloorCubePose() {
+    public SetCompactFloorCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
         shoulderStowed = false;
@@ -20,25 +20,23 @@ public class SetFloorCubePose extends CommandBase{
     public void initialize() {
         shoulderStowed = false;
         shoulderStowing = false;
-        arm.setWristPosition(WristConstants.kWristStowedAngle);
+        arm.setWristPosition(WristConstants.kStowedAngle);
     }
 
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(-10) && !shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderStowedAngle);
+            arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
             shoulderStowing = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle) && shoulderStowing){
-            // arm.setShoulderPosition(ShoulderConstants.kShoulderFloorCubeAngle);
-            arm.setShoulderPosition(ShoulderConstants.kShoulderExtendedFloorCubeAngle);
+        if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
+            arm.setShoulderPosition(ShoulderConstants.kCompactFloorCubeAngle);
             shoulderStowed = true;
         }
 
-        // if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle) && shoulderStowed){
-        if(arm.isShoulderAtAngle(ShoulderConstants.kShoulderExtendedFloorCubeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kWristExtendedFloorCubeAngle);
+        if(arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && shoulderStowed){
+            arm.setWristPosition(WristConstants.kCompactFloorCubeAngle);
         }
     }
 
@@ -50,7 +48,7 @@ public class SetFloorCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kWristFloorCubeAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kCompactFloorCubeAngle);
     }
 
 

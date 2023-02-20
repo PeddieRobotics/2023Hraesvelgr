@@ -16,7 +16,7 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void initialize() {
         if(arm.isShoulderBelowAngle(60) || arm.isShoulderAboveAngle(100)){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderLevelThreeConeAngle);
+            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
         }
         
         arm.setWristPosition(103);
@@ -25,11 +25,11 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(90)){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderLevelThreeConeAngle);
+            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
         }
 
         if(arm.isShoulderAboveAngle(100.0)){
-            arm.setWristPosition(WristConstants.kWristLevelThreeConeAngle);
+            arm.setWristPosition(WristConstants.kL3ConeAngle);
         }
   
     }
@@ -40,7 +40,7 @@ public class SetLevelThreeConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLevelThreeConeAngle) && arm.isWristAtAngle(WristConstants.kWristLevelThreeConeAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kL3ConeAngle) && arm.isWristAtAngle(WristConstants.kL3ConeAngle);
     }
 
 

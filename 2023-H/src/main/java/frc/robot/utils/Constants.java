@@ -19,6 +19,7 @@ public final class Constants {
         }
 
         public static class OIConstants {
+                public static final boolean kUseTestModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
         }
 
@@ -29,9 +30,9 @@ public final class Constants {
         public static class DriveConstants {
                 // Chassis Configuration
                 // Distance between the centers of left and right wheels on the robot
-                public static final double kTrackwidth = Units.inchesToMeters(20.5);
+                public static final double kTrackWidth = Units.inchesToMeters(20.5);
                 // Distance between the front and back wheels on the robot
-                public static final double kWheelbase = Units.inchesToMeters(24.5);
+                public static final double kWheelBase = Units.inchesToMeters(24.5);
 
                 public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
                 public static final double kMaxFloorSpeed = 0.75 * kRealMaxSpeedMetersPerSecond;
@@ -45,15 +46,18 @@ public final class Constants {
                 public static final double kSlowModeRotationSpeedScale = 0.55;
                 public static final double kCardinalDirectionSpeedScale = 0.3;
 
+                public static final Translation2d[] swerveModuleLocations = {
+                        new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),
+                        new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),
+                        new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),
+                        new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0)
+                };
+
                 public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-                                new Translation2d(kWheelbase / 2.0,
-                                                kTrackwidth / 2.0),
-                                new Translation2d(kWheelbase / 2.0,
-                                                -kTrackwidth / 2.0),
-                                new Translation2d(-kWheelbase / 2.0,
-                                                kTrackwidth / 2.0),
-                                new Translation2d(-kWheelbase/ 2.0,
-                                                -kTrackwidth / 2.0));
+                                swerveModuleLocations[0],
+                                swerveModuleLocations[1],
+                                swerveModuleLocations[2],
+                                swerveModuleLocations[3]);
 
                 // Angular offsets of the modules relative to the chassis in radians
                 public static final double kFrontLeftChassisAngularOffset = 3*Math.PI/2;
@@ -63,8 +67,8 @@ public final class Constants {
 
                 // Translation and Rotation Slew Rates
                 public static final boolean kUseRateLimit = true;
-                public static final double kDirectionSlewRate = 1.2; // radians per second
-                public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+                public static final double kDirectionSlewRate = 3; // radians per second
+                public static final double kMagnitudeSlewRate = 3; // percent per second (1 = 100%)
                 public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
@@ -161,48 +165,52 @@ public final class Constants {
         public static final class ShoulderConstants{
                  // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 60;
-            
-                public static final double kP = 0.0015;
+
+                public static final double kP = 0.0001;
                 public static final double kI = 0.000002;    
                 public static final double kD = 0.00004;
                 public static final double kIz = 5;
-                public static final double kFF = 0.0;
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
             
-                public static final double kShoulderStowedAngle = -75.0;
-                public static final double kShoulderLLSeekAngle = -75.0;
-                public static final double kShoulderLevelOneAngle = -75.0;
+                public static final double kStowedAngle = -75.0;
+                public static final double kLLSeekAngle = -75.0;
+                public static final double kL1Angle = -75.0;
 
                 // Shoulder is not fully extended out
-                public static final double kShoulderFloorConeAngle = -59.0;
-                public static final double kShoulderFloorCubeAngle = -59.0;
+                public static final double kCompactFloorConeAngle = -59.0;
+                public static final double kCompactFloorCubeAngle = -59.0;
 
                 // Shoudler is fully extended out
-                public static final double kShoulderExtendedFloorConeAngle = -30.0;
-                public static final double kShoulderExtendedFloorCubeAngle = -37.0;
+                public static final double kExtendedFloorConeAngle = -30.0;
+                public static final double kExtendedFloorCubeAngle = -37.0;
 
+                public static final double kL2ConeAngle = 5.0;
+                public static final double kL2CubeAngle = 5.0;
 
-                public static final double kShoulderLevelTwoConeAngle = 5.0;
-                public static final double kShoulderLevelTwoCubeAngle = 5.0;
+                public static final double kL3CubeForwardAngle = 10.0;
+                public static final double kL3CubeInvertedAngle = 157.0;
+                public static final double kL3ConeAngle = 157.0;
+                public static final double kDoubleSSConeAngle = 20.0;
+                public static final double kSingleSSAngle = -75.0;
 
-                public static final double kShoulderLevelThreeTransition = 90.0;
-                public static final double kShoulderLevelThreeCubeLobAngle = 10.0;
-                public static final double kShoulderLevelThreeCubeDunkAngle = 157.0;
-                public static final double kShoulderLevelThreeConeAngle = 157.0;
-                public static final double kShoulderHumanPlayerConeAngle = 20.0;
-                public static final double kShoulderHumanPlayerSingleSS = -75.0;
+                // Used generically in the code for checking if we are "close enough" to a pose
+                // Not currently the same as the Smart Motion tolerance used onboard the PID controller.
+                public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kShoulderSetpointTolerance = 1.0; // degrees
-
-                public static final double kSVolts = 0.0;
                 public static final double kGVolts = 0.4;
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.06;
 
-                public static final double kShoulderMotorReduction = 296; // 10368:35 or approximately 296:1;
+                public static final double kMotorReduction = 296; // 10368:35 or approximately 296:1;
 
-                public static final double kShoulderEncoderConversionFactor = 225.0/185.0; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kEncoderConversionFactor = 225.0/185.0; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kSmartMotionSetpointTol = 1.0;
+                public static final double kSmartMotionMinVel = 0.0; // rpm
+                public static final double kSmartMotionMaxVel = 6000.0; // rpm
+                public static final double kSmartMotionMaxAccel = 8000.0; // rpm / sec
+            
+        
         }
 
         public static final class WristConstants{
@@ -213,42 +221,40 @@ public final class Constants {
                 public static final double kI = 0.000005;
                 public static final double kD = 0.0001;
                 public static final double kIz = 4.0;
-                public static final double kFF = 0.0;
-                public static final double kAngleMin = 103;
-                public static final double kAngleMax = -140;
+
+                // Soft limits
+                public static final float kAngleMin = -140;
+                public static final float kAngleMax = 100;
             
-                public static final double kSVolts = 0.0;
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
             
-                public static final double kWristStowedAngle = 70.0;
-                public static final double kWristLLSeekAngle = -10.0;
-                public static final double kWristLevelOneAngle = -10.0;
-
+                public static final double kStowedAngle = 70.0;
+                public static final double kLLSeekAngle = -10.0;
+                public static final double kL1Angle = -10.0;
                 
                 // Shoudler is not fully extended out
-                public static final double kWristFloorConeAngle = -62.0;
-                public static final double kWristFloorCubeAngle = -75.0;
+                public static final double kCompactFloorConeAngle = -62.0;
+                public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoudler is fully extended out
-                public static final double kWristExtendedFloorConeAngle = -35.0;
-                public static final double kWristExtendedFloorCubeAngle = -20.0;
+                public static final double kExtendedFloorConeAngle = -35.0;
+                public static final double kExtendedFloorCubeAngle = -20.0;
                 
-                public static final double kWristLevelTwoConeAngle = -87.4;
-                public static final double kWristLevelTwoCubeAngle = -87.4;
+                public static final double kL2ConeAngle = -87.4;
+                public static final double kL2CubeAngle = -87.4;
 
-                public static final double kWristLevelThreeCubeTransition = 103.0;
-                public static final double kWristLevelThreeCubeLobAngle = -29.4;
-                public static final double kWristLevelThreeCubeDunkAngle = 2.5;
-                public static final double kWristLevelThreeConeAngle = 2.5;
-                public static final double kWristHumanPlayerConeAngle = -80.0;
-                public static final double kWristHumanPlayerSingleSS = 30.0;
+                public static final double kL3CubeForwardAngle = -29.4;
+                public static final double kL3CubeInvertedAngle = 2.5;
+                public static final double kL3ConeAngle = 2.5;
+                public static final double kDoubleSSConeAngle = -80.0;
+                public static final double kSingleSSAngle = 30.0;
 
-                public static final double kWristSetpointTolerance = 1.0; // degrees
+                public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kWristMotorReduction =  160; // 160:1
-                public static final double kWristEncoderConversionFactor =  103/41.761; // angular delta in degrees divided by encoder delta in native rotations
+                public static final double kMotorReduction =  160; // 160:1
+                public static final double kEncoderConversionFactor =  103/41.761; // angular delta in degrees divided by encoder delta in native rotations
             
         }
         

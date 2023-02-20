@@ -15,8 +15,8 @@ public class SetLLSeekPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderLLSeekAngle);
-        arm.setWristPosition(WristConstants.kWristLLSeekAngle);
+        arm.setShoulderPosition(ShoulderConstants.kLLSeekAngle);
+        arm.setWristPosition(WristConstants.kLLSeekAngle);
         // Needs logic for this...probably needs to make sure wrist is high enough before stowing the shoulder
     }
 
@@ -30,6 +30,6 @@ public class SetLLSeekPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderLLSeekAngle) && arm.isWristAtAngle(WristConstants.kWristLLSeekAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kLLSeekAngle) && arm.isWristAtAngle(WristConstants.kLLSeekAngle);
     }
 }

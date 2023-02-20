@@ -5,23 +5,23 @@ import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetHumanPlayerConePose extends CommandBase{
+public class SetDoubleSSConePose extends CommandBase{
     private Arm arm;
 
-    public SetHumanPlayerConePose() {
+    public SetDoubleSSConePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kShoulderHumanPlayerConeAngle);
+        arm.setShoulderPosition(ShoulderConstants.kDoubleSSConeAngle);
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(WristConstants.kWristHumanPlayerConeAngle);
+            arm.setWristPosition(WristConstants.kDoubleSSConeAngle);
         }
     }
 
@@ -31,7 +31,7 @@ public class SetHumanPlayerConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kShoulderHumanPlayerConeAngle) && arm.isWristAtAngle(WristConstants.kWristHumanPlayerConeAngle);
+        return arm.isShoulderAtAngle(ShoulderConstants.kDoubleSSConeAngle) && arm.isWristAtAngle(WristConstants.kDoubleSSConeAngle);
     }
 
 

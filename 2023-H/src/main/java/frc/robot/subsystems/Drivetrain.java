@@ -49,10 +49,14 @@ public class Drivetrain extends SubsystemBase {
     private double teleOpAngleOffset;
 
     // Correct angle algorithm variables
+    private boolean useHeadingCorrection;
     private Rotation2d correctHeadingTargetHeading;
     private Timer correctHeadingTimer;
     private double correctHeadingPreviousTime;
     private double correctHeadingOffTime;
+
+    // Global drivetrain teleop toggle
+    private boolean allowDriving;
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
@@ -98,6 +102,7 @@ public class Drivetrain extends SubsystemBase {
                 DriveConstants.kSnapToAnglePID[2]);
 
         // Correct heading algorithm
+        useHeadingCorrection = true;
         correctHeadingTimer = new Timer();
         correctHeadingTimer.start();
         correctHeadingPreviousTime = 0.0;
@@ -114,6 +119,7 @@ public class Drivetrain extends SubsystemBase {
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 VecBuilder.fill(0.4, 0.4, 0.4));
 
+        allowDriving = true;
     }
 
     @Override
@@ -131,6 +137,18 @@ public class Drivetrain extends SubsystemBase {
             drivetrain = new Drivetrain();
         }
         return drivetrain;
+    }
+
+    public void setAllowDriving(boolean allow){
+        allowDriving = allow;
+    }
+
+    public void setUseHeadingCorrection(boolean enable){
+      useHeadingCorrection = enable;
+    }
+
+    public SwerveModuleState[] getSwerveModuleStates(){
+      return swerveModuleStates;
     }
 
     // Returns the current pose of the robot
@@ -169,8 +187,8 @@ public class Drivetrain extends SubsystemBase {
             Translation2d centerOfRotation) {
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         ChassisSpeeds robotRelativeSpeeds;
-        // TODO: change to shuffleboard tab
-        if (SmartDashboard.getBoolean("Use heading correction?", false)) {
+
+        if (useHeadingCorrection) {
             fieldRelativeSpeeds = correctHeading(fieldRelativeSpeeds);
         }
 
@@ -189,8 +207,9 @@ public class Drivetrain extends SubsystemBase {
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kRealMaxSpeedMetersPerSecond);
 
-        setSwerveModuleStates(swerveModuleStates);
-
+        if(allowDriving){
+            setSwerveModuleStates(swerveModuleStates);
+        }
     }
 
     public void stopSwerveModules() {

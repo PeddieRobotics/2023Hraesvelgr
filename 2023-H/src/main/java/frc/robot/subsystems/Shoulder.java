@@ -4,17 +4,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Shuffleboard.tabs.ShoulderTab;
-import frc.robot.utils.Constants;
-import frc.robot.utils.OI;
-import frc.robot.utils.RobotMap;
-import frc.robot.utils.Constants.ShoulderConstants;
+import com.revrobotics.SparkMaxPIDController;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.networktables.GenericEntry;
+import frc.robot.utils.Constants.ShoulderConstants;
+import frc.robot.utils.RobotMap;
 
 public class Shoulder {
 
@@ -25,10 +20,7 @@ public class Shoulder {
     private SparkMaxPIDController pidController;
     private ArmFeedforward shoulderFeedforward;
 
-    private double kS, kG, kV, kA, arbitraryFF;
-    private ShoulderTab armTab;
-    private GenericEntry mShoulderTogglePID;
-    private GenericEntry mShoulderToggleOpenLoop;
+    private double kP, kI, kD, kIz, kG, kV, kA, arbitraryFF, kSmartMotionSetpointTol, kSmartMotionMinVel, kSmartMotionMaxVel, kSmartMotionMaxAccel;
 
     public Shoulder() {
 
@@ -44,57 +36,66 @@ public class Shoulder {
         shoulderMotorFollower.setIdleMode(IdleMode.kCoast);
 
         pidController = shoulderMotorMaster.getPIDController();
-        pidController.setSmartMotionAllowedClosedLoopError(ShoulderConstants.kShoulderSetpointTolerance, 0);
-        pidController.setSmartMotionMaxVelocity(ShoulderConstants.kShoulderSmartMotionMaxVelocity, 0);
-        pidController.setSmartMotionMaxAccel(ShoulderConstants.kShoulderSmartMotionMaxAccel, 0);
+        kP = ShoulderConstants.kP;
+        kI = ShoulderConstants.kI;
+        kD = ShoulderConstants.kD;
+        kIz = ShoulderConstants.kIz;
+        setPIDController(kP, kI, kD, kIz);
 
-        kS = ShoulderConstants.kSVolts;
+        kSmartMotionSetpointTol = ShoulderConstants.kSmartMotionSetpointTol;
+        kSmartMotionMinVel = ShoulderConstants.kSmartMotionMinVel;
+        kSmartMotionMaxVel = ShoulderConstants.kSmartMotionMaxVel;
+        kSmartMotionMaxAccel = ShoulderConstants.kSmartMotionMaxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionSetpointTol, 0);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionMinVel, 0);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionMaxVel, 0);
+        pidController.setSmartMotionMaxAccel(kSmartMotionMaxAccel, 0);
+
         kG = ShoulderConstants.kGVolts;
-
         kV = ShoulderConstants.kVVoltSecondPerRad;
         kA = ShoulderConstants.kAVoltSecondSquaredPerRad;
-        shoulderFeedforward = new ArmFeedforward(ShoulderConstants.kSVolts, ShoulderConstants.kGVolts,
+        shoulderFeedforward = new ArmFeedforward(0.0, ShoulderConstants.kGVolts,
                 ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         shoulderMotorMaster.setInverted(true);
         shoulderMotorFollower.setInverted(true);
 
-        shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
-        shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor);
+        shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
+        shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
         setEncoder(-47.0);
 
-        shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor/60.0);
-        shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kShoulderEncoderConversionFactor/60.0);
+        shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+        shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
 
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 80);
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -45);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 120);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -70);
 
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 80);
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -45);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 120);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -70);
 
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
         shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
-        armTab = new ShoulderTab();
-        mShoulderToggleOpenLoop = armTab.getTab().add("Toggle Shoulder Open Loop Control", false).getEntry();
-        mShoulderTogglePID = armTab.getTab().add("Toggle Shoulder PID Tuning Mode", false).getEntry();
+    }
+
+    public void setSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionSetpointTol = setpointTol;
+        kSmartMotionMinVel = minVel;
+        kSmartMotionMaxVel = maxVel;
+        kSmartMotionMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionSetpointTol, 0);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionMinVel, 0);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionMaxVel, 0);
+        pidController.setSmartMotionMaxAccel(kSmartMotionMaxAccel, 0);
 
     }
 
     public double getAngle() {
         return shoulderMotorMaster.getEncoder().getPosition();
-    }
-
-    public void setSpeed(double speed) {
-        shoulderMotorMaster.set(speed);
-    }
-
-    public double getSpeed() {
-        return shoulderMotorMaster.get();
     }
 
     public double getOutputCurrent() {
@@ -119,7 +120,7 @@ public class Shoulder {
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
 
-    public void setSmartMotion(double setpointDeg){
+    public void setPositionSmartMotion(double setpointDeg){
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
         pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
@@ -129,10 +130,6 @@ public class Shoulder {
         return arbitraryFF;
     }
 
-    public void setAngleSmartMotion(double setpoint) {
-        pidController.setReference(setpoint, ControlType.kSmartMotion);
-    }
-
     public void resetEncoder() {
         setEncoder(0);
     }
@@ -140,6 +137,10 @@ public class Shoulder {
     public void setEncoder(double newEncoderValue) {
         shoulderMotorMaster.getEncoder().setPosition(newEncoderValue);
         shoulderMotorFollower.getEncoder().setPosition(newEncoderValue);
+    }
+
+    public double getPercentOutput() {
+        return shoulderMotorMaster.get();
     }
 
     public void setPercentOutput(double speed) {
@@ -158,74 +159,28 @@ public class Shoulder {
         return shoulderMotorMaster.getEncoder().getVelocity();
     }
 
-    public boolean isMoving() {
-        return shoulderMotorMaster.get() != 0.0;
-    }
-
     public void disablePIDController() {
-        setShoulderFeedforward(0, 0, 0, 0);
-        setPidController(0, 0, 0, 0, 0);
+        setShoulderFeedforward(0, 0, 0);
+        setPIDController(0, 0, 0, 0);
     }
 
-    public void setShoulderFeedforward(double dbks, double dbkg, double dbkv, double dbka) {
-        kS = dbks;
-        kG = dbkg;
-        kV = dbkv;
-        kA = dbka;
-        shoulderFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+    public void setShoulderFeedforward(double dbkg, double dbkv, double dbka) {
+        if (kG != dbkg || kV != dbkv || kA != dbka) {
+            kG = dbkg;
+            kV = dbkv;
+            kA = dbka;
+            shoulderFeedforward = new ArmFeedforward(0, kG, kV, kA);
+        }
     }
 
-    public void setPidController(double p, double i, double d, double ff, double izone) {
+    public void setPIDController(double p, double i, double d, double izone) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
-        pidController.setFF(ff);
         pidController.setIZone(izone);
     }
 
     public void periodic() {
-    }
-
-    public void testPeriodic() {
-
-        if (mShoulderToggleOpenLoop.getBoolean(false)) {
-            setPercentOutput(OI.getInstance().getArmSpeed());
-            arbitraryFF = 0;
-        } else if (mShoulderTogglePID.getBoolean(false)) {
-            setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
-                    SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
-                    SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
-                    SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
-                    SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
-
-            setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
-                    SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts),
-                    SmartDashboard.getNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
-                    SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
-
-            double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg)", 0);
-            if (shoulderPIDSetpoint >= -75.0 && shoulderPIDSetpoint <= 155.0
-                    && SmartDashboard.getBoolean("Execute", false)) {
-                setPosition(shoulderPIDSetpoint);
-            } 
-        } else if(SmartDashboard.getBoolean("Toggle shoulder velocity PID tuning mode", false)){
-            setPidController(SmartDashboard.getNumber("Shoulder P", Constants.ShoulderConstants.kP),
-                SmartDashboard.getNumber("Shoulder I", Constants.ShoulderConstants.kI),
-                SmartDashboard.getNumber("Shoulder D", Constants.ShoulderConstants.kD),
-                SmartDashboard.getNumber("Shoulder FF", Constants.ShoulderConstants.kFF),
-                SmartDashboard.getNumber("Shoulder IZone", Constants.ShoulderConstants.kIz));
-
-            setShoulderFeedforward(SmartDashboard.getNumber("Shoulder kS", Constants.ShoulderConstants.kSVolts),
-                SmartDashboard.getNumber("Shoulder kG", Constants.ShoulderConstants.kSVolts), 
-                SmartDashboard.getNumber("Shoulder kV", Constants.ShoulderConstants.kVVoltSecondPerRad),
-                SmartDashboard.getNumber("Shoulder kA", Constants.ShoulderConstants.kAVoltSecondSquaredPerRad));
-
-            double shoulderPIDSetpoint = SmartDashboard.getNumber("Shoulder PID setpoint (deg/sec)",0);
-            if(shoulderPIDSetpoint >= -90.0 && shoulderPIDSetpoint <= 90.0 && SmartDashboard.getBoolean("Execute", false)){
-                setVelocity(shoulderPIDSetpoint);
-            } 
-        }
-
     }
 
     public void setMode(IdleMode mode) {

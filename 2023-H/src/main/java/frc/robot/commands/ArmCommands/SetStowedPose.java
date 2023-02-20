@@ -15,13 +15,13 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(WristConstants.kWristStowedAngle);
+        arm.setWristPosition(WristConstants.kStowedAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAtAngle(WristConstants.kWristStowedAngle)){
-            arm.setShoulderPosition(ShoulderConstants.kShoulderStowedAngle);
+        if(arm.isWristAtAngle(WristConstants.kStowedAngle)){
+            arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
         }
     }
 
@@ -31,7 +31,7 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(WristConstants.kWristStowedAngle) && arm.isShoulderAtAngle(ShoulderConstants.kShoulderStowedAngle);
+        return arm.isWristAtAngle(WristConstants.kStowedAngle) && arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle);
     }
 
 
