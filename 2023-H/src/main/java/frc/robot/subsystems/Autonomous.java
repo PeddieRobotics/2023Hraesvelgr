@@ -15,6 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.AutoCommands.AutonAlign;
+import frc.robot.commands.LimelightCommands.SetPipe;
+import frc.robot.commands.LimelightCommands.SetPipeType;
+import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
 
@@ -28,7 +32,7 @@ public class Autonomous extends SubsystemBase{
     private Hashtable<String, Command> autoRoutines;
 
     // Auto Builder
-    private SwerveAutoBuilder autoBuilder;
+    private CustomAutoBuilder autoBuilder;
 
     // Paths
     private PathPlannerTrajectory OnePieceBalanceCol3, OnePieceBalanceCol7, OnePieceSkedaddleMid, OnePiecePrepareCol9;
@@ -43,15 +47,37 @@ public class Autonomous extends SubsystemBase{
         autoRoutineSelector = new SendableChooser<Command>();
 
         HashMap<String, Command> eventMap = new HashMap<>();
+        // eventMap.put("dummyDashboardCommand", new DummyDashboardCommand());
+        // eventMap.put("DeployIntake", new DummyDeployIntakeCommand());
+        // eventMap.put("AimAndShoot", new DummyAimAndShootCommand()); //eventMap.put("AimAndShoot", new DummyAimAndShootCommand());
+        for(int i=1;i<=9;i++){
+            eventMap.put("AlignCol"+i, new AutonAlign(i));
+            eventMap.put("pipe"+i, new SetPipe(i));
+            eventMap.put("pipeType"+i, new SetPipeType(i));
+        }
+        eventMap.put("pipe0", new SetPipe(0));
 
-        autoBuilder = new SwerveAutoBuilder(
-            drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, 
-            DriveConstants.kinematics, 
-            new PIDConstants(AutoConstants.kPTranslationController, 0, 0), 
-            new PIDConstants(AutoConstants.kPThetaController, 0, 0), 
-            drivetrain::setSwerveModuleStates, 
-            eventMap, true, 
-            drivetrain
+        // autoBuilder = new SwerveAutoBuilder(
+        //     drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, 
+        //     DriveConstants.kinematics, 
+        //     new PIDConstants(AutoConstants.kPTranslationController, 0, 0), 
+        //     new PIDConstants(AutoConstants.kPThetaController, 0, 0), 
+        //     drivetrain::setSwerveModuleStates, 
+        //     eventMap, true, 
+        //     drivetrain
+        // );
+
+        autoBuilder = new CustomAutoBuilder(
+        drivetrain ::getPose, // Pose2d supplier
+        drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
+        () -> this.setFlipped(),
+        DriveConstants.kinematics, // SwerveDriveKinematics
+        new PIDConstants(AutoConstants.kPTranslationController, 0, 0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(AutoConstants.kPThetaController, 0, 0), // PID constants to correct for rotation error (used to create the rotation controller)
+            drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
+            eventMap,
+            true,
+            drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
         );
 
         defineAutoPaths();
@@ -103,6 +129,10 @@ public class Autonomous extends SubsystemBase{
         // autoRoutines.put("2 Piece Free Prepare Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceFreePrepareCol1", 0.5, 0.5)));
         // autoRoutines.put("2 Piece Bump Prepare Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBumpPrepareCol9", 0.5, 0.5)));
         // autoRoutines.put("3 Piece Free", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceFree", 0.5, 0.5)));
+
+        //test paths
+        autoRoutines.put("testPath1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath1", 0.5, 0.5)));
+        autoRoutines.put("testPath2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath2", 0.5, 0.5)));
     }   
 
 
@@ -115,6 +145,10 @@ public class Autonomous extends SubsystemBase{
         }
 
         SmartDashboard.putData("Auto Routines", autoRoutineSelector);
+    }
+
+    private void setFlipped(){ //used only in auto
+        drivetrain.setFlipped();
     }
 
     public Command getAutonomousCommand(){

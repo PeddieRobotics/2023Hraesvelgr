@@ -33,6 +33,7 @@ public class Drivetrain extends SubsystemBase {
     // Gyroscope Sensor
     private final ADIS16470_IMU gyro;
     private double heading;
+    private boolean isFlipped;
 
     // Swerve Drive
     private SwerveModuleState[] swerveModuleStates;
@@ -94,6 +95,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Teleop Angle offset from Autonomous to Teleop
         teleOpAngleOffset = 0;
+        isFlipped=false; //basically teleopAngleOffset for now
 
         // Snap to Angle Algorithm
         snapToAngleHeading = 0;
@@ -156,6 +158,10 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getEstimatedPosition();
     }
 
+    public Translation2d getPoseAsTranslation2d() {
+        return odometry.getEstimatedPosition().getTranslation();
+    }
+
     // Resets the current pose of the robot
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(getHeadingAsRotation2d(), swerveModulePositions, pose);
@@ -175,6 +181,15 @@ public class Drivetrain extends SubsystemBase {
         limelightBack.checkForAprilTagUpdates(odometry);
 
     }
+
+    public void setFlipped(){//used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
+        isFlipped = Math.abs(getPose().getRotation().getDegrees())>90;
+        //if(DriverStation.getAlliance()==DriverStation.Alliance.Red) isFlipped=!isFlipped;
+      }
+    
+      public boolean getFlipped(){
+        return isFlipped;
+      }
 
     // Drive algorithm
     public void setSwerveModuleStates(SwerveModuleState[] swerveModuleStates) {
@@ -198,7 +213,8 @@ public class Drivetrain extends SubsystemBase {
 
         if (fieldOriented) {
             robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds,
-                    Rotation2d.fromDegrees(teleOpAngleOffset + getHeading()));
+                    Rotation2d.fromDegrees((isFlipped)?180:0 + getHeading()));
+                    //Rotation2d.fromDegrees(teleopAngleOffset + getHeading()));
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
@@ -271,6 +287,34 @@ public class Drivetrain extends SubsystemBase {
                 desiredSpeed.vxMetersPerSecond,
                 desiredSpeed.vyMetersPerSecond,
                 correctedVr);
+    }
+
+        // Return a vector representing the displacement between the current (x,y) pose and some other point.
+    public Translation2d getNormalizedTranslationToPoint(Translation2d otherCoord) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.div(moveXY.getNorm());
+        return XY;
+    }
+
+    public Translation2d getTranslationToPoint(Translation2d otherCoord, double scalar) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.times(scalar);
+        return XY;
+    }
+
+    public Translation2d getTranslationToPoint(Pose2d otherCoord, double scalar) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.times(scalar);
+        return XY;
     }
 
     public void resetEncoders() {

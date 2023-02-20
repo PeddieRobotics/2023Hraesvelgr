@@ -160,6 +160,14 @@ public final class Constants {
                 public static final double kLimelightHeight = 22.8346; // inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
+                public static final double kLimeLightTranslationBound=.05;
+                public static final double kLimeLightAngleBound=1;
+                public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
+                                                new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
+                                                new Translation2d(1.02743,3.306826),new Translation2d(1.02743,3.865626),new Translation2d(1.02743,4.424426),
+                                                new Translation2d(1.02743,4.983226)};
+                public static final double robotOffsetToGoal = .37+.4+1;
+
         }
 
         public static final class ShoulderConstants{

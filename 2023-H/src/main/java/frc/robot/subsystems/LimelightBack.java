@@ -13,7 +13,8 @@ import frc.robot.utils.RollingAverage;
 public class LimelightBack extends Limelight {
     private static LimelightBack limelightBack;
 
-    private RollingAverage txAverage, tyAverage;
+    private RollingAverage txAverage, tyAverage,taAverage;
+    private boolean cube,level2;
 
     private String limelightName = "limelight-back";
 
@@ -55,6 +56,10 @@ public class LimelightBack extends Limelight {
         return LimelightHelper.getTV(limelightName);
     }
 
+    public boolean getCube(){
+        return cube;
+    }
+
     // Tx is the Horizontal Offset From Crosshair To Target
     public double getTx() {
         return LimelightHelper.getTX(limelightName);
@@ -75,6 +80,10 @@ public class LimelightBack extends Limelight {
 
     public double getTyAverage() {
         return tyAverage.getAverage();
+    }
+    
+    public double getTaAverage() {
+        return taAverage.getAverage();
     }
 
     // Class ID of primary neural detector result or neural classifier result
@@ -115,12 +124,33 @@ public class LimelightBack extends Limelight {
         if (hasTarget()) {
             txAverage.add(getTx());
             tyAverage.add(getTy());
+            taAverage.add(getTa());
         }
     }
 
     public void setPipeline(int pipelineNum) {
         LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
     }
+
+    public int getPipeline(){
+        return (int)LimelightHelper.getCurrentPipelineIndex(limelightName);
+    }
+
+    public int setPipelineType(int col){
+        level2 = true;
+          if (col==2||col==5||col==8) {
+            setPipeline(0);
+            cube=true;
+            return 0;
+          }
+          cube=false;
+          if(level2){
+            setPipeline(4);
+            return 4;
+          }
+          setPipeline(5);
+          return 5;
+        }
 
     public String getJSONDump() {
         return LimelightHelper.getJSONDump(limelightName);
@@ -133,8 +163,8 @@ public class LimelightBack extends Limelight {
         SmartDashboard.putNumber("BOTPOSE BACK X", this.getBotpose().getX());
         SmartDashboard.putNumber("BOTPOSE BACK Y", this.getBotpose().getY());
         SmartDashboard.putNumber("BOTPOSE BACK THETA", this.getBotpose().getRotation().getDegrees());
-        if (tagsSeen > 1) {
-            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        if (tagsSeen > 2) {
+            //odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
     }
 }
