@@ -181,9 +181,9 @@ public final class Constants {
                 public static final double kCompactFloorConeAngle = -59.0;
                 public static final double kCompactFloorCubeAngle = -59.0;
 
-                // Shoudler is fully extended out
+                // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
-                public static final double kExtendedFloorCubeAngle = -37.0;
+                public static final double kExtendedFloorCubeAngle = -35.0;
 
                 public static final double kL2ConeAngle = 5.0;
                 public static final double kL2CubeAngle = 5.0;
@@ -196,9 +196,9 @@ public final class Constants {
 
                 // Used generically in the code for checking if we are "close enough" to a pose
                 // Not currently the same as the Smart Motion tolerance used onboard the PID controller.
-                public static final double kSetpointTolerance = 1.0; // degrees
+                public static final double kSetpointTolerance = 1.5; // degrees
 
-                public static final double kGVolts = 0.4;
+                public static final double kGVolts = 0.3;
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.06;
 
@@ -217,7 +217,7 @@ public final class Constants {
                 // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 25;
             
-                public static final double kP = 0.005;
+                public static final double kP = 0.015;
                 public static final double kI = 0.000005;
                 public static final double kD = 0.0001;
                 public static final double kIz = 4.0;
@@ -234,13 +234,13 @@ public final class Constants {
                 public static final double kLLSeekAngle = -10.0;
                 public static final double kL1Angle = -10.0;
                 
-                // Shoudler is not fully extended out
+                // Shoulder is not fully extended out
                 public static final double kCompactFloorConeAngle = -62.0;
                 public static final double kCompactFloorCubeAngle = -75.0;
 
-                // Shoudler is fully extended out
+                // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -35.0;
-                public static final double kExtendedFloorCubeAngle = -20.0;
+                public static final double kExtendedFloorCubeAngle = -13.0;
                 
                 public static final double kL2ConeAngle = -87.4;
                 public static final double kL2CubeAngle = -87.4;

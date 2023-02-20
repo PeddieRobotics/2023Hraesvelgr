@@ -54,7 +54,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void setShoulderPosition(double setPoint){
-        shoulder.setPosition(setPoint);
+        shoulder.setPositionSmartMotion(setPoint);
     }
 
     public void setWristPosition(double setPoint){

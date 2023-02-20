@@ -69,11 +69,11 @@ public class Shoulder {
 
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 120);
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -70);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
+        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
 
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 120);
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -70);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
+        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
 
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
         shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);

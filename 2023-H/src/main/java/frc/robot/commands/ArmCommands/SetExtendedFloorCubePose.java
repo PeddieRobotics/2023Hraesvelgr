@@ -25,7 +25,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(-10) && !shoulderStowing){
+        if(arm.isWristAboveAngle(30) && !shoulderStowing){
             arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
             shoulderStowing = true;
         }

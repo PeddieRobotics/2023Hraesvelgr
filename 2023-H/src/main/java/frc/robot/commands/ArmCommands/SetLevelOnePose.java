@@ -15,13 +15,17 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(WristConstants.kL1Angle);
+        arm.setWristPosition(40);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(-30)){
+        if(arm.isWristAboveAngle(30)){
             arm.setShoulderPosition(ShoulderConstants.kL1Angle);
+        }
+
+        if(arm.isShoulderBelowAngle(-55)){
+            arm.setWristPosition(WristConstants.kL1Angle);
         }
     }
 

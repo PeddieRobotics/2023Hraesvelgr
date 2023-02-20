@@ -15,8 +15,10 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
+import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetLLSeekPose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
@@ -25,6 +27,7 @@ import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
+import frc.robot.commands.DriveCommands.LockDrivetrain;
 
 public class OI {
     public static OI instance;
@@ -63,20 +66,21 @@ public class OI {
 
         // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        // xButton.onTrue(new SetLevelOnePose());
+        xButton.onTrue(new SetLevelOnePose());
 
-        // Cube intake / score L1 with any gamepiece
+        // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        // leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-        // new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
+        // Cube intake/eject gamepiece
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
-        // rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-        // new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        // circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
@@ -93,15 +97,15 @@ public class OI {
 
         // Lock Drivetrain
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
-        // leftStickButton.toggleOnTrue(new LockDrivetrain());
+        leftStickButton.toggleOnTrue(new LockDrivetrain());
 
         // LL seek pose
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
-        //touchpadButton.onTrue(new SetLLSeek());
+        touchpadButton.onTrue(new SetLLSeekPose());
 
-        // Human Player Station Loading
+        // Double substation (human player) cone loading
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        // squareButton.onTrue(new SetHumanPlayerConePone());
+        squareButton.onTrue(new SetDoubleSSConePose());
 
         // Slow Mode
         Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
