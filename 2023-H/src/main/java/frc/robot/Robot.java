@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
             shuffleboard.setupTeleop();
         }
 
-        PathPlannerServer.startServer(5895);
+        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
         } else {
             // Always assume field orientation should be opposite
             // where the gyro is zeroed.
-            robotContainer.setupAngleOffsetFromAuto(180);
+            robotContainer.setFlipped(true);
 
             // For the sake of calculating odometry correctly,
             // make our initial pose on the field such that

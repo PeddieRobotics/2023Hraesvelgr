@@ -151,7 +151,7 @@ public class LimelightBack extends Limelight {
           }
           setPipeline(5);
           return 5;
-        }
+    }
 
     public String getJSONDump() {
         return LimelightHelper.getJSONDump(limelightName);

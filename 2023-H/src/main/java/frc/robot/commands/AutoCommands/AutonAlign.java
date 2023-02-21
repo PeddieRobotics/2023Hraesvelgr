@@ -1,5 +1,6 @@
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.Drake;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,9 +12,10 @@ import frc.robot.utils.OI;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightBack;
+import frc.robot.subsystems.LimelightFront;
 
 public class AutonAlign extends CommandBase {
-    private final LimelightBack limelightBack;
+    private final Limelight limelight;
     private final Drivetrain drivetrain;
     private final double kMax = 0.8;
 
@@ -31,8 +33,8 @@ public class AutonAlign extends CommandBase {
     private double initialRotation;
 
     public AutonAlign(int col) {
-        limelightBack = LimelightBack.getInstance();
         drivetrain = Drivetrain.getInstance();
+        limelight = (Math.abs(drivetrain.getPose().getRotation().getDegrees())<90)?LimelightBack.getInstance():LimelightFront.getInstance();
 
         thetaSnapController = new PIDController(0.055, 0, 0);
         thetaAlignController = new PIDController(0.055, 0, 0);
@@ -77,7 +79,7 @@ public class AutonAlign extends CommandBase {
         initialPose=drivetrain.getPose();
         initialRotation=drivetrain.getHeading();
 
-        pipe=limelightBack.setPipelineType(column);
+        pipe=limelight.setPipelineType(column);
         state = "SNAP-ALIGN";
 
     }
@@ -85,11 +87,11 @@ public class AutonAlign extends CommandBase {
     @Override
     public void execute() {
 
-        double tx = limelightBack.getTxAverage();
+        double tx = limelight.getTxAverage();
         OI oi = OI.getInstance();
 
         ColY = LimelightConstants.columnDestinationCoords[column].getY();
-        pipe=limelightBack.setPipelineType(column);
+        pipe=limelight.setPipelineType(column);
 
         double alignSpeed = SmartDashboard.getNumber("Auton align speed", 1);
         double minMove = SmartDashboard.getNumber("minmove", 0.12);
@@ -158,7 +160,7 @@ public class AutonAlign extends CommandBase {
                 break;
 
         }
-        SmartDashboard.putNumber("LL dist", limelightBack.getDistance());
+        //SmartDashboard.putNumber("LL dist", limelight.getDistance());
         SmartDashboard.putBoolean("stopped", stopped);
         SmartDashboard.putString("state", state);
 
@@ -181,13 +183,13 @@ public class AutonAlign extends CommandBase {
     public double LimitedSpeedMultiplier(double input, double scalar){
         double speedLimitMultiplier = 1;
 
-        if(limelightBack.getPipeline()!=pipe) return 0;
+        if(limelight.getPipeline()!=pipe) return 0;
 
-        double ta = limelightBack.getTaAverage();
+        double ta = limelight.getTaAverage();
         double taUpperBound = 1.9;
         //double taLowerBound = 0.5;
 
-        if(limelightBack.getCube()){
+        if(limelight.getCube()){
             taUpperBound = 1.7;
             //taLowerBound = 0.5;
         } else {

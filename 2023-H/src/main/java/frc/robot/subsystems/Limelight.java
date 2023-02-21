@@ -9,6 +9,17 @@ public abstract class Limelight extends SubsystemBase {
 
     public abstract Pose2d getBotpose();
 
+    public abstract int getPipeline();
+
     public abstract String getJSONDump();
+
+    public abstract int setPipelineType(int col);
+
+    public abstract double getTxAverage();
+
+    public abstract double getTaAverage();
+
+    public abstract boolean getCube();
+
 
 }

@@ -191,13 +191,17 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setFlipped(){//used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
-        isFlipped = Math.abs(getPose().getRotation().getDegrees())>90;
+        isFlipped = Math.abs(getPose().getRotation().getDegrees())<90;
         //if(DriverStation.getAlliance()==DriverStation.Alliance.Red) isFlipped=!isFlipped;
-      }
+    }
+
+    public void setFlipped(boolean bool){
+        isFlipped = bool;
+    }
     
-      public boolean getFlipped(){
+    public boolean getFlipped(){
         return isFlipped;
-      }
+    }
 
     // Drive algorithm
     public void setSwerveModuleStates(SwerveModuleState[] swerveModuleStates) {
@@ -350,6 +354,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.reset();
+        isFlipped=true;
         correctHeadingTimer.reset();
         correctHeadingTimer.start();
     }

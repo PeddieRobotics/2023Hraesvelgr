@@ -83,4 +83,8 @@ public class RobotContainer {
         return autonomous.getAngleOffsetFromAuto();
     }
 
+    public void setFlipped(boolean bool){
+        drivetrain.setFlipped(bool);
+    }
+
 }
