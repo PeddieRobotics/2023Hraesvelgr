@@ -2,6 +2,7 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawState;
 
 public class IntakeCube extends CommandBase{
     private Claw claw;
@@ -29,7 +30,11 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.hasCube();
+        if(claw.monitor()){
+            claw.setState(ClawState.CUBE);
+            return true;
+        }
+        return false;
     }
 
     

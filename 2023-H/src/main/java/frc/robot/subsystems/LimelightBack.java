@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
@@ -128,11 +127,7 @@ public class LimelightBack extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        SmartDashboard.putNumber("Tags seen BACK", tagsSeen);
-        SmartDashboard.putBoolean("hasTarget BACK", this.hasTarget());
-        SmartDashboard.putNumber("BOTPOSE BACK X", this.getBotpose().getX());
-        SmartDashboard.putNumber("BOTPOSE BACK Y", this.getBotpose().getY());
-        SmartDashboard.putNumber("BOTPOSE BACK THETA", this.getBotpose().getRotation().getDegrees());
+
         if (tagsSeen > 1) {
             odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }

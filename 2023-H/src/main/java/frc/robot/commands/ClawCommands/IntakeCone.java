@@ -2,6 +2,7 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawState;
 
 public class IntakeCone extends CommandBase{
     private Claw claw;
@@ -23,11 +24,18 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
+        if(!interrupted){
+
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return claw.hasCone();
+        if(claw.monitor()){
+            claw.setState(ClawState.CONE);
+            return true;
+        }
+        return false;
     }
 
     
