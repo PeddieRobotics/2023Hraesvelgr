@@ -4,9 +4,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ClawCommands.EjectGamepiece;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
@@ -81,26 +88,16 @@ public class OperatorOI {
         }));
 
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new InstantCommand(() -> {
-            // Set to eject
-        }));
+        xButton.onTrue(new EjectGamepiece());
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new InstantCommand(() -> {
-            // Set armstate to l2scoring
-            // should check for cube or cone
-        }));
+        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), Claw.getInstance()::hasCone));
 
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new InstantCommand(() -> {
-            // Set armstate to humanstationintake
-        }));
+        squareButton.onTrue(new SetDoubleSSConePose());
 
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new InstantCommand(() -> {
-            // Set armstate to l3scoring
-            // should check for cone or cube
-        }));
+        triangleButton.onTrue(new SetLevelThreeConePose());
 
         Trigger leftTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
         leftTriggerPressedTrigger.whileTrue(new CommandBase() {
