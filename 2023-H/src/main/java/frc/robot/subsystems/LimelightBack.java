@@ -21,6 +21,7 @@ public class LimelightBack extends Limelight {
     public LimelightBack() {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
+        taAverage = new RollingAverage();
     }
 
     public static LimelightBack getInstance() {

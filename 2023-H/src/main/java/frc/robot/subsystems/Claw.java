@@ -47,6 +47,8 @@ public class Claw extends SubsystemBase {
 
         // SmartDashboard.putData(gamepieceChooser);
 
+        clawCurrentAverage = new RollingAverage();
+
         state = ClawState.EMPTY;
     }
     

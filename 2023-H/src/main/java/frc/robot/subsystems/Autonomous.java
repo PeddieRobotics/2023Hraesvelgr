@@ -14,8 +14,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
+import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
+import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.AutoCommands.AutonAlign;
+import frc.robot.commands.ClawCommands.EjectGamepiece;
+import frc.robot.commands.ClawCommands.IntakeCone;
+import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.LimelightCommands.SetPipe;
 import frc.robot.commands.LimelightCommands.SetPipeType;
 import frc.robot.utils.CustomAutoBuilder;
@@ -56,6 +64,13 @@ public class Autonomous extends SubsystemBase{
             eventMap.put("pipeType"+i, new SetPipeType(i));
         }
         eventMap.put("pipe0", new SetPipe(0));
+
+        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePose(), new EjectGamepiece(),new SetStowedPose()));
+        eventMap.put("IntakeCube", new SequentialCommandGroup(new SetCompactFloorCubePose(), new IntakeCube(),new SetStowedPose()));
+        eventMap.put("IntakeCone", new SequentialCommandGroup(new SetCompactFloorConePose(), new IntakeCone(),new SetStowedPose()));
+
+        eventMap.put("IntakeConePose", new SetCompactFloorConePose());
+        eventMap.put("IntakeCubePose", new SetCompactFloorCubePose());
 
         // autoBuilder = new SwerveAutoBuilder(
         //     drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, 
@@ -133,6 +148,7 @@ public class Autonomous extends SubsystemBase{
         //test paths
         autoRoutines.put("testPath1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath1", 0.5, 0.5)));
         autoRoutines.put("testPath2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath2", 0.5, 0.5)));
+        autoRoutines.put("testPath3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath3", 0.5, 0.5)));
     }   
 
 
