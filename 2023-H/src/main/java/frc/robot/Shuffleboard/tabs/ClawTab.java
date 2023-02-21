@@ -31,7 +31,7 @@ public class ClawTab extends ShuffleboardTabBase {
         .getEntry();
         mSpeedSetpoint = tab.add("Speed Setpoint", 0.0)
                 .getEntry();
-        mState = tab.add("Has Game Piece", false).getEntry();
+        // mState = tab.add("Has Game Piece", false).getEntry();
         } catch(IllegalArgumentException e){
         }
 
@@ -40,7 +40,6 @@ public class ClawTab extends ShuffleboardTabBase {
     @Override
     public void update() {
         try{
-                mState.setBoolean(claw.monitor());
                 mSpeed.setDouble(claw.getSpeed());
                 mCurrent.setDouble(claw.getOutputCurrent());
                 mTemp.setDouble(claw.getMotorTemperature());

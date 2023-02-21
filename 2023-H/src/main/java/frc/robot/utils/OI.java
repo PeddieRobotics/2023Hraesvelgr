@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -104,9 +105,13 @@ public class OI {
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
         leftStickButton.toggleOnTrue(new LockDrivetrain());
 
-        // LL seek pose
+        // Transitory pose
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetTransitoryPose());
+
+        // Set stowed pose
+        Trigger muteButton = new JoystickButton(driverController, 15);
+        muteButton.onTrue(new SetStowedPose());
 
         // Double substation (human player) cone loading
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);

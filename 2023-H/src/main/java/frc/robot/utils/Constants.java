@@ -225,7 +225,7 @@ public final class Constants {
 
                 // Soft limits
                 public static final float kAngleMin = -140;
-                public static final float kAngleMax = 103;
+                public static final float kAngleMax = 104;
             
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;

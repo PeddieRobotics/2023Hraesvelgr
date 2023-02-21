@@ -28,10 +28,10 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(claw.monitor()){
-            claw.setState(ClawState.CONE);
-            return true;
-        }
+        // if(claw.monitor()){
+        //     claw.setState(ClawState.CONE);
+        //     return true;
+        // }
         return false;
     }
 

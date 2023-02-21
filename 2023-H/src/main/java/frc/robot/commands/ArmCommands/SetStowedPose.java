@@ -23,7 +23,7 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAtAngle(WristConstants.kStowedAngle) && !transitory){
+        if(arm.isWristAboveAngle(WristConstants.kStowedAngle - 40) && !transitory){
             arm.setShoulderPosition(ShoulderConstants.kTransitoryAngle);
             transitory = true;
         }

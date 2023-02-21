@@ -41,13 +41,13 @@ public class Claw extends SubsystemBase {
         cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
         coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
 
-        // gamepieceChooser = new SendableChooser<String>();
-        // gamepieceChooser.addOption("Cone", "Cone");
-        // gamepieceChooser.addOption("Cube", "Cube");
-        // gamepieceChooser.addOption("None", "None");
-        // gamepieceChooser.setDefaultOption("None", "None");
+        gamepieceChooser = new SendableChooser<String>();
+        gamepieceChooser.addOption("Cone", "Cone");
+        gamepieceChooser.addOption("Cube", "Cube");
+        gamepieceChooser.addOption("None", "None");
+        gamepieceChooser.setDefaultOption("None", "None");
 
-        // SmartDashboard.putData(gamepieceChooser);
+        SmartDashboard.putData(gamepieceChooser);
 
         state = ClawState.EMPTY;
     }
@@ -64,15 +64,6 @@ public class Claw extends SubsystemBase {
         return instance;
     }
 
-    // Monitors for a current spike consistent with an detected gamepiece intake
-    // Temporary idea (?)
-    public boolean monitor(){
-        if(clawCurrentAverage.getAverage() > 30.0){
-            return true;
-        }
-        return false;
-    }
-
     public ClawState getState() {
         return state;
     }
@@ -86,14 +77,14 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasCone(){
-        return state == ClawState.CONE;
-        // return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
+        // return state == ClawState.CONE;
+        return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
         // return !coneSensor.get();
     }
 
     public boolean hasCube(){
-        return state == ClawState.CUBE;
-        // return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
+        // return state == ClawState.CUBE;
+        return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
         // return !cubeSensor.get();
     }
 
