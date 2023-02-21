@@ -1,22 +1,20 @@
 package frc.robot.commands.DriveCommands;
 
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.OI;
-import frc.robot.utils.OI.DPadDirection;
+import frc.robot.utils.DriverOI;
+import frc.robot.utils.DriverOI.DPadDirection;
 
 public class SwerveDriveCommand extends CommandBase {
   private Drivetrain drivetrain = Drivetrain.getInstance();
-  private OI oi = OI.getInstance();
-
+  private DriverOI driverOI = DriverOI.getInstance();
 
   /** Creates a new SwerveDriveCommand. */
   public SwerveDriveCommand() {
-    // Use addRequirements() here to declare subsystem dependencies. 
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
   }
 
@@ -30,19 +28,18 @@ public class SwerveDriveCommand extends CommandBase {
   public void execute() {
     Translation2d position;
 
-    if(oi.getDriverDPadInput() != DPadDirection.NONE){
-      position = oi.getCardinalDirection();
-    }
-    else{
-      position = oi.getSwerveTranslation();
+    if (driverOI.getDriverDPadInput() != DPadDirection.NONE) {
+      position = driverOI.getCardinalDirection();
+    } else {
+      position = driverOI.getSwerveTranslation();
       SmartDashboard.putNumber("field relative input forward axis", position.getX());
       SmartDashboard.putNumber("field relative input strafe axis", position.getY());
 
     }
 
-    double rotation = -oi.getRotation();
+    double rotation = -driverOI.getRotation();
 
-    Translation2d centerOfRotation = oi.getCenterOfRotation();
+    Translation2d centerOfRotation = driverOI.getCenterOfRotation();
 
     drivetrain.drive(position, rotation, true, centerOfRotation);
 
