@@ -31,6 +31,8 @@ public class Claw extends SubsystemBase {
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
+        clawCurrentAverage = new RollingAverage();
+
         // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
         // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
 
@@ -65,7 +67,7 @@ public class Claw extends SubsystemBase {
     // Monitors for a current spike consistent with an detected gamepiece intake
     // Temporary idea (?)
     public boolean monitor(){
-        if(clawCurrentAverage.getAverage() > 15.0){
+        if(clawCurrentAverage.getAverage() > 30.0){
             return true;
         }
         return false;

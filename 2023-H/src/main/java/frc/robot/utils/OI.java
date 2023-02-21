@@ -88,7 +88,7 @@ public class OI {
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
-        triangleButton.onTrue(new SetLevelThreeConePose());
+        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         // Single SS pose button
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);

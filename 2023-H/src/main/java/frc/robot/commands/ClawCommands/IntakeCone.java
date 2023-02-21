@@ -24,9 +24,6 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
-        if(!interrupted){
-
-        }
     }
 
     @Override
