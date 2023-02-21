@@ -32,10 +32,7 @@ public class LimelightFront extends Limelight {
     @Override
     public void periodic() {
         updateRollingAverages();
-        // updateLimelightInfoOnDashboard();
-        // // setPipeline((int) SmartDashboard.getNumber("pipeline", 0));
-        // SmartDashboard.putNumberArray("BOTPOSE_WPIBLUE!",
-        // LimelightHelper.getBotPose_wpiBlue(limelightName));
+
     }
 
     public Translation2d getBotXY() {
@@ -132,11 +129,6 @@ public class LimelightFront extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        SmartDashboard.putNumber("Tags seen FRONT", tagsSeen);
-        SmartDashboard.putBoolean("hasTarget FRONT", this.hasTarget());
-        SmartDashboard.putNumber("BOTPOSE FRONT X", this.getBotpose().getX());
-        SmartDashboard.putNumber("BOTPOSE FRONT Y", this.getBotpose().getY());
-        SmartDashboard.putNumber("BOTPOSE FRONT THETA", this.getBotpose().getRotation().getDegrees());
         if (tagsSeen > 1) {
             odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }

@@ -5,15 +5,12 @@ import frc.robot.subsystems.Arm;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetStowedPose extends CommandBase{
+public class SetTransitoryPose extends CommandBase{
     private Arm arm;
-    private boolean transitory;
 
-    public SetStowedPose() {
+    public SetTransitoryPose() {
         arm = Arm.getInstance();
-        addRequirements(arm);
-        transitory = false;
-        
+        addRequirements(arm);   
     }
 
     @Override
@@ -23,24 +20,18 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAtAngle(WristConstants.kStowedAngle) && !transitory){
+        if(arm.isWristAtAngle(WristConstants.kStowedAngle)){
             arm.setShoulderPosition(ShoulderConstants.kTransitoryAngle);
-            transitory = true;
-        }
-
-        if(transitory && arm.isShoulderBelowAngle(-42)){
-            arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
         }
     }
 
     @Override
     public void end(boolean interrupted){
-        transitory = false;
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(WristConstants.kStowedAngle) && arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle);
+        return arm.isWristAtAngle(WristConstants.kStowedAngle) && arm.isShoulderAtAngle(ShoulderConstants.kTransitoryAngle);
     }
 
 
