@@ -39,6 +39,8 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModuleState[] swerveModuleStates;
     private SwerveModulePosition[] swerveModulePositions;
 
+    private double latestChassisSpeed;
+
     private final SwerveDrivePoseEstimator odometry;
 
     // Snap To Angle Algorithm Variables
@@ -122,6 +124,8 @@ public class Drivetrain extends SubsystemBase {
                 VecBuilder.fill(0.4, 0.4, 0.4));
 
         allowDriving = true;
+
+        latestChassisSpeed = 0.0;
     }
 
     @Override
@@ -139,6 +143,10 @@ public class Drivetrain extends SubsystemBase {
             drivetrain = new Drivetrain();
         }
         return drivetrain;
+    }
+
+    public double getSpeed(){
+        return latestChassisSpeed;
     }
 
     public void setAllowDriving(boolean allow){
@@ -218,6 +226,8 @@ public class Drivetrain extends SubsystemBase {
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
+
+        latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2));
 
         swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerOfRotation);
 

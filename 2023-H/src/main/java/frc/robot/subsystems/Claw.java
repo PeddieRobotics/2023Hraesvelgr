@@ -9,12 +9,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
 
 public class Claw extends SubsystemBase {
     private static Claw instance;
     private CANSparkMax clawMotor;
     private DigitalInput coneSensor, cubeSensor;
+
+    private RollingAverage clawCurrentAverage;
+    
+    public enum ClawState {EMPTY, CUBE, CONE};
+    private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
     private SendableChooser<String> gamepieceChooser;
 
@@ -33,18 +39,20 @@ public class Claw extends SubsystemBase {
         cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
         coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
 
-        gamepieceChooser = new SendableChooser<String>();
-        gamepieceChooser.addOption("Cone", "Cone");
-        gamepieceChooser.addOption("Cube", "Cube");
-        gamepieceChooser.addOption("None", "None");
-        gamepieceChooser.setDefaultOption("None", "None");
+        // gamepieceChooser = new SendableChooser<String>();
+        // gamepieceChooser.addOption("Cone", "Cone");
+        // gamepieceChooser.addOption("Cube", "Cube");
+        // gamepieceChooser.addOption("None", "None");
+        // gamepieceChooser.setDefaultOption("None", "None");
 
-        SmartDashboard.putData(gamepieceChooser);
+        // SmartDashboard.putData(gamepieceChooser);
+
+        state = ClawState.EMPTY;
     }
     
     @Override
     public void periodic(){
-        
+        clawCurrentAverage.add(clawMotor.getOutputCurrent());
     }
 
     public static Claw getInstance(){
@@ -54,17 +62,36 @@ public class Claw extends SubsystemBase {
         return instance;
     }
 
+    // Monitors for a current spike consistent with an detected gamepiece intake
+    // Temporary idea (?)
+    public boolean monitor(){
+        if(clawCurrentAverage.getAverage() > 15.0){
+            return true;
+        }
+        return false;
+    }
+
+    public ClawState getState() {
+        return state;
+    }
+
+    public void setState(ClawState state) {
+        this.state = state;
+    }
+
     public void setSpeed(double clawSpeed){
         clawMotor.set(clawSpeed);
     }
 
     public boolean hasCone(){
-        return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
+        return state == ClawState.CONE;
+        // return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
         // return !coneSensor.get();
     }
 
     public boolean hasCube(){
-        return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
+        return state == ClawState.CUBE;
+        // return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
         // return !cubeSensor.get();
     }
 

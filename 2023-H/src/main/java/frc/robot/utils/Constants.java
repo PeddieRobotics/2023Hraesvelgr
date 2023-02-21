@@ -181,6 +181,7 @@ public final class Constants {
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
             
+                public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kLLSeekAngle = -75.0;
                 public static final double kL1Angle = -75.0;
@@ -193,12 +194,12 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = -30.0;
                 public static final double kExtendedFloorCubeAngle = -35.0;
 
-                public static final double kL2ConeAngle = 5.0;
-                public static final double kL2CubeAngle = 5.0;
+                public static final double kL2ConeAngle = 14.0;
+                public static final double kL2CubeAngle = 14.0;
 
                 public static final double kL3CubeForwardAngle = 10.0;
-                public static final double kL3CubeInvertedAngle = 157.0;
-                public static final double kL3ConeAngle = 157.0;
+                public static final double kL3CubeInvertedAngle = 155.0;
+                public static final double kL3ConeAngle = 155.0;
                 public static final double kDoubleSSConeAngle = 20.0;
                 public static final double kSingleSSAngle = -75.0;
 
@@ -232,7 +233,7 @@ public final class Constants {
 
                 // Soft limits
                 public static final float kAngleMin = -140;
-                public static final float kAngleMax = 100;
+                public static final float kAngleMax = 103;
             
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
@@ -247,11 +248,11 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -35.0;
+                public static final double kExtendedFloorConeAngle = -25.0;
                 public static final double kExtendedFloorCubeAngle = -13.0;
                 
-                public static final double kL2ConeAngle = -87.4;
-                public static final double kL2CubeAngle = -87.4;
+                public static final double kL2ConeAngle = -80.0;
+                public static final double kL2CubeAngle = -80.0;
 
                 public static final double kL3CubeForwardAngle = -29.4;
                 public static final double kL3CubeInvertedAngle = 2.5;

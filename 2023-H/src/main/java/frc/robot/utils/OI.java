@@ -24,6 +24,9 @@ import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ArmCommands.SetSingleSSPose;
+import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
@@ -85,9 +88,11 @@ public class OI {
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(new SetLevelThreeConePose());
 
-        // Currently no function.
+        // Single SS pose button
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
+        shareButton.onTrue(new SetSingleSSPose());
 
        // Align to goal
         Trigger rightStickButton = new JoystickButton(driverController, PS4Controller.Button.kR3.value);
@@ -101,7 +106,7 @@ public class OI {
 
         // LL seek pose
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new SetLLSeekPose());
+        touchpadButton.onTrue(new SetTransitoryPose());
 
         // Double substation (human player) cone loading
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);

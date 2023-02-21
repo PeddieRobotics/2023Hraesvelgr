@@ -7,28 +7,43 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetExtendedFloorConePose extends CommandBase{
     private Arm arm;
-    private boolean shoulderStowed, shoulderStowing;
+    private boolean shoulderStowed, shoulderStowing, transitory;
 
     public SetExtendedFloorConePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
         shoulderStowed = false;
         shoulderStowing = false;
+        transitory = false;
         
     }
 
     @Override
     public void initialize() {
+
+        transitory = false;
         shoulderStowed = false;
         shoulderStowing = false;
+
+        if(arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorConeAngle)){
+            shoulderStowed = true;
+        }
+
         arm.setWristPosition(WristConstants.kStowedAngle);
     }
 
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
-            shoulderStowing = true;
+            
+            if(!transitory){
+                arm.setShoulderPosition(ShoulderConstants.kTransitoryAngle);
+                transitory = true;
+            }
+            if(transitory && arm.isShoulderBelowAngle(-42)){
+                arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
+                shoulderStowing = true;
+            }
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
@@ -47,6 +62,7 @@ public class SetExtendedFloorConePose extends CommandBase{
     public void end(boolean interrupted){
         shoulderStowed = false;
         shoulderStowing = false;
+        transitory = false;
     }
 
     @Override
