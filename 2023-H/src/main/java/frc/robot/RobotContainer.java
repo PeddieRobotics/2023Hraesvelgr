@@ -29,7 +29,7 @@ public class RobotContainer {
     private final OI oi;
     private final Autonomous autonomous;
     private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    //private final LimelightBack limelightBack;
 
     private Command autoCommand;
 
@@ -46,7 +46,7 @@ public class RobotContainer {
 
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        //limelightBack = LimelightBack.getInstance();
         // blinkin = Blinkin.getInstance();
     }
 

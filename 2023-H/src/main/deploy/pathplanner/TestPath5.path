@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7482650493029086,
-        "y": 4.984705897855446
+        "x": 2.0,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.748265049302907,
-        "y": 4.984705897855446
+        "x": 2.9999999999999982,
+        "y": 5.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -39,7 +39,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "IntakeCube"
+          "IntakeCone"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

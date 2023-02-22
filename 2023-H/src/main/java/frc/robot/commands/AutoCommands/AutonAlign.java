@@ -34,7 +34,7 @@ public class AutonAlign extends CommandBase {
 
     public AutonAlign(int col) {
         drivetrain = Drivetrain.getInstance();
-        limelight = (Math.abs(drivetrain.getPose().getRotation().getDegrees())<90)?LimelightBack.getInstance():LimelightFront.getInstance();
+        limelight = (Math.abs(drivetrain.getPose().getRotation().getDegrees())<90 ^ drivetrain.getFlipped())?LimelightBack.getInstance():LimelightFront.getInstance();
 
         thetaSnapController = new PIDController(0.055, 0, 0);
         thetaAlignController = new PIDController(0.055, 0, 0);

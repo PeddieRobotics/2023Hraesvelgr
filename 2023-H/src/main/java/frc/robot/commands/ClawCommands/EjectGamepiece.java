@@ -20,13 +20,14 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void initialize() {
         initialTime = Timer.getFPGATimestamp();
+        claw.outtakeCone();
 
-        if(claw.hasCone()){
-            claw.outtakeCone();
-        }
-        else if(claw.hasCube()){
-            claw.outtakeCube();
-        }
+        // if(claw.hasCone()){
+        //     claw.outtakeCone();
+        // }
+        // else if(claw.hasCube()){
+        //     claw.outtakeCube();
+        // }
     }
 
     @Override
@@ -41,7 +42,7 @@ public class EjectGamepiece extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return (!claw.hasCone() && !claw.hasCube()) && (currentTime-initialTime) > minimumEjectionTime;
+        return  (currentTime-initialTime) > minimumEjectionTime; //(!claw.hasCone() && !claw.hasCube()) &&
     }
 
     

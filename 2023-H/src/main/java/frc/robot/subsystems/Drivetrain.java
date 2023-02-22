@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    //private final LimelightBack limelightBack;
 
     // Swerve Modules
     private final MAXSwerveModule[] swerveModules;
@@ -63,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        //limelightBack = LimelightBack.getInstance();
 
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
@@ -126,6 +126,7 @@ public class Drivetrain extends SubsystemBase {
         allowDriving = true;
 
         latestChassisSpeed = 0.0;
+        correctHeadingTargetHeading = getHeadingAsRotation2d();
     }
 
     @Override
@@ -186,7 +187,7 @@ public class Drivetrain extends SubsystemBase {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
         limelightFront.checkForAprilTagUpdates(odometry);
-        limelightBack.checkForAprilTagUpdates(odometry);
+        //limelightBack.checkForAprilTagUpdates(odometry);
 
     }
 
@@ -225,7 +226,7 @@ public class Drivetrain extends SubsystemBase {
 
         if (fieldOriented) {
             robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds,
-                    Rotation2d.fromDegrees((isFlipped)?180:0 + getHeading()));
+                    Rotation2d.fromDegrees(((isFlipped)?180:0) + getHeading()));
                     //Rotation2d.fromDegrees(teleopAngleOffset + getHeading()));
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;

@@ -30,10 +30,10 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(claw.monitor()){
-            claw.setState(ClawState.CUBE);
-            return true;
-        }
+        // if(claw.monitor()){
+        //     claw.setState(ClawState.CUBE);
+        //     return true;
+        // }
         return false;
     }
 
