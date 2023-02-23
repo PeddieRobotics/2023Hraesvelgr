@@ -60,25 +60,25 @@ public class Shoulder {
         shoulderMotorMaster.setInverted(true);
         shoulderMotorFollower.setInverted(true);
 
-        shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-        shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-        setEncoder(-75.0);
+        // shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
+        // shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
+        // //setEncoder(-75.0);
 
-        shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
-        shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+        // //shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+        // //shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
 
         shoulderMotorMaster.setClosedLoopRampRate(0.01);
 
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
-        shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
+        // shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
+        // shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
 
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
-        shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
+        // shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
+        // shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
 
-        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
-        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, true);
-        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
     }
 
