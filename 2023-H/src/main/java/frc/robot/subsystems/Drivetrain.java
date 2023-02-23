@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    // private final LimelightBack limelightBack;
 
     // Swerve Modules
     private final MAXSwerveModule[] swerveModules;
@@ -62,7 +62,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        // limelightBack = LimelightBack.getInstance();
 
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
@@ -180,7 +180,7 @@ public class Drivetrain extends SubsystemBase {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
         limelightFront.checkForAprilTagUpdates(odometry);
-        limelightBack.checkForAprilTagUpdates(odometry);
+        // limelightBack.checkForAprilTagUpdates(odometry);
 
     }
 

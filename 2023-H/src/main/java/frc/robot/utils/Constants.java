@@ -192,12 +192,12 @@ public final class Constants {
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
-                public static final double kExtendedFloorCubeAngle = -35.0;
+                public static final double kExtendedFloorCubeAngle = -34.0;
 
                 public static final double kL2ConeAngle = 14.0;
                 public static final double kL2CubeAngle = 14.0;
 
-                public static final double kL3CubeForwardAngle = 10.0;
+                public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
                 public static final double kL3ConeAngle = 155.0;
                 public static final double kDoubleSSConeAngle = 20.0;
@@ -250,8 +250,8 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -25.0;
-                public static final double kExtendedFloorCubeAngle = -13.0;
+                public static final double kExtendedFloorConeAngle = -29.0;
+                public static final double kExtendedFloorCubeAngle = -25.0;
 
                 public static final double kL2ConeAngle = -80.0;
                 public static final double kL2CubeAngle = -80.0;
@@ -272,7 +272,7 @@ public final class Constants {
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 40;
+                public static final int kClawMotorCurrentLimit = 30;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
                 public static final double kConeIntakeSpeed = -1;
