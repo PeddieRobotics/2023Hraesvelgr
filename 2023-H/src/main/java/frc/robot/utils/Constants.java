@@ -23,6 +23,8 @@ public final class Constants {
                 public static final double kDrivingDeadband = 0.1;
                 public static final double kMaxDeltaShoulderAnglePerSecond = .5;
                 public static final double kMaxDeltaWristAnglePerSecond = .5;
+                // If claw speed is over this, then it is considered max speed
+                public static final double kMaxSpeedThreshold = 0.9;
         }
 
         public static class BlinkinConstants {

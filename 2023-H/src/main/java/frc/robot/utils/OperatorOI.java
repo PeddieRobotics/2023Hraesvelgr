@@ -40,10 +40,11 @@ public class OperatorOI {
      * the center depending on aliance
      */
     private int alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 7 : 2;
-
+    private Claw claw;
     private AlignGoalColumn alignGoalColumn = AlignGoalColumn.kCenter;
 
     public OperatorOI() {
+        claw = Claw.getInstance();
         configureController();
     }
 
@@ -93,7 +94,7 @@ public class OperatorOI {
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
         circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),
-                Claw.getInstance()::hasCone));
+                claw::hasCone));
 
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         squareButton.onTrue(new SetDoubleSSConePose());
@@ -116,13 +117,25 @@ public class OperatorOI {
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 
-        // Trigger startButton = new JoystickButton(controller,
-        // PS4Controller.Button.kOptions.value);
-        // // toggle intake full speed or off
+        Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
+        // toggle intake full speed or off
+        startButton.onTrue(new InstantCommand(() -> {
+            if (claw.getClawSpeed() > Constants.OIConstants.kMaxSpeedThreshold) {
+                claw.stopClaw();
+            } else {
+                claw.setSpeed(1);
+            }
+        }));
 
-        // Trigger backButton = new JoystickButton(controller,
-        // PS4Controller.Button.kShare.value);
-        // // toggle intake full reverse speed or off
+        Trigger backButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
+        // toggle intake full reverse speed or off
+        backButton.onTrue(new InstantCommand(() -> {
+            if (claw.getClawSpeed() < -Constants.OIConstants.kMaxSpeedThreshold) {
+                claw.stopClaw();
+            } else {
+                claw.setSpeed(-1);
+            }
+        }));
     }
 
     private boolean bothBumpersHeld() {
