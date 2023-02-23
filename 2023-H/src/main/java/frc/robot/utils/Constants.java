@@ -180,7 +180,8 @@ public final class Constants {
                 public static final double kIz = 5;
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
-            
+
+                public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kLLSeekAngle = -75.0;
@@ -194,12 +195,12 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = -30.0;
                 public static final double kExtendedFloorCubeAngle = -34.0;
 
-                public static final double kL2ConeAngle = 14.0;
-                public static final double kL2CubeAngle = 14.0;
+                public static final double kL2ConeAngle = 5.0;
+                public static final double kL2CubeAngle = 5.0;
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeAngle = 155.0;
+                public static final double kL3ConeAngle = 156.0;
                 public static final double kDoubleSSConeAngle = 20.0;
                 public static final double kSingleSSAngle = -75.0;
 
@@ -212,9 +213,9 @@ public final class Constants {
                 public static final double kVVoltSecondPerRad = 5.77;
                 public static final double kAVoltSecondSquaredPerRad = 0.06;
 
-                public static final double kMotorReduction = 296; // 10368:35 or approximately 296:1;
+                public static final double kMotorReduction = 246.857143; // 10368:35 or approximately 296:1;
 
-                public static final double kEncoderConversionFactor = 225.0 / 185.0; // angular delta in degrees divided
+                public static final double kEncoderConversionFactor = 165.0/113.48; // angular delta in degrees divided
                                                                                      // by encoder delta in native
                                                                                      // rotations
                 public static final double kSmartMotionSetpointTol = 1.0;
@@ -241,26 +242,27 @@ public final class Constants {
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
 
+                public static final double kHomeAngle = 103.0;
                 public static final double kStowedAngle = 70.0;
                 public static final double kLLSeekAngle = -10.0;
                 public static final double kL1Angle = -10.0;
 
                 // Shoulder is not fully extended out
-                public static final double kCompactFloorConeAngle = -62.0;
+                public static final double kCompactFloorConeAngle = -50.0;
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -29.0;
                 public static final double kExtendedFloorCubeAngle = -25.0;
                 
-                public static final double kL2ConeAngle = -80.0;
+                public static final double kL2ConeAngle = -75.0;
                 public static final double kL2CubeAngle = -80.0;
 
-                public static final double kL3CubeForwardAngle = -29.4;
+                public static final double kL3CubeForwardAngle = -5.0;
                 public static final double kL3CubeInvertedAngle = 2.5;
-                public static final double kL3ConeAngle = 2.5;
+                public static final double kL3ConeAngle = 0.0;
                 public static final double kDoubleSSConeAngle = -80.0;
-                public static final double kSingleSSAngle = 30.0;
+                public static final double kSingleSSAngle = -35.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 

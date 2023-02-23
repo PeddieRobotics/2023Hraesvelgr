@@ -73,56 +73,56 @@ public class DriverOI {
 
         // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
-        // xButton.onTrue(new SetLevelOnePose());
+        xButton.onTrue(new SetLevelOnePose());
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
-        // leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-        //         new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+                new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         // Cube intake/eject gamepiece
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
-        // rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-        //         new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+                new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
-        // circleButton
-        //         .onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
+        circleButton
+                .onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new
-        // SetLevelThreeCubePose(), claw::hasCone));
-        // triangleButton.onTrue(
-        //         new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new
+        SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(
+                new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         // Single SS pose button
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
         //shareButton.onTrue(new SetSingleSSPose());
 
-        // // Align to goal
-        // Trigger rightStickButton = new JoystickButton(driverController,
-        // PS4Controller.Button.kR3.value);
-        // // TODO: runs auto-align/driver assist
+        // Align to goal
+        Trigger rightStickButton = new JoystickButton(driverController,
+        PS4Controller.Button.kR3.value);
+        // TODO: runs auto-align/driver assist
 
         // MISC CONTROLS
 
         // Lock Drivetrain
         Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
-        //leftStickButton.toggleOnTrue(new LockDrivetrain());
+        leftStickButton.toggleOnTrue(new LockDrivetrain());
 
         // Transitory pose
         Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
-        //touchpadButton.onTrue(new SetTransitoryPose());
+        touchpadButton.onTrue(new SetTransitoryPose());
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(driverController, 15);
-        //muteButton.onTrue(new SetStowedPose());
+        muteButton.onTrue(new SetStowedPose());
 
         // Double substation (human player) cone loading
         Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
-        //squareButton.onTrue(new SetDoubleSSConePose());
+        squareButton.onTrue(new SetDoubleSSConePose());
 
         // Slow Mode
         Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
