@@ -99,7 +99,7 @@ public class DriverOI {
 
         // Single SS pose button
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
-        //shareButton.onTrue(new SetSingleSSPose());
+        shareButton.onTrue(new SetSingleSSPose());
 
         // Align to goal
         Trigger rightStickButton = new JoystickButton(driverController,
