@@ -21,8 +21,8 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseTestModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
-                public static final double kMaxDeltaShoulderAnglePerSecond = 0;
-                public static final double kMaxDeltaWristAnglePerSecond = 0;
+                public static final double kMaxDeltaShoulderAnglePerSecond = .5;
+                public static final double kMaxDeltaWristAnglePerSecond = .5;
         }
 
         public static class BlinkinConstants {
@@ -180,7 +180,7 @@ public final class Constants {
                 public static final double kIz = 5;
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
-            
+
                 public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kLLSeekAngle = -75.0;
@@ -236,7 +236,7 @@ public final class Constants {
                 // Soft limits
                 public static final float kAngleMin = -140;
                 public static final float kAngleMax = 104;
-            
+
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
@@ -252,7 +252,7 @@ public final class Constants {
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -25.0;
                 public static final double kExtendedFloorCubeAngle = -13.0;
-                
+
                 public static final double kL2ConeAngle = -80.0;
                 public static final double kL2CubeAngle = -80.0;
 
