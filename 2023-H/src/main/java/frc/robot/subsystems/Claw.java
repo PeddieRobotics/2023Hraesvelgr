@@ -77,14 +77,14 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasCone(){
-        // return state == ClawState.CONE;
-        return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
+        return state == ClawState.CONE;
+        // return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
         // return !coneSensor.get();
     }
 
     public boolean hasCube(){
-        // return state == ClawState.CUBE;
-        return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
+        return state == ClawState.CUBE;
+        // return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
         // return !cubeSensor.get();
     }
 
@@ -126,6 +126,10 @@ public class Claw extends SubsystemBase {
 
     public double getOutputCurrent() {
         return clawMotor.getOutputCurrent();
+    }
+
+    public double getVoltage(){
+        return clawMotor.getBusVoltage();
     }
 
 }

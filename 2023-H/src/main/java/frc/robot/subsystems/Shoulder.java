@@ -194,4 +194,8 @@ public class Shoulder {
         }
         return shoulder;
     }
+
+    public double getVoltage(){
+        return shoulderMotorMaster.getBusVoltage();
+    }
 }

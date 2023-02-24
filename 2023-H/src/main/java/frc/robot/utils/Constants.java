@@ -183,6 +183,7 @@ public final class Constants {
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
 
+                public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kLLSeekAngle = -75.0;
@@ -257,7 +258,7 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = -29.0;
                 public static final double kExtendedFloorCubeAngle = -25.0;
 
-                public static final double kL2ConeAngle = -80.0;
+                public static final double kL2ConeAngle = -65.0;
                 public static final double kL2CubeAngle = -80.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;

@@ -11,7 +11,7 @@ import frc.robot.utils.Constants.WristConstants;
 public class WristTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
 
-    private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
+    private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
             mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint;
 
     public WristTab() {
@@ -29,7 +29,8 @@ public class WristTab extends ShuffleboardTabBase {
                     .getEntry();
             mTemp = tab.add("Temperature", 0.0)
                     .getEntry();
-
+            mVoltage = tab.add("Voltage", 0.0)
+                    .getEntry();
             mOpenLoopToggle = tab.add("Open Loop Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
@@ -67,6 +68,7 @@ public class WristTab extends ShuffleboardTabBase {
             mAngle.setDouble(wrist.getPosition());
             mCurrent.setDouble(wrist.getOutputCurrent());
             mTemp.setDouble(wrist.getMotorTemperature());
+            mVoltage.setDouble(wrist.getVoltage());
             mArbitraryFF.setDouble(wrist.getArbitraryFF());
 
             if (mOpenLoopToggle.getBoolean(false)) {

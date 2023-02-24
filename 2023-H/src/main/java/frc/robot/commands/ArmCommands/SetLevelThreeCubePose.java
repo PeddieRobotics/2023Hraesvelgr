@@ -15,6 +15,7 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public void initialize() {
+        arm.setWristPosition(30);
         arm.setShoulderPosition(ShoulderConstants.kL3CubeForwardAngle);
     }
 

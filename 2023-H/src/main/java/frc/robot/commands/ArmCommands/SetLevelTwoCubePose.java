@@ -15,6 +15,7 @@ public class SetLevelTwoCubePose extends CommandBase{
 
     @Override
     public void initialize() {
+        arm.setWristPosition(40);
         arm.setShoulderPosition(ShoulderConstants.kL2CubeAngle);
     }
 
