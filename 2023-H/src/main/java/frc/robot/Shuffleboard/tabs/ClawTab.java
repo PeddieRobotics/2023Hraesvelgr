@@ -11,7 +11,7 @@ import frc.robot.utils.Constants.WristConstants;
 public class ClawTab extends ShuffleboardTabBase {
         private Claw claw = Claw.getInstance();
 
-        private GenericEntry mSpeed, mCurrent, mTemp, mVoltage, mOpenLoopToggle, mSpeedSetpoint;
+        private GenericEntry mSpeed, mCurrent, mTemp, mVoltage, mOpenLoopToggle, mSpeedSetpoint, mState;
 
         public ClawTab() {
         }
@@ -33,6 +33,7 @@ public class ClawTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mSpeedSetpoint = tab.add("Speed Setpoint", 0.0)
                                         .getEntry();
+                        mState = tab.add("State", "Empty").getEntry();
                 } catch (IllegalArgumentException e) {
                 }
 
@@ -45,6 +46,7 @@ public class ClawTab extends ShuffleboardTabBase {
                         mCurrent.setDouble(claw.getOutputCurrent());
                         mTemp.setDouble(claw.getMotorTemperature());
                         mVoltage.setDouble(claw.getVoltage());
+                        mState.setString(claw.getState().toString());
 
                         if (mOpenLoopToggle.getBoolean(false)) {
                                 claw.setSpeed(mSpeedSetpoint.getDouble(0.0));
