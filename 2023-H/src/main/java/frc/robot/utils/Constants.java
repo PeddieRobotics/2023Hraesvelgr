@@ -21,8 +21,10 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseTestModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
-                public static final double kMaxDeltaShoulderAnglePerSecond = 0;
-                public static final double kMaxDeltaWristAnglePerSecond = 0;
+                public static final double kMaxDeltaShoulderAnglePerSecond = .5;
+                public static final double kMaxDeltaWristAnglePerSecond = .5;
+                // If claw speed is over this, then it is considered max speed
+                public static final double kMaxSpeedThreshold = 0.9;
         }
 
         public static class BlinkinConstants {
@@ -181,7 +183,6 @@ public final class Constants {
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
 
-                public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kLLSeekAngle = -75.0;
@@ -215,9 +216,10 @@ public final class Constants {
 
                 public static final double kMotorReduction = 246.857143; // 10368:35 or approximately 296:1;
 
-                public static final double kEncoderConversionFactor = 165.0/113.48; // angular delta in degrees divided
-                                                                                     // by encoder delta in native
-                                                                                     // rotations
+                public static final double kEncoderConversionFactor = 165.0 / 113.48; // angular delta in degrees
+                                                                                      // divided
+                                                                                      // by encoder delta in native
+                                                                                      // rotations
                 public static final double kSmartMotionSetpointTol = 1.0;
                 public static final double kSmartMotionMinVel = 0.0; // rpm
                 public static final double kSmartMotionMaxVel = 6000.0; // rpm
@@ -237,7 +239,7 @@ public final class Constants {
                 // Soft limits
                 public static final float kAngleMin = -140;
                 public static final float kAngleMax = 104;
-            
+
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
@@ -254,8 +256,8 @@ public final class Constants {
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -29.0;
                 public static final double kExtendedFloorCubeAngle = -25.0;
-                
-                public static final double kL2ConeAngle = -65.0;
+
+                public static final double kL2ConeAngle = -80.0;
                 public static final double kL2CubeAngle = -80.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;
