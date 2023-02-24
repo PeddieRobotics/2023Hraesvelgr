@@ -100,7 +100,7 @@ public final class Constants {
 
                  // Calculations required for driving motor conversion factors and feed forward
                 public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-                public static final double kWheelDiameterMeters = 0.0762;
+                public static final double kWheelDiameterMeters = 0.0751+0.000637;
                 public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
                 // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
                 public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
@@ -131,7 +131,7 @@ public final class Constants {
                 public static final double kTurningMinOutput = -1;
                 public static final double kTurningMaxOutput = 1;
 
-                public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
+                public static final IdleMode kDrivingMotorIdleMode = IdleMode.kCoast;
                 public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
                 public static final int kDrivingMotorCurrentLimit = 50; // amps

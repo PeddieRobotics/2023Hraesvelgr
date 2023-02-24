@@ -404,4 +404,12 @@ public class Drivetrain extends SubsystemBase {
         backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
     }
 
+    public double[] getModuleRotations(){
+        double[] positions={frontLeftSwerveModule.getRotations(),
+            backLeftSwerveModule.getRotations(),
+            frontRightSwerveModule.getRotations(),
+            backRightSwerveModule.getRotations()};
+        return (positions);
+    }
+
 }
