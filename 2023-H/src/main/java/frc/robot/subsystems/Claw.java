@@ -129,7 +129,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double getVoltage(){
-        return clawMotor.getBusVoltage();
+        return clawMotor.getAppliedOutput();
     }
 
 }

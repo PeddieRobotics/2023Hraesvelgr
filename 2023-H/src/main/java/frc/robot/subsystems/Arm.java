@@ -12,9 +12,23 @@ public class Arm extends SubsystemBase {
     private final Shoulder shoulder;
     private final Wrist wrist;
 
+    public enum ArmState {MOVING, HOME, STOWED, TRANSITION, FLOOR_INTAKE_CUBE_COMPACT, FLOOR_INTAKE_CUBE_EXTENDED,
+        FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, LL_SEEK, SINGLE_SS, DOUBLE_SS_CONE, DOUBLE_SS_CUBE,
+        L1, L2_CONE, L2_CUBE, L3_CUBE_FORWARD, L3_CONE_FORWARD, L3_CUBE_INVERTED, L3_CONE_INVERTED};
+    
+    private ArmState state;
+
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+    }
+
+    public ArmState getState() {
+        return state;
+    }
+
+    public void setState(ArmState state) {
+        this.state = state;
     }
 
     public void setShoulderMode(IdleMode mode){
@@ -53,7 +67,15 @@ public class Arm extends SubsystemBase {
         return wrist.getOutputCurrent();
     }
 
+    public void holdShoulderPosition(){
+        setShoulderPosition(shoulder.getAngle());
+    }
+
     public void setShoulderPosition(double setPoint){
+        shoulder.setPosition(setPoint);
+    }
+
+    public void setShoulderPositionSmartMotion(double setPoint){
         shoulder.setPositionSmartMotion(setPoint);
     }
 
@@ -103,6 +125,10 @@ public class Arm extends SubsystemBase {
 
     public boolean isWristBelowAngle(double angle){
         return getWristPosition() < angle;
+    }
+
+    public boolean isShoulderFullyStowed(){
+        return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
     }
 
     public static Arm getInstance() {

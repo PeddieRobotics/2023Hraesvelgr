@@ -140,6 +140,6 @@ public class Wrist {
     }
 
     public double getVoltage(){
-        return wristMotor.getBusVoltage();
+        return wristMotor.getAppliedOutput();
     }
 }

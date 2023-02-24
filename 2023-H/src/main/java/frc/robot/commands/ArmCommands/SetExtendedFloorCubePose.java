@@ -2,6 +2,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -28,23 +29,25 @@ public class SetExtendedFloorCubePose extends CommandBase{
         }
 
         arm.setWristPosition(WristConstants.kStowedAngle);
+        arm.setState(ArmState.MOVING);
+
     }
 
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
             if(!transitory){
-                arm.setShoulderPosition(ShoulderConstants.kTransitoryAngle);
+                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
                 transitory = true;
             }
             if(transitory && arm.isShoulderBelowAngle(-42)){
-                arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
+                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle);
                 shoulderStowing = true;
             }
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kExtendedFloorCubeAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kExtendedFloorCubeAngle);
             shoulderStowed = true;
         }
 
@@ -58,6 +61,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
         transitory = false;
+        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
     }
 
     @Override

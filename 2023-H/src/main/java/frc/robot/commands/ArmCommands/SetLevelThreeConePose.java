@@ -2,6 +2,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -16,16 +17,18 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void initialize() {
         if(arm.isShoulderBelowAngle(60) || arm.isShoulderAboveAngle(100)){
-            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kL3ConeAngle);
         }
         
         arm.setWristPosition(103);
+        arm.setState(ArmState.MOVING);
+
     }
 
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(90)){
-            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kL3ConeAngle);
         }
 
         if(arm.isShoulderAboveAngle(100.0)){
@@ -36,6 +39,7 @@ public class SetLevelThreeConePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
+        arm.setState(ArmState.L3_CONE_INVERTED);
     }
 
     @Override

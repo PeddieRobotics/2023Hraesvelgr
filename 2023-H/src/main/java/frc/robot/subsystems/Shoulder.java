@@ -107,11 +107,20 @@ public class Shoulder {
         shoulderMotorFollower.set(0);
     }
 
-    // Do not use without resetting PID constants to appropriate ones for a position loop.
+    // Currently only used to hold the position of the arm after a smart motion call.
+    // See Arm class method holdPosition
     public void setPosition(double setpointDeg) {
-        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointDeg), 0);
+        // If we're at any fully stowed state for the shoulder, we should get 0 output from the PID controller
+        // Make the feedforward 0, and pass setPosition our current shoulder angle to accomplish this.
+        if(Arm.getInstance().isShoulderFullyStowed()){
+            arbitraryFF = 0.0;
+            pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
+        }   
+        else{
+            arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
+            pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
+        }
     }
 
     public void setVelocity(double setpointVel){
@@ -196,6 +205,6 @@ public class Shoulder {
     }
 
     public double getVoltage(){
-        return shoulderMotorMaster.getBusVoltage();
+        return shoulderMotorMaster.getAppliedOutput();
     }
 }
