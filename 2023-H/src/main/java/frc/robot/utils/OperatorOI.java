@@ -144,7 +144,7 @@ public class OperatorOI {
 
     private double getShoulderPIDOffset() {
         double rawAxis = controller.getLeftY();
-        if (rawAxis < Constants.OIConstants.kDrivingDeadband && rawAxis > -Constants.OIConstants.kDrivingDeadband) {
+        if (Math.abs(rawAxis) < Constants.OIConstants.kDrivingDeadband) {
             return 0;
         }
 
@@ -154,7 +154,7 @@ public class OperatorOI {
 
     private double getWristPIDOffset() {
         double rawAxis = controller.getRightY();
-        if (rawAxis < Constants.OIConstants.kDrivingDeadband && rawAxis > -Constants.OIConstants.kDrivingDeadband) {
+        if (Math.abs(rawAxis) < Constants.OIConstants.kDrivingDeadband) {
             return 0;
         }
 
