@@ -11,7 +11,7 @@ import frc.robot.utils.Constants.ShoulderConstants;
 public class ShoulderTab extends ShuffleboardTabBase {
         private Shoulder shoulder = Shoulder.getInstance();
 
-        private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
+        private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
                         mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
                         mSmartMotionMaxVel, mSmartMotionMaxAccel;
 
@@ -34,7 +34,9 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mTemp = tab
                                         .add("Temperature", 0.0)
                                         .getEntry();
-
+                        mVoltage = tab
+                                        .add("Voltage", 0.0)
+                                        .getEntry();
                         mOpenLoopToggle = tab.add("Open Loop Toggle", false)
                                         .withWidget(BuiltInWidgets.kToggleButton)
                                         .getEntry();
@@ -81,6 +83,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mAngle.setDouble(shoulder.getPosition());
                         mCurrent.setDouble(shoulder.getOutputCurrent());
                         mTemp.setDouble(shoulder.getMotorTemperature());
+                        mVoltage.setDouble(shoulder.getVoltage());
                         mArbitraryFF.setDouble(shoulder.getArbitraryFF());
 
                         if (mOpenLoopToggle.getBoolean(false)) {
