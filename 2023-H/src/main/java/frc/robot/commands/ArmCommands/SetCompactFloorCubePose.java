@@ -7,27 +7,41 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetCompactFloorCubePose extends CommandBase{
     private Arm arm;
-    private boolean shoulderStowed, shoulderStowing;
+    private boolean shoulderStowed, shoulderStowing, transitory;
 
     public SetCompactFloorCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
         shoulderStowed = false;
         shoulderStowing = false;
+        transitory = false;
     }
 
     @Override
     public void initialize() {
         shoulderStowed = false;
         shoulderStowing = false;
+        transitory = false;
+        
+        if(arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kCompactFloorCubeAngle)){
+            shoulderStowed = true;
+        }
+
         arm.setWristPosition(WristConstants.kStowedAngle);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(-10) && !shoulderStowing){
-            arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
-            shoulderStowing = true;
+        if(arm.isWristAboveAngle(30) && !shoulderStowing){
+            
+            if(!transitory){
+                arm.setShoulderPosition(ShoulderConstants.kTransitoryAngle);
+                transitory = true;
+            }
+            if(transitory && arm.isShoulderBelowAngle(-42)){
+                arm.setShoulderPosition(ShoulderConstants.kStowedAngle);
+                shoulderStowing = true;
+            }
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
@@ -44,6 +58,7 @@ public class SetCompactFloorCubePose extends CommandBase{
     public void end(boolean interrupted){
         shoulderStowed = false;
         shoulderStowing = false;
+        transitory = false;
     }
 
     @Override

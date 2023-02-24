@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
+import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
@@ -78,12 +78,12 @@ public class DriverOI {
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
         leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+                new SequentialCommandGroup(new SetCompactFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         // Cube intake/eject gamepiece
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+                new SequentialCommandGroup(new SetCompactFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
@@ -92,8 +92,8 @@ public class DriverOI {
 
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        // triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new
-        // SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new
+        SetLevelThreeCubePose(), claw::hasCone));
         triangleButton.onTrue(
                 new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
@@ -101,10 +101,10 @@ public class DriverOI {
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
         shareButton.onTrue(new SetSingleSSPose());
 
-        // // Align to goal
-        // Trigger rightStickButton = new JoystickButton(driverController,
-        // PS4Controller.Button.kR3.value);
-        // // TODO: runs auto-align/driver assist
+        // Align to goal
+        Trigger rightStickButton = new JoystickButton(driverController,
+        PS4Controller.Button.kR3.value);
+        // TODO: runs auto-align/driver assist
 
         // MISC CONTROLS
 
