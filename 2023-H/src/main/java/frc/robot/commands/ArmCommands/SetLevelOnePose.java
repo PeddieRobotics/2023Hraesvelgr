@@ -21,14 +21,20 @@ public class SetLevelOnePose extends CommandBase{
     @Override
     public void initialize() {
         transitory = false;
-        arm.setWristPosition(60);
+        if(arm.isShoulderBelowAngle(-50)){
+            arm.setWristPosition(WristConstants.kL1Angle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
+            transitory = true;
+        }
+        else{
+            arm.setWristPosition(60);
+        }
         arm.setState(ArmState.MOVING);
 
     }
 
     @Override
     public void execute() {
-
         if(arm.isWristAboveAngle(30) && !transitory){
             arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
             transitory = true;
@@ -47,6 +53,7 @@ public class SetLevelOnePose extends CommandBase{
     public void end(boolean interrupted){ 
         transitory = false;
         arm.setState(ArmState.L1);
+        arm.holdShoulderPosition();
     }
 
     @Override

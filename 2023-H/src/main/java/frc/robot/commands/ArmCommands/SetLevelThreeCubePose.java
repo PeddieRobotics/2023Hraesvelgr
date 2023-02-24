@@ -23,7 +23,7 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(-30)){
+        if(arm.isShoulderAboveAngle(-20)){
             arm.setWristPosition(WristConstants.kL3CubeForwardAngle);
         }
     }
@@ -31,6 +31,7 @@ public class SetLevelThreeCubePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         arm.setState(ArmState.L3_CUBE_FORWARD);
+        arm.holdShoulderPosition();
 
     }
 

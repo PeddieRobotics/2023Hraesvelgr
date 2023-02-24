@@ -2,7 +2,15 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ArmCommands.SetTransitoryPose;
+import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -21,6 +29,7 @@ public class Arm extends SubsystemBase {
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+        state = ArmState.HOME;
     }
 
     public ArmState getState() {

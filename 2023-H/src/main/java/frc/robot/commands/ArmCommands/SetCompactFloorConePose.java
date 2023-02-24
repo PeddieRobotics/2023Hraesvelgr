@@ -64,6 +64,8 @@ public class SetCompactFloorConePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
         transitory = false;
+        // arm.holdShoulderPosition();
+
     }
 
     @Override

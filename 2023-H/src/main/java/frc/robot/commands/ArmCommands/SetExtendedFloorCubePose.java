@@ -62,6 +62,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
         shoulderStowing = false;
         transitory = false;
         arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
+        arm.holdShoulderPosition();
     }
 
     @Override

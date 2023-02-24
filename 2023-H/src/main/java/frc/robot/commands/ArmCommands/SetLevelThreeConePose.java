@@ -40,6 +40,7 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         arm.setState(ArmState.L3_CONE_INVERTED);
+        arm.holdShoulderPosition();
     }
 
     @Override

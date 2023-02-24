@@ -15,7 +15,7 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
     private Shoulder shoulder = Shoulder.getInstance();
 
     private GenericEntry mL1Shoulder, mL1Wrist, mL2ConeShoulder, mL2ConeWrist, mL2CubeShoulder, mL2CubeWrist,
-    mL3ConeShoulder, mL3ConeWrist, mL3CubeShoulder, mL3CubeWrist, mLLSeekShoulder, mLLSeekWrist,
+    mL3ConeShoulder, mL3ConeWrist, mL3CubeShoulder, mL3CubeWrist,
     mStowedShoulder, mStowedWrist, mCompactFloorConeShoulder, mCompactFloorConeWrist,
     mCompactFloorCubeShoulder, mCompactFloorCubeWrist, mExtendedFloorConeShoulder, mExtendedFloorConeWrist,
     mExtendedFloorCubeShoulder, mExtendedFloorCubeWrist;
@@ -47,10 +47,6 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
             mStowedShoulder = tab.add("L3 Stowed Shoulder", ShoulderConstants.kStowedAngle)
                     .getEntry();
             mStowedWrist = tab.add("Stowed Wrist", WristConstants.kStowedAngle)
-                    .getEntry();
-            mLLSeekShoulder = tab.add("LL Seek Shoulder", ShoulderConstants.kLLSeekAngle)
-                    .getEntry();
-            mLLSeekWrist = tab.add("LL Seek Wrist", WristConstants.kLLSeekAngle)
                     .getEntry();
             mCompactFloorConeShoulder = tab.add("Compact Floor Cone Shoulder", ShoulderConstants.kCompactFloorConeAngle)
                     .getEntry();

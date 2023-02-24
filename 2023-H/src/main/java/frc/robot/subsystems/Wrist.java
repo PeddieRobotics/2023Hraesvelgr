@@ -26,7 +26,7 @@ public class Wrist {
 
     private ArmFeedforward wristFeedforward;
 
-    private double kS, kG, kV, kA, arbitraryFF;
+    private double kG, kV, kA, arbitraryFF;
 
     public Wrist() {
 
@@ -37,14 +37,14 @@ public class Wrist {
         pidController = wristMotor.getPIDController();
 
         kG = WristConstants.kGVolts;
-
         kV = WristConstants.kVVoltSecondPerRad;
         kA = WristConstants.kAVoltSecondSquaredPerRad;
 
-        wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+        wristFeedforward = new ArmFeedforward(0.0, kG, kV, kA);
 
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kEncoderConversionFactor);
-        setEncoder(103);
+        wristMotor.getEncoder().setVelocityConversionFactor(WristConstants.kEncoderConversionFactor/60.0);
+        setEncoder(WristConstants.kHomeAngle);
 
         // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
@@ -140,6 +140,6 @@ public class Wrist {
     }
 
     public double getVoltage(){
-        return wristMotor.getAppliedOutput();
+        return wristMotor.getAppliedOutput()*100;
     }
 }

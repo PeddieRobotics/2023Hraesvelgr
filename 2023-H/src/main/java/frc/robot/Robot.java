@@ -45,11 +45,11 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
 
         shuffleboard = ShuffleboardMain.getInstance();
-        if(OIConstants.kUseTestModeLayout){
-            shuffleboard.setupTestMode();
+        if(OIConstants.kUseDebugModeLayout){
+            shuffleboard.setupDebugMode();
         }
         else{
-            shuffleboard.setupTeleop();
+            shuffleboard.setupCompetitionMode();
         }
 
         PathPlannerServer.startServer(5895);
@@ -139,6 +139,14 @@ public class Robot extends TimedRobot {
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
         LiveWindow.setEnabled(false);
+
+        shuffleboard = ShuffleboardMain.getInstance();
+        if(OIConstants.kUseDebugModeLayout){
+            shuffleboard.setupDebugMode();
+        }
+        else{
+            shuffleboard.setupCompetitionMode();
+        }
     }
 
     @Override

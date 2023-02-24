@@ -31,6 +31,7 @@ public class SetLevelTwoConePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         arm.setState(ArmState.L2_CONE);
+        arm.holdShoulderPosition();
 
     }
 

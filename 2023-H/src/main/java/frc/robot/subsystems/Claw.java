@@ -55,6 +55,7 @@ public class Claw extends SubsystemBase {
     @Override
     public void periodic(){
         clawCurrentAverage.add(clawMotor.getOutputCurrent());
+        
     }
 
     public static Claw getInstance(){
@@ -129,7 +130,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double getVoltage(){
-        return clawMotor.getAppliedOutput();
+        return clawMotor.getAppliedOutput()*100;
     }
 
 }

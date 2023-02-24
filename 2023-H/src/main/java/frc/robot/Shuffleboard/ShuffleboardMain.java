@@ -37,7 +37,7 @@ public class ShuffleboardMain {
         return shuffleboard;
     }
 
-    public void setupTeleop(){
+    public void setupCompetitionMode(){
         operatorTab = new OperatorTab();
 
         tabs.add(operatorTab);
@@ -61,7 +61,7 @@ public class ShuffleboardMain {
 
     }
 
-    public void setupTestMode(){
+    public void setupDebugMode(){
         operatorTab = new OperatorTab();
         tabs.add(operatorTab);
 

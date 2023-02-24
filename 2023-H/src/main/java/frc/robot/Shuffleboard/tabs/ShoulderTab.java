@@ -13,7 +13,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
 
         private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
                         mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
-                        mSmartMotionMaxVel, mSmartMotionMaxAccel;
+                        mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
 
         public ShoulderTab() {
         }
@@ -71,6 +71,8 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mSmartMotionMaxAccel = tab.add("S.M. Max Accel", ShoulderConstants.kSmartMotionMaxAccel)
                                         .getEntry();
+                        mLimitSensor = tab.add("Limit sensor", true)
+                                        .getEntry();
                 } catch (IllegalArgumentException e) {
                 }
 
@@ -85,6 +87,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mTemp.setDouble(shoulder.getMotorTemperature());
                         mVoltage.setDouble(shoulder.getVoltage());
                         mArbitraryFF.setDouble(shoulder.getArbitraryFF());
+                        mLimitSensor.setBoolean(shoulder.atLimitSensor());
 
                         if (mOpenLoopToggle.getBoolean(false)) {
                                 shoulder.setPercentOutput(DriverOI.getInstance().getArmSpeed());
@@ -92,7 +95,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                 shoulder.setPIDController(mkP.getDouble(ShoulderConstants.kP),
                                                 mkI.getDouble(ShoulderConstants.kI),
                                                 mkD.getDouble(ShoulderConstants.kD),
-                                                mkIz.getDouble(ShoulderConstants.kIz));
+                                                mkIz.getDouble(ShoulderConstants.kIz), 0);
 
                                 shoulder.setShoulderFeedforward(
                                                 mkG.getDouble(0.0),

@@ -39,6 +39,7 @@ public class SetStowedPose extends CommandBase{
     public void end(boolean interrupted){
         transitory = false;
         arm.setState(ArmState.STOWED);
+        arm.holdShoulderPosition();
 
     }
 

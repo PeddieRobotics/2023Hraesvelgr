@@ -67,6 +67,7 @@ public class SetExtendedFloorConePose extends CommandBase{
         shoulderStowing = false;
         transitory = false;
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+        arm.holdShoulderPosition();
     }
 
     @Override
