@@ -16,9 +16,10 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.LimelightBack;
+//import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
-import frc.robot.utils.OI;
+import frc.robot.utils.DriverOI;
+import frc.robot.utils.OperatorOI;
 
 public class RobotContainer {
     private final Drivetrain drivetrain;
@@ -26,7 +27,8 @@ public class RobotContainer {
     private final Claw claw;
     private final Arm arm;
 
-    private final OI oi;
+    private final OperatorOI operatorOI;
+    private final DriverOI driverOI;
     private final Autonomous autonomous;
     private final LimelightFront limelightFront;
     //private final LimelightBack limelightBack;
@@ -42,7 +44,8 @@ public class RobotContainer {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
 
-        oi = OI.getInstance();
+        operatorOI = OperatorOI.getInstance();
+        driverOI = DriverOI.getInstance();
 
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();

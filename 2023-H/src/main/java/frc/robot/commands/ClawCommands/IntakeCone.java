@@ -24,18 +24,15 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
-        if(!interrupted){
-
-        }
     }
 
     @Override
     public boolean isFinished() {
-        if(claw.monitor()){
-            claw.setState(ClawState.CONE);
-            return true;
-        }
-        return false;
+        // if(claw.monitor()){
+        //     claw.setState(ClawState.CONE);
+        //     return true;
+        // }
+        return claw.hasCone();
     }
 
     

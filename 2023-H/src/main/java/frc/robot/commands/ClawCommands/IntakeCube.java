@@ -9,7 +9,6 @@ public class IntakeCube extends CommandBase{
 
     public IntakeCube(){
         claw = Claw.getInstance();
-
         addRequirements(claw);
     }
 
@@ -25,7 +24,11 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.stopClaw();
+        if(!interrupted){
+            claw.setSpeed(-0.1);
+        } else {
+            claw.stopClaw();
+        }
     }
 
     @Override
@@ -34,7 +37,7 @@ public class IntakeCube extends CommandBase{
         //     claw.setState(ClawState.CUBE);
         //     return true;
         // }
-        return false;
+        return claw.hasCube();
     }
 
     

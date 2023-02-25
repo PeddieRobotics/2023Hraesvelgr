@@ -31,6 +31,8 @@ public class Claw extends SubsystemBase {
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
+        clawCurrentAverage = new RollingAverage();
+
         // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
         // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
 
@@ -39,13 +41,13 @@ public class Claw extends SubsystemBase {
         cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
         coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
 
-        // gamepieceChooser = new SendableChooser<String>();
-        // gamepieceChooser.addOption("Cone", "Cone");
-        // gamepieceChooser.addOption("Cube", "Cube");
-        // gamepieceChooser.addOption("None", "None");
-        // gamepieceChooser.setDefaultOption("None", "None");
+        gamepieceChooser = new SendableChooser<String>();
+        gamepieceChooser.addOption("Cone", "Cone");
+        gamepieceChooser.addOption("Cube", "Cube");
+        gamepieceChooser.addOption("None", "None");
+        gamepieceChooser.setDefaultOption("None", "None");
 
-        // SmartDashboard.putData(gamepieceChooser);
+        SmartDashboard.putData(gamepieceChooser);
 
         clawCurrentAverage = new RollingAverage();
 
@@ -62,15 +64,6 @@ public class Claw extends SubsystemBase {
             instance = new Claw();
         }
         return instance;
-    }
-
-    // Monitors for a current spike consistent with an detected gamepiece intake
-    // Temporary idea (?)
-    public boolean monitor(){
-        if(clawCurrentAverage.getAverage() > 15.0){
-            return true;
-        }
-        return false;
     }
 
     public ClawState getState() {
@@ -135,6 +128,10 @@ public class Claw extends SubsystemBase {
 
     public double getOutputCurrent() {
         return clawMotor.getOutputCurrent();
+    }
+
+    public double getVoltage(){
+        return clawMotor.getBusVoltage();
     }
 
 }

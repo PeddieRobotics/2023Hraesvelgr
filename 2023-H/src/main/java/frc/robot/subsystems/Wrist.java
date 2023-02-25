@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants;
-import frc.robot.utils.OI;
+import frc.robot.utils.DriverOI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -117,7 +117,7 @@ public class Wrist {
         }
     }
 
-    public void setPIDController(double p, double i, double d, double izone){
+    public void setPIDController(double p, double i, double d, double izone) {
         pidController.setP(p);
         pidController.setI(i);
         pidController.setD(d);
@@ -128,7 +128,6 @@ public class Wrist {
 
     }
 
-
     public void setMode(IdleMode mode) {
         wristMotor.setIdleMode(mode);
     }
@@ -138,5 +137,9 @@ public class Wrist {
             wrist = new Wrist();
         }
         return wrist;
+    }
+
+    public double getVoltage(){
+        return wristMotor.getBusVoltage();
     }
 }

@@ -3,6 +3,7 @@ package frc.robot.commands.ClawCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawState;
 
 public class EjectGamepiece extends CommandBase{
     private Claw claw;
@@ -38,6 +39,7 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
+        claw.setState(ClawState.EMPTY);
     }
 
     @Override

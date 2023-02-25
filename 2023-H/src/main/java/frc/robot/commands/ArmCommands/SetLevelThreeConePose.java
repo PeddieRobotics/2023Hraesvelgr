@@ -15,7 +15,8 @@ public class SetLevelThreeConePose extends CommandBase{
 
     @Override
     public void initialize() {
-        if(arm.isShoulderBelowAngle(60) || arm.isShoulderAboveAngle(100)){
+
+        if(arm.isShoulderAboveAngle(-45)){
             arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
         }
         
