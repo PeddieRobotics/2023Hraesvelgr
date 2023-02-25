@@ -49,6 +49,9 @@ public class Shoulder {
           shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
           setEncoder(ShoulderConstants.kHomeAngle);
   
+        //   shoulderMotorMaster.getEncoder().setVelocityConversionFactor(1);
+        //   shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1);
+          
           shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
           shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
   
