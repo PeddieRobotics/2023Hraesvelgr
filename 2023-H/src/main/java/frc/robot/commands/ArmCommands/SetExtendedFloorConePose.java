@@ -25,7 +25,7 @@ public class SetExtendedFloorConePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorConeAngle)){
+        if((arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorConeAngle))){
             shoulderStowed = true;
         }
 

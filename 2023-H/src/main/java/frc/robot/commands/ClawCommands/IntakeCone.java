@@ -32,7 +32,7 @@ public class IntakeCone extends CommandBase{
         //     claw.setState(ClawState.CONE);
         //     return true;
         // }
-        return false;
+        return claw.hasCone();
     }
 
     

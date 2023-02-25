@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -80,12 +81,12 @@ public class DriverOI {
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
         leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new SequentialCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+                new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
-        // Cube intake/eject gamepiece
+        // Cube intake/eject gamepieceshu
         Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new SequentialCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+                new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);

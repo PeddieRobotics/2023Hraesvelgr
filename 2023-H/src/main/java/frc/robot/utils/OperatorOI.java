@@ -159,6 +159,6 @@ public class OperatorOI {
             return 0;
 
         }
-        return -5*rawAxis;
+        return -1*rawAxis;
     }
 }
