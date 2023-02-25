@@ -36,7 +36,6 @@ import frc.robot.utils.Constants.OIConstants;
 
 public class DriverOI {
     public static DriverOI instance;
-
     private Drivetrain drivetrain;
     private Claw claw;
 
@@ -50,6 +49,7 @@ public class DriverOI {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+    private boolean allowBackwardMovement = false; //prevent backward movement, stops from crashing into grid
 
     public enum DPadDirection {
         NONE, FORWARDS, LEFT, RIGHT, BACKWARDS
@@ -95,7 +95,8 @@ public class DriverOI {
 
         // Level 3 Scoring
         Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(
+                new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         // Single SS pose button
         Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
@@ -103,7 +104,7 @@ public class DriverOI {
 
         // Align to goal
         Trigger rightStickButton = new JoystickButton(driverController,
-        PS4Controller.Button.kR3.value);
+                PS4Controller.Button.kR3.value);
         // TODO: runs auto-align/driver assist
 
         // MISC CONTROLS
@@ -146,13 +147,24 @@ public class DriverOI {
     }
 
     public double getForward() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        double input = driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        if (!allowBackwardMovement && input > 0) { 
+            return 0;
+        } else if (!allowBackwardMovement && input <= 0) {
+            allowBackwardMovement = true;
+            return 0;
+        }
+        return input;
     }
 
     public double getStrafe() {
         return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
     }
 
+    public void setAllowBackward(boolean allow){
+        allowBackwardMovement = allow;
+    }
+    
     /* DRIVER METHODS */
     public Translation2d getSwerveTranslation() {
         double xSpeed = getForward();

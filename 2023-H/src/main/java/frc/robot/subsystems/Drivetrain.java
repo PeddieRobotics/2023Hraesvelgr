@@ -161,6 +161,10 @@ public class Drivetrain extends SubsystemBase {
       return swerveModuleStates;
     }
 
+    public Translation2d getPoseAsTranslation2d(){
+        return getPose().getTranslation();
+    }
+
     // Returns the current pose of the robot
     public Pose2d getPose() {
         return odometry.getEstimatedPosition();
