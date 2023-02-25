@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9859804319383159,
-        "y": 2.194638842490763
+        "x": 1.7737935421845994,
+        "y": 5.00002264186052
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9300373211794901,
-        "y": 0.7121464073818783
+        "x": 2.7737935421846007,
+        "y": 5.00002264186052
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -24,12 +26,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.4008580463609634,
-        "y": 1.131719738073072
+        "x": 7.076927517491398,
+        "y": 4.600237836839311
       },
       "prevControl": {
-        "x": 3.4008580463609634,
-        "y": 1.131719738073072
+        "x": 6.076927517491398,
+        "y": 4.600237836839311
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -45,5 +47,19 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.5181818181818182,
+      "names": [
+        "IntakeCubePose"
+      ]
+    },
+    {
+      "position": 0.7818181818181816,
+      "names": [
+        "event",
+        "StartIntakingCube"
+      ]
+    }
+  ]
 }
