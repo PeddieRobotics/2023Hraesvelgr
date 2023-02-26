@@ -45,7 +45,7 @@ public class SetTransitoryPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(wrist.getkTransitoryAngle()) && arm.isShoulderAtAngle(ShoulderConstants.kTransitoryAngle);
+        return arm.isWristAtAngle(wrist.getkTransitoryAngle()) && arm.isShoulderAtAngle(shoulder.getkTransitoryAngle());
     }
 
 
