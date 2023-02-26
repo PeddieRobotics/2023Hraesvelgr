@@ -148,8 +148,6 @@ public class OperatorOI {
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CUBE)));
 
-        Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new SetDoubleSSConePose());
     }
 
     private boolean bothBumpersHeld() {
