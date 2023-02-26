@@ -177,7 +177,7 @@ public final class Constants {
                 public static final int kMaxCurrent = 60;
 
                 // Position PID contants
-                public static final double kPositionP = 0.013; // 0.013
+                public static final double kPositionP = 0.026; // 0.013
                 public static final double kPositionI = 0.000001;
                 public static final double kPositionD = 0.00003;
                 public static final double kPositionIz = 7;

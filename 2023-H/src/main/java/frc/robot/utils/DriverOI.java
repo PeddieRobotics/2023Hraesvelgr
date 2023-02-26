@@ -86,8 +86,9 @@ public class DriverOI {
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
+        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+                new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
+                    new SetStowedPose()), claw::hasGamepiece));
 
         // Level 2 Scoring
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);

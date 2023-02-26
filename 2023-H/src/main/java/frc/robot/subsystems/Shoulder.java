@@ -345,26 +345,15 @@ public class Shoulder {
 
     public void periodic() {
         // Limit sensor triggered and arm is moving down
-
-        if(atLimitSensor() && getVelocity() < 0){   
-            reachedLimitSensorDownward = true;
-        }
-
         if(atLimitSensor() && getVelocity() > 0){   
             reachedLimitSensorUpward = true;
         }
 
-        // // If the arm is moving down and leaves the limit sensor, reset the encoder
-        // if(reachedLimitSensorDownward && !atLimitSensor()){
-        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
-        //     reachedLimitSensorDownward = false;
-        // }
-
-        // // If the arm is moving up and leaves the limit sensor, reset the encoder
-        // if(reachedLimitSensorUpward && !atLimitSensor()){
-        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
-        //     reachedLimitSensorUpward = false;
-        // }
+        // If the arm is moving up and leaves the limit sensor, reset the encoder
+        if(reachedLimitSensorUpward && !atLimitSensor()){
+            shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
+            reachedLimitSensorUpward = false;
+        }
 
     }
 
