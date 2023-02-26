@@ -2,6 +2,8 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
@@ -9,6 +11,9 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetExtendedFloorCubePose extends CommandBase{
     private Arm arm;
+    private Shoulder shoulder;
+    private Wrist wrist;
+
     private boolean shoulderStowed, shoulderStowing, transitory;
 
     public SetExtendedFloorCubePose() {
@@ -17,6 +22,9 @@ public class SetExtendedFloorCubePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
         transitory = false;
+
+        shoulder = Shoulder.getInstance();
+        wrist = Wrist.getInstance();
     }
 
     @Override

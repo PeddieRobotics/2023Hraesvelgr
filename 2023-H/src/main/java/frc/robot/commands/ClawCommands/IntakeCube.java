@@ -9,7 +9,6 @@ import frc.robot.utils.Constants.ClawConstants;
 public class IntakeCube extends CommandBase{
     private Claw claw;
     private LimelightFront limelightFront;
-    private boolean sawCone;
 
     public IntakeCube(){
         claw = Claw.getInstance();
@@ -21,7 +20,6 @@ public class IntakeCube extends CommandBase{
         limelightFront = LimelightFront.getInstance();
         limelightFront.setPipeline(7);
         claw.intakeCube();
-        sawCone = false;
         claw.setState(ClawState.INTAKING);
 
         
@@ -29,9 +27,6 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void execute() {
-        if(limelightFront.hasTarget()){
-            sawCone = true;
-        }
     }
 
     @Override
@@ -47,12 +42,7 @@ public class IntakeCube extends CommandBase{
     @Override
     public boolean isFinished() {
         if(claw.monitorCurrentForSuccessfulIntake()){
-            if(sawCone){
-                claw.setState(ClawState.CONE);
-            }
-            else{
-                claw.setState(ClawState.CUBE);
-            }
+            claw.setState(ClawState.CUBE);
             return true;
         }
         return false;

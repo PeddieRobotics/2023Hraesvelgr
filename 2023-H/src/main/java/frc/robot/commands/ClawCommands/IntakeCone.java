@@ -18,7 +18,6 @@ public class IntakeCone extends CommandBase{
     @Override
     public void initialize() {
         limelightFront = LimelightFront.getInstance();
-        limelightFront.setPipeline(7);
         claw.intakeCone();
         sawCone = false;
         claw.setState(ClawState.INTAKING);
@@ -34,19 +33,13 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
-        limelightFront.setPipeline(0);
     }
 
     @Override
     public boolean isFinished() {
         if(claw.monitorCurrentForSuccessfulIntake()){
             claw.stopClaw();
-            if(sawCone){
-                claw.setState(ClawState.CONE);
-            }
-            else{
-                claw.setState(ClawState.CUBE);
-            }
+            claw.setState(ClawState.CONE);
             return true;
         }
 

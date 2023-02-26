@@ -292,6 +292,7 @@ public final class Constants {
                 public static final double kLLSeekAngle = -25.0;
                 public static final double kDoubleSSConeAngle = -80.0;
                 public static final double kSingleSSAngle = 10.0;
+                public static final double kTransitoryAngle = 70.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 

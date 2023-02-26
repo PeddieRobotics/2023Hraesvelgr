@@ -4,6 +4,8 @@ import javax.xml.crypto.dsig.Transform;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
@@ -11,12 +13,18 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetLevelOnePose extends CommandBase{
     private Arm arm;
+    private Shoulder shoulder;
+    private Wrist wrist;
+
     private boolean transitory;
 
     public SetLevelOnePose() {
         arm = Arm.getInstance();
         transitory = false;
         addRequirements(arm);
+
+        shoulder = Shoulder.getInstance();
+        wrist = Wrist.getInstance();
     }
 
     @Override

@@ -78,7 +78,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void holdShoulderPosition(){
-        setShoulderPosition(shoulder.getAngle());
+        setShoulderPosition(shoulder.getCurrentPIDSetpointAngle());
     }
 
     public void setShoulderPosition(double setPoint){

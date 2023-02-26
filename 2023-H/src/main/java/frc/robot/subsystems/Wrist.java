@@ -24,6 +24,32 @@ public class Wrist {
 
     private double kP, kI, kD, kIz, kG, kV, kA, arbitraryFF;
 
+    // Angles (poses) start here
+    private double kHomeAngle = WristConstants.kHomeAngle;
+    private double kStowedAngle = WristConstants.kStowedAngle;
+    private double kL1Angle = WristConstants.kL1Angle;
+
+    // Shoulder is not fully extended out
+    private double kCompactFloorConeAngle = WristConstants.kCompactFloorConeAngle;
+    private double kCompactFloorCubeAngle = WristConstants.kCompactFloorCubeAngle;
+
+    // Shoulder is fully extended out
+    private double kExtendedFloorConeAngle = WristConstants.kExtendedFloorConeAngle;
+    private double kExtendedFloorCubeAngle = WristConstants.kExtendedFloorCubeAngle;
+
+    private double kL2ConeAngle = WristConstants.kL2ConeAngle;
+    private double kL2CubeAngle = WristConstants.kL2CubeAngle;
+
+    private double kL3CubeForwardAngle = WristConstants.kL3CubeForwardAngle;
+    private double kL3CubeInvertedAngle = WristConstants.kL3CubeInvertedAngle;
+    private double kL3ConeAngle = WristConstants.kL3ConeAngle;
+
+    private double kLLSeekAngle = WristConstants.kLLSeekAngle;
+    private double kDoubleSSConeAngle = WristConstants.kDoubleSSConeAngle;
+    private double kSingleSSAngle = WristConstants.kSingleSSAngle;
+    private double kTransitoryAngle = WristConstants.kTransitoryAngle;
+
+
     public Wrist() {
 
         wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
@@ -161,4 +187,133 @@ public class Wrist {
     public void disablePIDController() {
         wristMotor.set(0);
     }
+
+    public double getkHomeAngle() {
+        return kHomeAngle;
+    }
+
+    public void setkHomeAngle(double kHomeAngle) {
+        this.kHomeAngle = kHomeAngle;
+    }
+
+    public double getkStowedAngle() {
+        return kStowedAngle;
+    }
+
+    public void setkStowedAngle(double kStowedAngle) {
+        this.kStowedAngle = kStowedAngle;
+    }
+
+    public double getkL1Angle() {
+        return kL1Angle;
+    }
+
+    public void setkL1Angle(double kL1Angle) {
+        this.kL1Angle = kL1Angle;
+    }
+
+    public double getkCompactFloorConeAngle() {
+        return kCompactFloorConeAngle;
+    }
+
+    public void setkCompactFloorConeAngle(double kCompactFloorConeAngle) {
+        this.kCompactFloorConeAngle = kCompactFloorConeAngle;
+    }
+
+    public double getkCompactFloorCubeAngle() {
+        return kCompactFloorCubeAngle;
+    }
+
+    public void setkCompactFloorCubeAngle(double kCompactFloorCubeAngle) {
+        this.kCompactFloorCubeAngle = kCompactFloorCubeAngle;
+    }
+
+    public double getkExtendedFloorConeAngle() {
+        return kExtendedFloorConeAngle;
+    }
+
+    public void setkExtendedFloorConeAngle(double kExtendedFloorConeAngle) {
+        this.kExtendedFloorConeAngle = kExtendedFloorConeAngle;
+    }
+
+    public double getkExtendedFloorCubeAngle() {
+        return kExtendedFloorCubeAngle;
+    }
+
+    public void setkExtendedFloorCubeAngle(double kExtendedFloorCubeAngle) {
+        this.kExtendedFloorCubeAngle = kExtendedFloorCubeAngle;
+    }
+
+    public double getkL2ConeAngle() {
+        return kL2ConeAngle;
+    }
+
+    public void setkL2ConeAngle(double kL2ConeAngle) {
+        this.kL2ConeAngle = kL2ConeAngle;
+    }
+
+    public double getkL2CubeAngle() {
+        return kL2CubeAngle;
+    }
+
+    public void setkL2CubeAngle(double kL2CubeAngle) {
+        this.kL2CubeAngle = kL2CubeAngle;
+    }
+
+    public double getkL3CubeForwardAngle() {
+        return kL3CubeForwardAngle;
+    }
+
+    public void setkL3CubeForwardAngle(double kL3CubeForwardAngle) {
+        this.kL3CubeForwardAngle = kL3CubeForwardAngle;
+    }
+
+    public double getkL3CubeInvertedAngle() {
+        return kL3CubeInvertedAngle;
+    }
+
+    public void setkL3CubeInvertedAngle(double kL3CubeInvertedAngle) {
+        this.kL3CubeInvertedAngle = kL3CubeInvertedAngle;
+    }
+
+    public double getkL3ConeAngle() {
+        return kL3ConeAngle;
+    }
+
+    public void setkL3ConeAngle(double kL3ConeAngle) {
+        this.kL3ConeAngle = kL3ConeAngle;
+    }
+
+    public double getkLLSeekAngle() {
+        return kLLSeekAngle;
+    }
+
+    public void setkLLSeekAngle(double kLLSeekAngle) {
+        this.kLLSeekAngle = kLLSeekAngle;
+    }
+
+    public double getkDoubleSSConeAngle() {
+        return kDoubleSSConeAngle;
+    }
+
+    public void setkDoubleSSConeAngle(double kDoubleSSConeAngle) {
+        this.kDoubleSSConeAngle = kDoubleSSConeAngle;
+    }
+
+    public double getkSingleSSAngle() {
+        return kSingleSSAngle;
+    }
+
+    public void setkSingleSSAngle(double kSingleSSAngle) {
+        this.kSingleSSAngle = kSingleSSAngle;
+    }
+
+    public double getkTransitoryAngle() {
+        return kTransitoryAngle;
+    }
+
+    public void setkTransitoryAngle(double kTransitoryAngle) {
+        this.kTransitoryAngle = kTransitoryAngle;
+    }
+
 }

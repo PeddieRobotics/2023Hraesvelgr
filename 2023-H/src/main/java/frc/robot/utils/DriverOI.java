@@ -81,7 +81,8 @@ public class DriverOI {
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
-                new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
+                new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
+                    new SetStowedPose()), claw::hasGamepiece));
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);

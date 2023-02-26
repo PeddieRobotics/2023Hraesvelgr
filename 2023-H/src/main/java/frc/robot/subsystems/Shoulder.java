@@ -22,7 +22,7 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensor;
+    private boolean reachedLimitSensorDownward, reachedLimitSensorUpward;
 
     private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -30,7 +30,34 @@ public class Shoulder {
     kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionFastSetpointTol, kSmartMotionFastMinVel,
     kSmartMotionFastMaxVel, kSmartMotionFastMaxAccel;
 
+    // Angles (poses) start here
+    private double kHomeAngle = ShoulderConstants.kHomeAngle;
+    private double kStowedAngle = ShoulderConstants.kStowedAngle;
+    private double kL1Angle = ShoulderConstants.kL1Angle;
+
+    // Shoulder is not fully extended out
+    private double kCompactFloorConeAngle = ShoulderConstants.kCompactFloorConeAngle;
+    private double kCompactFloorCubeAngle = ShoulderConstants.kCompactFloorCubeAngle;
+
+    // Shoulder is fully extended out
+    private double kExtendedFloorConeAngle = ShoulderConstants.kExtendedFloorConeAngle;
+    private double kExtendedFloorCubeAngle = ShoulderConstants.kExtendedFloorCubeAngle;
+
+    private double kL2ConeAngle = ShoulderConstants.kL2ConeAngle;
+    private double kL2CubeAngle = ShoulderConstants.kL2CubeAngle;
+
+    private double kL3CubeForwardAngle = ShoulderConstants.kL3CubeForwardAngle;
+    private double kL3CubeInvertedAngle = ShoulderConstants.kL3CubeInvertedAngle;
+    private double kL3ConeAngle = ShoulderConstants.kL3ConeAngle;
+
+    private double kLLSeekAngle = ShoulderConstants.kLLSeekAngle;
+    private double kDoubleSSConeAngle = ShoulderConstants.kDoubleSSConeAngle;
+    private double kSingleSSAngle = ShoulderConstants.kSingleSSAngle;
+    private double kTransitoryAngle = ShoulderConstants.kTransitoryAngle;
+
     public enum SmartMotionArmSpeed {REGULAR, SLOW, FAST};
+
+    private double currentPIDSetpointAngle;
 
     public Shoulder() {
 
@@ -53,9 +80,6 @@ public class Shoulder {
           shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
           setEncoder(ShoulderConstants.kHomeAngle);
   
-        //   shoulderMotorMaster.getEncoder().setVelocityConversionFactor(1);
-        //   shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1);
-          
           shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
           shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
   
@@ -63,10 +87,10 @@ public class Shoulder {
           shoulderMotorMaster.setClosedLoopRampRate(0.01);
   
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
-          shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
+          shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -76);
   
           shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
-          shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
+          shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -76);
   
           shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
           shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -124,7 +148,11 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensor = false;
+        reachedLimitSensorDownward = false;
+        reachedLimitSensorUpward = false;
+
+        // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
+        currentPIDSetpointAngle = -75.0;
 
     }
 
@@ -177,11 +205,14 @@ public class Shoulder {
     // Currently only used to hold the position of the arm after a smart motion call.
     // See Arm class method holdPosition
     public void setPosition(double setpointDeg) {
+        currentPIDSetpointAngle = setpointDeg;
+
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
         pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
     }
 
+    // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), Math.toRadians(setpointVel));
 
@@ -189,6 +220,8 @@ public class Shoulder {
     }
 
     public void setPositionSmartMotion(double setpointDeg, SmartMotionArmSpeed mode){
+        currentPIDSetpointAngle = setpointDeg;
+
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
         switch(mode){
@@ -313,15 +346,25 @@ public class Shoulder {
     public void periodic() {
         // Limit sensor triggered and arm is moving down
 
-        if(atLimitSensor()){   
-            reachedLimitSensor = true;
+        if(atLimitSensor() && getVelocity() < 0){   
+            reachedLimitSensorDownward = true;
         }
 
-        // If the arm is moving up and leaves the limit sensor, reset the encoder
-        if(reachedLimitSensor && !atLimitSensor() && getVelocity() > 0){
-            // shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
-            reachedLimitSensor = false;
+        if(atLimitSensor() && getVelocity() > 0){   
+            reachedLimitSensorUpward = true;
         }
+
+        // // If the arm is moving down and leaves the limit sensor, reset the encoder
+        // if(reachedLimitSensorDownward && !atLimitSensor()){
+        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
+        //     reachedLimitSensorDownward = false;
+        // }
+
+        // // If the arm is moving up and leaves the limit sensor, reset the encoder
+        // if(reachedLimitSensorUpward && !atLimitSensor()){
+        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
+        //     reachedLimitSensorUpward = false;
+        // }
 
     }
 
@@ -339,5 +382,141 @@ public class Shoulder {
 
     public double getVoltage(){
         return shoulderMotorMaster.getAppliedOutput()*100;
+    }
+
+    public double getkHomeAngle() {
+        return kHomeAngle;
+    }
+
+    public void setkHomeAngle(double kHomeAngle) {
+        this.kHomeAngle = kHomeAngle;
+    }
+
+    public double getkStowedAngle() {
+        return kStowedAngle;
+    }
+
+    public void setkStowedAngle(double kStowedAngle) {
+        this.kStowedAngle = kStowedAngle;
+    }
+
+    public double getkL1Angle() {
+        return kL1Angle;
+    }
+
+    public void setkL1Angle(double kL1Angle) {
+        this.kL1Angle = kL1Angle;
+    }
+
+    public double getkCompactFloorConeAngle() {
+        return kCompactFloorConeAngle;
+    }
+
+    public void setkCompactFloorConeAngle(double kCompactFloorConeAngle) {
+        this.kCompactFloorConeAngle = kCompactFloorConeAngle;
+    }
+
+    public double getkCompactFloorCubeAngle() {
+        return kCompactFloorCubeAngle;
+    }
+
+    public void setkCompactFloorCubeAngle(double kCompactFloorCubeAngle) {
+        this.kCompactFloorCubeAngle = kCompactFloorCubeAngle;
+    }
+
+    public double getkExtendedFloorConeAngle() {
+        return kExtendedFloorConeAngle;
+    }
+
+    public void setkExtendedFloorConeAngle(double kExtendedFloorConeAngle) {
+        this.kExtendedFloorConeAngle = kExtendedFloorConeAngle;
+    }
+
+    public double getkExtendedFloorCubeAngle() {
+        return kExtendedFloorCubeAngle;
+    }
+
+    public void setkExtendedFloorCubeAngle(double kExtendedFloorCubeAngle) {
+        this.kExtendedFloorCubeAngle = kExtendedFloorCubeAngle;
+    }
+
+    public double getkL2ConeAngle() {
+        return kL2ConeAngle;
+    }
+
+    public void setkL2ConeAngle(double kL2ConeAngle) {
+        this.kL2ConeAngle = kL2ConeAngle;
+    }
+
+    public double getkL2CubeAngle() {
+        return kL2CubeAngle;
+    }
+
+    public void setkL2CubeAngle(double kL2CubeAngle) {
+        this.kL2CubeAngle = kL2CubeAngle;
+    }
+
+    public double getkL3CubeForwardAngle() {
+        return kL3CubeForwardAngle;
+    }
+
+    public void setkL3CubeForwardAngle(double kL3CubeForwardAngle) {
+        this.kL3CubeForwardAngle = kL3CubeForwardAngle;
+    }
+
+    public double getkL3CubeInvertedAngle() {
+        return kL3CubeInvertedAngle;
+    }
+
+    public void setkL3CubeInvertedAngle(double kL3CubeInvertedAngle) {
+        this.kL3CubeInvertedAngle = kL3CubeInvertedAngle;
+    }
+
+    public double getkL3ConeAngle() {
+        return kL3ConeAngle;
+    }
+
+    public void setkL3ConeAngle(double kL3ConeAngle) {
+        this.kL3ConeAngle = kL3ConeAngle;
+    }
+
+    public double getkLLSeekAngle() {
+        return kLLSeekAngle;
+    }
+
+    public void setkLLSeekAngle(double kLLSeekAngle) {
+        this.kLLSeekAngle = kLLSeekAngle;
+    }
+
+    public double getkDoubleSSConeAngle() {
+        return kDoubleSSConeAngle;
+    }
+
+    public void setkDoubleSSConeAngle(double kDoubleSSConeAngle) {
+        this.kDoubleSSConeAngle = kDoubleSSConeAngle;
+    }
+
+    public double getkSingleSSAngle() {
+        return kSingleSSAngle;
+    }
+
+    public void setkSingleSSAngle(double kSingleSSAngle) {
+        this.kSingleSSAngle = kSingleSSAngle;
+    }
+
+    public double getkTransitoryAngle() {
+        return kTransitoryAngle;
+    }
+
+    public void setkTransitoryAngle(double kTransitoryAngle) {
+        this.kTransitoryAngle = kTransitoryAngle;
+    }
+
+    public double getCurrentPIDSetpointAngle() {
+        return currentPIDSetpointAngle;
+    }
+
+    public void setCurrentPIDSetpointAngle(double currentPIDSetpointAngle) {
+        this.currentPIDSetpointAngle = currentPIDSetpointAngle;
     }
 }
