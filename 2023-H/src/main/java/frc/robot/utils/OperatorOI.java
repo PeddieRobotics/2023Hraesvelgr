@@ -1,6 +1,7 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -146,6 +147,9 @@ public class OperatorOI {
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CUBE)));
+
+        Trigger muteButton = new JoystickButton(controller, 15);
+        muteButton.onTrue(new SetDoubleSSConePose());
     }
 
     private boolean bothBumpersHeld() {

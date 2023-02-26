@@ -235,7 +235,7 @@ public final class Constants {
                 public static final double kL3ConeAngle = 155.0;
 
                 public static final double kLLSeekAngle = -75.0;
-                public static final double kDoubleSSConeAngle = 20.0;
+                public static final double kDoubleSSConeAngle = 25.0;
                 public static final double kSingleSSAngle = -75.0;
 
                 // Used generically in the code for checking if we are "close enough" to a pose
@@ -290,8 +290,8 @@ public final class Constants {
                 public static final double kL3ConeAngle = 0.0;
 
                 public static final double kLLSeekAngle = -25.0;
-                public static final double kDoubleSSConeAngle = -80.0;
-                public static final double kSingleSSAngle = 10.0;
+                public static final double kDoubleSSConeAngle = -89.0;
+                public static final double kSingleSSAngle = 30.0;
                 public static final double kTransitoryAngle = 70.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees

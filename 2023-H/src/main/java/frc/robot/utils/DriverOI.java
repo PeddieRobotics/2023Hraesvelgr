@@ -124,7 +124,7 @@ public class DriverOI {
 
         // Double substation (human player) cone loading
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new SetDoubleSSConePose());
+        squareButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
 
         // Slow Mode
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);

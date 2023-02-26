@@ -57,7 +57,6 @@ public class Wrist {
         wristMotor.setIdleMode(IdleMode.kBrake);
 
         pidController = wristMotor.getPIDController();
-
         kP = WristConstants.kP;
         kI = WristConstants.kI;
         kD = WristConstants.kD;
