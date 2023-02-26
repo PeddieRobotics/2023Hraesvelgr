@@ -27,19 +27,19 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(WristConstants.kHomeAngle);
+        arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.MOVING);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(WristConstants.kHomeAngle - 40) && !transitory){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+        if(arm.isWristAboveAngle(wrist.getkHomeAngle() - 40) && !transitory){
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }
 
         if(transitory && arm.isShoulderBelowAngle(-39)){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kHomeAngle, SmartMotionArmSpeed.SLOW);
+            arm.setShoulderPositionSmartMotion(shoulder.getkHomeAngle(), SmartMotionArmSpeed.SLOW);
         }
     }
 
@@ -53,7 +53,7 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(WristConstants.kHomeAngle) && arm.isShoulderAtAngle(ShoulderConstants.kHomeAngle);
+        return arm.isWristAtAngle(wrist.getkHomeAngle()) && arm.isShoulderAtAngle(shoulder.getkHomeAngle());
     }
 
 

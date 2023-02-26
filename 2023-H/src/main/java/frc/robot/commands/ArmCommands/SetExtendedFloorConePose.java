@@ -34,11 +34,11 @@ public class SetExtendedFloorConePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
 
-        if((arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorConeAngle))){
+        if((arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle()))){
             shoulderStowed = true;
         }
 
-        arm.setWristPosition(WristConstants.kStowedAngle);
+        arm.setWristPosition(wrist.getkStowedAngle());
         arm.setState(ArmState.MOVING);
 
     }
@@ -48,22 +48,22 @@ public class SetExtendedFloorConePose extends CommandBase{
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
             
             if(!transitory){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+                arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
                 transitory = true;
             }
             if(transitory && arm.isShoulderBelowAngle(-39)){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle, SmartMotionArmSpeed.SLOW);
+                arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
                 shoulderStowing = true;
             }
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kExtendedFloorConeAngle, SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing){
+            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorConeAngle(), SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kExtendedFloorConeAngle);
+        if(arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && shoulderStowed){
+            arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
     
     }
@@ -80,7 +80,7 @@ public class SetExtendedFloorConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorConeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorConeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle());
     }
 
 

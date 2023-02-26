@@ -25,14 +25,14 @@ public class SetLevelThreeCubePose extends CommandBase{
     @Override
     public void initialize() {
         arm.setWristPosition(30);
-        arm.setShoulderPositionSmartMotion(ShoulderConstants.kL3CubeForwardAngle, SmartMotionArmSpeed.REGULAR);
+        arm.setShoulderPositionSmartMotion(shoulder.getkL3CubeForwardAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-20)){
-            arm.setWristPosition(WristConstants.kL3CubeForwardAngle);
+            arm.setWristPosition(wrist.getkL3CubeForwardAngle());
         }
     }
 
@@ -45,7 +45,7 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kL3CubeForwardAngle) && arm.isWristAtAngle(WristConstants.kL3CubeForwardAngle);
+        return arm.isShoulderAtAngle(shoulder.getkL3CubeForwardAngle()) && arm.isWristAtAngle(wrist.getkL3CubeForwardAngle());
     }
 
 

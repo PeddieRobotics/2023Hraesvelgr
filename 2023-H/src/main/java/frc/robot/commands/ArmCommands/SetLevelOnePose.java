@@ -31,8 +31,8 @@ public class SetLevelOnePose extends CommandBase{
     public void initialize() {
         transitory = false;
         if(arm.isShoulderBelowAngle(-50)){
-            arm.setWristPosition(WristConstants.kL1Angle);
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+            arm.setWristPosition(wrist.getkL1Angle());
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }
         else{
@@ -45,16 +45,16 @@ public class SetLevelOnePose extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(30) && !transitory){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }
 
         if(transitory && arm.isShoulderBelowAngle(-39)){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kL1Angle, SmartMotionArmSpeed.SLOW);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL1Angle(), SmartMotionArmSpeed.SLOW);
         }
 
         if(arm.isShoulderBelowAngle(-55)){
-            arm.setWristPosition(WristConstants.kL1Angle);
+            arm.setWristPosition(wrist.getkL1Angle());
         }
     }
 
@@ -67,7 +67,7 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(WristConstants.kL1Angle) && arm.isShoulderAtAngle(ShoulderConstants.kL1Angle);
+        return arm.isWristAtAngle(wrist.getkL1Angle()) && arm.isShoulderAtAngle(shoulder.getkL1Angle());
     }
 
 

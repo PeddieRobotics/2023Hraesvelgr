@@ -25,14 +25,14 @@ public class SetLevelTwoCubePose extends CommandBase{
     @Override
     public void initialize() {
         arm.setWristPosition(40);
-        arm.setShoulderPositionSmartMotion(ShoulderConstants.kL2CubeAngle, SmartMotionArmSpeed.REGULAR);
+        arm.setShoulderPositionSmartMotion(shoulder.getkL2CubeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-20)){
-            arm.setWristPosition(WristConstants.kL2CubeAngle);
+            arm.setWristPosition(wrist.getkL2CubeAngle());
         }
     }
 
@@ -45,7 +45,7 @@ public class SetLevelTwoCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kL2CubeAngle) && arm.isWristAtAngle(WristConstants.kL2CubeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkL2CubeAngle()) && arm.isWristAtAngle(wrist.getkL2CubeAngle());
     }
 
 

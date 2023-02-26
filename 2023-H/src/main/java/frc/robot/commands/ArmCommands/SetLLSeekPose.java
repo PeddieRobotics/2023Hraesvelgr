@@ -32,11 +32,11 @@ public class SetLLSeekPose extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(30)){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kLLSeekAngle, SmartMotionArmSpeed.REGULAR);
+            arm.setShoulderPositionSmartMotion(shoulder.getkLLSeekAngle(), SmartMotionArmSpeed.REGULAR);
         }
 
         if(arm.isShoulderBelowAngle(-55)){
-            arm.setWristPosition(WristConstants.kLLSeekAngle);
+            arm.setWristPosition(wrist.getkLLSeekAngle());
         }
     }
 
@@ -48,6 +48,6 @@ public class SetLLSeekPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kLLSeekAngle) && arm.isWristAtAngle(WristConstants.kLLSeekAngle);
+        return arm.isShoulderAtAngle(shoulder.getkLLSeekAngle()) && arm.isWristAtAngle(wrist.getkLLSeekAngle());
     }
 }

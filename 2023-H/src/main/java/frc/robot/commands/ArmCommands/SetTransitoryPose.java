@@ -30,8 +30,8 @@ public class SetTransitoryPose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(ShoulderConstants.kTransitoryAngle) || arm.isShoulderBelowAngle(-65) || arm.isWristAboveAngle(30)){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderAboveAngle(shoulder.getkTransitoryAngle()) || arm.isShoulderBelowAngle(-65) || arm.isWristAboveAngle(30)){
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         }
 
     }

@@ -33,11 +33,11 @@ public class SetCompactFloorCubePose extends CommandBase{
         shoulderStowing = false;
         transitory = false;
         
-        if(arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kCompactFloorCubeAngle)){
+        if(arm.isShoulderAtAngle(shoulder.getkCompactFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkCompactFloorCubeAngle())){
             shoulderStowed = true;
         }
 
-        arm.setWristPosition(WristConstants.kStowedAngle);
+        arm.setWristPosition(wrist.getkStowedAngle());
         arm.setState(ArmState.MOVING);
 
     }
@@ -47,22 +47,22 @@ public class SetCompactFloorCubePose extends CommandBase{
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
             
             if(!transitory){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+                arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
                 transitory = true;
             }
             if(transitory && arm.isShoulderBelowAngle(-39)){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle, SmartMotionArmSpeed.SLOW);
+                arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
                 shoulderStowing = true;
             }
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kCompactFloorCubeAngle, SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing){
+            arm.setShoulderPositionSmartMotion(shoulder.getkCompactFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kCompactFloorCubeAngle);
+        if(arm.isShoulderAtAngle(shoulder.getkCompactFloorCubeAngle()) && shoulderStowed){
+            arm.setWristPosition(wrist.getkCompactFloorCubeAngle());
         }
     }
 
@@ -76,7 +76,7 @@ public class SetCompactFloorCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kCompactFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kCompactFloorCubeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkCompactFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkCompactFloorCubeAngle());
     }
 
 

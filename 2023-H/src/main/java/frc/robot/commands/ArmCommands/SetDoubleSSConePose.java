@@ -24,7 +24,7 @@ public class SetDoubleSSConePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPositionSmartMotion(ShoulderConstants.kDoubleSSConeAngle, SmartMotionArmSpeed.REGULAR);
+        arm.setShoulderPositionSmartMotion(shoulder.getkDoubleSSConeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
 
     }
@@ -32,7 +32,7 @@ public class SetDoubleSSConePose extends CommandBase{
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(WristConstants.kDoubleSSConeAngle);
+            arm.setWristPosition(wrist.getkDoubleSSConeAngle());
         }
     }
 
@@ -44,7 +44,7 @@ public class SetDoubleSSConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kDoubleSSConeAngle) && arm.isWristAtAngle(WristConstants.kDoubleSSConeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkDoubleSSConeAngle()) && arm.isWristAtAngle(wrist.getkDoubleSSConeAngle());
     }
 
 

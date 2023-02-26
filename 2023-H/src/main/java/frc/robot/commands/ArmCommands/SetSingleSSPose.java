@@ -24,14 +24,14 @@ public class SetSingleSSPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPositionSmartMotion(ShoulderConstants.kSingleSSAngle, SmartMotionArmSpeed.REGULAR);
+        arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(WristConstants.kSingleSSAngle);
+            arm.setWristPosition(wrist.getkSingleSSAngle());
         }
     }
 
@@ -44,7 +44,7 @@ public class SetSingleSSPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kSingleSSAngle) && arm.isWristAtAngle(WristConstants.kSingleSSAngle);
+        return arm.isShoulderAtAngle(shoulder.getkSingleSSAngle()) && arm.isWristAtAngle(wrist.getkSingleSSAngle());
     }
 
 

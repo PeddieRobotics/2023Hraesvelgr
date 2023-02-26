@@ -1,5 +1,7 @@
 package frc.robot.commands.ArmCommands;
 
+import com.fasterxml.jackson.databind.util.ArrayBuilders.ShortBuilder;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
@@ -33,11 +35,11 @@ public class SetExtendedFloorCubePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
 
-        if((arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorCubeAngle))){
+        if((arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle()))){
             shoulderStowed = true;
         }
 
-        arm.setWristPosition(WristConstants.kStowedAngle);
+        arm.setWristPosition(wrist.getkStowedAngle());
         arm.setState(ArmState.MOVING);
 
     }
@@ -46,22 +48,22 @@ public class SetExtendedFloorCubePose extends CommandBase{
     public void execute() {
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
             if(!transitory){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
+                arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
                 transitory = true;
             }
             if(transitory && arm.isShoulderBelowAngle(-39)){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle, SmartMotionArmSpeed.SLOW);
+                arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
                 shoulderStowing = true;
             }
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kExtendedFloorCubeAngle, SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing){
+            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorCubeAngle) && shoulderStowed){
-            arm.setWristPosition(WristConstants.kExtendedFloorCubeAngle);
+        if(arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && shoulderStowed){
+            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
         }
     }
 
@@ -76,7 +78,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kExtendedFloorCubeAngle) && arm.isWristAtAngle(WristConstants.kExtendedFloorCubeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle());
     }
 
 
