@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmCommands.ManualShoulderControl;
 import frc.robot.commands.ArmCommands.ManualWristControl;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetHomePose;
@@ -107,6 +108,9 @@ public class OperatorOI {
         Trigger leftTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
         leftTriggerPressedTrigger.whileTrue(new ManualWristControl());
 
+        Trigger rightTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
+        rightTriggerPressedTrigger.whileTrue(new ManualShoulderControl());
+
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
@@ -153,8 +157,7 @@ public class OperatorOI {
         if (Math.abs(rawAxis) < Constants.OIConstants.kDrivingDeadband) {
             return 0;
         }
-        return 0;
-        // return rawAxis/7;
+        return -1*rawAxis/4;
     }
 
     public double getWristPIDOffset() {

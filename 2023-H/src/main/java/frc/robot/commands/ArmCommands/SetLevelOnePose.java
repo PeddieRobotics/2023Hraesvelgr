@@ -5,6 +5,7 @@ import javax.xml.crypto.dsig.Transform;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -23,7 +24,7 @@ public class SetLevelOnePose extends CommandBase{
         transitory = false;
         if(arm.isShoulderBelowAngle(-50)){
             arm.setWristPosition(WristConstants.kL1Angle);
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }
         else{
@@ -36,12 +37,12 @@ public class SetLevelOnePose extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(30) && !transitory){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }
 
-        if(transitory && arm.isShoulderBelowAngle(-42)){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kL1Angle);
+        if(transitory && arm.isShoulderBelowAngle(-39)){
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kL1Angle, SmartMotionArmSpeed.SLOW);
         }
 
         if(arm.isShoulderBelowAngle(-55)){

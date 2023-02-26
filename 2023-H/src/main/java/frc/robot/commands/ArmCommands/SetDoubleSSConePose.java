@@ -3,6 +3,7 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -16,7 +17,7 @@ public class SetDoubleSSConePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPositionSmartMotion(ShoulderConstants.kDoubleSSConeAngle);
+        arm.setShoulderPositionSmartMotion(ShoulderConstants.kDoubleSSConeAngle, SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
 
     }

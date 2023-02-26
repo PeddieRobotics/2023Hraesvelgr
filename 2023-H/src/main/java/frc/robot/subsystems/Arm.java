@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
@@ -84,8 +85,8 @@ public class Arm extends SubsystemBase {
         shoulder.setPosition(setPoint);
     }
 
-    public void setShoulderPositionSmartMotion(double setPoint){
-        shoulder.setPositionSmartMotion(setPoint);
+    public void setShoulderPositionSmartMotion(double setPoint, SmartMotionArmSpeed mode){
+        shoulder.setPositionSmartMotion(setPoint, mode);
     }
 
     public void setWristPosition(double setPoint){

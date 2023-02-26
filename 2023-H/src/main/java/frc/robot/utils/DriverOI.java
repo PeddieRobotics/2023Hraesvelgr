@@ -83,7 +83,7 @@ public class DriverOI {
         leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
                 new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
-        // Cube intake/eject gamepieceshu
+        // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
                 new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
@@ -298,16 +298,16 @@ public class DriverOI {
     public Translation2d getCardinalDirection() {
         switch (getDriverDPadInput()) {
             case FORWARDS:
-                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed,
+                return new Translation2d(-DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed,
                         0.0);
             case RIGHT:
                 return new Translation2d(0.0,
-                        -DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
+                        DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case LEFT:
                 return new Translation2d(0.0,
-                        DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
+                        -DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed);
             case BACKWARDS:
-                return new Translation2d(-DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed,
+                return new Translation2d(DriveConstants.kCardinalDirectionSpeedScale * DriveConstants.kMaxFloorSpeed,
                         0.0);
             default:
                 return new Translation2d(0.0, 0.0);

@@ -44,13 +44,13 @@ public class RobotContainer {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
 
-        operatorOI = OperatorOI.getInstance();
-        driverOI = DriverOI.getInstance();
-
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
         // limelightBack = LimelightBack.getInstance();
         // blinkin = Blinkin.getInstance();
+
+        operatorOI = OperatorOI.getInstance();
+        driverOI = DriverOI.getInstance();
     }
 
     public Command getAutonomousCommand() {

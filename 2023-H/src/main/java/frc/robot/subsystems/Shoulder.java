@@ -22,11 +22,15 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorDownward;
+    private boolean reachedLimitSensor;
 
     private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
-    kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionSetpointTol, kSmartMotionMinVel,
-    kSmartMotionMaxVel, kSmartMotionMaxAccel;
+    kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
+    kSmartMotionRegularMaxVel, kSmartMotionRegularMaxAccel, kSmartMotionSlowSetpointTol, kSmartMotionSlowMinVel,
+    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionFastSetpointTol, kSmartMotionFastMinVel,
+    kSmartMotionFastMaxVel, kSmartMotionFastMaxAccel;
+
+    public enum SmartMotionArmSpeed {REGULAR, SLOW, FAST};
 
     public Shoulder() {
 
@@ -72,26 +76,44 @@ public class Shoulder {
           // PID control setup
           pidController = shoulderMotorMaster.getPIDController();
   
-          // Set up SmartMotion PIDController on pid slot 0
+          // Set up SmartMotion PIDController (regular speed) on pid slot 0
           kP = ShoulderConstants.kP;
           kI = ShoulderConstants.kI;
           kD = ShoulderConstants.kD;
           kIz = ShoulderConstants.kIz;
-          setPIDController(kP, kI, kD, kIz, 0);
+          setupPIDController(kP, kI, kD, kIz, 0);
   
-          kSmartMotionSetpointTol = ShoulderConstants.kSmartMotionSetpointTol;
-          kSmartMotionMinVel = ShoulderConstants.kSmartMotionMinVel;
-          kSmartMotionMaxVel = ShoulderConstants.kSmartMotionMaxVel;
-          kSmartMotionMaxAccel = ShoulderConstants.kSmartMotionMaxAccel;
-          setSmartMotionParameters(ShoulderConstants.kSmartMotionSetpointTol,
-          ShoulderConstants.kSmartMotionMinVel, ShoulderConstants.kSmartMotionMaxVel, ShoulderConstants.kSmartMotionMaxAccel);
+          kSmartMotionRegularSetpointTol = ShoulderConstants.kSmartMotionRegularSetpointTol;
+          kSmartMotionRegularMinVel = ShoulderConstants.kSmartMotionRegularMinVel;
+          kSmartMotionRegularMaxVel = ShoulderConstants.kSmartMotionRegularMaxVel;
+          kSmartMotionRegularMaxAccel = ShoulderConstants.kSmartMotionRegularMaxAccel;
+          setRegularSmartMotionParameters(ShoulderConstants.kSmartMotionRegularSetpointTol,
+          ShoulderConstants.kSmartMotionRegularMinVel, ShoulderConstants.kSmartMotionRegularMaxVel, ShoulderConstants.kSmartMotionRegularMaxAccel);
+  
+          // Set up SmartMotion PIDController (slow speed) on pid slot 2
+          setupPIDController(kP, kI, kD, kIz, 2);
+          kSmartMotionSlowSetpointTol = ShoulderConstants.kSmartMotionSlowSetpointTol;
+          kSmartMotionSlowMinVel = ShoulderConstants.kSmartMotionSlowMinVel;
+          kSmartMotionSlowMaxVel = ShoulderConstants.kSmartMotionSlowMaxVel;
+          kSmartMotionSlowMaxAccel = ShoulderConstants.kSmartMotionSlowMaxAccel;
+          setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+          ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
+  
+          // Set up SmartMotion PIDController (fast speed) on pid slot 3
+          setupPIDController(kP, kI, kD, kIz, 3);
+          kSmartMotionFastSetpointTol = ShoulderConstants.kSmartMotionFastSetpointTol;
+          kSmartMotionFastMinVel = ShoulderConstants.kSmartMotionFastMinVel;
+          kSmartMotionFastMaxVel = ShoulderConstants.kSmartMotionFastMaxVel;
+          kSmartMotionFastMaxAccel = ShoulderConstants.kSmartMotionFastMaxAccel;
+          setFastSmartMotionParameters(ShoulderConstants.kSmartMotionFastSetpointTol,
+          ShoulderConstants.kSmartMotionFastMinVel, ShoulderConstants.kSmartMotionFastMaxVel, ShoulderConstants.kSmartMotionFastMaxAccel);
   
           // Set up position PIDController on pid slot 1
           kPositionP = ShoulderConstants.kPositionP;
           kPositionI = ShoulderConstants.kPositionI;
           kPositionD = ShoulderConstants.kPositionD;
           kPositionIz = ShoulderConstants.kPositionIz;
-          setPIDController(kPositionP, kPositionI, kPositionD, kPositionIz, 1);
+          setupPIDController(kPositionP, kPositionI, kPositionD, kPositionIz, 1);
   
           // Set up shoulder feedforward params
           kG = ShoulderConstants.kGVolts;
@@ -102,20 +124,41 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensorDownward = false;
+        reachedLimitSensor = false;
 
     }
 
-    public void setSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
-        kSmartMotionSetpointTol = setpointTol;
-        kSmartMotionMinVel = minVel;
-        kSmartMotionMaxVel = maxVel;
-        kSmartMotionMaxAccel = maxAccel;
-        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionSetpointTol, 0);
-        pidController.setSmartMotionMinOutputVelocity(kSmartMotionMinVel, 0);
-        pidController.setSmartMotionMaxVelocity(kSmartMotionMaxVel, 0);
-        pidController.setSmartMotionMaxAccel(kSmartMotionMaxAccel, 0);
+    public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionRegularSetpointTol = setpointTol;
+        kSmartMotionRegularMinVel = minVel;
+        kSmartMotionRegularMaxVel = maxVel;
+        kSmartMotionRegularMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionRegularSetpointTol, 0);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionRegularMinVel, 0);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionRegularMaxVel, 0);
+        pidController.setSmartMotionMaxAccel(kSmartMotionRegularMaxAccel, 0);
+    }
 
+    public void setSlowSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionSlowSetpointTol = setpointTol;
+        kSmartMotionSlowMinVel = minVel;
+        kSmartMotionSlowMaxVel = maxVel;
+        kSmartMotionSlowMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionSlowSetpointTol, 2);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionSlowMinVel, 2);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionSlowMaxVel, 2);
+        pidController.setSmartMotionMaxAccel(kSmartMotionSlowMaxAccel, 2);
+    }
+
+    public void setFastSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionFastSetpointTol = setpointTol;
+        kSmartMotionFastMinVel = minVel;
+        kSmartMotionFastMaxVel = maxVel;
+        kSmartMotionFastMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionFastSetpointTol, 3);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionFastMinVel, 3);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionFastMaxVel, 3);
+        pidController.setSmartMotionMaxAccel(kSmartMotionFastMaxAccel, 3);
     }
 
     public double getAngle() {
@@ -145,10 +188,22 @@ public class Shoulder {
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
 
-    public void setPositionSmartMotion(double setpointDeg){
+    public void setPositionSmartMotion(double setpointDeg, SmartMotionArmSpeed mode){
         arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
-        pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
+        switch(mode){
+            case REGULAR:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
+                break;
+            case SLOW:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 2, arbitraryFF);
+                break;
+            case FAST:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 3, arbitraryFF);
+                break;
+            default:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
+        }
     }
 
     public double getArbitraryFF() {
@@ -184,15 +239,11 @@ public class Shoulder {
         return shoulderMotorMaster.getEncoder().getVelocity();
     }
 
-    // Not really recommended(?) but will ensure all PID controllers are disabled.
-    // Currently unused.
     public void disablePIDController() {
-        setShoulderFeedforward(0, 0, 0);
-        setPIDController(0, 0, 0, 0, 0); // Smart motion PID controller
-        setPIDController(0, 0, 0, 0, 1); // Position PID controller
+        shoulderMotorMaster.set(0);
     }
 
-    public void setShoulderFeedforward(double dbkg, double dbkv, double dbka) {
+    public void updateShoulderFeedforward(double dbkg, double dbkv, double dbka) {
         if (kG != dbkg || kV != dbkv || kA != dbka) {
             kG = dbkg;
             kV = dbkv;
@@ -201,23 +252,75 @@ public class Shoulder {
         }
     }
 
-    public void setPIDController(double p, double i, double d, double izone, int pidslot) {
+    public void setupPIDController(double p, double i, double d, double izone, int pidslot) {
         pidController.setP(p, pidslot);
         pidController.setI(i, pidslot);
         pidController.setD(d, pidslot);
         pidController.setIZone(izone, pidslot);
     }
 
-    public void periodic() {
+    public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
+        if(pidslot == 0){
+            if(kP != p || kI != i || kD != d || kIz != izone){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+            }
+        }
+        else if(pidslot == 1){
+            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone){
+                kPositionP = p;
+                kPositionI = i;
+                kPositionD = d;
+                kPositionIz = izone;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+            }           
+        }
+        else if(pidslot == 2){
+            if(kP != p || kI != i || kD != d || kIz != izone){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+            }
+        }
+        else if(pidslot == 3){
+            if(kP != p || kI != i || kD != d || kIz != izone){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+            }
+        }
+    }
 
+    public void periodic() {
         // Limit sensor triggered and arm is moving down
-        if(atLimitSensor() && getVelocity() < 0){   
-            reachedLimitSensorDownward = true;
+
+        if(atLimitSensor()){   
+            reachedLimitSensor = true;
         }
 
-        if(reachedLimitSensorDownward && !atLimitSensor()){
-            shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
-            reachedLimitSensorDownward = false;
+        // If the arm is moving up and leaves the limit sensor, reset the encoder
+        if(reachedLimitSensor && !atLimitSensor() && getVelocity() > 0){
+            // shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
+            reachedLimitSensor = false;
         }
 
     }

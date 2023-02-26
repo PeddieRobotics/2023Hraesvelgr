@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.Constants.ShoulderConstants;
 
@@ -63,13 +64,13 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mkD = tab.add("kD", ShoulderConstants.kD)
                                         .getEntry();
 
-                        mSmartMotionAngleTol = tab.add("S.M. Setpoint Tol", ShoulderConstants.kSmartMotionSetpointTol)
+                        mSmartMotionAngleTol = tab.add("S.M. Setpoint Tol", ShoulderConstants.kSmartMotionRegularSetpointTol)
                                         .getEntry();
-                        mSmartMotionMinVel = tab.add("S.M. Min Vel", ShoulderConstants.kSmartMotionMinVel)
+                        mSmartMotionMinVel = tab.add("S.M. Min Vel", ShoulderConstants.kSmartMotionRegularMinVel)
                                         .getEntry();
-                        mSmartMotionMaxVel = tab.add("S.M. Max Vel", ShoulderConstants.kSmartMotionMaxVel)
+                        mSmartMotionMaxVel = tab.add("S.M. Max Vel", ShoulderConstants.kSmartMotionRegularMaxVel)
                                         .getEntry();
-                        mSmartMotionMaxAccel = tab.add("S.M. Max Accel", ShoulderConstants.kSmartMotionMaxAccel)
+                        mSmartMotionMaxAccel = tab.add("S.M. Max Accel", ShoulderConstants.kSmartMotionRegularMaxAccel)
                                         .getEntry();
                         mLimitSensor = tab.add("Limit sensor", true)
                                         .getEntry();
@@ -92,18 +93,18 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         if (mOpenLoopToggle.getBoolean(false)) {
                                 shoulder.setPercentOutput(DriverOI.getInstance().getArmSpeed());
                         } else if (mPIDToggle.getBoolean(false)) {
-                                shoulder.setPIDController(mkP.getDouble(ShoulderConstants.kP),
+                                shoulder.updatePIDController(mkP.getDouble(ShoulderConstants.kP),
                                                 mkI.getDouble(ShoulderConstants.kI),
                                                 mkD.getDouble(ShoulderConstants.kD),
                                                 mkIz.getDouble(ShoulderConstants.kIz), 0);
 
-                                shoulder.setShoulderFeedforward(
+                                shoulder.updateShoulderFeedforward(
                                                 mkG.getDouble(0.0),
                                                 mkV.getDouble(0.0),
                                                 mkA.getDouble(0.0));
 
-                                shoulder.setPositionSmartMotion(mPIDSetpoint.getDouble(0.0));
-                                shoulder.setSmartMotionParameters(mSmartMotionAngleTol.getDouble(0.0),
+                                shoulder.setPositionSmartMotion(mPIDSetpoint.getDouble(0.0), SmartMotionArmSpeed.REGULAR);
+                                shoulder.setRegularSmartMotionParameters(mSmartMotionAngleTol.getDouble(0.0),
                                                 mSmartMotionMinVel.getDouble(0.0), mSmartMotionMaxVel.getDouble(0.0),
                                                 mSmartMotionMaxAccel.getDouble(0.0));
 

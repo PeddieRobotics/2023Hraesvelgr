@@ -3,6 +3,7 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -37,17 +38,17 @@ public class SetExtendedFloorCubePose extends CommandBase{
     public void execute() {
         if(arm.isWristAboveAngle(30) && !shoulderStowing){
             if(!transitory){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle);
+                arm.setShoulderPositionSmartMotion(ShoulderConstants.kTransitoryAngle, SmartMotionArmSpeed.REGULAR);
                 transitory = true;
             }
-            if(transitory && arm.isShoulderBelowAngle(-42)){
-                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle);
+            if(transitory && arm.isShoulderBelowAngle(-39)){
+                arm.setShoulderPositionSmartMotion(ShoulderConstants.kStowedAngle, SmartMotionArmSpeed.SLOW);
                 shoulderStowing = true;
             }
         }
 
         if(arm.isShoulderAtAngle(ShoulderConstants.kStowedAngle) && shoulderStowing){
-            arm.setShoulderPositionSmartMotion(ShoulderConstants.kExtendedFloorCubeAngle);
+            arm.setShoulderPositionSmartMotion(ShoulderConstants.kExtendedFloorCubeAngle, SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
 

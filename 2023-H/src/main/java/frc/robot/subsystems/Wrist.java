@@ -7,13 +7,9 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utils.Constants;
-import frc.robot.utils.DriverOI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.networktables.GenericEntry;
 
 public class Wrist {
     private static Wrist wrist;
@@ -26,7 +22,7 @@ public class Wrist {
 
     private ArmFeedforward wristFeedforward;
 
-    private double kG, kV, kA, arbitraryFF;
+    private double kP, kI, kD, kIz, kG, kV, kA, arbitraryFF;
 
     public Wrist() {
 
@@ -35,6 +31,12 @@ public class Wrist {
         wristMotor.setIdleMode(IdleMode.kBrake);
 
         pidController = wristMotor.getPIDController();
+
+        kP = WristConstants.kP;
+        kI = WristConstants.kI;
+        kD = WristConstants.kD;
+        kIz = WristConstants.kIz;
+        setupPIDController(kP, kI, kD, kIz, 0);
 
         kG = WristConstants.kGVolts;
         kV = WristConstants.kVVoltSecondPerRad;
@@ -108,7 +110,7 @@ public class Wrist {
         wristMotor.set(0);
     }
 
-    public void setWristFeedforward(double dbkg, double dbkv, double dbka) {
+    public void updateWristFeedforward(double dbkg, double dbkv, double dbka) {
         if (kG != dbkg || kV != dbkv || kA != dbka) {
             kG = dbkg;
             kV = dbkv;
@@ -117,11 +119,24 @@ public class Wrist {
         }
     }
 
-    public void setPIDController(double p, double i, double d, double izone) {
-        pidController.setP(p);
-        pidController.setI(i);
-        pidController.setD(d);
-        pidController.setIZone(izone);
+    public void setupPIDController(double p, double i, double d, double izone, int pidslot) {
+        pidController.setP(p, pidslot);
+        pidController.setI(i, pidslot);
+        pidController.setD(d, pidslot);
+        pidController.setIZone(izone, pidslot);
+    }
+
+    public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
+        if(kP != p || kI != i || kD != d || kIz != izone){
+            kP = p;
+            kI = i;
+            kD = d;
+            kIz = izone;
+            pidController.setP(p, pidslot);
+            pidController.setI(i, pidslot);
+            pidController.setD(d, pidslot);
+            pidController.setIZone(izone, pidslot);
+        }
     }
 
     public void periodic() {
@@ -141,5 +156,9 @@ public class Wrist {
 
     public double getVoltage(){
         return wristMotor.getAppliedOutput()*100;
+    }
+
+    public void disablePIDController() {
+        wristMotor.set(0);
     }
 }

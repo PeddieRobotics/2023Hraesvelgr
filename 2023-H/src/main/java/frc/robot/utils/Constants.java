@@ -193,10 +193,20 @@ public final class Constants {
                 public static final double kD = 0.00004;
                 public static final double kIz = 5;
 
-                public static final double kSmartMotionSetpointTol = 1.0;
-                public static final double kSmartMotionMinVel = 0.0; // rpm
-                public static final double kSmartMotionMaxVel = 1000.0; // rpm
-                public static final double kSmartMotionMaxAccel = 1000.0; // rpm / sec
+                public static final double kSmartMotionSlowSetpointTol = 1.0;
+                public static final double kSmartMotionSlowMinVel = 0.0; // rpm
+                public static final double kSmartMotionSlowMaxVel = 3000.0; // rpm
+                public static final double kSmartMotionSlowMaxAccel = 7000.0; // rpm / sec
+
+                public static final double kSmartMotionRegularSetpointTol = 1.0;
+                public static final double kSmartMotionRegularMinVel = 0.0; // rpm
+                public static final double kSmartMotionRegularMaxVel = 12000.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 15000.0; // rpm / sec
+                
+                public static final double kSmartMotionFastSetpointTol = 1.0;
+                public static final double kSmartMotionFastMinVel = 0.0; // rpm
+                public static final double kSmartMotionFastMaxVel = 18000.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 30000.0; // rpm / sec
 
                 // Soft limits
                 public static final double kAngleMin = -75;
@@ -235,9 +245,7 @@ public final class Constants {
 
                 public static final double kMotorReduction = 246.857143;
 
-                public static final double kEncoderConversionFactor = 165.0/113.48; // angular delta in degrees divided
-                                                                                     // by encoder delta in native
-                                                                                     // rotations
+                public static final double kEncoderConversionFactor = 360.0/kMotorReduction;
 
         }
 
@@ -288,9 +296,7 @@ public final class Constants {
                 public static final double kSetpointTolerance = 1.0; // degrees
 
                 public static final double kMotorReduction = 160; // 160:1
-                public static final double kEncoderConversionFactor = 103 / 41.761; // angular delta in degrees divided
-                                                                                    // by encoder delta in native
-                                                                                    // rotations
+                public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
 
         }
 

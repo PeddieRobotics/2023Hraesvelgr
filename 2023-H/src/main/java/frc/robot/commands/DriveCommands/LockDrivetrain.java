@@ -15,10 +15,10 @@ public class LockDrivetrain extends CommandBase{
 
     @Override
     public void initialize(){
-        if(drivetrain.getSpeed() < 0.5){
+        //if(drivetrain.getSpeed() < 0.5){
             drivetrain.lock();
             success = true;
-        }
+        //}
     }
 
     //Called once the command ends or is interrupted
