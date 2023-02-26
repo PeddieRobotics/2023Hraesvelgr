@@ -124,6 +124,8 @@ public class Drivetrain extends SubsystemBase {
         allowDriving = true;
 
         latestChassisSpeed = 0.0;
+
+        correctHeadingTargetHeading = new Rotation2d();
     }
 
     @Override

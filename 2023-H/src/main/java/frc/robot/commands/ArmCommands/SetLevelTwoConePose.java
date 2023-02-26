@@ -16,9 +16,10 @@ public class SetLevelTwoConePose extends CommandBase{
 
     @Override
     public void initialize() {
+        arm.setWristPosition(40);
         arm.setShoulderPositionSmartMotion(ShoulderConstants.kL2ConeAngle);
         arm.setState(ArmState.MOVING);
-
+        
     }
 
     @Override

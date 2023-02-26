@@ -10,7 +10,6 @@ public class IntakeCube extends CommandBase{
 
     public IntakeCube(){
         claw = Claw.getInstance();
-
         addRequirements(claw);
     }
 
