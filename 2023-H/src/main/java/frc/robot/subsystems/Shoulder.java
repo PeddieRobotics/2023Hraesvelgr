@@ -22,7 +22,7 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensor;
+    private boolean reachedLimitSensorDownward;
 
     private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionSetpointTol, kSmartMotionMinVel,
@@ -102,7 +102,7 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensor = false;
+        reachedLimitSensorDownward = false;
 
     }
 
@@ -134,16 +134,9 @@ public class Shoulder {
     // Currently only used to hold the position of the arm after a smart motion call.
     // See Arm class method holdPosition
     public void setPosition(double setpointDeg) {
-        // Below the fulcrum, disable feedforward
-        if(getAngle() < -50.0){
-             arbitraryFF = 0.0;
-             pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
-        }   
-        else{
-            arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
-            pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
-        }
+        pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
     }
 
     public void setVelocity(double setpointVel){
@@ -164,10 +157,6 @@ public class Shoulder {
 
     public boolean atLimitSensor(){
     return !limitSensor.get();
-    }
-
-    public void resetEncoder() {
-        setEncoder(ShoulderConstants.kHomeAngle+2);
     }
 
     public void setEncoder(double newEncoderValue) {
@@ -221,13 +210,16 @@ public class Shoulder {
 
     public void periodic() {
 
-        // if(atLimitSensor()){
-        //     reachedLimitSensor = true;
-        // }
-        // else if(reachedLimitSensor && !atLimitSensor()){
-        //     shoulder.resetEncoder();
-        //     reachedLimitSensor = false;
-        // }
+        // Limit sensor triggered and arm is moving down
+        if(atLimitSensor() && getVelocity() < 0){   
+            reachedLimitSensorDownward = true;
+        }
+
+        if(reachedLimitSensorDownward && !atLimitSensor()){
+            shoulder.setEncoder(ShoulderConstants.kHomeAngle); 
+            reachedLimitSensorDownward = false;
+        }
+
     }
 
     public void setMode(IdleMode mode) {

@@ -40,7 +40,7 @@ public class DriverOI {
     private Drivetrain drivetrain;
     private Claw claw;
 
-    private PS4Controller driverController = new PS4Controller(0);
+    private PS4Controller controller = new PS4Controller(0);
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
@@ -75,62 +75,62 @@ public class DriverOI {
         // Drive & Scoring Controls
 
         // Score L1 with any gamepiece
-        Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
+        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SetLevelOnePose());
 
         // Cone intake/eject gamepiece
-        Trigger leftBumperButton = new JoystickButton(driverController, PS4Controller.Button.kL1.value);
+        Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
                 new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()), claw::hasGamepiece));
 
         // Cube intake/eject gamepieceshu
-        Trigger rightBumperButton = new JoystickButton(driverController, PS4Controller.Button.kR1.value);
+        Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
                 new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()), claw::hasGamepiece));
 
         // Level 2 Scoring
-        Trigger circleButton = new JoystickButton(driverController, PS4Controller.Button.kCircle.value);
+        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
         circleButton
                 .onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
 
         // Level 3 Scoring
-        Trigger triangleButton = new JoystickButton(driverController, PS4Controller.Button.kTriangle.value);
+        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
         // Single SS pose button
-        Trigger shareButton = new JoystickButton(driverController, PS4Controller.Button.kShare.value);
+        Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
         shareButton.onTrue(new SetSingleSSPose());
 
         // Align to goal
-        Trigger rightStickButton = new JoystickButton(driverController,
+        Trigger rightStickButton = new JoystickButton(controller,
         PS4Controller.Button.kR3.value);
         // TODO: runs auto-align/driver assist
 
         // MISC CONTROLS
 
         // Lock Drivetrain
-        Trigger leftStickButton = new JoystickButton(driverController, PS4Controller.Button.kL3.value);
+        Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
         leftStickButton.toggleOnTrue(new LockDrivetrain());
 
         // Transitory pose
-        Trigger touchpadButton = new JoystickButton(driverController, PS4Controller.Button.kTouchpad.value);
+        Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetTransitoryPose());
 
         // Set stowed pose
-        Trigger muteButton = new JoystickButton(driverController, 15);
+        Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
         // Double substation (human player) cone loading
-        Trigger squareButton = new JoystickButton(driverController, PS4Controller.Button.kSquare.value);
+        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         squareButton.onTrue(new SetDoubleSSConePose());
 
         // Slow Mode
-        Trigger optionsButton = new JoystickButton(driverController, PS4Controller.Button.kOptions.value);
+        Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
         optionsButton.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)))
                 .onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Reset gyro (resets field oriented drive)
-        Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);
+        Trigger ps4Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         ps4Button.onTrue(new InstantCommand(() -> drivetrain.resetGyro()));
     }
 
@@ -146,11 +146,11 @@ public class DriverOI {
     }
 
     public double getForward() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        return controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
     }
 
     public double getStrafe() {
-        return driverController.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        return controller.getRawAxis(PS4Controller.Axis.kLeftX.value);
     }
 
     /* DRIVER METHODS */
@@ -253,8 +253,8 @@ public class DriverOI {
     }
 
     public double getRotation() {
-        double leftRotation = driverController.getRawAxis(PS4Controller.Axis.kL2.value);
-        double rightRotation = driverController.getRawAxis(PS4Controller.Axis.kR2.value);
+        double leftRotation = controller.getRawAxis(PS4Controller.Axis.kL2.value);
+        double rightRotation = controller.getRawAxis(PS4Controller.Axis.kR2.value);
 
         double combinedRotation;
         if (DriveConstants.kUseRateLimit) {
@@ -267,8 +267,8 @@ public class DriverOI {
     }
 
     public Translation2d getCenterOfRotation() {
-        double rotX = driverController.getRawAxis(2) * DriveConstants.kWheelBase;
-        double rotY = driverController.getRawAxis(5) * DriveConstants.kTrackWidth;
+        double rotX = controller.getRawAxis(2) * DriveConstants.kWheelBase;
+        double rotY = controller.getRawAxis(5) * DriveConstants.kTrackWidth;
 
         if (rotX * rotY > 0) {
             rotX = -rotX;
@@ -281,7 +281,7 @@ public class DriverOI {
     }
 
     public DPadDirection getDriverDPadInput() {
-        switch (driverController.getPOV()) {
+        switch (controller.getPOV()) {
             case 0:
                 return DPadDirection.FORWARDS;
             case 90:
@@ -317,8 +317,8 @@ public class DriverOI {
 
     // For testing purposes/ open loop mode.
     public double getArmSpeed() {
-        if (Math.abs(driverController.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01) {
-            return -driverController.getRawAxis(PS4Controller.Axis.kRightY.value) * 0.6;
+        if (Math.abs(controller.getRawAxis(PS4Controller.Axis.kRightY.value)) > 0.01) {
+            return -controller.getRawAxis(PS4Controller.Axis.kRightY.value) * 0.6;
         }
         return 0;
     }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.ManualWristControl;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
+import frc.robot.commands.ArmCommands.SetHomePose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
@@ -132,9 +133,12 @@ public class OperatorOI {
             }
         }));
 
+        // Home the entire arm subsystem (full system reset)
+        Trigger muteButton = new JoystickButton(controller, 15);
+        muteButton.onTrue(new SetHomePose());
+
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CONE)));
-
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CUBE)));
