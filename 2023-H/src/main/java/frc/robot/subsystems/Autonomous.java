@@ -14,14 +14,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
 import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
+import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetL3TransitoryPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.AutoCommands.AutonAlign;
@@ -33,11 +38,14 @@ import frc.robot.commands.LimelightCommands.SetPipeType;
 import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.Constants.WristConstants;
 
 public class Autonomous extends SubsystemBase{
     // Subsystems
     private static Autonomous autonomous;
     private final Drivetrain drivetrain;
+    private final Arm arm;
+    //private final Claw claw;
 
     // Sendable Chooser
     private SendableChooser<Command> autoRoutineSelector;
@@ -53,6 +61,7 @@ public class Autonomous extends SubsystemBase{
 
     public Autonomous(){
         drivetrain = Drivetrain.getInstance();
+        arm = Arm.getInstance();
         
         // Setup sendable chooser
         autoRoutines = new Hashtable<String, Command>();
@@ -68,15 +77,18 @@ public class Autonomous extends SubsystemBase{
             eventMap.put("pipeType"+i, new SetPipeType(i));
         }
         eventMap.put("pipe0", new SetPipe(0));
+        eventMap.put("stow", new SetStowedPose());
+        eventMap.put("eject", new EjectGamepiece());
 
-        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePose(), new EjectGamepiece(),new SetStowedPose()));
-        eventMap.put("CubeL3", new SequentialCommandGroup(new SetLevelThreeCubePose(), new EjectGamepiece(),new SetStowedPose()));
-        eventMap.put("IntakeCube", new SequentialCommandGroup(new SetExtendedFloorCubePose(), new ParallelRaceGroup( new IntakeCube(), new WaitCommand(3)),new SetStowedPose()));
-        eventMap.put("IntakeCone", new SequentialCommandGroup(new SetCompactFloorConePose(), new IntakeCone(),new SetStowedPose()));
+        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetL3TransitoryPose()));
+        eventMap.put("CubeL3", new EjectGamepiece()); //new SetStowedPose()));
+        eventMap.put("CubeL3Pose", new SetLevelThreeCubePose()); //new SetStowedPose()));
+        eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
 
-        eventMap.put("IntakeConePose", new SetCompactFloorConePose());
-        eventMap.put("IntakeCubePose", new SetCompactFloorCubePose());
-        eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
+        eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
+        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
+        eventMap.put("IntakeCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
+        eventMap.put("IntakeCone", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCone(), new WaitCommand(4)),new SetStowedPose()));
 
 
         // autoBuilder = new SwerveAutoBuilder(
@@ -151,6 +163,10 @@ public class Autonomous extends SubsystemBase{
         // autoRoutines.put("2 Piece Free Prepare Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceFreePrepareCol1", 0.5, 0.5)));
         // autoRoutines.put("2 Piece Bump Prepare Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBumpPrepareCol9", 0.5, 0.5)));
         // autoRoutines.put("3 Piece Free", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceFree", 0.5, 0.5)));
+
+        autoRoutines.put("1PieceSkedaddleCol9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceSkedaddleCol9", 0.5, 0.5)));
+        autoRoutines.put("2PieceTop", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTop", 1.5, 1.5)));
+        autoRoutines.put("3PieceTop", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceTop Copy", 0.5, 0.5)));
 
         //test paths
         int i=10;

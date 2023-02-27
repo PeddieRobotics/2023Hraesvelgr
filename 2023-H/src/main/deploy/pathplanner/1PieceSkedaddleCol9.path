@@ -57,8 +57,13 @@
     {
       "position": 0.7818181818181816,
       "names": [
-        "event",
-        "StartIntakingCube"
+        "IntakeCube"
+      ]
+    },
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
       ]
     }
   ]
