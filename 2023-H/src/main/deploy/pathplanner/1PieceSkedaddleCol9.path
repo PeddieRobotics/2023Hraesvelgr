@@ -33,31 +33,6 @@
         "x": 6.75706004361909,
         "y": 4.59168447178845
       },
-      "nextControl": {
-        "x": 6.75706004361909,
-        "y": 4.59168447178845
-      },
-      "holonomicAngle": 0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.26156534819467,
-        "y": 3.317137448535904
-      },
-      "prevControl": {
-        "x": 5.991346122405098,
-        "y": 4.618003660660623
-      },
       "nextControl": null,
       "holonomicAngle": 0,
       "isReversal": false,
@@ -65,10 +40,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stow"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "before",
+        "waitTime": 0.3
       }
     }
   ],
@@ -80,7 +57,7 @@
       ]
     },
     {
-      "position": 0.7818181818181816,
+      "position": 0.7272727272727262,
       "names": [
         "IntakeCube"
       ]

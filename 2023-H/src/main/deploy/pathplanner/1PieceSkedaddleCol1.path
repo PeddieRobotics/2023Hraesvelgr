@@ -33,44 +33,19 @@
         "x": 5.794805603216649,
         "y": 0.9982047174978699
       },
-      "nextControl": {
-        "x": 5.794805603216649,
-        "y": 0.9982047174978699
-      },
-      "holonomicAngle": 0.0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.23220311746746,
-        "y": 1.992135775654771
-      },
-      "prevControl": {
-        "x": 5.607271441300252,
-        "y": 1.617067451821978
-      },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceBack"
+          "stow"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "before",
+        "waitTime": 0.3
       }
     }
   ],
@@ -78,19 +53,13 @@
     {
       "position": 0.01,
       "names": [
-        "IntakeCubePose"
+        "stow"
       ]
     },
     {
-      "position": 0.75,
+      "position": 0.7363636363636352,
       "names": [
         "IntakeCube"
-      ]
-    },
-    {
-      "position": 1.3090909090909086,
-      "names": [
-        "stow"
       ]
     }
   ]

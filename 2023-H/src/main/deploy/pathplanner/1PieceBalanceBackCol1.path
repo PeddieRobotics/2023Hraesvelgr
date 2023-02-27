@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7709136287837797,
-        "y": 5.00145774204592
+        "x": 1.7479391322419011,
+        "y": 0.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.431142771376452,
-        "y": 4.982831874754659
+        "x": 3.188080752578739,
+        "y": 0.2855749022155638
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -26,18 +26,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.37,
-        "y": 4.58
+        "x": 6.751229828990271,
+        "y": 0.941944468922951
       },
       "prevControl": {
-        "x": 3.997956450458356,
-        "y": 4.654894127970074
+        "x": 5.794805603216649,
+        "y": 0.9982047174978699
       },
       "nextControl": {
-        "x": 3.997956450458356,
-        "y": 4.654894127970074
+        "x": 5.794805603216649,
+        "y": 0.9982047174978699
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -51,42 +51,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.7661578959521558,
-        "y": 4.390722054171381
+        "x": 5.23220311746746,
+        "y": 1.992135775654771
       },
       "prevControl": {
-        "x": 1.7843766596624102,
-        "y": 5.1012538388713144
-      },
-      "nextControl": {
-        "x": 1.7399968354138013,
-        "y": 3.370440693175543
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [
-          "eject"
-        ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 2.531345971782853,
-        "y": 3.4615651049483924
-      },
-      "prevControl": {
-        "x": 1.9847830604752121,
-        "y": 3.488893250513774
+        "x": 5.607271441300252,
+        "y": 1.617067451821978
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -109,19 +82,13 @@
       ]
     },
     {
-      "position": 0.85,
+      "position": 0.75,
       "names": [
         "IntakeCube"
       ]
     },
     {
-      "position": 1.1,
-      "names": [
-        "CubeL3Pose"
-      ]
-    },
-    {
-      "position": 2.3,
+      "position": 1.3090909090909086,
       "names": [
         "stow"
       ]
