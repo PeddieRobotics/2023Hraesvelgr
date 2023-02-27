@@ -68,6 +68,10 @@ public class LimelightBack extends Limelight {
         return LimelightHelper.getTA(limelightName);
     }
 
+    public double getTargetID() {
+        return LimelightHelper.getFiducialID(limelightName);
+    }
+
     public double getTxAverage() {
         return txAverage.getAverage();
     }
@@ -132,4 +136,16 @@ public class LimelightBack extends Limelight {
             odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
     }
+
+    public Translation2d getCurrentAprilTag(int limelightName) { // gets the april tag the limelight is currently seeing
+        return LimelightHelper.getAprilTagCoordinates((int) getTargetID()); // this isn't the closest, it's just the one we're seeing
+    }
+
+    public Translation2d getAprilTagCoordinates(int tagNumber){
+        return LimelightHelper.getAprilTagCoordinates(tagNumber);
+    }
+
+    public int getClosestColumn(Translation2d pose, boolean isCube){
+        return LimelightHelper.getClosestColumn(pose, isCube);
+    }    
 }

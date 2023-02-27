@@ -4,39 +4,54 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightBack;
+import frc.robot.subsystems.LimelightFront;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.DriverOI;
+import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
 
-public class HPStationAlign extends CommandBase{
-    //private final Limelight limelight;
+public class HPStationAlign extends CommandBase {
     private final Drivetrain drivetrain;
     private PIDController thetaController, yController;
     private DriverOI oi;
     private double forwardDist;
     private String state;
     private Translation2d destinationXY, odometryXY;
+    private String limelightName;
+    LimelightFront limelightFront;
+    LimelightBack limelightBack;
+    private Arm arm;
+    private boolean isCube;
 
-    public HPStationAlign() { 
-        // thetaController = new PIDController(kPThetaController, 0, 0);
-        
-        // limelight = Limelight.getInstance();
-
+    public HPStationAlign() {
         drivetrain = Drivetrain.getInstance();
+        arm = Arm.getInstance();
+        limelightFront = LimelightFront.getInstance();
+        limelightBack = limelightBack.getInstance();
         thetaController = new PIDController(0.035, 0, 0);
         yController = new PIDController(0.055, 0, 0);
         SmartDashboard.putString("side", "right");
+        limelightName = "limelightFront";
         addRequirements(drivetrain);
     }
 
     @Override
     public void initialize() {
+        switch (arm.getState()) {
+            case L3_CUBE_INVERTED:
+                limelightName = "limelightBack";
+                break;
+            case L3_CONE_INVERTED:
+                limelightName = "limelightBack";
+                break;
+        }
         oi = DriverOI.getInstance();
         state = "6-3";
-        destinationXY = limelight.getClosestAprilTagCoord();
-        SmartDashboard.putNumber("DEST X", destinationXY.getX());
-        SmartDashboard.putNumber("DEST Y", destinationXY.getY());
-        SmartDashboard.putBoolean("over??", false);
+        destinationXY = LimelightHelper.getCurrentAprilTagCoordinates(limelightName);
     }
 
     @Override
@@ -48,18 +63,25 @@ public class HPStationAlign extends CommandBase{
         if (Math.abs(drivetrain.getHeading()) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), 0);
         }
-        if(!state.equals("6-3")){
-        if (SmartDashboard.getString("side", "right").equals("right")) {
-            limelight.setPipeline(2); // point of interest to the right pipeline
+        if (!state.equals("6-3")) {
+            if (SmartDashboard.getString("side", "right").equals("right")) {
+                LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagRightPOIPipeline); // POI right
+            } else {
+                LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagLeftPOIPipeline); // POI left
+            }
         } else {
-            limelight.setPipeline(1); // point of interest to the left pipeline
+            // we might be able to just set this according to the "default lane"
+            //SET THIS BASED ON DEFAULT LANE!!!!
+            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagMainPipeline);
         }
+        double txAvg;
+        if(limelightName.equals("limelightBack")){
+            txAvg = limelightBack.getTxAverage();
         } else {
-            //we might be able to just set this according to the "default lane"
-            limelight.setPipeline(0);
+            txAvg = limelightFront.getTxAverage();
         }
-        if (Math.abs(limelight.getTxAverage()) > LimelightConstants.kLimeLightTranslationAngleBound) {
-            yMove = yController.calculate(limelight.getTxAverage(), 0);
+        if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
+            yMove = yController.calculate(txAvg, 0);
         }
 
         switch (state) {
@@ -104,17 +126,17 @@ public class HPStationAlign extends CommandBase{
         SmartDashboard.putString("zzState", state);
     }
 
-    public double LimitedSpeedMultiplier(double input, Translation2d odometryXY) { 
+    public double LimitedSpeedMultiplier(double input, Translation2d odometryXY) {
         double speedLimitMultiplier;
-        double startDist = 3; //specifically only used for the 3-1.5 case
+        double startDist = 3; // specifically only used for the 3-1.5 case
         double stopDist = 1.5;
         double currentDist = Math.abs(odometryXY.getX() - destinationXY.getX());
-        //might need to slow this down
+        // might need to slow this down
         if (currentDist <= stopDist) {
             return 1;
         } else if (currentDist <= startDist) {
             speedLimitMultiplier = 2 - stopDist / currentDist;
-        } else { 
+        } else {
             speedLimitMultiplier = 1;
         }
         SmartDashboard.putNumber("speed multiplier", speedLimitMultiplier);
@@ -129,7 +151,5 @@ public class HPStationAlign extends CommandBase{
     @Override
     public boolean isFinished() {
         return false;
-        // the check for dist<= 0.8 is jsut an extra thing in case there is any case
-        // where that could be true w/o it setting the case as done?
     }
 }

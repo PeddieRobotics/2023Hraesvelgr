@@ -781,4 +781,83 @@ public class LimelightHelper {
         LimelightResults results = getLatestResults(limelightName);
         return results.targetingResults.targets_Fiducials.length;
     }
+
+    public static Translation2d getAprilTagCoordinates(int tagNumber) { //coordinates of all april tags
+        final double add = 0.37 + .4; // this is an arbitrary number 
+        switch (tagNumber) {
+          case 1:
+            return new Translation2d(15.513558 - add, 1.071626);
+          case 2:
+            return new Translation2d(15.513558 - add, 2.748026);
+          case 3:
+            return new Translation2d(15.513558 - add, 4.424426);
+          case 4:
+            return new Translation2d(16.178784 - add, 6.749796);
+          case 5:
+            return new Translation2d(0.36195, 6.749796);
+          case 6:
+            return new Translation2d(1.02743 + add, 4.424426);
+          case 7:
+            return new Translation2d(1.02743 + add, 2.748026);
+          case 8:
+            return new Translation2d(1.02743 + add, 1.071626);
+        }
+        return new Translation2d(0, 0);
+      }
+
+      public static int getClosestColumn(Translation2d pose, boolean isCube) { // this only works for blue for now i think????
+        double y = pose.getY();
+        int closestColumn = 0;
+        double min = Integer.MAX_VALUE;
+        int[] cubeCols = { 2, 5, 8 };
+        int[] coneCols = { 1, 3, 4, 6, 7, 9 };
+        if (isCube) {
+            for (int i = 0; i < 3; i++) {
+                if (Math.abs(y - getColumnCoordinates(cubeCols[i]).getY()) < min) {
+                    min = Math.abs(y - getColumnCoordinates(cubeCols[i]).getY());
+                    closestColumn = cubeCols[i];
+                }
+            }
+        } else {
+            for (int i = 0; i < 6; i++) {
+                if (Math.abs(y - getColumnCoordinates(coneCols[i]).getY()) < min) {
+                    min = Math.abs(y - getColumnCoordinates(coneCols[i]).getY());
+                    closestColumn = coneCols[i];
+                }
+            }
+        }
+        return closestColumn;
+    }
+
+    public static Translation2d getColumnCoordinates(int column) { // gets coordinates of a certain column
+        final double add = 0.37 + .4; // gets you to the edge of l1
+        switch (column) {
+            case 1: // COLUMN 1
+                return new Translation2d(1.02743 + add, 0.512826);
+            case 2: // april tag 8, COLUMN 2
+                return new Translation2d(1.02743 + add, 1.071626);
+            case 3: // COLUMN 3
+                return new Translation2d(1.02743 + add, 1.630426);
+            case 4: // COLUMN 4
+                return new Translation2d(1.02743 + add, 2.189226);
+            case 5: // april tag 7, COLUMN 5
+                return new Translation2d(1.02743 + add, 2.748026);
+            case 6: // COLUMN 6
+                return new Translation2d(1.02743 + add, 3.306826);
+            case 7: // COLUMN 7
+                return new Translation2d(1.02743 + add, 3.865626);
+            case 8: // april tag 6, COLUMN 8
+                return new Translation2d(1.02743 + add, 4.424426);
+            case 9: // COLUMN 9
+                return new Translation2d(1.02743 + add, 4.983226);
+        }
+        return new Translation2d(0, 0);
+    }
+
+    public static Translation2d getCurrentAprilTagCoordinates(String limelightName) { // gets the april tag the limelight is currently seeing
+        return getAprilTagCoordinates((int)getFiducialID(limelightName)); // this isn't the closest, it's just the one we're seeing
+    }
+
+   
+
 }

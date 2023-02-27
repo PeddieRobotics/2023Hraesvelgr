@@ -150,7 +150,7 @@ public class DriverOI {
     }
 
     public double getForward() {
-        double input = driverController.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        double input = controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
         if (!allowBackwardMovement && input > 0) { 
             return 0;
         } else if (!allowBackwardMovement && input <= 0) {
