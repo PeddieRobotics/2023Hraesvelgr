@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Shuffleboard.ShuffleboardMain;
+import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.utils.Constants.OIConstants;
 
 /**
@@ -125,6 +126,9 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        // Default pose for the robot to begin teleop is stowed.
+        CommandScheduler.getInstance().schedule(new SetStowedPose());
     }
 
     @Override

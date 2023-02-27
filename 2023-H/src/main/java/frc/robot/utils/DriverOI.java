@@ -25,6 +25,8 @@ import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetSingleSSPose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPose;
+import frc.robot.commands.AutoCommands.BalanceCS;
+import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
@@ -106,7 +108,7 @@ public class DriverOI {
         // Align to goal
         Trigger rightStickButton = new JoystickButton(controller,
         PS4Controller.Button.kR3.value);
-        // TODO: runs auto-align/driver assist
+        rightStickButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1, 0), new BalanceCS(), new LockDrivetrain()));
 
         // MISC CONTROLS
 

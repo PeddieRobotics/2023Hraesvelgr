@@ -84,11 +84,6 @@ public final class Constants {
                 // "Snap to angle" algorithm parameters
                 public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
 
-                // "Beam balance" algorithm parameters
-                public static final double kPBeamBalanceDrive = 0; // starting value for p
-                public static final double kBeamBalanceGoalDegrees = 0;
-                public static final double kBeamBalanceAngleThresholdDegrees = -1;
-
                 // "Correct heading" algorithm parameters
                 public static final double kHeadingCorrectionP = 0.05;
                 public static final double kHeadingCorrectionTolerance = 2.0;
@@ -160,6 +155,12 @@ public final class Constants {
 
                 public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                                 kMaxAngularSpeed, kMaxAngularAccel);
+
+                // "Beam balance" algorithm parameters
+                public static final double kPBeamBalanceDrive = 0.03;
+                public static final double kBeamBalanceGoalDegrees = 0.0; // Tune based on field
+                public static final double kBeamBalanceAngleThresholdDegrees = 2.0;
+                
         }
 
         public static final class NeoMotorConstants {
@@ -177,7 +178,7 @@ public final class Constants {
                 public static final int kMaxCurrent = 60;
 
                 // Position PID contants
-                public static final double kPositionP = 0.026; // 0.013
+                public static final double kPositionP = 0.013; // 0.013
                 public static final double kPositionI = 0.000001;
                 public static final double kPositionD = 0.00003;
                 public static final double kPositionIz = 7;
