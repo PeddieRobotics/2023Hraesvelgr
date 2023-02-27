@@ -27,10 +27,13 @@ public class Arm extends SubsystemBase {
     
     private ArmState state;
 
+    private boolean stowingIntake;
+
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
         state = ArmState.HOME;
+        stowingIntake = false;
     }
 
     public ArmState getState() {
@@ -139,6 +142,14 @@ public class Arm extends SubsystemBase {
 
     public boolean isShoulderFullyStowed(){
         return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
+    }
+
+    public boolean getAllowStowIntake(){
+        return stowingIntake;
+    }
+
+    public void setAllowStowIntake(boolean stowingIntake){
+        this.stowingIntake = stowingIntake;
     }
 
     public static Arm getInstance() {

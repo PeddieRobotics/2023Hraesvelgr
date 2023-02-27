@@ -15,7 +15,7 @@ public class OperatorTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
     private Shoulder shoulder = Shoulder.getInstance();
     private FieldView fieldView;
-    private GenericEntry mArmState;
+    private GenericEntry mArmState, mStowingIntake;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
@@ -26,9 +26,8 @@ public class OperatorTab extends ShuffleboardTabBase {
         withPosition(0,0);
 
         try {
-            mArmState = tab
-                            .add("Arm State", "Home")
-                            .getEntry();
+            mArmState = tab.add("Arm State", "Home").getEntry();
+            mStowingIntake = tab.add("Stowing Intake", false).getEntry();
         } catch(IllegalArgumentException e){
         }
 
@@ -38,6 +37,7 @@ public class OperatorTab extends ShuffleboardTabBase {
     public void update() {
         fieldView.update();
         mArmState.setString(arm.getState().toString());
+        arm.setAllowStowIntake(mStowingIntake.getBoolean(false));
     }
 
 }
