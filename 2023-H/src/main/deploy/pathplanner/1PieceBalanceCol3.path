@@ -16,10 +16,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "after",
-        "waitTime": 1.0
+        "waitTime": 0.1
       }
     },
     {
@@ -39,7 +41,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceFront"
+          "Balance"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

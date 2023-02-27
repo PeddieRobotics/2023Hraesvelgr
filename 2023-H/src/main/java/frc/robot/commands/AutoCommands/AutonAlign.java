@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utils.Constants.LimelightConstants;
-import frc.robot.utils.OI;
+import frc.robot.utils.DriverOI;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightBack;
@@ -88,7 +88,7 @@ public class AutonAlign extends CommandBase {
     public void execute() {
 
         double tx = limelight.getTxAverage();
-        OI oi = OI.getInstance();
+        DriverOI oi = DriverOI.getInstance();
 
         ColY = LimelightConstants.columnDestinationCoords[column].getY();
         pipe=limelight.setPipelineType(column);

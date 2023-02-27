@@ -175,7 +175,7 @@ public class DriverOI {
             double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
             // Calculate the direction slew rate based on an estimate of the lateral
-            // acceleration
+            // accelerationcurrentTranslationDir
             double directionSlewRate;
             if (m_currentTranslationMag != 0.0) {
                 directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
