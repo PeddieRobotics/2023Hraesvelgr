@@ -26,7 +26,7 @@ public class Wrist {
 
     private ArmFeedforward wristFeedforward;
 
-    private double kS, kG, kV, kA, arbitraryFF;
+    private double kP, kI, kD, kIz, kS, kG, kV, kA, arbitraryFF;
 
     public Wrist() {
 
@@ -35,6 +35,11 @@ public class Wrist {
         wristMotor.setIdleMode(IdleMode.kBrake);
 
         pidController = wristMotor.getPIDController();
+        kP = WristConstants.kP;
+        kI = WristConstants.kI;
+        kD = WristConstants.kD;
+        kIz = WristConstants.kIz;
+        setPIDController(kP, kI, kD, kIz);
 
         kG = WristConstants.kGVolts;
 
