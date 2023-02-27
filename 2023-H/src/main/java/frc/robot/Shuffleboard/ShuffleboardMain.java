@@ -23,7 +23,7 @@ public class ShuffleboardMain {
     private WristTab wristTab;
     private DrivetrainTab drivetrainTab;
     private LimelightFrontTab limelightFrontTab;
-    // private LimelightBackTab limelightBackTab;
+    private LimelightBackTab limelightBackTab;
     private SystemsTab systemsTab;
 
     public ShuffleboardMain() {
@@ -52,8 +52,8 @@ public class ShuffleboardMain {
 
         tabs.add(limelightFrontTab);
         
-        // limelightBackTab = new LimelightBackTab();
-        // tabs.add(limelightBackTab);
+        limelightBackTab = new LimelightBackTab();
+        tabs.add(limelightBackTab);
 
         for (ShuffleboardTabBase tab : tabs) {
             tab.createEntries();
@@ -83,8 +83,8 @@ public class ShuffleboardMain {
         limelightFrontTab = new LimelightFrontTab();
         tabs.add(limelightFrontTab);
         
-        // limelightBackTab = new LimelightBackTab();
-        // tabs.add(limelightBackTab);
+        limelightBackTab = new LimelightBackTab();
+        tabs.add(limelightBackTab);
 
         for (ShuffleboardTabBase tab : tabs) {
             tab.createEntries();

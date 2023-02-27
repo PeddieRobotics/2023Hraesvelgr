@@ -108,7 +108,7 @@ public class DriverOI {
         // Align to goal
         Trigger rightStickButton = new JoystickButton(controller,
         PS4Controller.Button.kR3.value);
-        rightStickButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1, 0), new BalanceCS(), new LockDrivetrain()));
+        rightStickButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1, 0, true), new BalanceCS(), new LockDrivetrain()));
 
         // MISC CONTROLS
 
