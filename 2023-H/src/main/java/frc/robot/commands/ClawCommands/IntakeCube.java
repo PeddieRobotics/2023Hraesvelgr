@@ -2,10 +2,13 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.LimelightFront;
 import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Constants.ClawConstants;
 
 public class IntakeCube extends CommandBase{
     private Claw claw;
+    private LimelightFront limelightFront;
 
     public IntakeCube(){
         claw = Claw.getInstance();
@@ -14,7 +17,11 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void initialize() {
+        limelightFront = LimelightFront.getInstance();
+        limelightFront.setPipeline(7);
         claw.intakeCube();
+        claw.setState(ClawState.INTAKING);
+
         
     }
 
@@ -25,19 +32,22 @@ public class IntakeCube extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         if(!interrupted){
-            claw.setSpeed(-0.1);
-        } else {
+            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+        }
+        else{
             claw.stopClaw();
         }
     }
 
     @Override
     public boolean isFinished() {
-        // if(claw.monitor()){
-        //     claw.setState(ClawState.CUBE);
-        //     return true;
-        // }
-        return claw.hasCube();
+        if(claw.monitorCurrentForSuccessfulIntake()){
+            claw.stopClaw();
+            claw.setState(ClawState.CUBE);
+            return true;
+        }
+
+        return false;
     }
 
     

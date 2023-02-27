@@ -10,13 +10,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.ADIS16470_IMU;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -135,6 +135,12 @@ public class Drivetrain extends SubsystemBase {
             swerveModulePositions[i] = swerveModules[i].getPosition();
         }
         updateOdometry();
+
+        double currentPitch = drivetrain.getPitch();
+        SmartDashboard.putNumber("Current pitch", currentPitch);
+
+        double currentPitchRate = drivetrain.getPitchRate();
+        SmartDashboard.putNumber("Current pitch rate", currentPitchRate);
 
     }
 
@@ -302,7 +308,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Gyroscope
     public double getHeading() {
-        heading = gyro.getAngle();
+        heading = gyro.getAngle(gyro.getYawAxis());
         return Math.IEEEremainder(heading, 360);
     }
 
@@ -311,27 +317,24 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetGyro() {
-        gyro.reset();
+        gyro.resetAllAngles();
         correctHeadingTimer.reset();
         correctHeadingTimer.start();
     }
 
-    public double getGyroRate() {
-        return gyro.getRate();
+    public double getPitch() {
+        return gyro.getAngle(IMUAxis.kRoll);
     }
 
-    public IMUAxis getYaw() {
-        return gyro.getYawAxis();
-    }
-
-    public double getTurnRate() {
-        return gyro.getRate();
+    public double getPitchRate(){
+        return gyro.getRate(IMUAxis.kRoll);
     }
 
     // Autonomous Transformation
     public void setTeleOpAngleOffset(double target) {
         teleOpAngleOffset = target;
     }
+
 
     // Snap to angle algorithm
     private double snapToAngle() {
@@ -359,5 +362,11 @@ public class Drivetrain extends SubsystemBase {
         frontRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
         backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
     }
+
+    public void driveMetersInDirection(double meters, Rotation2d direction){
+        frontLeftSwerveModule.setDriveMotor(meters);
+    }
+
+
 
 }

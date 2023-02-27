@@ -37,7 +37,7 @@ public class WristTab extends ShuffleboardTabBase {
             mPIDToggle = tab.add("PID Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
-            mPIDSetpoint = tab.add("PID Setpoint", WristConstants.kIz)
+            mPIDSetpoint = tab.add("PID Setpoint", WristConstants.kHomeAngle)
                     .getEntry();
             mArbitraryFF = tab.add("Arb FF", 0.0)
                     .getEntry();
@@ -74,12 +74,12 @@ public class WristTab extends ShuffleboardTabBase {
             if (mOpenLoopToggle.getBoolean(false)) {
                 wrist.setPercentOutput(DriverOI.getInstance().getArmSpeed());
             } else if (mPIDToggle.getBoolean(false)) {
-                wrist.setPIDController(mkP.getDouble(WristConstants.kP),
+                wrist.updatePIDController(mkP.getDouble(WristConstants.kP),
                         mkI.getDouble(WristConstants.kI),
                         mkD.getDouble(WristConstants.kD),
-                        mkIz.getDouble(WristConstants.kIz));
+                        mkIz.getDouble(WristConstants.kIz), 0);
 
-                wrist.setWristFeedforward(
+                wrist.updateWristFeedforward(
                         mkG.getDouble(0.0),
                         mkV.getDouble(0.0),
                         mkA.getDouble(0.0));

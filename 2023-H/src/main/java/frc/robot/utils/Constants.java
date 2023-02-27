@@ -19,7 +19,7 @@ public final class Constants {
         }
 
         public static class OIConstants {
-                public static final boolean kUseTestModeLayout = true;
+                public static final boolean kUseDebugModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
                 public static final double kMaxDeltaShoulderAnglePerSecond = .5;
                 public static final double kMaxDeltaWristAnglePerSecond = .5;
@@ -83,11 +83,6 @@ public final class Constants {
 
                 // "Snap to angle" algorithm parameters
                 public final static double[] kSnapToAnglePID = { 0.350, 0, 0 };
-
-                // "Beam balance" algorithm parameters
-                public static final double kPBeamBalanceDrive = 0; // starting value for p
-                public static final double kBeamBalanceGoalDegrees = 0;
-                public static final double kBeamBalanceAngleThresholdDegrees = -1;
 
                 // "Correct heading" algorithm parameters
                 public static final double kHeadingCorrectionP = 0.05;
@@ -160,6 +155,12 @@ public final class Constants {
 
                 public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                                 kMaxAngularSpeed, kMaxAngularAccel);
+
+                // "Beam balance" algorithm parameters
+                public static final double kPBeamBalanceDrive = 0.03;
+                public static final double kBeamBalanceGoalDegrees = 0.0; // Tune based on field
+                public static final double kBeamBalanceAngleThresholdDegrees = 2.0;
+                
         }
 
         public static final class NeoMotorConstants {
@@ -184,22 +185,52 @@ public final class Constants {
                 // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 60;
 
+                // Position PID contants
+                public static final double kPositionP = 0.013; // 0.013
+                public static final double kPositionI = 0.000001;
+                public static final double kPositionD = 0.00003;
+                public static final double kPositionIz = 7;
+
+                // Shoulder feedforward
+                public static final double kGVolts = 0.3;
+                public static final double kVVoltSecondPerRad = 5.77;
+                public static final double kAVoltSecondSquaredPerRad = 0.06;
+
+                // Smart Motion controller parameters (velocity PID constants)
                 public static final double kP = 0.0001;
                 public static final double kI = 0.000002;
                 public static final double kD = 0.00004;
                 public static final double kIz = 5;
+
+                public static final double kSmartMotionSlowSetpointTol = 1.0;
+                public static final double kSmartMotionSlowMinVel = 0.0; // rpm
+                public static final double kSmartMotionSlowMaxVel = 3000.0; // rpm
+                public static final double kSmartMotionSlowMaxAccel = 7000.0; // rpm / sec
+
+                public static final double kSmartMotionRegularSetpointTol = 1.0;
+                public static final double kSmartMotionRegularMinVel = 0.0; // rpm
+                public static final double kSmartMotionRegularMaxVel = 12000.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 15000.0; // rpm / sec
+                
+                public static final double kSmartMotionFastSetpointTol = 1.0;
+                public static final double kSmartMotionFastMinVel = 0.0; // rpm
+                public static final double kSmartMotionFastMaxVel = 18000.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 30000.0; // rpm / sec
+
+                // Soft limits
                 public static final double kAngleMin = -75;
                 public static final double kAngleMax = 155;
 
+                // Angles (poses) start here
                 public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -45.0;
                 public static final double kStowedAngle = -75.0;
-                public static final double kLLSeekAngle = -75.0;
                 public static final double kL1Angle = -75.0;
 
                 // Shoulder is not fully extended out
-                public static final double kCompactFloorConeAngle = -59.5;
-                public static final double kCompactFloorCubeAngle = -59.5;
+                public static final double kCompactFloorConeAngle = -62;
+                public static final double kCompactFloorCubeAngle = -60;
+                ;
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
@@ -210,7 +241,9 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeAngle = 156.0;
+                public static final double kL3ConeAngle = 155.0;
+
+                public static final double kLLSeekAngle = -75.0;
                 public static final double kDoubleSSConeAngle = 25.0;
                 public static final double kSingleSSAngle = -75.0;
 
@@ -219,20 +252,9 @@ public final class Constants {
                 // controller.
                 public static final double kSetpointTolerance = 1.5; // degrees
 
-                public static final double kGVolts = 0.3;
-                public static final double kVVoltSecondPerRad = 5.77;
-                public static final double kAVoltSecondSquaredPerRad = 0.06;
+                public static final double kMotorReduction = 246.857143;
 
-                public static final double kMotorReduction = 246.857143; // 10368:35 or approximately 296:1;
-
-                public static final double kEncoderConversionFactor = 165.0 / 113.48; // angular delta in degrees
-                                                                                      // divided
-                                                                                      // by encoder delta in native
-                                                                                      // rotations
-                public static final double kSmartMotionSetpointTol = 1.0;
-                public static final double kSmartMotionMinVel = 0.0; // rpm
-                public static final double kSmartMotionMaxVel = 6000.0; // rpm
-                public static final double kSmartMotionMaxAccel = 8000.0; // rpm / sec
+                public static final double kEncoderConversionFactor = 360.0/kMotorReduction;
 
         }
 
@@ -240,26 +262,29 @@ public final class Constants {
                 // Do not change the below numbers without consultation, extremely dangerous!
                 public static final int kMaxCurrent = 25;
 
+                // Position PID constants
                 public static final double kP = 0.015;
                 public static final double kI = 0.000005;
                 public static final double kD = 0.0001;
                 public static final double kIz = 4.0;
 
-                // Soft limits
-                public static final float kAngleMin = -140;
-                public static final float kAngleMax = 104;
-
+                // Wrist feedforward
+                // Currently unused
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
 
+                // Soft limits
+                public static final float kAngleMin = -140;
+                public static final float kAngleMax = 104;
+        
+                // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
                 public static final double kStowedAngle = 70.0;
-                public static final double kLLSeekAngle = -10.0;
                 public static final double kL1Angle = -10.0;
 
                 // Shoulder is not fully extended out
-                public static final double kCompactFloorConeAngle = -50.0;
+                public static final double kCompactFloorConeAngle = -66.0;
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
@@ -272,25 +297,27 @@ public final class Constants {
                 public static final double kL3CubeForwardAngle = -5.0;
                 public static final double kL3CubeInvertedAngle = 2.5;
                 public static final double kL3ConeAngle = 0.0;
+
+                public static final double kLLSeekAngle = -25.0;
                 public static final double kDoubleSSConeAngle = -89.0;
-                public static final double kSingleSSAngle = -35.0;
+                public static final double kSingleSSAngle = 30.0;
+                public static final double kTransitoryAngle = 70.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
                 public static final double kMotorReduction = 160; // 160:1
-                public static final double kEncoderConversionFactor = 103 / 41.761; // angular delta in degrees divided
-                                                                                    // by encoder delta in native
-                                                                                    // rotations
+                public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
 
         }
 
         public static final class ClawConstants {
                 public static final int kClawMotorCurrentLimit = 30;
 
-                // Below intake/outtake speeds need fixing (made up placeholders)
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kConeOuttakeSpeed = 1;
                 public static final double kCubeIntakeSpeed = -1;
                 public static final double kCubeOuttakeSpeed = 1;
+
+                public static final double kCubeHoldSpeed = -0.1;
         }
 }
