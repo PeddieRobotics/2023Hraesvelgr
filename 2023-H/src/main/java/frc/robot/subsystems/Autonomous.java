@@ -92,8 +92,10 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeConePose", new SetCompactFloorConePose());
         eventMap.put("IntakeCubePose", new SetCompactFloorCubePose());
         // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
-        eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
-        eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
+        // eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
+        // eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
+        eventMap.put("BalanceNear", new ClimbCSAprilTag(1.5, 180,true));
+        eventMap.put("BalanceFar", new ClimbCSAprilTag(1.5, 0,false));
 
 
         // autoBuilder = new SwerveAutoBuilder(

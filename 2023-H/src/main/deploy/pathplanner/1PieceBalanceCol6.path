@@ -34,14 +34,14 @@
         "y": 3.25
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceFront"
+          "BalanceNear"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
