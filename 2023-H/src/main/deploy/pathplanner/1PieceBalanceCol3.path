@@ -36,12 +36,12 @@
       "nextControl": null,
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 1.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "Balance"
+          "BalanceFront"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -49,5 +49,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

@@ -7,11 +7,38 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.747939132241901,
-        "y": 0.5
+        "x": 3.188080752578739,
+        "y": 0.2855749022155638
       },
       "holonomicAngle": 0,
       "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ConeL3"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.751229828990271,
+        "y": 0.941944468922951
+      },
+      "prevControl": {
+        "x": 5.794805603216649,
+        "y": 0.9982047174978699
+      },
+      "nextControl": {
+        "x": 5.794805603216649,
+        "y": 0.9982047174978699
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -24,26 +51,47 @@
     },
     {
       "anchorPoint": {
-        "x": 6.284411296095319,
-        "y": 0.8745006580922258
+        "x": 5.23220311746746,
+        "y": 1.992135775654771
       },
       "prevControl": {
-        "x": 4.580956889186505,
-        "y": 0.5738910568730236
+        "x": 5.607271441300252,
+        "y": 1.617067451821978
       },
       "nextControl": null,
-      "holonomicAngle": 6.95295746817403,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "BalanceBack"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "IntakeCubePose"
+      ]
+    },
+    {
+      "position": 0.75,
+      "names": [
+        "IntakeCube"
+      ]
+    },
+    {
+      "position": 1.3090909090909086,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

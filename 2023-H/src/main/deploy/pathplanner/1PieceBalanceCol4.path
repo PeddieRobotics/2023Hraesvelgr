@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.729720368532362,
-        "y": 2.4889366360778786
+        "x": 1.725314289630847,
+        "y": 2.1796699375711674
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,20 +16,22 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "after",
-        "waitTime": 1.0
+        "waitTime": 0.0
       }
     },
     {
       "anchorPoint": {
-        "x": 2.5586741173489504,
-        "y": 3.0425335396141437
+        "x": 2.5317111858713517,
+        "y": 2.17
       },
       "prevControl": {
-        "x": 1.975033526662132,
-        "y": 3.0425335396141437
+        "x": 2.3816838563382343,
+        "y": 2.18875341619164
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -47,5 +49,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

@@ -80,16 +80,20 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("pipe0", new SetPipe(0));
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
+        eventMap.put("IntakeCone", new ParallelRaceGroup(new WaitCommand(4),new IntakeCone()));
+        eventMap.put("IntakeCube", new ParallelRaceGroup(new WaitCommand(4),new IntakeCube()));
 
         eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetL3TransitoryPose()));
         eventMap.put("CubeL3", new EjectGamepiece()); //new SetStowedPose()));
         eventMap.put("CubeL3Pose", new SetLevelThreeCubePose()); //new SetStowedPose()));
         eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
+    
 
         eventMap.put("IntakeConePose", new SetCompactFloorConePose());
         eventMap.put("IntakeCubePose", new SetCompactFloorCubePose());
-        eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
-        eventMap.put("Balance", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
+        // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
+        eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
+        eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
 
 
         // autoBuilder = new SwerveAutoBuilder(
