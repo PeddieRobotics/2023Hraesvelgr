@@ -74,7 +74,7 @@ public class DriverOI {
     public void setupControls() {
         // Drive & Scoring Controls
 
-        /*
+        
 
         // Score L1 with any gamepiece
         Trigger xButton = new JoystickButton(driverController, PS4Controller.Button.kCross.value);
@@ -131,7 +131,7 @@ public class DriverOI {
         optionsButton.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)))
                 .onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
-        */
+        
 
         // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(driverController, PS4Controller.Button.kPS.value);

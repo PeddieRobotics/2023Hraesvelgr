@@ -160,8 +160,8 @@ public class LimelightFront extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        if (tagsSeen > 1) {
-            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        if (tagsSeen > 1 && this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm()<.5) {
+            //odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
     }
 
