@@ -250,7 +250,7 @@ public final class Constants {
 
         public static final class WristConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 10; // was 25 amps
+                public static final int kMaxCurrent = 25; // was 25 amps
 
                 // Position PID constants
                 public static final double kP = 0.015;
