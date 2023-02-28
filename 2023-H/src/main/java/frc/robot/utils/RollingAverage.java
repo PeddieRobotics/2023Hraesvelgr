@@ -8,6 +8,7 @@ public class RollingAverage {
     private int index = 0;
     private double samples[];
     private double s1, s2, s3;
+    private double mostRecentDeletedEntry;
 
     public RollingAverage(int size){
         this.size = size;
@@ -15,6 +16,8 @@ public class RollingAverage {
         for (int i = 0; i < size; i++){
             samples[i] = 0; 
         }
+        mostRecentDeletedEntry = 0.0;
+
     }
 
     public RollingAverage(int size, double initialVal){
@@ -23,6 +26,8 @@ public class RollingAverage {
         for (int i = 0; i < size; i++){
             samples[i] = initialVal; 
         }
+        mostRecentDeletedEntry = 0.0;
+
     }
 
     public RollingAverage(){
@@ -37,6 +42,7 @@ public class RollingAverage {
     // Adds x to the array as well as the total sum
     public void add(double x){
         total -= samples[index];
+        mostRecentDeletedEntry = samples[index];
         samples[index] = x;
         total += x;
         if(++index == size){
@@ -64,5 +70,9 @@ public class RollingAverage {
 
     public double getIntegral(){
         return total;
+    }
+
+    public double getMostRecentDeletedEntry(){
+        return mostRecentDeletedEntry;
     }
 }

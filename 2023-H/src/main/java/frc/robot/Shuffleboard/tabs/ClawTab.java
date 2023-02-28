@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Claw;
-import frc.robot.utils.DriverOI;
-import frc.robot.utils.Constants.WristConstants;
 
 public class ClawTab extends ShuffleboardTabBase {
         private Claw claw = Claw.getInstance();
@@ -33,7 +31,9 @@ public class ClawTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mSpeedSetpoint = tab.add("Speed Setpoint", 0.0)
                                         .getEntry();
-                        mState = tab.add("State", "Empty").getEntry();
+                        mState = tab
+                                        .add("Game piece?", "Empty")
+                                        .getEntry();
                 } catch (IllegalArgumentException e) {
                 }
 

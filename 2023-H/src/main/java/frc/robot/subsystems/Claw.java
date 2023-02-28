@@ -4,10 +4,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
@@ -17,9 +21,12 @@ public class Claw extends SubsystemBase {
     private CANSparkMax clawMotor;
     private DigitalInput coneSensor, cubeSensor;
 
-    private RollingAverage clawCurrentAverage;
+    private RollingAverage currentAverage, prevWindowCurrentAverage, clawCurrentAverage;
+
+    private boolean firstSpike;
+    private int spikeCounter;
     
-    public enum ClawState {EMPTY, CUBE, CONE};
+    public enum ClawState {EMPTY, INTAKING, CUBE, CONE};
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
     private SendableChooser<String> gamepieceChooser;
@@ -31,7 +38,10 @@ public class Claw extends SubsystemBase {
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
-        clawCurrentAverage = new RollingAverage();
+        currentAverage = new RollingAverage(10);
+        prevWindowCurrentAverage = new RollingAverage(10);
+        firstSpike = false;
+        spikeCounter = 0;
 
         // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
         // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
@@ -56,7 +66,14 @@ public class Claw extends SubsystemBase {
     
     @Override
     public void periodic(){
-        clawCurrentAverage.add(clawMotor.getOutputCurrent());
+        // Keep track of current information for detecting spikes/trends (gamepiece detection)
+        currentAverage.add(clawMotor.getOutputCurrent());
+        prevWindowCurrentAverage.add(currentAverage.getMostRecentDeletedEntry());
+
+        // if(monitorCurrentForSuccessfulIntake() && currentAverage.getAverage() > 25){
+        //     setSpeed(0);
+        // }
+
     }
 
     public static Claw getInstance(){
@@ -80,14 +97,10 @@ public class Claw extends SubsystemBase {
 
     public boolean hasCone(){
         return state == ClawState.CONE;
-        // return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
-        // return !coneSensor.get();
     }
 
     public boolean hasCube(){
         return state == ClawState.CUBE;
-        // return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
-        // return !cubeSensor.get();
     }
 
     public boolean hasGamepiece(){
@@ -131,7 +144,41 @@ public class Claw extends SubsystemBase {
     }
 
     public double getVoltage(){
-        return clawMotor.getBusVoltage();
+        return clawMotor.getAppliedOutput()*100;
+    }
+
+    public boolean monitorCurrentForSuccessfulIntake(){
+                    // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
+            if(currentAverage.getAverage() > 29 && prevWindowCurrentAverage.getAverage() > 29){
+                firstSpike = false; // reset first spike boolean
+                return true;
+            }
+            else{
+                return false;
+            }
+        // if(!firstSpike){
+        //     if(currentAverage.getAverage() > 25){
+        //         firstSpike = true;
+        //     }
+        //     return false;
+        // }
+        // // If we've seen the first spike already...
+        // else{
+        //     // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
+        //     if(currentAverage.getAverage() > 25 && prevWindowCurrentAverage.getAverage() > 25){
+        //         firstSpike = false; // reset first spike boolean
+        //         return true;
+        //     }
+        //     else{
+        //         spikeCounter++;
+        //         // If approx. 500 ms have passed without another spike, go back to looking for the first spike again.
+        //         if(spikeCounter > 25){
+        //             firstSpike = false;
+        //             spikeCounter = 0;
+        //         }
+        //         return false;
+        //     }
+        // }
     }
 
 }

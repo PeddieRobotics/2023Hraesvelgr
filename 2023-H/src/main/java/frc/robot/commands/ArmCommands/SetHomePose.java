@@ -9,52 +9,51 @@ import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetLevelThreeConePose extends CommandBase{
+public class SetHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
+    private boolean transitory;
 
-    public SetLevelThreeConePose() {
+    public SetHomePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
+        transitory = false;
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+        
     }
 
     @Override
     public void initialize() {
-
-        if(arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
-        }
-        
-        arm.setWristPosition(103);
+        arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.MOVING);
-
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(75)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
+        if(arm.isWristAboveAngle(wrist.getkHomeAngle() - 40) && !transitory){
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
+            transitory = true;
         }
 
-        if(arm.isShoulderAboveAngle(100.0)){
-            arm.setWristPosition(wrist.getkL3ConeAngle());
+        if(transitory && arm.isShoulderBelowAngle(-39)){
+            arm.setShoulderPositionSmartMotion(shoulder.getkHomeAngle(), SmartMotionArmSpeed.SLOW);
         }
-  
     }
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.L3_CONE_INVERTED);
+        transitory = false;
+        arm.setState(ArmState.HOME);
         arm.holdShoulderPosition();
+
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkL3ConeAngle()) && arm.isWristAtAngle(wrist.getkL3ConeAngle());
+        return arm.isWristAtAngle(wrist.getkHomeAngle()) && arm.isShoulderAtAngle(shoulder.getkHomeAngle());
     }
 
 

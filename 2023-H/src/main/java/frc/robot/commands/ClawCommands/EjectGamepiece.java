@@ -44,7 +44,7 @@ public class EjectGamepiece extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return  (currentTime-initialTime) > minimumEjectionTime; //(!claw.hasCone() && !claw.hasCube()) &&
+        return (currentTime-initialTime) > minimumEjectionTime;
     }
 
     

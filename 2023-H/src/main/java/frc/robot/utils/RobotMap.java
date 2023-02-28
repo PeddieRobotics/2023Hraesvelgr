@@ -15,8 +15,9 @@ public class RobotMap{
     public static final int kRearRightTurningCanId = 41;
     //Sensors 
     //TODO: Currently arbitrary values, update later
-    public static final int kClawConeSensor = 0;
-    public static final int kClawCubeSensor = 1;
+    // public static final int kClawConeSensor = 0;
+    // public static final int kClawCubeSensor = 1;
+    public static final int kShoulderLimitSensor = 1;
     public static final int kWristLimitSensor = 2;
     
     // Arm Motors

@@ -1,4 +1,3 @@
-
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
