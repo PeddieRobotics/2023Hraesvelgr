@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.RobotMap;
 
@@ -22,7 +23,7 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorDownward, reachedLimitSensorUpward;
+    private boolean reachedLimitSensorUpward;
 
     private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -148,12 +149,12 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensorDownward = false;
         reachedLimitSensorUpward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = -75.0;
 
+        SmartDashboard.putNumber("Shoulder limit sensor angle", 0.0);
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -351,7 +352,8 @@ public class Shoulder {
 
         // If the arm is moving up and leaves the limit sensor, reset the encoder
         if(reachedLimitSensorUpward && !atLimitSensor()){
-            shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
+            // shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
+            SmartDashboard.putNumber("Shoulder limit sensor angle", shoulder.getPosition());
             reachedLimitSensorUpward = false;
         }
 

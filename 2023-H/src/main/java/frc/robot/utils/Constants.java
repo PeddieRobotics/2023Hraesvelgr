@@ -21,8 +21,7 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
-                public static final double kMaxDeltaShoulderAnglePerSecond = .5;
-                public static final double kMaxDeltaWristAnglePerSecond = .5;
+
                 // If claw speed is over this, then it is considered max speed
                 public static final double kMaxSpeedThreshold = 0.9;
         }
@@ -156,10 +155,10 @@ public final class Constants {
                 public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                                 kMaxAngularSpeed, kMaxAngularAccel);
 
-                // "Beam balance" algorithm parameters
-                public static final double kPBeamBalanceDrive = 0.03;
-                public static final double kBeamBalanceGoalDegrees = 0.0; // Tune based on field
-                public static final double kBeamBalanceAngleThresholdDegrees = 2.0;
+                // Charge station balance algorithm parameters
+                public static final double kPCSBalanceDrive = 0.03;
+                public static final double kCSGoalDegrees = 0.0; // Tune based on field
+                public static final double kCSAngleThresholdDegrees = 2.0;
                 
         }
 
@@ -222,7 +221,6 @@ public final class Constants {
                 // Shoulder is not fully extended out
                 public static final double kCompactFloorConeAngle = -62;
                 public static final double kCompactFloorCubeAngle = -60;
-                ;
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
@@ -252,7 +250,7 @@ public final class Constants {
 
         public static final class WristConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 25;
+                public static final int kMaxCurrent = 10; // was 25 amps
 
                 // Position PID constants
                 public static final double kP = 0.015;

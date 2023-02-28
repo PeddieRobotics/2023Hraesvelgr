@@ -27,7 +27,7 @@ public LimelightBackTab(){
     public void createEntries() {
         tab = Shuffleboard.getTab("Limelight Back");
 
-        tab.addCamera("Stream", "LL Back", "mjpg:http://10.58.95.11:5800")
+        tab.addCamera("Stream", "LL Back", "mjpg:http://10.58.95.12:5800")
         .withSize(9, 6)
         .withPosition(0, 1);
         

@@ -17,8 +17,8 @@ public class RobotMap{
     //TODO: Currently arbitrary values, update later
     // public static final int kClawConeSensor = 0;
     // public static final int kClawCubeSensor = 1;
-    // public static final int kWristLimitSensor = 2;
     public static final int kShoulderLimitSensor = 1;
+    public static final int kWristLimitSensor = 2;
     
     // Arm Motors
     public static final int kShoulderMotorMaster = 50;

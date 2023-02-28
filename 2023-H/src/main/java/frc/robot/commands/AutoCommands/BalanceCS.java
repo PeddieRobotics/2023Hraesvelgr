@@ -23,7 +23,7 @@ public class BalanceCS extends CommandBase{
     public BalanceCS(){
         drivetrain = Drivetrain.getInstance();
         addRequirements(drivetrain);
-        balanceP = AutoConstants.kPBeamBalanceDrive;
+        balanceP = AutoConstants.kPCSBalanceDrive;
         balanceFF = -0.03;
         balanceAccelP = 0.008;
 
@@ -42,7 +42,7 @@ public class BalanceCS extends CommandBase{
         currentPitch = drivetrain.getPitch();
         pitchRate = drivetrain.getPitchRate();
 
-        error = AutoConstants.kBeamBalanceGoalDegrees-currentPitch;
+        error = AutoConstants.kCSGoalDegrees-currentPitch;
         SmartDashboard.putNumber("Balance CS error", error);
 
         balanceP = SmartDashboard.getNumber("Balance CS P value", 0.0);
@@ -89,7 +89,7 @@ public class BalanceCS extends CommandBase{
     }
 
     private boolean isBalanced(){
-        return Math.abs(error) < AutoConstants.kBeamBalanceAngleThresholdDegrees;
+        return Math.abs(error) < AutoConstants.kCSAngleThresholdDegrees;
     }
 
 }

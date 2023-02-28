@@ -2,16 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.ArmCommands.SetTransitoryPose;
-import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -22,7 +14,7 @@ public class Arm extends SubsystemBase {
     private final Wrist wrist;
 
     public enum ArmState {MOVING, HOME, STOWED, TRANSITION, FLOOR_INTAKE_CUBE_COMPACT, FLOOR_INTAKE_CUBE_EXTENDED,
-        FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, LL_SEEK, SINGLE_SS, DOUBLE_SS_CONE, DOUBLE_SS_CUBE,
+        FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, LL_SEEK, SINGLE_SS, DOUBLE_SS_CONE,
         L1, L2_CONE, L2_CUBE, L3_CUBE_FORWARD, L3_CONE_FORWARD, L3_CUBE_INVERTED, L3_CONE_INVERTED};
     
     private ArmState state;
