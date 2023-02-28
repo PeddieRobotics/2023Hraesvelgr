@@ -277,7 +277,7 @@ public final class Constants {
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 30;
+                public static final int kClawMotorCurrentLimit = 40;
 
                 // Below intake/outtake speeds need fixing (made up placeholders)
                 public static final double kConeIntakeSpeed = -1;
