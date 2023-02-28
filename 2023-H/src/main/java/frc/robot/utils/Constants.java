@@ -210,6 +210,7 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
+                public static final double kL3ConePart1Angle = 85.0;
                 public static final double kL3ConeAngle = 156.0;
                 public static final double kDoubleSSConeAngle = 25.0;
                 public static final double kSingleSSAngle = -75.0;
