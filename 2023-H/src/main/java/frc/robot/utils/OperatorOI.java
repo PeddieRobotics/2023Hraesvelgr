@@ -93,7 +93,7 @@ public class OperatorOI {
 
         // Arm Poses
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SetLevel3Part1Pose());
+        xButton.onTrue(new SetLevelOnePose());
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
         circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),
