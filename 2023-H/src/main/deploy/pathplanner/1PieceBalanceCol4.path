@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.99,
-        "y": 0.42
+        "x": 1.729720368532362,
+        "y": 2.1680328815219188
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9899999999999984,
-        "y": 0.42
+        "x": 1.7421636239255351,
+        "y": 2.1680328815219188
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,34 +16,45 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "after",
+        "waitTime": 0.0
       }
     },
     {
       "anchorPoint": {
-        "x": 5.454453298985515,
-        "y": 0.42
+        "x": 2.5317111858713517,
+        "y": 2.17
       },
       "prevControl": {
-        "x": 4.454453298985515,
-        "y": 0.42
+        "x": 2.3805163108732375,
+        "y": 2.17
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 1.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "BalanceNear"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

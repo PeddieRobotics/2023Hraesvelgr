@@ -69,10 +69,7 @@ public class SetCompactFloorConePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulderStowed = false;
-        shoulderStowing = false;
-        transitory = false;
-        // arm.holdShoulderPosition();
+        arm.setState(ArmState.FLOOR_INTAKE_CONE_COMPACT);
 
     }
 

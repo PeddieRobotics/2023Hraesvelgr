@@ -26,33 +26,36 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkStowedAngle());
+        transitory = false;
+        // arm.setWristPosition(wrist.getkStowedAngle());
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
         arm.setState(ArmState.MOVING);
+
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(30) && !transitory){
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
-            transitory = true;
-        }
-
-        if(transitory && arm.isShoulderBelowAngle(-39)){
+        if(arm.isShoulderBelowAngle(-35)){
             arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
         }
     }
 
     @Override
     public void end(boolean interrupted){
-        transitory = false;
-        arm.setState(ArmState.STOWED);
-        arm.holdShoulderPosition();
+        // If the stow results in the shoulder's angle being above the desired angle, pull it in towards the limit sensor
+        // if(shoulder.getAngle() > shoulder.getkStowedAngle()){
+        //     shoulder.setPercentOutput(-0.1);
+        // }
+        if(!interrupted){
+            arm.setState(ArmState.STOWED);
+        }
 
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
+        return arm.isShoulderAtAngle(shoulder.getkStowedAngle());
+        // return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
     }
 
 

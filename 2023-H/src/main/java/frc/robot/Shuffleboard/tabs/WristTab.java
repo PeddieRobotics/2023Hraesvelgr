@@ -12,7 +12,7 @@ public class WristTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
 
     private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
-            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint;
+            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mLimitSensor;
 
     public WristTab() {
     }
@@ -31,6 +31,8 @@ public class WristTab extends ShuffleboardTabBase {
                     .getEntry();
             mVoltage = tab.add("Voltage", 0.0)
                     .getEntry();
+        mLimitSensor = tab.add("Limit sensor", false)
+                .getEntry();
             mOpenLoopToggle = tab.add("Open Loop Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
@@ -70,6 +72,7 @@ public class WristTab extends ShuffleboardTabBase {
             mTemp.setDouble(wrist.getMotorTemperature());
             mVoltage.setDouble(wrist.getVoltage());
             mArbitraryFF.setDouble(wrist.getArbitraryFF());
+            mLimitSensor.setBoolean(wrist.atLimitSensor());
 
             if (mOpenLoopToggle.getBoolean(false)) {
                 wrist.setPercentOutput(DriverOI.getInstance().getArmSpeed());

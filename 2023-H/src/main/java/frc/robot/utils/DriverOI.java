@@ -74,11 +74,6 @@ public class DriverOI {
     }
 
     public void setupControls() {
-        // Drive & Scoring Controls
-
-        // Score L1 with any gamepiece
-        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SetLevelOnePose());
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
@@ -88,50 +83,51 @@ public class DriverOI {
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), claw::hasGamepiece));
 
-        // Level 2 Scoring
-        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton
-                .onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(), claw::hasCone));
-
-        // Level 3 Scoring
+        // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
 
-        // Single SS pose button
-        Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
-        shareButton.onTrue(new SetSingleSSPose());
-
-        // Align to goal
-        Trigger rightStickButton = new JoystickButton(controller,
-        PS4Controller.Button.kR3.value);
-        rightStickButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1, 0, true), new BalanceCS(), new LockDrivetrain()));
-
-        // MISC CONTROLS
-
-        // Lock Drivetrain
-        Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
-        leftStickButton.toggleOnTrue(new LockDrivetrain());
-
-        // Transitory pose
-        Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new SetTransitoryPose());
+        // Single SS pose Button
+        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        xButton.onTrue(new ParallelCommandGroup(new SetSingleSSPose(), new IntakeCone()));
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        // Double substation (human player) cone loading
-        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
+        // Slow Mode Toggle
+        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton.onTrue(new InstantCommand(() -> toggleDriveSpeedMode()));
 
-        // Slow Mode
+        // 
+        // Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
+        // rightStickButton.onTrue(new LockDrivetrain());
+
+        // Lock Drivetrain
+        Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
+        // leftStickButton.toggleOnTrue();
+
+        // Transitory pose
+        Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
+        touchpadButton.onTrue(new SetStowedPose());
+
+        // Align to goal
+        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        // squareButton.onTrue();
+
+        // 
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        optionsButton.whileTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW)))
-                .onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
+        // optionsButton.onTrue();
+
+        // 
+        Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
+        // shareButton.onTrue(new ());
+
+        
 
         // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
@@ -147,6 +143,14 @@ public class DriverOI {
 
     public void setDriveSpeedMode(DriveSpeedMode mode) {
         driveSpeedMode = mode;
+    }
+
+    public void toggleDriveSpeedMode(){
+        if(driveSpeedMode.equals(DriveSpeedMode.NORMAL)){
+            driveSpeedMode = DriveSpeedMode.SLOW;
+        } else {
+            driveSpeedMode = DriveSpeedMode.NORMAL;
+        }
     }
 
     public double getForward() {
@@ -186,7 +190,7 @@ public class DriverOI {
             double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
             // Calculate the direction slew rate based on an estimate of the lateral
-            // acceleration
+            // accelerationcurrentTranslationDir
             double directionSlewRate;
             if (m_currentTranslationMag != 0.0) {
                 directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
@@ -12,13 +13,15 @@ import frc.robot.utils.RollingAverage;
 public class LimelightBack extends Limelight {
     private static LimelightBack limelightBack;
 
-    private RollingAverage txAverage, tyAverage;
+    private RollingAverage txAverage, tyAverage,taAverage;
+    private boolean cube,level2;
 
     private String limelightName = "limelight-back";
 
     public LimelightBack() {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
+        taAverage = new RollingAverage();
     }
 
     public static LimelightBack getInstance() {
@@ -54,6 +57,10 @@ public class LimelightBack extends Limelight {
         return LimelightHelper.getTV(limelightName);
     }
 
+    public boolean getCube(){
+        return cube;
+    }
+
     // Tx is the Horizontal Offset From Crosshair To Target
     public double getTx() {
         return LimelightHelper.getTX(limelightName);
@@ -78,6 +85,10 @@ public class LimelightBack extends Limelight {
 
     public double getTyAverage() {
         return tyAverage.getAverage();
+    }
+    
+    public double getTaAverage() {
+        return taAverage.getAverage();
     }
 
     // Class ID of primary neural detector result or neural classifier result
@@ -118,11 +129,32 @@ public class LimelightBack extends Limelight {
         if (hasTarget()) {
             txAverage.add(getTx());
             tyAverage.add(getTy());
+            taAverage.add(getTa());
         }
     }
 
     public void setPipeline(int pipelineNum) {
         LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
+    }
+
+    public int getPipeline(){
+        return (int)LimelightHelper.getCurrentPipelineIndex(limelightName);
+    }
+
+    public int setPipelineType(int col){
+        level2 = true;
+          if (col==2||col==5||col==8) {
+            setPipeline(0);
+            cube=true;
+            return 0;
+          }
+          cube=false;
+          if(level2){
+            setPipeline(4);
+            return 4;
+          }
+          setPipeline(5);
+          return 5;
     }
 
     public String getJSONDump() {
@@ -131,7 +163,6 @@ public class LimelightBack extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-
         if (tagsSeen > 1) {
             odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }

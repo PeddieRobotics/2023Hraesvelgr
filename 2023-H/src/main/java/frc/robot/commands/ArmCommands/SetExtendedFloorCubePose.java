@@ -16,7 +16,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
     private Shoulder shoulder;
     private Wrist wrist;
 
-    private boolean shoulderStowed, shoulderStowing, transitory;
+    private boolean shoulderStowed, shoulderStowing, transitory, allowStowing;
 
     public SetExtendedFloorCubePose() {
         arm = Arm.getInstance();
@@ -24,6 +24,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
         transitory = false;
+        allowStowing = arm.getAllowStowIntake();
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -34,8 +35,9 @@ public class SetExtendedFloorCubePose extends CommandBase{
         transitory = false;
         shoulderStowed = false;
         shoulderStowing = false;
+        allowStowing = arm.getAllowStowIntake();
 
-        if((arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle()))){
+        if(!allowStowing || (arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle()))){
             shoulderStowed = true;
         }
 
@@ -57,7 +59,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
             }
         }
 
-        if(arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing){
+        if((arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing) || !allowStowing){
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
@@ -69,11 +71,10 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulderStowed = false;
-        shoulderStowing = false;
-        transitory = false;
-        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
+            arm.holdShoulderPosition();
+        }
     }
 
     @Override

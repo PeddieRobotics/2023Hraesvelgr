@@ -1,15 +1,11 @@
 package frc.robot.commands.ArmCommands;
 
-import javax.xml.crypto.dsig.Transform;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ShoulderConstants;
-import frc.robot.utils.Constants.WristConstants;
 
 public class SetLevelOnePose extends CommandBase{
     private Arm arm;
@@ -32,7 +28,7 @@ public class SetLevelOnePose extends CommandBase{
         transitory = false;
         if(arm.isShoulderBelowAngle(-50)){
             arm.setWristPosition(wrist.getkL1Angle());
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
             transitory = true;
         }
         else{
@@ -60,9 +56,10 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){ 
-        transitory = false;
-        arm.setState(ArmState.L1);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.L1);
+            arm.holdShoulderPosition();
+        }
     }
 
     @Override

@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.99,
-        "y": 1.0291573683485586
+        "x": 1.7303749975816927,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.855378926090433,
-        "y": 1.0102359255225846
+        "x": 2.7303749975816913,
+        "y": 5.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -19,24 +19,24 @@
         "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 0.1
       }
     },
     {
       "anchorPoint": {
-        "x": 5.370538632847277,
-        "y": 2.02
+        "x": 6.463454182257865,
+        "y": 4.585618643419883
       },
       "prevControl": {
-        "x": 5.407834040019827,
-        "y": 0.6934987037956043
+        "x": 5.463454182257865,
+        "y": 4.585618643419883
       },
       "nextControl": {
-        "x": 5.367383225354721,
-        "y": 2.1322296938484353
+        "x": 5.463454182257865,
+        "y": 4.585618643419883
       },
       "holonomicAngle": 0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -49,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9,
-        "y": 2.0174856584211476
+        "x": 1.73,
+        "y": 4.390722054171381
       },
       "prevControl": {
-        "x": 3.9,
-        "y": 1.9237821075903474
+        "x": 3.260376151661394,
+        "y": 4.572909691273928
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -70,5 +70,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.34545454545454546,
+      "names": [
+        "IntakeCubePose"
+      ]
+    },
+    {
+      "position": 0.781818181818182,
+      "names": [
+        "StartIntakingCube"
+      ]
+    }
+  ]
 }

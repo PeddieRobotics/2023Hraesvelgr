@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9859804319383159,
-        "y": 2.194638842490763
+        "x": 1.73,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9300373211794901,
-        "y": 0.7121464073818783
+        "x": 2.729999999999998,
+        "y": 5.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,20 +16,22 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "after",
+        "waitTime": 0.1
       }
     },
     {
       "anchorPoint": {
-        "x": 4.4008580463609634,
-        "y": 1.131719738073072
+        "x": 4.0,
+        "y": 5.0
       },
       "prevControl": {
-        "x": 3.4008580463609634,
-        "y": 1.131719738073072
+        "x": 3.0,
+        "y": 5.0
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -45,5 +47,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

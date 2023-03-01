@@ -15,6 +15,7 @@ public class SetExtendedFloorConePose extends CommandBase{
     private Wrist wrist;
 
     private boolean shoulderStowed, shoulderStowing, transitory;
+    private boolean allowStowing;
 
     public SetExtendedFloorConePose() {
         arm = Arm.getInstance();
@@ -22,6 +23,7 @@ public class SetExtendedFloorConePose extends CommandBase{
         shoulderStowed = false;
         shoulderStowing = false;
         transitory = false;
+        allowStowing = arm.getAllowStowIntake();
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -33,8 +35,9 @@ public class SetExtendedFloorConePose extends CommandBase{
         transitory = false;
         shoulderStowed = false;
         shoulderStowing = false;
+        allowStowing = arm.getAllowStowIntake();
 
-        if((arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle()))){
+        if(!allowStowing || (arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle()))){
             shoulderStowed = true;
         }
 
@@ -57,7 +60,7 @@ public class SetExtendedFloorConePose extends CommandBase{
             }
         }
 
-        if(arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing){
+        if((arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing) || !allowStowing){
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorConeAngle(), SmartMotionArmSpeed.REGULAR);
             shoulderStowed = true;
         }
@@ -71,11 +74,10 @@ public class SetExtendedFloorConePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulderStowed = false;
-        shoulderStowing = false;
-        transitory = false;
-        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+            arm.holdShoulderPosition();
+        }
     }
 
     @Override

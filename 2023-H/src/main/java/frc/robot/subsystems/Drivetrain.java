@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
-    // private final LimelightBack limelightBack;
+    private final LimelightBack limelightBack;
 
     // Swerve Modules
     private final MAXSwerveModule[] swerveModules;
@@ -33,6 +33,7 @@ public class Drivetrain extends SubsystemBase {
     // Gyroscope Sensor
     private final ADIS16470_IMU gyro;
     private double heading;
+    private boolean isFlipped;
 
     // Swerve Drive
     private SwerveModuleState[] swerveModuleStates;
@@ -62,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
-        // limelightBack = LimelightBack.getInstance();
+        limelightBack = LimelightBack.getInstance();
 
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
@@ -96,6 +97,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Teleop Angle offset from Autonomous to Teleop
         teleOpAngleOffset = 0;
+        isFlipped=false; //basically teleopAngleOffset for now
 
         // Snap to Angle Algorithm
         snapToAngleHeading = 0;
@@ -124,8 +126,7 @@ public class Drivetrain extends SubsystemBase {
         allowDriving = true;
 
         latestChassisSpeed = 0.0;
-
-        correctHeadingTargetHeading = new Rotation2d();
+        correctHeadingTargetHeading = getHeadingAsRotation2d();
     }
 
     @Override
@@ -176,6 +177,10 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getEstimatedPosition();
     }
 
+    public Translation2d getPoseAsTranslation2d() {
+        return odometry.getEstimatedPosition().getTranslation();
+    }
+
     // Resets the current pose of the robot
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(getHeadingAsRotation2d(), swerveModulePositions, pose);
@@ -191,9 +196,22 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        limelightFront.checkForAprilTagUpdates(odometry);
+        // limelightFront.checkForAprilTagUpdates(odometry);
         // limelightBack.checkForAprilTagUpdates(odometry);
 
+    }
+
+    public void setFlipped(){//used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
+        isFlipped = Math.abs(getPose().getRotation().getDegrees()) < 90;
+        //if(DriverStation.getAlliance()==DriverStation.Alliance.Red) isFlipped=!isFlipped;
+    }
+
+    public void setFlipped(boolean bool){
+        isFlipped = bool;
+    }
+    
+    public boolean getFlipped(){
+        return isFlipped;
     }
 
     // Drive algorithm
@@ -218,7 +236,8 @@ public class Drivetrain extends SubsystemBase {
 
         if (fieldOriented) {
             robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds,
-                    Rotation2d.fromDegrees(teleOpAngleOffset + getHeading()));
+                    Rotation2d.fromDegrees(((isFlipped)?180:0) + getHeading()));
+                    //Rotation2d.fromDegrees(teleopAngleOffset + getHeading()));
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
@@ -295,6 +314,34 @@ public class Drivetrain extends SubsystemBase {
                 correctedVr);
     }
 
+        // Return a vector representing the displacement between the current (x,y) pose and some other point.
+    public Translation2d getNormalizedTranslationToPoint(Translation2d otherCoord) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.div(moveXY.getNorm());
+        return XY;
+    }
+
+    public Translation2d getTranslationToPoint(Translation2d otherCoord, double scalar) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.times(scalar);
+        return XY;
+    }
+
+    public Translation2d getTranslationToPoint(Pose2d otherCoord, double scalar) {
+        Translation2d currentXY = getPoseAsTranslation2d();
+        Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
+            -(otherCoord.getY() - currentXY.getY()));
+        // finds the distance between the current odometry thing and the given coord
+        Translation2d XY = moveXY.times(scalar);
+        return XY;
+    }
+
     public void resetEncoders() {
         frontLeftSwerveModule.resetEncoders();
         backLeftSwerveModule.resetEncoders();
@@ -361,6 +408,14 @@ public class Drivetrain extends SubsystemBase {
         backLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(3 * Math.PI / 4)));
         frontRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
         backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
+    }
+
+    public double[] getModuleRotations(){
+        double[] positions={frontLeftSwerveModule.getRotations(),
+            backLeftSwerveModule.getRotations(),
+            frontRightSwerveModule.getRotations(),
+            backRightSwerveModule.getRotations()};
+        return (positions);
     }
 
     public void driveMetersInDirection(double meters, Rotation2d direction){

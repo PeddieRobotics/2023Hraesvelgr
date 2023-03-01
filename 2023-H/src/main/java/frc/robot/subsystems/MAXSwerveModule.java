@@ -210,4 +210,8 @@ public class MAXSwerveModule {
     SmartDashboard.putNumber(drivingCANId + " Wheel RPM", m_drivingEncoder.getVelocity());
     SmartDashboard.putNumber(turningCANId + " Angle Motor Angle", m_turningEncoder.getPosition());
   }
+
+  public double getRotations(){
+    return m_drivingEncoder.getPosition()/ModuleConstants.kDrivingEncoderPositionFactor;
+  }
 }

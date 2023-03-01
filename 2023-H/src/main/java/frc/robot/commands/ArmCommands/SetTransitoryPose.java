@@ -38,8 +38,10 @@ public class SetTransitoryPose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.TRANSITION);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.TRANSITION);
+            arm.holdShoulderPosition();
+        }
 
     }
 

@@ -41,13 +41,7 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(claw.monitorCurrentForSuccessfulIntake()){
-            claw.stopClaw();
-            claw.setState(ClawState.CUBE);
-            return true;
-        }
-
-        return false;
+        return claw.hasCube();
     }
 
     

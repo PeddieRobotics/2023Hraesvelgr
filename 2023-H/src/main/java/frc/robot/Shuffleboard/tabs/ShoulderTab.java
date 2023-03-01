@@ -72,7 +72,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mSmartMotionMaxAccel = tab.add("S.M. Max Accel", ShoulderConstants.kSmartMotionRegularMaxAccel)
                                         .getEntry();
-                        mLimitSensor = tab.add("Limit sensor", true)
+                        mLimitSensor = tab.add("Limit sensor", false)
                                         .getEntry();
                 } catch (IllegalArgumentException e) {
                 }

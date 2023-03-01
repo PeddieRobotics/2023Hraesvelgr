@@ -10,13 +10,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist {
     private static Wrist wrist;
 
     private CANSparkMax wristMotor;
 
-    // private DigitalInput limitSensor;
+    private DigitalInput limitSensor;
+    private boolean reachedLimitSensorDownward;
 
     private SparkMaxPIDController pidController;
 
@@ -73,15 +76,15 @@ public class Wrist {
         wristMotor.getEncoder().setVelocityConversionFactor(WristConstants.kEncoderConversionFactor/60.0);
         setEncoder(WristConstants.kHomeAngle);
 
-        // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
+        limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, WristConstants.kAngleMax);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, WristConstants.kAngleMin);
 
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        //
-        wristMotor.setClosedLoopRampRate(0.01);
+        
+        wristMotor.setClosedLoopRampRate(0.2);
 
     }
 
@@ -95,9 +98,9 @@ public class Wrist {
         return arbitraryFF;
     }
 
-    // public boolean atLimitSensor(){
-    // return !limitSensor.get();
-    // }
+    public boolean atLimitSensor(){
+    return !limitSensor.get();
+    }
 
     public void resetEncoder() {
         setEncoder(0);
@@ -165,7 +168,16 @@ public class Wrist {
     }
 
     public void periodic() {
+        // Limit sensor triggered and wrist is moving down
+        if(atLimitSensor() && getVelocity() < 0){   
+            reachedLimitSensorDownward = true;
+        }
 
+        // If the wrist is moving down and leaves the limit sensor, reset the encoder
+        if(reachedLimitSensorDownward && !atLimitSensor()){
+            wrist.setEncoder(75); 
+            reachedLimitSensorDownward = false;
+        }
     }
 
     public void setMode(IdleMode mode) {

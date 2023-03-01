@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.RobotMap;
 
@@ -22,7 +23,7 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorDownward, reachedLimitSensorUpward;
+    private boolean reachedLimitSensorUpward, reachedLimitSensorDownward;
 
     private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -87,10 +88,10 @@ public class Shoulder {
           shoulderMotorMaster.setClosedLoopRampRate(0.01);
   
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
-          shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -76);
+          shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
   
           shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kForward, 155);
-          shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -76);
+          shoulderMotorFollower.setSoftLimit(SoftLimitDirection.kReverse, -75);
   
           shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
           shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -148,12 +149,13 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensorDownward = false;
         reachedLimitSensorUpward = false;
+        reachedLimitSensorDownward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = -75.0;
 
+        SmartDashboard.putNumber("shoulder limit sensor", 0.0);
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -199,7 +201,6 @@ public class Shoulder {
 
     public void stopShoulder() {
         shoulderMotorMaster.set(0);
-        shoulderMotorFollower.set(0);
     }
 
     // Currently only used to hold the position of the arm after a smart motion call.
@@ -344,16 +345,30 @@ public class Shoulder {
     }
 
     public void periodic() {
-        // Limit sensor triggered and arm is moving down
+        // Limit sensor triggered and shoulder is moving up
         if(atLimitSensor() && getVelocity() > 0){   
             reachedLimitSensorUpward = true;
         }
+        // Limit sensor triggered at shoulder is moving down
+        // if(atLimitSensor() && getVelocity() < 0){
+        //     reachedLimitSensorDownward = true;
+        // }
 
-        // If the arm is moving up and leaves the limit sensor, reset the encoder
+        // If the shoulder is moving up and leaves the limit sensor, reset the encoder
         if(reachedLimitSensorUpward && !atLimitSensor()){
-            shoulder.setEncoder(ShoulderConstants.kHomeAngle+2); 
+            shoulder.setEncoder(-70); 
+
             reachedLimitSensorUpward = false;
         }
+
+        // If the shoulder is moving down and leaves the limit sensor, stop the shoulder and hold its position below the sensor
+        // if(reachedLimitSensorDownward && !atLimitSensor()){
+        //     shoulder.stopShoulder();
+        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle);
+        //     shoulder.setPosition(ShoulderConstants.kHomeAngle);
+        //     reachedLimitSensorDownward = false;
+
+        // }
 
     }
 

@@ -21,8 +21,7 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final double kDrivingDeadband = 0.1;
-                public static final double kMaxDeltaShoulderAnglePerSecond = .5;
-                public static final double kMaxDeltaWristAnglePerSecond = .5;
+
                 // If claw speed is over this, then it is considered max speed
                 public static final double kMaxSpeedThreshold = 0.9;
         }
@@ -103,7 +102,7 @@ public final class Constants {
 
                 // Calculations required for driving motor conversion factors and feed forward
                 public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-                public static final double kWheelDiameterMeters = 0.0762;
+                public static final double kWheelDiameterMeters = 0.0751+0.000637;
                 public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
                 // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
                 // teeth on the bevel pinion
@@ -136,7 +135,7 @@ public final class Constants {
                 public static final double kTurningMinOutput = -1;
                 public static final double kTurningMaxOutput = 1;
 
-                public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
+                public static final IdleMode kDrivingMotorIdleMode = IdleMode.kCoast;
                 public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
                 public static final int kDrivingMotorCurrentLimit = 50; // amps
@@ -156,10 +155,10 @@ public final class Constants {
                 public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                                 kMaxAngularSpeed, kMaxAngularAccel);
 
-                // "Beam balance" algorithm parameters
-                public static final double kPBeamBalanceDrive = 0.03;
-                public static final double kBeamBalanceGoalDegrees = 0.0; // Tune based on field
-                public static final double kBeamBalanceAngleThresholdDegrees = 2.0;
+                // Charge station balance algorithm parameters
+                public static final double kPCSBalanceDrive = 0.03;
+                public static final double kCSGoalDegrees = 0.0; // Tune based on field
+                public static final double kCSAngleThresholdDegrees = 2.0;
                 
         }
 
@@ -179,6 +178,14 @@ public final class Constants {
                 public static final int kLLTagRightPOIPipeline = 2;
                 public static final int kLLTapeLowerPipeline = 4;
                 public static final int kLLTapeUpperPipeline = 5;
+                public static final double kLimeLightTranslationBound=.05;
+                public static final double kLimeLightAngleBound=1;
+                public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
+                                                new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
+                                                new Translation2d(1.02743,3.306826),new Translation2d(1.02743,3.865626),new Translation2d(1.02743,4.424426),
+                                                new Translation2d(1.02743,4.983226)};
+                public static final double robotOffsetToGoal = .37+.4+1;
+
         }
 
         public static final class ShoulderConstants {
@@ -228,19 +235,20 @@ public final class Constants {
                 public static final double kL1Angle = -75.0;
 
                 // Shoulder is not fully extended out
+                // Currently unused
                 public static final double kCompactFloorConeAngle = -62;
                 public static final double kCompactFloorCubeAngle = -60;
-                ;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -30.0;
+                public static final double kExtendedFloorConeAngle = -32.0;
                 public static final double kExtendedFloorCubeAngle = -34.0;
 
-                public static final double kL2ConeAngle = 11.0;
+                public static final double kL2ConeAngle = 21.0;
                 public static final double kL2CubeAngle = 5.0;
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
+                public static final double kL3ConePart1Angle = 85.0;
                 public static final double kL3ConeAngle = 155.0;
 
                 public static final double kLLSeekAngle = -75.0;
@@ -252,8 +260,12 @@ public final class Constants {
                 // controller.
                 public static final double kSetpointTolerance = 1.5; // degrees
 
-                public static final double kMotorReduction = 246.857143;
-
+                public static final double kMotorReduction = 246.857143; // 10368:35 or approximately 296:1;
+                
+                public static final double kSmartMotionSetpointTol = 1.0;
+                public static final double kSmartMotionMinVel = 0.0; // rpm
+                public static final double kSmartMotionMaxVel = 10000.0; //6000.0; // rpm
+                public static final double kSmartMotionMaxAccel = 17500; // rpm / sec
                 public static final double kEncoderConversionFactor = 360.0/kMotorReduction;
 
         }
@@ -268,15 +280,15 @@ public final class Constants {
                 public static final double kD = 0.0001;
                 public static final double kIz = 4.0;
 
+                // Soft limits
+                public static final float kAngleMin = -140;
+                public static final float kAngleMax = 104;
+            
                 // Wrist feedforward
                 // Currently unused
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
-
-                // Soft limits
-                public static final float kAngleMin = -140;
-                public static final float kAngleMax = 104;
         
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
@@ -284,14 +296,15 @@ public final class Constants {
                 public static final double kL1Angle = -10.0;
 
                 // Shoulder is not fully extended out
+                // Currently unused
                 public static final double kCompactFloorConeAngle = -66.0;
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -29.0;
+                public static final double kExtendedFloorConeAngle = -15.0;
                 public static final double kExtendedFloorCubeAngle = -29.0;
 
-                public static final double kL2ConeAngle = -65.0;
+                public static final double kL2ConeAngle = -85.0;
                 public static final double kL2CubeAngle = -80.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;
@@ -311,7 +324,7 @@ public final class Constants {
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 30;
+                public static final int kClawMotorCurrentLimit = 40;
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kConeOuttakeSpeed = 1;

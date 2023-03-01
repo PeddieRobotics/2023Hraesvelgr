@@ -26,61 +26,105 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
 
         try{
                 mStowedShoulder = tab.add("Stowed Shoulder", ShoulderConstants.kStowedAngle)
+                .withSize(2, 1)
+                .withPosition(0, 0)
                 .getEntry();
                 mStowedWrist = tab.add("Stowed Wrist", WristConstants.kStowedAngle)
+                .withSize(2, 1)
+                .withPosition(0, 1)
                 .getEntry();
                 mTransitoryShoulder = tab.add("Transitory Shoulder", ShoulderConstants.kTransitoryAngle)
+                .withSize(2, 1)
+                .withPosition(0, 2)
                 .getEntry();
+
                 mTransitoryWrist = tab.add("Transitory Wrist", WristConstants.kTransitoryAngle)
+                .withSize(2, 1)
+                .withPosition(0, 3)
                 .getEntry();
+
                 mLLSeekShoulder = tab.add("LL Seek Shoulder", ShoulderConstants.kLLSeekAngle)
+                .withSize(2, 1)
+                .withPosition(0, 4)
                 .getEntry();
+
                 mLLSeekWrist = tab.add("LL Seek Wrist", WristConstants.kLLSeekAngle)
+                .withSize(2, 1)
+                .withPosition(0, 5)
                 .getEntry();
+
             mL1Shoulder = tab.add("L1 Shoulder", ShoulderConstants.kL1Angle)
+            .withSize(2, 1)
+            .withPosition(2, 0)
                     .getEntry();
             mL1Wrist = tab.add("L1 Wrist", WristConstants.kL1Angle)
+            .withSize(2, 1)
+            .withPosition(2, 1)
                     .getEntry();
             mL2ConeShoulder = tab.add("L2 Cone Shoulder", ShoulderConstants.kL2ConeAngle)
+            .withSize(2, 1)
+            .withPosition(2, 2)
                     .getEntry();
             mL2ConeWrist = tab.add("L2 Cone Wrist", WristConstants.kL2ConeAngle)
+            .withSize(2, 1)
+            .withPosition(2, 3)
                     .getEntry();
             mL2CubeShoulder = tab.add("L2 Cube Shoulder", ShoulderConstants.kL2CubeAngle)
+            .withSize(2, 1)
+            .withPosition(2, 4)
                     .getEntry();
             mL2CubeWrist = tab.add("L2 Cube Wrist", WristConstants.kL2CubeAngle)
+            .withSize(2, 1)
+            .withPosition(2, 5)
                     .getEntry();
             mL3CubeShoulder = tab.add("L3 Cube Shoulder", ShoulderConstants.kL3CubeForwardAngle)
+            .withSize(2, 1)
+            .withPosition(4, 0)
                     .getEntry();
             mL3CubeWrist = tab.add("L3 Cube Wrist", WristConstants.kL3CubeForwardAngle)
+            .withSize(2, 1)
+            .withPosition(4, 1)
                     .getEntry();
             mL3ConeShoulder = tab.add("L3 Cone Shoulder", ShoulderConstants.kL3ConeAngle)
+            .withSize(2, 1)
+            .withPosition(4, 2)
                     .getEntry();
             mL3ConeWrist = tab.add("L3 Cone Wrist", WristConstants.kL3ConeAngle)
+            .withSize(2, 1)
+            .withPosition(4, 3)
                     .getEntry();
-            mCompactFloorConeShoulder = tab.add("Compact Floor Cone Shoulder", ShoulderConstants.kCompactFloorConeAngle)
-                    .getEntry();
-            mCompactFloorConeWrist = tab.add("Compact Floor Cone Wrist", WristConstants.kCompactFloorConeAngle)
-                    .getEntry();
-            mCompactFloorCubeShoulder = tab.add("Compact Floor Cube Shoulder", ShoulderConstants.kCompactFloorCubeAngle)
-                    .getEntry();
-            mCompactFloorCubeWrist = tab.add("Compact Floor Cube Wrist", WristConstants.kCompactFloorCubeAngle)
-                    .getEntry();
+        mDoubleSSConeShoulder = tab.add("Double Substation Cone Shoulder", ShoulderConstants.kDoubleSSConeAngle)
+        .withSize(2, 1)
+        .withPosition(4, 4)
+                .getEntry();
+        mDoubleSSConeWrist = tab.add("Double Substation Cone Wrist", WristConstants.kDoubleSSConeAngle)
+        .withSize(2, 1)
+        .withPosition(4, 5)
+                .getEntry();
             mExtendedFloorConeShoulder = tab.add("Extended Floor Cone Shoulder", ShoulderConstants.kExtendedFloorConeAngle)
+            .withSize(2, 1)
+            .withPosition(6, 0)
                     .getEntry();
             mExtendedFloorConeWrist = tab.add("Extended Floor Cone Wrist", WristConstants.kExtendedFloorConeAngle)
+            .withSize(2, 1)
+            .withPosition(6, 1)
                     .getEntry();
             mExtendedFloorCubeShoulder = tab.add("Extended Floor Cube Shoulder", ShoulderConstants.kExtendedFloorCubeAngle)
+            .withSize(2, 1)
+            .withPosition(6, 2)
                     .getEntry();
             mExtendedFloorCubeWrist = tab.add("Extended Floor Cube Wrist", WristConstants.kExtendedFloorCubeAngle)
+            .withSize(2, 1)
+            .withPosition(6, 3)
                     .getEntry();
-                mDoubleSSConeShoulder = tab.add("Double Substation Cone Shoulder", ShoulderConstants.kDoubleSSConeAngle)
-                .getEntry();
-                mDoubleSSConeWrist = tab.add("Double Substation Cone Wrist", WristConstants.kDoubleSSConeAngle)
-                .getEntry();
                 mSingleSSShoulder = tab.add("Single Substation Shoulder", ShoulderConstants.kSingleSSAngle)
-                .getEntry();
+                .withSize(2, 1)
+                .withPosition(6, 4)
+                        .getEntry();
                 mSingleSSWrist = tab.add("Single Substation Wrist", WristConstants.kSingleSSAngle)
-                .getEntry();
+                .withSize(2, 1)
+                .withPosition(6, 5)
+                        .getEntry();
         } catch(IllegalArgumentException e){
         }
     }
@@ -110,12 +154,6 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
 
         shoulder.setkL3CubeForwardAngle(mL3CubeShoulder.getDouble(ShoulderConstants.kL3CubeForwardAngle));
         wrist.setkL3CubeForwardAngle(mL3CubeWrist.getDouble(WristConstants.kL3CubeForwardAngle));
-
-        shoulder.setkCompactFloorConeAngle(mCompactFloorConeShoulder.getDouble(ShoulderConstants.kCompactFloorConeAngle));
-        wrist.setkCompactFloorConeAngle(mCompactFloorConeWrist.getDouble(WristConstants.kCompactFloorConeAngle));
-
-        shoulder.setkCompactFloorCubeAngle(mCompactFloorCubeShoulder.getDouble(ShoulderConstants.kCompactFloorCubeAngle));
-        wrist.setkCompactFloorCubeAngle(mCompactFloorCubeWrist.getDouble(WristConstants.kCompactFloorCubeAngle));
 
         shoulder.setkExtendedFloorConeAngle(mExtendedFloorConeShoulder.getDouble(ShoulderConstants.kExtendedFloorConeAngle));
         wrist.setkExtendedFloorConeAngle(mExtendedFloorConeWrist.getDouble(WristConstants.kExtendedFloorConeAngle));
