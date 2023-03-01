@@ -37,7 +37,7 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.hasCone();
+        return claw.hasGamepiece();
     }
 
     

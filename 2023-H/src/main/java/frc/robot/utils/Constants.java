@@ -233,10 +233,10 @@ public final class Constants {
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -32.0;
-                public static final double kExtendedFloorCubeAngle = -34.0;
+                public static final double kExtendedFloorCubeAngle = -40.0;
 
-                public static final double kL2ConeAngle = 21.0;
-                public static final double kL2CubeAngle = 5.0;
+                public static final double kL2ConeAngle = 16.0;
+                public static final double kL2CubeAngle = 16.0;
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
@@ -284,7 +284,7 @@ public final class Constants {
         
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
-                public static final double kStowedAngle = 70.0;
+                public static final double kStowedAngle = 80.0;
                 public static final double kL1Angle = -10.0;
 
                 // Shoulder is not fully extended out
@@ -293,11 +293,11 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -15.0;
-                public static final double kExtendedFloorCubeAngle = -29.0;
+                public static final double kExtendedFloorConeAngle = -25.0;
+                public static final double kExtendedFloorCubeAngle = -13;
 
-                public static final double kL2ConeAngle = -85.0;
-                public static final double kL2CubeAngle = -80.0;
+                public static final double kL2ConeAngle = -78.0;
+                public static final double kL2CubeAngle = -85.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;
                 public static final double kL3CubeInvertedAngle = 2.5;
@@ -316,7 +316,7 @@ public final class Constants {
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 40;
+                public static final int kClawMotorCurrentLimit = 25;
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kConeOuttakeSpeed = 1;

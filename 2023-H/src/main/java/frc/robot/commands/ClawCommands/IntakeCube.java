@@ -41,7 +41,7 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.hasCube();
+        return claw.hasGamepiece();
     }
 
     
