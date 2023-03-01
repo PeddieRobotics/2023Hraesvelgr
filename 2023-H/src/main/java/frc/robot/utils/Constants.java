@@ -234,7 +234,7 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = -30.0;
                 public static final double kExtendedFloorCubeAngle = -34.0;
 
-                public static final double kL2ConeAngle = 11.0;
+                public static final double kL2ConeAngle = 21.0;
                 public static final double kL2CubeAngle = 5.0;
 
                 public static final double kL3CubeForwardAngle = 15.0;
@@ -294,7 +294,7 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = -29.0;
                 public static final double kExtendedFloorCubeAngle = -29.0;
 
-                public static final double kL2ConeAngle = -65.0;
+                public static final double kL2ConeAngle = -85.0;
                 public static final double kL2CubeAngle = -80.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;
@@ -314,7 +314,7 @@ public final class Constants {
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 30;
+                public static final int kClawMotorCurrentLimit = 40;
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kConeOuttakeSpeed = 1;

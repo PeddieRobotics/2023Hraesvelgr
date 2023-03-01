@@ -149,36 +149,37 @@ public class Claw extends SubsystemBase {
 
     public boolean monitorCurrentForSuccessfulIntake(){
                     // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
+            // if(currentAverage.getAverage() > 29 && prevWindowCurrentAverage.getAverage() > 29){
+            //     firstSpike = false; // reset first spike boolean
+            //     return true;
+            // }
+            // else{
+            //     return false;
+            // }
+        if(!firstSpike){
+            if(currentAverage.getAverage() > 25){
+                firstSpike = true;
+            }
+            
+            return false;
+        }
+        // If we've seen the first spike already...
+        else{
+            // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
             if(currentAverage.getAverage() > 29 && prevWindowCurrentAverage.getAverage() > 29){
                 firstSpike = false; // reset first spike boolean
                 return true;
             }
             else{
+                spikeCounter++;
+                // If approx. 500 ms have passed without another spike, go back to looking for the first spike again.
+                if(spikeCounter > 25){
+                    firstSpike = false;
+                    spikeCounter = 0;
+                }
                 return false;
             }
-        // if(!firstSpike){
-        //     if(currentAverage.getAverage() > 25){
-        //         firstSpike = true;
-        //     }
-        //     return false;
-        // }
-        // // If we've seen the first spike already...
-        // else{
-        //     // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
-        //     if(currentAverage.getAverage() > 25 && prevWindowCurrentAverage.getAverage() > 25){
-        //         firstSpike = false; // reset first spike boolean
-        //         return true;
-        //     }
-        //     else{
-        //         spikeCounter++;
-        //         // If approx. 500 ms have passed without another spike, go back to looking for the first spike again.
-        //         if(spikeCounter > 25){
-        //             firstSpike = false;
-        //             spikeCounter = 0;
-        //         }
-        //         return false;
-        //     }
-        // }
+        }
     }
 
 }
