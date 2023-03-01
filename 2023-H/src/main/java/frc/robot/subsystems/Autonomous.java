@@ -34,6 +34,7 @@ import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
+import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.LimelightCommands.SetPipe;
 import frc.robot.commands.LimelightCommands.SetPipeType;
 import frc.robot.utils.CustomAutoBuilder;
@@ -74,6 +75,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("pipe0", new SetPipe(0));
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
+        eventMap.put("lock", new LockDrivetrain());
         eventMap.put("IntakeCone", new ParallelRaceGroup(new WaitCommand(4),new IntakeCone()));
         eventMap.put("IntakeCube", new ParallelRaceGroup(new WaitCommand(4),new IntakeCube()));
 
@@ -88,10 +90,10 @@ public class Autonomous extends SubsystemBase{
         // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
         // eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
         // eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
-        eventMap.put("BalanceNearFrontLL", new ClimbCSAprilTag(1.5, 0, true, true));
-        eventMap.put("BalanceFarFrontLL", new ClimbCSAprilTag(1.5, 180, false, true));
-        eventMap.put("BalanceNearBackLL", new ClimbCSAprilTag(1.5, 0, true, false));
-        eventMap.put("BalanceFarBackLL", new ClimbCSAprilTag(1.5, 180, false, false));
+        eventMap.put("BalanceNearFrontLL", new ClimbCSAprilTag(1.25, 180, true, true));
+        eventMap.put("BalanceFarFrontLL", new ClimbCSAprilTag(1.25, 0, false, true));
+        eventMap.put("BalanceNearBackLL", new ClimbCSAprilTag(1.25, 180, true, false));
+        eventMap.put("BalanceFarBackLL", new ClimbCSAprilTag(1.25, 0, false, false));
 
 
         // autoBuilder = new SwerveAutoBuilder(

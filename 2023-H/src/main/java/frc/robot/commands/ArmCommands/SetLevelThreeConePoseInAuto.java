@@ -3,18 +3,27 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
 public class SetLevelThreeConePoseInAuto extends CommandBase{
     private Arm arm;
     private Claw claw;
+    private Shoulder shoulder;
+    private Wrist wrist;
 
     public SetLevelThreeConePoseInAuto() {
         arm = Arm.getInstance();
         claw = Claw.getInstance();
+
         addRequirements(arm);
+
+        shoulder = Shoulder.getInstance();
+        wrist = Wrist.getInstance();
     }
 
     @Override
@@ -22,7 +31,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         arm.setState(ArmState.MOVING);
 
         if(arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
         }
         
         arm.setWristPosition(103);
@@ -31,12 +40,12 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(90)){
-            arm.setShoulderPosition(ShoulderConstants.kL3ConeAngle);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.FAST);
             // arm.setShoulderPosition(139);
         }
 
         if(arm.isShoulderAboveAngle(100.0)){
-            arm.setWristPosition(WristConstants.kL3ConeAngle);
+            arm.setWristPosition(wrist.getkL3ConeAngle());
             // arm.setWristPosition(27);
         }
 
@@ -49,11 +58,12 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
     @Override
     public void end(boolean interrupted){
         arm.setState(ArmState.L3_CONE_INVERTED);
+        claw.stopClaw();
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kL3ConeAngle) && arm.isWristAtAngle(WristConstants.kL3ConeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkL3ConeAngle()) && arm.isWristAtAngle(wrist.getkL3ConeAngle());
     }
 
 

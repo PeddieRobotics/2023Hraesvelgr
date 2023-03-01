@@ -41,6 +41,7 @@ public class ClimbCSAprilTag extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+        drivetrain.stopSwerveModules();
     }
 
     @Override
@@ -49,10 +50,10 @@ public class ClimbCSAprilTag extends CommandBase{
         if(climbAwayFromScoringGrid){
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){
-                    return limelightFront.getBotpose().getX() > 3.7;
+                    return limelightFront.getBotpose().getX() > 3.75;
                 }
                 else{
-                    return limelightBack.getBotpose().getX() > 3.7;
+                    return limelightBack.getBotpose().getX() > 3.75;
                 }
             }
             else if(DriverStation.getAlliance() == Alliance.Red){

@@ -16,11 +16,8 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "ConeL3",
-          "stow"
-        ],
-        "executionBehavior": "sequential",
+        "names": [],
+        "executionBehavior": "parallel",
         "waitBehavior": "after",
         "waitTime": 0.1
       }
@@ -37,17 +34,16 @@
       "nextControl": null,
       "holonomicAngle": 0.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": 1.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceNearBackLL",
-          "lock"
+          "BalanceNearBackLL"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 0.1
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     }
   ],

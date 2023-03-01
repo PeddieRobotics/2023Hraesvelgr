@@ -16,19 +16,21 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "stow"
+        ],
         "executionBehavior": "parallel",
-        "waitBehavior": "after",
+        "waitBehavior": "none",
         "waitTime": 0.1
       }
     },
     {
       "anchorPoint": {
-        "x": 2.5495647354931075,
+        "x": 2.3,
         "y": 2.1953610270856916
       },
       "prevControl": {
-        "x": 2.164269110300017,
+        "x": 1.9147043748069095,
         "y": 2.1953610270856916
       },
       "nextControl": null,

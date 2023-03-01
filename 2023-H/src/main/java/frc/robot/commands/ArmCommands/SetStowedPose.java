@@ -28,7 +28,7 @@ public class SetStowedPose extends CommandBase{
     public void initialize() {
         transitory = false;
         arm.setWristPosition(wrist.getkStowedAngle());
-        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.FAST);
         arm.setState(ArmState.MOVING);
 
     }

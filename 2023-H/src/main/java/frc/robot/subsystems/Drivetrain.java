@@ -127,6 +127,8 @@ public class Drivetrain extends SubsystemBase {
 
         latestChassisSpeed = 0.0;
         correctHeadingTargetHeading = getHeadingAsRotation2d();
+
+        SmartDashboard.putBoolean("isFlipped", isFlipped);
     }
 
     @Override
@@ -142,6 +144,8 @@ public class Drivetrain extends SubsystemBase {
 
         double currentPitchRate = drivetrain.getPitchRate();
         SmartDashboard.putNumber("Current pitch rate", currentPitchRate);
+
+        SmartDashboard.putBoolean("isFlipped", isFlipped);
 
     }
 
