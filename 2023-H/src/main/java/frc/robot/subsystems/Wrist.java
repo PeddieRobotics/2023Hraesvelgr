@@ -8,7 +8,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.utils.RobotMap;
-import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -20,7 +19,7 @@ public class Wrist {
     private CANSparkMax wristMotor;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorUpward;
+    private boolean reachedLimitSensorDownward;
 
     private SparkMaxPIDController pidController;
 
@@ -84,9 +83,8 @@ public class Wrist {
 
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        //
-        wristMotor.setClosedLoopRampRate(0.01);
-        SmartDashboard.putNumber("Wrist limit sensor angle", 0.0);
+        
+        wristMotor.setClosedLoopRampRate(0.2);
 
     }
 
@@ -170,16 +168,15 @@ public class Wrist {
     }
 
     public void periodic() {
-        // Limit sensor triggered and arm is moving down
-        if(atLimitSensor() && getVelocity() > 0){   
-            reachedLimitSensorUpward = true;
+        // Limit sensor triggered and wrist is moving down
+        if(atLimitSensor() && getVelocity() < 0){   
+            reachedLimitSensorDownward = true;
         }
 
-        // If the arm is moving up and leaves the limit sensor, reset the encoder
-        if(reachedLimitSensorUpward && !atLimitSensor()){
-            // wrist.setEncoder(WristConstants.kHomeAngle-2); 
-            SmartDashboard.putNumber("Wrist limit sensor angle", wrist.getPosition());
-            reachedLimitSensorUpward = false;
+        // If the wrist is moving down and leaves the limit sensor, reset the encoder
+        if(reachedLimitSensorDownward && !atLimitSensor()){
+            wrist.setEncoder(75); 
+            reachedLimitSensorDownward = false;
         }
     }
 

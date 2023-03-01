@@ -42,8 +42,10 @@ public class SetLLSeekPose extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        arm.setState(ArmState.LL_SEEK);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.LL_SEEK);
+            arm.holdShoulderPosition();
+        }
     }
 
     @Override

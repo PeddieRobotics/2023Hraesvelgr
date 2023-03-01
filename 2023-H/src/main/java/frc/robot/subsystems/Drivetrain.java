@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
-    //private final LimelightBack limelightBack;
+    private final LimelightBack limelightBack;
 
     // Swerve Modules
     private final MAXSwerveModule[] swerveModules;
@@ -63,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
-        //limelightBack = LimelightBack.getInstance();
+        limelightBack = LimelightBack.getInstance();
 
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
@@ -193,12 +193,12 @@ public class Drivetrain extends SubsystemBase {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
         limelightFront.checkForAprilTagUpdates(odometry);
-        //limelightBack.checkForAprilTagUpdates(odometry);
+        limelightBack.checkForAprilTagUpdates(odometry);
 
     }
 
     public void setFlipped(){//used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
-        isFlipped = Math.abs(getPose().getRotation().getDegrees())<90;
+        isFlipped = Math.abs(getPose().getRotation().getDegrees()) < 90;
         //if(DriverStation.getAlliance()==DriverStation.Alliance.Red) isFlipped=!isFlipped;
     }
 

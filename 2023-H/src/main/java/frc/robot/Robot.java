@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        LiveWindow.setEnabled(false);
+
         robotContainer = new RobotContainer();
 
         shuffleboard = ShuffleboardMain.getInstance();
@@ -128,7 +130,7 @@ public class Robot extends TimedRobot {
         }
 
         // Default pose for the robot to begin teleop is stowed.
-        CommandScheduler.getInstance().schedule(new SetStowedPose());
+        // CommandScheduler.getInstance().schedule(new SetStowedPose());
     }
 
     @Override
@@ -138,7 +140,6 @@ public class Robot extends TimedRobot {
         robotContainer.resetGyro();
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
-        LiveWindow.setEnabled(false);
 
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){

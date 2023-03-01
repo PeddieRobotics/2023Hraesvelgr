@@ -227,11 +227,12 @@ public final class Constants {
                 public static final double kL1Angle = -75.0;
 
                 // Shoulder is not fully extended out
+                // Currently unused
                 public static final double kCompactFloorConeAngle = -62;
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -30.0;
+                public static final double kExtendedFloorConeAngle = -32.0;
                 public static final double kExtendedFloorCubeAngle = -34.0;
 
                 public static final double kL2ConeAngle = 21.0;
@@ -240,7 +241,7 @@ public final class Constants {
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
                 public static final double kL3ConePart1Angle = 85.0;
-                public static final double kL3ConeAngle = 156.0;
+                public static final double kL3ConeAngle = 155.0;
 
                 public static final double kLLSeekAngle = -75.0;
                 public static final double kDoubleSSConeAngle = 25.0;
@@ -263,7 +264,7 @@ public final class Constants {
 
         public static final class WristConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 25; // was 25 amps
+                public static final int kMaxCurrent = 25;
 
                 // Position PID constants
                 public static final double kP = 0.015;
@@ -287,11 +288,12 @@ public final class Constants {
                 public static final double kL1Angle = -10.0;
 
                 // Shoulder is not fully extended out
+                // Currently unused
                 public static final double kCompactFloorConeAngle = -66.0;
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -29.0;
+                public static final double kExtendedFloorConeAngle = -15.0;
                 public static final double kExtendedFloorCubeAngle = -29.0;
 
                 public static final double kL2ConeAngle = -85.0;

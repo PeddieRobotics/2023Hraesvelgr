@@ -24,7 +24,7 @@ public class SetLevelTwoConePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(40);
+        // arm.setWristPosition(40);
         arm.setShoulderPositionSmartMotion(shoulder.getkL2ConeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.MOVING);
         
@@ -32,21 +32,24 @@ public class SetLevelTwoConePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(wrist.getkL2ConeAngle());
-        }
+        // if(arm.isShoulderAboveAngle(-30)){
+        //     arm.setWristPosition(wrist.getkL2ConeAngle());
+        // }
     }
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.L2_CONE);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.L2_CONE);
+            arm.holdShoulderPosition();
+        }
 
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkL2ConeAngle()) && arm.isWristAtAngle(wrist.getkL2ConeAngle());
+        return arm.isShoulderAtAngle(shoulder.getkL2ConeAngle());
+        // return arm.isShoulderAtAngle(shoulder.getkL2ConeAngle()) && arm.isWristAtAngle(wrist.getkL2ConeAngle());
     }
 
 

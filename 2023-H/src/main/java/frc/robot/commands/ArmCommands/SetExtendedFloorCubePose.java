@@ -71,11 +71,10 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulderStowed = false;
-        shoulderStowing = false;
-        transitory = false;
-        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
+            arm.holdShoulderPosition();
+        }
     }
 
     @Override

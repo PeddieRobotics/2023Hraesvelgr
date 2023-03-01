@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
@@ -160,8 +159,9 @@ public class LimelightFront extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        if (tagsSeen > 1 && this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm()<.5) {
-            //odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        // this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm()<.5;
+        if (tagsSeen > 1) {
+            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
     }
 

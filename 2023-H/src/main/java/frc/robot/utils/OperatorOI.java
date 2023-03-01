@@ -1,7 +1,6 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -10,9 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.ManualShoulderControl;
 import frc.robot.commands.ArmCommands.ManualWristControl;
-import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetHomePose;
-import frc.robot.commands.ArmCommands.SetLevel3Part1Pose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;

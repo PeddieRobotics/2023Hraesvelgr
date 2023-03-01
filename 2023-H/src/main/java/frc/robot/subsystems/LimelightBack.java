@@ -159,13 +159,8 @@ public class LimelightBack extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        SmartDashboard.putNumber("Tags seen BACK", tagsSeen);
-        SmartDashboard.putBoolean("hasTarget BACK", this.hasTarget());
-        SmartDashboard.putNumber("BOTPOSE BACK X", this.getBotpose().getX());
-        SmartDashboard.putNumber("BOTPOSE BACK Y", this.getBotpose().getY());
-        SmartDashboard.putNumber("BOTPOSE BACK THETA", this.getBotpose().getRotation().getDegrees());
-        if (tagsSeen > 2) {
-            //odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        if (tagsSeen > 1) {
+            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
     }
 }

@@ -38,8 +38,10 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.L3_CUBE_FORWARD);
-        arm.holdShoulderPosition();
+        if(!interrupted){
+            arm.setState(ArmState.L3_CUBE_FORWARD);
+            arm.holdShoulderPosition();
+        }
 
     }
 
