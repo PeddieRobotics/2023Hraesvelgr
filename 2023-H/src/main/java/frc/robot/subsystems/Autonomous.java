@@ -48,8 +48,6 @@ public class Autonomous extends SubsystemBase{
     private final Arm arm;
     //private final Claw claw;
 
-    // Sendable Chooser
-    private SendableChooser<Command> autoRoutineSelector;
     private Hashtable<String, Command> autoRoutines;
 
     // Auto Builder
@@ -63,7 +61,6 @@ public class Autonomous extends SubsystemBase{
         
         // Setup sendable chooser
         autoRoutines = new Hashtable<String, Command>();
-        autoRoutineSelector = new SendableChooser<Command>();
 
         HashMap<String, Command> eventMap = new HashMap<>();
         // eventMap.put("dummyDashboardCommand", new DummyDashboardCommand());
@@ -91,8 +88,10 @@ public class Autonomous extends SubsystemBase{
         // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
         // eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
         // eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
-        eventMap.put("BalanceNear", new ClimbCSAprilTag(1.5, 180,true));
-        eventMap.put("BalanceFar", new ClimbCSAprilTag(1.5, 0,false));
+        eventMap.put("BalanceNearFrontLL", new ClimbCSAprilTag(1.5, 0, true, true));
+        eventMap.put("BalanceFarFrontLL", new ClimbCSAprilTag(1.5, 180, false, true));
+        eventMap.put("BalanceNearBackLL", new ClimbCSAprilTag(1.5, 0, true, false));
+        eventMap.put("BalanceFarBackLL", new ClimbCSAprilTag(1.5, 180, false, false));
 
 
         // autoBuilder = new SwerveAutoBuilder(
@@ -120,7 +119,6 @@ public class Autonomous extends SubsystemBase{
 
         //defineAutoPaths();
         setupAutoRoutines();
-        setupAutoSelector();
     }
 
     @Override
@@ -174,26 +172,14 @@ public class Autonomous extends SubsystemBase{
         // autoRoutines.put("testPath2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath2", 0.5, 0.5)));
         // autoRoutines.put("testPath3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath3", 0.5, 0.5)));
         // autoRoutines.put("testPath4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath4", 0.5, 0.5)));
+
+        //Testing auto paths 
+        autoRoutines.put("Testing Auto Path 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart1", 1.5, 1.5)));
+        autoRoutines.put("Testing Auto Path 2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart2", 1.5, 1.5)));
     }   
-
-
-    public void setupAutoSelector(){
-        Enumeration<String> e = autoRoutines.keys();
-
-        while (e.hasMoreElements()) {
-            String autoRoutineName = e.nextElement();
-            autoRoutineSelector.addOption(autoRoutineName, autoRoutines.get(autoRoutineName));
-        }
-
-        SmartDashboard.putData("Auto Routines", autoRoutineSelector);
-    }
 
     private void setFlipped(){ //used only in auto
         drivetrain.setFlipped();
-    }
-
-    public Command getAutonomousCommand(){
-        return autoRoutineSelector.getSelected();
     }
 
     //Does not reflect for red -- DO NOT CHANGE
@@ -203,6 +189,10 @@ public class Autonomous extends SubsystemBase{
 
     public double getAngleOffsetFromAuto(){
         return 180.0; // NEED TO IMPLEMENT BY RETURNING INITIAL POSE FROM AUTO. Defaulting to 180 degrees.
+    }
+
+    public Hashtable<String, Command> getAutoRoutines() {
+        return autoRoutines;
     }
 
 }

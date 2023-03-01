@@ -46,9 +46,11 @@ public class Robot extends TimedRobot {
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
             shuffleboard.setupDebugMode();
+            shuffleboard.setupAutoSelector();
         }
         else{
             shuffleboard.setupCompetitionMode();
+            shuffleboard.setupAutoSelector();
         }
 
         PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!

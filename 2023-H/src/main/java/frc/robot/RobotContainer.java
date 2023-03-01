@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
@@ -33,6 +34,8 @@ public class RobotContainer {
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
 
+    private ShuffleboardMain shuffleboard;
+
     private Command autoCommand;
 
     // private final Blinkin blinkin;
@@ -51,11 +54,13 @@ public class RobotContainer {
 
         operatorOI = OperatorOI.getInstance();
         driverOI = DriverOI.getInstance();
+
+        shuffleboard = ShuffleboardMain.getInstance();
     }
 
     public Command getAutonomousCommand() {
         drivetrain.resetGyro();
-        return autonomous.getAutonomousCommand();
+        return shuffleboard.getAutonomousCommand();
     }
 
     public void resetGyro() {

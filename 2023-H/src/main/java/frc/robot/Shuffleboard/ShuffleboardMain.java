@@ -2,6 +2,7 @@ package frc.robot.Shuffleboard;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Shuffleboard.tabs.*;
 
 public class ShuffleboardMain {
@@ -90,6 +91,14 @@ public class ShuffleboardMain {
             tab.update();
         }
         
+    }
+
+    public Command getAutonomousCommand(){
+        return operatorTab.getAutonomousCommand();
+    }
+
+    public void setupAutoSelector(){
+        operatorTab.setupAutoSelector();
     }
 
 }
