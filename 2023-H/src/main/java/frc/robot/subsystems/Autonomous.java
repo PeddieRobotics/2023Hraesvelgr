@@ -83,7 +83,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeCone", new ParallelRaceGroup(new WaitCommand(4),new IntakeCone()));
         eventMap.put("IntakeCube", new ParallelRaceGroup(new WaitCommand(4),new IntakeCube()));
 
-        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto()));
+        eventMap.put("ConeL3", new SequentialCommandGroup( new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3Return()));
         eventMap.put("CubeL3", new EjectGamepiece());
         eventMap.put("CubeL3Pose", new SetLevelThreeCubePose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
@@ -150,7 +150,7 @@ public class Autonomous extends SubsystemBase{
 
         // 1 piece routines with charge station
         autoRoutines.put("1 Piece Balance Back Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol1", 2.0, 2.0)));
-        autoRoutines.put("1 Piece Balance Back Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 2.0, 2.0)));
+        autoRoutines.put("1 Piece Balance Back Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Column 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol4", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Column 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol6", 1.0, 1.0)));

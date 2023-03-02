@@ -208,13 +208,13 @@ public final class Constants {
 
                 public static final double kSmartMotionRegularSetpointTol = 1.0;
                 public static final double kSmartMotionRegularMinVel = 0.0; // rpm
-                public static final double kSmartMotionRegularMaxVel = 6000.0; // rpm
-                public static final double kSmartMotionRegularMaxAccel = 9000.0; // rpm / sec
+                public static final double kSmartMotionRegularMaxVel = 10000.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 15000.0; // rpm / sec
                 
                 public static final double kSmartMotionFastSetpointTol = 1.0;
                 public static final double kSmartMotionFastMinVel = 0.0; // rpm
-                public static final double kSmartMotionFastMaxVel = 10000.0; // rpm
-                public static final double kSmartMotionFastMaxAccel = 15000.0; // rpm / sec
+                public static final double kSmartMotionFastMaxVel = 18000.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 20000.0; // rpm / sec
 
                 // Soft limits
                 public static final double kAngleMin = -75;

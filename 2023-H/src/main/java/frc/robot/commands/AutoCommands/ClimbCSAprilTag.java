@@ -33,6 +33,8 @@ public class ClimbCSAprilTag extends CommandBase{
     public void initialize() {
         Translation2d chargeStationVector = new Translation2d(speed, new Rotation2d(Math.toRadians(robotHeading)));
         drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
+
+        limelightBack.startAveragingX();
     }
 
     @Override
@@ -64,15 +66,15 @@ public class ClimbCSAprilTag extends CommandBase{
                     return limelightBack.getBotpose().getX() < 12.7;
                 }
             }
-            return true;
+            return false;
         }
         else{
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){
-                    return limelightFront.getBotpose().getX() < 3.9;
+                    return limelightFront.getBotpose().getX() < 4.0;
                 }
                 else{
-                    return limelightBack.getBotpose().getX() < 3.9;
+                    return limelightBack.getAveragePoseX() < 4.2;
                 }
             }
             else if(DriverStation.getAlliance() == Alliance.Red){
@@ -83,7 +85,7 @@ public class ClimbCSAprilTag extends CommandBase{
                     return limelightBack.getBotpose().getX() > 12.9;
                 }
             }
-            return true;
+            return false;
         }
     }
 

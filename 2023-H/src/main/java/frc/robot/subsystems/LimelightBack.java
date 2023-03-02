@@ -13,7 +13,7 @@ import frc.robot.utils.RollingAverage;
 public class LimelightBack extends Limelight {
     private static LimelightBack limelightBack;
 
-    private RollingAverage txAverage, tyAverage,taAverage;
+    private RollingAverage txAverage, tyAverage,taAverage,xAverage;
     private boolean cube,level2;
 
     private String limelightName = "limelight-back";
@@ -22,6 +22,7 @@ public class LimelightBack extends Limelight {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
+        xAverage = new RollingAverage(4,getBotpose().getX());
     }
 
     public static LimelightBack getInstance() {
@@ -50,6 +51,14 @@ public class LimelightBack extends Limelight {
             return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
         }
         return new Pose2d();
+    }
+
+    public void startAveragingX(){
+        xAverage = new RollingAverage(4,getBotpose().getX());
+    }
+
+    public double getAveragePoseX() {
+        return xAverage.getAverage();
     }
 
     // Tv is whether the limelight has a valid target
@@ -126,6 +135,8 @@ public class LimelightBack extends Limelight {
             txAverage.add(getTx());
             tyAverage.add(getTy());
             taAverage.add(getTa());
+            double xMeasurement = getBotpose().getX();
+            if(Math.abs(xAverage.getAverage()-xMeasurement)>.3) xAverage.add(xMeasurement);
         }
     }
 

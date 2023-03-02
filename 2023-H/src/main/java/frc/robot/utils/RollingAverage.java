@@ -27,6 +27,7 @@ public class RollingAverage {
             samples[i] = initialVal; 
         }
         mostRecentDeletedEntry = 0.0;
+        total=size*initialVal;
 
     }
 

@@ -11,7 +11,7 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetTransitoryPoseL3Return extends CommandBase{
     private Arm arm;
-    private boolean transitory;
+    private boolean transitory,stopped;
     private Shoulder shoulder;
     private Wrist wrist;
 
@@ -26,12 +26,16 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public void initialize() {
+        stopped=false;
+        if(arm.getState() != ArmState.L3_CONE_INVERTED) stopped=true;
+        if(stopped) return;
         arm.setWristPosition(103);
         arm.setState(ArmState.MOVING);
     }
 
     @Override
     public void execute() {
+        if(stopped) return;
         if(arm.isWristAboveAngle(75)){
             arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         }
@@ -49,7 +53,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(wrist.getkTransitoryAngle()) && arm.isShoulderAtAngle(shoulder.getkTransitoryAngle());
+        return arm.isShoulderBelowAngle(90)||stopped;
     }
 
 

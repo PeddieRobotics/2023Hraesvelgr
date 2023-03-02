@@ -51,21 +51,15 @@
   ],
   "markers": [
     {
-      "position": 0.4145454545454371,
+      "position": 0.01,
       "names": [
         "IntakeCubePose"
       ]
     },
     {
-      "position": 0.7272727272727262,
+      "position": 0.6060606060605856,
       "names": [
         "IntakeCube"
-      ]
-    },
-    {
-      "position": 0.01,
-      "names": [
-        "TransitionPoseL3Return"
       ]
     }
   ]

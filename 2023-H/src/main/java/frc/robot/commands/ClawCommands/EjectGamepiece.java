@@ -46,9 +46,6 @@ public class EjectGamepiece extends CommandBase{
     public void end(boolean interrupted) {
         claw.stopClaw();
         claw.setState(ClawState.EMPTY);
-        if(arm.getState() == ArmState.L3_CONE_INVERTED){
-            CommandScheduler.getInstance().schedule(new SetTransitoryPoseL3Return());
-        }
     }
 
     @Override

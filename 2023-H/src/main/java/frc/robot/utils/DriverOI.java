@@ -78,13 +78,13 @@ public class DriverOI {
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return()),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
                     new SetStowedPose()), claw::hasGamepiece));
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new EjectGamepiece(),
+        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return()),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), claw::hasGamepiece));
 
@@ -102,7 +102,7 @@ public class DriverOI {
 
         // Slow Mode Toggle
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new InstantCommand(() -> toggleDriveSpeedMode()));
+        circleButton.onTrue(new ClimbCSAprilTag(1.25, 0, false, false));//circleButton.onTrue(new InstantCommand(() -> toggleDriveSpeedMode()));
 
         // 
         // Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);

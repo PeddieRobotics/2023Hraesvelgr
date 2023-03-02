@@ -29,7 +29,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         arm.setState(ArmState.MOVING);
 
         if(arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.FAST);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
         }
         
         arm.setWristPosition(103);
@@ -38,7 +38,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
     @Override
     public void execute() {
         if(arm.isWristAboveAngle(90)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.FAST);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
             // arm.setShoulderPosition(139);
         }
 
