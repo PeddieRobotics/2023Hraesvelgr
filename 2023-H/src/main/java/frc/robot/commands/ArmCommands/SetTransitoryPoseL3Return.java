@@ -53,7 +53,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderBelowAngle(90)||stopped;
+        return arm.isShoulderBelowAngle(75)||stopped;
     }
 
 

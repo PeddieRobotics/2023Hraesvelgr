@@ -3,7 +3,9 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
 import frc.robot.utils.OperatorOI;
+import frc.robot.utils.Constants.ShoulderConstants;
 
 public class ManualShoulderControl extends CommandBase{
     private Arm arm;
@@ -24,7 +26,14 @@ public class ManualShoulderControl extends CommandBase{
     @Override
     public void execute() {
         shoulderOffset = oi.getShoulderPIDOffset();
-        arm.setShoulderPosition(currentShoulder += shoulderOffset);
+        currentShoulder += shoulderOffset;
+        if(currentShoulder > ShoulderConstants.kAngleMax){
+            currentShoulder = ShoulderConstants.kAngleMax;
+        }
+        if(currentShoulder < ShoulderConstants.kAngleMin){
+            currentShoulder = ShoulderConstants.kAngleMin;
+        }
+        arm.setShoulderPosition(currentShoulder);
     }
 
     @Override

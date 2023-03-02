@@ -47,14 +47,7 @@ public class AutonAlign extends CommandBase {
         pipe=-1;
         addRequirements(drivetrain);
 
-        SmartDashboard.putNumber("minmove", 0.12);
-        SmartDashboard.putNumber("snap theta P", 0.015);
-        SmartDashboard.putNumber("align theta P", 0.015);
-        SmartDashboard.putNumber("snap y P", 2);
-        SmartDashboard.putNumber("align y P", 0.035);
-
         state = "";
-        SmartDashboard.putString("ZZSTATE",state);
     }
 
     @Override

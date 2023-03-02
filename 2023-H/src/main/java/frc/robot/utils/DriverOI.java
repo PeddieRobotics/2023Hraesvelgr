@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import javax.sound.midi.Instrument;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -78,13 +80,13 @@ public class DriverOI {
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return()),
+        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return(), new SetStowedPose()),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
                     new SetStowedPose()), claw::hasGamepiece));
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return()),
+        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return(), new SetStowedPose()),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), claw::hasGamepiece));
 
@@ -100,9 +102,8 @@ public class DriverOI {
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        // Slow Mode Toggle
+        //
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ClimbCSAprilTag(1.25, 0, false, false));//circleButton.onTrue(new InstantCommand(() -> toggleDriveSpeedMode()));
 
         // 
         // Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
@@ -120,9 +121,10 @@ public class DriverOI {
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.onTrue();
 
-        // 
+        // Slow Mode
+        // Back Button / Option Button
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        // optionsButton.onTrue();
+        optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // 
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
@@ -166,10 +168,6 @@ public class DriverOI {
     public Translation2d getSwerveTranslation() {
         double xSpeed = getForward();
         double ySpeed = getStrafe();
-
-        SmartDashboard.putNumber("raw input forward", xSpeed);
-        SmartDashboard.putNumber("raw input strafe", ySpeed);
-        SmartDashboard.putString("Drive mode", driveSpeedMode.toString());
 
         double xSpeedCommanded;
         double ySpeedCommanded;
