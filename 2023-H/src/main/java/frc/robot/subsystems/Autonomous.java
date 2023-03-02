@@ -24,11 +24,12 @@ import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
 import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetL3TransitoryPose;
+import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.AutoCommands.AutonAlign;
 import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
@@ -76,20 +77,21 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
         eventMap.put("lock", new LockDrivetrain());
+
+        eventMap.put("TransitoryPoseL3Return", new SetTransitoryPoseL3Return());
+
         eventMap.put("IntakeCone", new ParallelRaceGroup(new WaitCommand(4),new IntakeCone()));
         eventMap.put("IntakeCube", new ParallelRaceGroup(new WaitCommand(4),new IntakeCube()));
 
-        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetL3TransitoryPose()));
-        eventMap.put("CubeL3", new EjectGamepiece()); //new SetStowedPose()));
-        eventMap.put("CubeL3Pose", new SetLevelThreeCubePose()); //new SetStowedPose()));
+        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto()));
+        eventMap.put("CubeL3", new EjectGamepiece());
+        eventMap.put("CubeL3Pose", new SetLevelThreeCubePose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
     
 
-        eventMap.put("IntakeConePose", new SetCompactFloorConePose());
-        eventMap.put("IntakeCubePose", new SetCompactFloorCubePose());
+        eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
+        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
         // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
-        // eventMap.put("BalanceFront", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
-        // eventMap.put("BalanceBack", new ClimbCSAprilTag(1.5, drivetrain.getHeading()));
         eventMap.put("BalanceNearFrontLL", new ClimbCSAprilTag(1.25, 180, true, true));
         eventMap.put("BalanceFarFrontLL", new ClimbCSAprilTag(1.25, 0, false, true));
         eventMap.put("BalanceNearBackLL", new ClimbCSAprilTag(1.25, 180, true, false));
@@ -125,9 +127,6 @@ public class Autonomous extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("path intial pose x", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getX());
-        SmartDashboard.putNumber("path intial pose y", PathPlanner.loadPathGroup("SwerveTest", 1.5, 1.5).get(0).getInitialHolonomicPose().getY());
-
     }
 
     public static Autonomous getInstance(){
@@ -143,23 +142,30 @@ public class Autonomous extends SubsystemBase{
 
     public void setupAutoRoutines(){
 
-        //Mock competition paths
-        autoRoutines.put("1 Piece Balance Back Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol1", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Back Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Column 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol4", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Column 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol6", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Column 7", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol7", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Balance Column 5", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol5", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Skedaddle Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceSkedaddleCol1", 0.5, 0.5)));
-        autoRoutines.put("1 Piece Skedaddle Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceSkedaddleCol9", 0.5, 0.5)));
+        // Competition paths
 
+        // 1 piece routines without charge station
+        autoRoutines.put("1 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceCol1", 1.0, 1.0)));
+        autoRoutines.put("1 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceCol9", 1.0, 1.0)));
 
-        autoRoutines.put("2 Piece Balance Bump", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceBump", 0.5, 0.5)));
-        autoRoutines.put("2 Piece Balance Top", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceTop", 0.5, 0.5)));
-        autoRoutines.put("2 Piece Bump", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
-        autoRoutines.put("2 Piece Prepare Top", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
-        autoRoutines.put("2PieceTop", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTop", 0.5, 0.5)));
+        // 1 piece routines with charge station
+        autoRoutines.put("1 Piece Balance Back Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol1", 2.0, 2.0)));
+        autoRoutines.put("1 Piece Balance Back Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 2.0, 2.0)));
+        autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 1.0, 1.0)));
+        autoRoutines.put("1 Piece Balance Column 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol4", 1.0, 1.0)));
+        autoRoutines.put("1 Piece Balance Column 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol6", 1.0, 1.0)));
+        autoRoutines.put("1 Piece Balance Column 7", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol7", 1.0, 1.0)));
+
+        // 2 piece routines without charge station
+        autoRoutines.put("2 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTop", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Prepare Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
+
+        // 2 piece routines with charge station
+        autoRoutines.put("2 Piece Balance Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceTop", 0.5, 0.5)));
+
+        // 3 piece routines without charge station
+        autoRoutines.put("3 Piece L1 Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceL1Top", 0.5, 0.5)));
 
         // autoRoutines.put("3 Piece Balance Top", autobuilder.fullAuto(PathPlanner.loadPathGroup("3PieceBalanceTop", 0.5, 0.5)));
         // autoRoutines.put("3 Piece Top", autobuilder.fullAuto(PathPlanner.loadPathGroup("3PieceTop", 0.5, 0.5)))

@@ -42,11 +42,8 @@ public class SetStowedPose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        // If the stow results in the shoulder's angle being above the desired angle, pull it in towards the limit sensor
-        // if(shoulder.getAngle() > shoulder.getkStowedAngle()){
-        //     shoulder.setPercentOutput(-0.1);
-        // }
         if(!interrupted){
+            arm.holdShoulderPosition();
             arm.setState(ArmState.STOWED);
         }
 

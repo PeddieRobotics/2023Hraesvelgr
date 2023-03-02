@@ -17,44 +17,39 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ConeL3"
+          "ConeL3",
+          "TransitoryPoseL3Return"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "after",
-        "waitTime": 0.0
+        "waitTime": 0.1
       }
     },
     {
       "anchorPoint": {
-        "x": 2.5404553536379804,
+        "x": 2.35,
         "y": 3.188283649294572
       },
       "prevControl": {
-        "x": 2.0667674971713583,
+        "x": 1.876312143533378,
         "y": 3.179174267439445
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
-      "velOverride": 1.5,
+      "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceNear"
+          "BalanceNearBackLL",
+          "lock"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.1
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.01,
-      "names": [
-        "stow"
-      ]
-    }
-  ]
+  "markers": []
 }

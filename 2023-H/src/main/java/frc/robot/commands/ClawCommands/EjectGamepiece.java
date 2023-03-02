@@ -8,7 +8,7 @@ import frc.robot.subsystems.Claw.ClawState;
 public class EjectGamepiece extends CommandBase{
     private Claw claw;
     private double initialTime, currentTime;
-    private final double minimumEjectionTime = 1.0; // Always try for 1 second to eject the current game piece
+    private final double minimumEjectionTime = 0.5; // Always try for 1 second to eject the current game piece
 
     public EjectGamepiece(){
         claw = Claw.getInstance();

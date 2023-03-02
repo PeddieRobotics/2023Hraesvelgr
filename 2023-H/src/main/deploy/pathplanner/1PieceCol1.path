@@ -53,13 +53,19 @@
     {
       "position": 0.01,
       "names": [
-        "stow"
+        "TransitoryPoseL3Return"
       ]
     },
     {
-      "position": 0.7363636363636352,
+      "position": 0.6472727272727297,
       "names": [
         "IntakeCube"
+      ]
+    },
+    {
+      "position": 0.509090909090909,
+      "names": [
+        "IntakeCubePose"
       ]
     }
   ]

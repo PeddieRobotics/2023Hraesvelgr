@@ -18,7 +18,7 @@
       "stopEvent": {
         "names": [
           "ConeL3",
-          "stow"
+          "TransitoryPoseL3Return"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -27,11 +27,11 @@
     },
     {
       "anchorPoint": {
-        "x": 2.5495647354931075,
+        "x": 2.35,
         "y": 2.1953610270856916
       },
       "prevControl": {
-        "x": 2.164269110300017,
+        "x": 1.9647043748069097,
         "y": 2.1953610270856916
       },
       "nextControl": null,

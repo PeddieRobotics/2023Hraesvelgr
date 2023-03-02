@@ -7,8 +7,6 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ShoulderConstants;
-import frc.robot.utils.Constants.WristConstants;
 
 public class SetLevelThreeConePoseInAuto extends CommandBase{
     private Arm arm;
@@ -31,7 +29,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         arm.setState(ArmState.MOVING);
 
         if(arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.FAST);
         }
         
         arm.setWristPosition(103);
@@ -59,6 +57,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
     public void end(boolean interrupted){
         arm.setState(ArmState.L3_CONE_INVERTED);
         claw.stopClaw();
+        arm.setWristPosition(103); // prepare the wrist to return
     }
 
     @Override

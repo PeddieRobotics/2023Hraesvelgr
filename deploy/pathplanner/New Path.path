@@ -2,46 +2,19 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7737935421845994,
-        "y": 5.00002264186052
+        "x": 1.0,
+        "y": 3.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3242987265543547,
-        "y": 4.937505653335342
+        "x": 2.0,
+        "y": 3.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "ConeL3"
-        ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 6.760776089312521,
-        "y": 4.5170058956380394
-      },
-      "prevControl": {
-        "x": 6.753274722835865,
-        "y": 4.5170058956380394
-      },
-      "nextControl": {
-        "x": 6.753274722835865,
-        "y": 4.5170058956380394
-      },
-      "holonomicAngle": 0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -51,12 +24,37 @@
     },
     {
       "anchorPoint": {
-        "x": 5.571488461093898,
-        "y": 3.21336368778301
+        "x": 3.0,
+        "y": 5.0
       },
       "prevControl": {
-        "x": 6.301269235304326,
-        "y": 4.514229899907729
+        "x": 3.0,
+        "y": 4.0
+      },
+      "nextControl": {
+        "x": 3.0,
+        "y": 4.0
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.0,
+        "y": 3.0
+      },
+      "prevControl": {
+        "x": 4.0,
+        "y": 3.0
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -65,39 +63,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "BalanceFarBackLL"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.4654545454545483,
-      "names": [
-        "IntakeCubePose"
-      ]
-    },
-    {
-      "position": 0.7818181818181816,
-      "names": [
-        "IntakeCube"
-      ]
-    },
-    {
-      "position": 1.5999999999999968,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 0.014545454545453718,
-      "names": [
-        "TransitoryPoseL3Return"
-      ]
-    }
-  ]
+  "markers": []
 }
