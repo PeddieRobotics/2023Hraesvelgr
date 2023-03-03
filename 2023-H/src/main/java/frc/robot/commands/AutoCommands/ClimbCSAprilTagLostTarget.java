@@ -10,14 +10,14 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
-public class ClimbCSAprilTag extends CommandBase{
+public class ClimbCSAprilTagLostTarget extends CommandBase{
     private Drivetrain drivetrain;
     private LimelightFront limelightFront;
     private LimelightBack limelightBack;
-    private double speed, robotHeading;
-    private boolean climbAwayFromScoringGrid, useLLFront;
+    private double speed, robotHeading, startX;
+    private boolean climbAwayFromScoringGrid, useLLFront,lostTarget;
 
-    public ClimbCSAprilTag(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
+    public ClimbCSAprilTagLostTarget(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
@@ -41,12 +41,20 @@ public class ClimbCSAprilTag extends CommandBase{
         else{
             limelightBack.startAveragingX();
         }
+        lostTarget=false;
     }
 
     @Override
     public void execute() {
-        Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
+        if(!limelightBack.hasTarget() && !lostTarget) {
+            startX = drivetrain.getPose().getX();
+            SmartDashboard.putNumber("Start X", startX);
+            lostTarget=true;
+        }
+        if(lostTarget){
+            Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
         drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
+        }
     }
 
     @Override
@@ -57,6 +65,12 @@ public class ClimbCSAprilTag extends CommandBase{
     @Override
     public boolean isFinished() {
         // Below, red side is untested, as is the entire climb towards grid (else case).
+        if(lostTarget){
+            double deltaX = Math.abs(drivetrain.getPose().getX()-startX);
+            SmartDashboard.putNumber("Delta X", deltaX);
+            return(Math.abs(drivetrain.getPose().getX()-startX)> 1);
+
+        }
         if(climbAwayFromScoringGrid){
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){

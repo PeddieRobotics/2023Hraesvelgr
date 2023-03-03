@@ -12,7 +12,7 @@ import frc.robot.utils.RollingAverage;
 public class LimelightFront extends Limelight {
     private static LimelightFront limelightFront;
 
-    private RollingAverage txAverage, tyAverage,taAverage;
+    private RollingAverage txAverage, tyAverage, taAverage, xAverage;
     private boolean cube,level2;
 
     private String limelightName = "limelight-front";
@@ -21,6 +21,8 @@ public class LimelightFront extends Limelight {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
+        xAverage = new RollingAverage(4,getBotpose().getX());
+
     }
 
     public static LimelightFront getInstance() {
@@ -34,6 +36,14 @@ public class LimelightFront extends Limelight {
     public void periodic() {
         updateRollingAverages();
 
+    }
+
+    public void startAveragingX(){
+        xAverage = new RollingAverage(4,getBotpose().getX());
+    }
+
+    public double getAveragePoseX() {
+        return xAverage.getAverage();
     }
 
     public Translation2d getBotXY() {

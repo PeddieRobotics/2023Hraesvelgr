@@ -10,14 +10,14 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
-public class ClimbCSAprilTag extends CommandBase{
+public class ClimbCSOdometry extends CommandBase{
     private Drivetrain drivetrain;
     private LimelightFront limelightFront;
     private LimelightBack limelightBack;
     private double speed, robotHeading;
     private boolean climbAwayFromScoringGrid, useLLFront;
 
-    public ClimbCSAprilTag(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
+    public ClimbCSOdometry(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
@@ -60,18 +60,18 @@ public class ClimbCSAprilTag extends CommandBase{
         if(climbAwayFromScoringGrid){
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){
-                    return limelightFront.getAveragePoseX() > 3.75;
+                    return drivetrain.getPose().getX() > 3.75;
                 }
                 else{
-                    return limelightBack.getAveragePoseX() > 3.75;
+                    return drivetrain.getPose().getX() > 3.75;
                 }
             }
             else if(DriverStation.getAlliance() == Alliance.Red){
                 if(useLLFront){
-                    return limelightFront.getAveragePoseX() < 12.7;
+                    return drivetrain.getPose().getX() < 12.7;
                 }
                 else{
-                    return limelightBack.getAveragePoseX() < 12.7;
+                    return drivetrain.getPose().getX() < 12.7;
                 }
             }
             return false;
@@ -79,18 +79,18 @@ public class ClimbCSAprilTag extends CommandBase{
         else{
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){
-                    return limelightFront.getAveragePoseX() < 4.0;
+                    return drivetrain.getPose().getX() < 4.0;
                 }
                 else{
-                    return limelightBack.getAveragePoseX() < 4.0;
+                    return drivetrain.getPose().getX() < 4.0;
                 }
             }
             else if(DriverStation.getAlliance() == Alliance.Red){
                 if(useLLFront){
-                    return limelightFront.getAveragePoseX() > 12.9;
+                    return drivetrain.getPose().getX() > 12.9;
                 }
                 else{
-                    return limelightBack.getAveragePoseX() > 12.9;
+                    return drivetrain.getPose().getX() > 12.9;
                 }
             }
             return false;

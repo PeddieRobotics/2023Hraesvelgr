@@ -30,6 +30,8 @@ import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.AutoCommands.BalanceCS;
 import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
+import frc.robot.commands.AutoCommands.ClimbCSOdometry;
+import frc.robot.commands.AutoCommands.ClimbCSTilt;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
@@ -96,42 +98,40 @@ public class DriverOI {
 
         // Single SS pose Button
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new ParallelCommandGroup(new SetSingleSSPose(), new IntakeCone()));
+        xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSPose(), new IntakeCone()), new SetStowedPose()));
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        //
+        // Circle button unusued. Temporarily used to test charge station.
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1.25, 0, false, false), new LockDrivetrain()));
+        circleButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 0, false, true), new LockDrivetrain()));
 
-        // 
-        // Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
-        // rightStickButton.onTrue(new LockDrivetrain());
+        // LOck drivetrain
+        Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
+        rightStickButton.onTrue(new LockDrivetrain());
 
-        // Lock Drivetrain
+        // Does nothing
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
-        // leftStickButton.toggleOnTrue();
 
-        // Transitory pose
+        // Also stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
-        // Align to goal
+        // Square button unused. Temporarily used to test charge station.
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        // squareButton.onTrue();
+        // squareButton.onTrue(new SequentialCommandGroup(new ClimbCSOdometry(1, 0, false, false), new LockDrivetrain()));
+        squareButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, false), new LockDrivetrain()));
 
         // Slow Mode
         // Back Button / Option Button
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
         optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
-        // 
+        // Currently does nothing
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
         // shareButton.onTrue(new ());
-
-        
 
         // Reset gyro (resets field oriented drive)
         Trigger ps4Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);

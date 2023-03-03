@@ -16,7 +16,6 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
@@ -90,22 +89,25 @@ public class OperatorOI {
         }));
 
         // Arm Poses
+        // L1 score
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SetLevelOnePose());
 
+        // L2 score
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
         circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),claw::hasCone));
 
+        // L3 score
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue( new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
 
+        // Stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
         // Home the entire arm subsystem (full system reset)
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetHomePose());
-        
 
         // Manual Wrist and Shoulder Override Controls
         Trigger leftTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
@@ -114,7 +116,7 @@ public class OperatorOI {
         Trigger rightTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
         rightTriggerPressedTrigger.whileTrue(new ManualShoulderControl());
 
-        // Gyro rest override
+        // Gyro reset
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 

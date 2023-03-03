@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
         }
 
         // Default pose for the robot to begin teleop is stowed.
-        // CommandScheduler.getInstance().schedule(new SetStowedPose());
+        CommandScheduler.getInstance().schedule(new SetStowedPose());
     }
 
     @Override

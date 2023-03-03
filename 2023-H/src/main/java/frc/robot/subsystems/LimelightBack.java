@@ -13,7 +13,7 @@ import frc.robot.utils.RollingAverage;
 public class LimelightBack extends Limelight {
     private static LimelightBack limelightBack;
 
-    private RollingAverage txAverage, tyAverage,taAverage,xAverage;
+    private RollingAverage txAverage, tyAverage, taAverage, xAverage;
     private boolean cube,level2;
 
     private String limelightName = "limelight-back";

@@ -11,14 +11,13 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetTransitoryPoseL3Return extends CommandBase{
     private Arm arm;
-    private boolean transitory,stopped;
+    private boolean stopped;
     private Shoulder shoulder;
     private Wrist wrist;
 
     public SetTransitoryPoseL3Return() {
         arm = Arm.getInstance();
         addRequirements(arm);
-        transitory = false;
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -47,8 +46,6 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        transitory = false;
-        arm.setState(ArmState.TRANSITION);
     }
 
     @Override

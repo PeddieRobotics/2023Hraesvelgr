@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.ADIS16470_IMU;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
@@ -34,6 +35,7 @@ public class Drivetrain extends SubsystemBase {
     private final ADIS16470_IMU gyro;
     private double heading;
     private boolean isFlipped;
+    private RollingAverage pitchRateAverage;
 
     // Swerve Drive
     private SwerveModuleState[] swerveModuleStates;
@@ -65,6 +67,7 @@ public class Drivetrain extends SubsystemBase {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
+
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
                 RobotMap.kFrontLeftDrivingCanId,
@@ -94,6 +97,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Gyroscope Sensor
         gyro = new ADIS16470_IMU();
+        pitchRateAverage = new RollingAverage(4);
 
         // Teleop Angle offset from Autonomous to Teleop
         teleOpAngleOffset = 0;
@@ -139,10 +143,11 @@ public class Drivetrain extends SubsystemBase {
         }
         updateOdometry();
 
-        double currentPitch = drivetrain.getPitch();
-        SmartDashboard.putNumber("Current pitch", currentPitch);
+        pitchRateAverage.add(getPitchRate());
 
-        double currentPitchRate = drivetrain.getPitchRate();
+        SmartDashboard.putNumber("Current pitch", getPitch());
+
+        double currentPitchRate = drivetrain.getAveragePitchRate();
         SmartDashboard.putNumber("Current pitch rate", currentPitchRate);
 
         SmartDashboard.putBoolean("isFlipped", isFlipped);
@@ -196,8 +201,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        limelightFront.checkForAprilTagUpdates(odometry);
-        limelightBack.checkForAprilTagUpdates(odometry);
+        // limelightFront.checkForAprilTagUpdates(odometry);
+        // limelightBack.checkForAprilTagUpdates(odometry);
 
     }
 
@@ -375,6 +380,10 @@ public class Drivetrain extends SubsystemBase {
 
     public double getPitchRate(){
         return gyro.getRate(IMUAxis.kRoll);
+    }
+
+    public double getAveragePitchRate(){
+        return pitchRateAverage.getAverage();
     }
 
     // Autonomous Transformation
