@@ -36,7 +36,7 @@ public class ClimbCSTilt extends CommandBase{
         SmartDashboard.putBoolean("hasTilted", hasTilted);
         SmartDashboard.putNumber("Delta X", 0.0);
         SmartDashboard.putNumber("Pitch threshold", 12);
-        SmartDashboard.putNumber("Pitch rate threshold", 15);
+        SmartDashboard.putNumber("Pitch rate threshold", 20);
         SmartDashboard.putNumber("minTimeToClimb", 2.0);
         SmartDashboard.putNumber("minTimeToWaitForTilt", 1.0);
         SmartDashboard.putBoolean("climbForward", false);

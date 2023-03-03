@@ -29,7 +29,7 @@ public class SetLevelThreeConePose extends CommandBase{
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
         }
         
-        arm.setWristPosition(103);
+        arm.setWristPosition(100);
         arm.setState(ArmState.MOVING);
 
     }

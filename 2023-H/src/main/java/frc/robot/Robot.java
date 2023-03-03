@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        LiveWindow.setEnabled(false);
+        // LiveWindow.setEnabled(false);
 
         robotContainer = new RobotContainer();
 

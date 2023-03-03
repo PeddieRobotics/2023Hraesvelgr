@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
@@ -144,6 +145,10 @@ public class Arm extends SubsystemBase {
         this.stowingIntake = stowingIntake;
     }
 
+    public boolean isInvertedL3Cone(){
+        return arm.getState() == ArmState.L3_CONE_INVERTED;
+    }
+
     public static Arm getInstance() {
         if (arm == null) {
             arm = new Arm();
@@ -153,6 +158,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("inverted l3 cone?", isInvertedL3Cone());
         shoulder.periodic();
         wrist.periodic();
     }

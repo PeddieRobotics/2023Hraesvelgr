@@ -36,6 +36,7 @@ import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.DriveConstants;
@@ -46,6 +47,7 @@ public class DriverOI {
 
     private Drivetrain drivetrain;
     private Claw claw;
+    private Arm arm;
 
     private PS4Controller controller = new PS4Controller(0);
 
@@ -71,6 +73,7 @@ public class DriverOI {
     public DriverOI() {
         drivetrain = Drivetrain.getInstance();
         claw = Claw.getInstance();
+        arm = Arm.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 
@@ -82,13 +85,13 @@ public class DriverOI {
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return(), new SetStowedPose()),
+        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
                     new SetStowedPose()), claw::hasGamepiece));
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new SetTransitoryPoseL3Return(), new SetStowedPose()),
+        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), claw::hasGamepiece));
 
@@ -106,7 +109,7 @@ public class DriverOI {
 
         // Circle button unusued. Temporarily used to test charge station.
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 0, false, true), new LockDrivetrain()));
+        circleButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 0, false, false), new LockDrivetrain()));
 
         // LOck drivetrain
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
@@ -122,7 +125,7 @@ public class DriverOI {
         // Square button unused. Temporarily used to test charge station.
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.onTrue(new SequentialCommandGroup(new ClimbCSOdometry(1, 0, false, false), new LockDrivetrain()));
-        squareButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, false), new LockDrivetrain()));
+        squareButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, true), new LockDrivetrain()));
 
         // Slow Mode
         // Back Button / Option Button

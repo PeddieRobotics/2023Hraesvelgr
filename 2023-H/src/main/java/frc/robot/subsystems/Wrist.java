@@ -168,16 +168,18 @@ public class Wrist {
     }
 
     public void periodic() {
-        // Limit sensor triggered and wrist is moving down
+        //Limit sensor triggered and wrist is moving down
         if(atLimitSensor() && getVelocity() < 0){   
             reachedLimitSensorDownward = true;
         }
 
         // If the wrist is moving down and leaves the limit sensor, reset the encoder
-        if(reachedLimitSensorDownward && !atLimitSensor()){
+        if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
             wrist.setEncoder(75); 
             reachedLimitSensorDownward = false;
         }
+
+        if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
     }
 
     public void setMode(IdleMode mode) {

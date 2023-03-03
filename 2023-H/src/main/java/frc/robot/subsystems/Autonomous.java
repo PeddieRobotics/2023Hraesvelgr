@@ -32,6 +32,7 @@ import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.AutoCommands.AutonAlign;
 import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
+import frc.robot.commands.AutoCommands.ClimbCSTilt;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
@@ -92,10 +93,10 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
         // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
-        eventMap.put("BalanceNearFrontLL", new ClimbCSAprilTag(1.25, 180, true, true));
-        eventMap.put("BalanceFarFrontLL", new ClimbCSAprilTag(1.25, 0, false, true));
-        eventMap.put("BalanceNearBackLL", new ClimbCSAprilTag(1.25, 180, true, false));
-        eventMap.put("BalanceFarBackLL", new ClimbCSAprilTag(1.25, 0, false, false));
+        eventMap.put("BalanceNearFrontLL", new ClimbCSTilt(1.25, 180, true, true));
+        eventMap.put("BalanceFarFrontLL", new ClimbCSTilt(1.25, 0, false, true));
+        eventMap.put("BalanceNearBackLL", new ClimbCSTilt(1.25, 180, true, false));
+        eventMap.put("BalanceFarBackLL", new ClimbCSTilt(1.25, 0, false, false));
 
 
         // autoBuilder = new SwerveAutoBuilder(

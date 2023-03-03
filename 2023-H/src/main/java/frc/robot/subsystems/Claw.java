@@ -19,13 +19,9 @@ import frc.robot.utils.Constants.ClawConstants;
 public class Claw extends SubsystemBase {
     private static Claw instance;
     private CANSparkMax clawMotor;
-    private DigitalInput coneSensor, cubeSensor;
+    private DigitalInput backSensor, frontSensor;
+    private boolean useSensors;
 
-    private RollingAverage currentAverage, prevWindowCurrentAverage, clawCurrentAverage;
-
-    private boolean firstSpike;
-    private int spikeCounter;
-    
     public enum ClawState {EMPTY, INTAKING, CUBE, CONE};
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
@@ -38,13 +34,9 @@ public class Claw extends SubsystemBase {
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
-        currentAverage = new RollingAverage(10);
-        prevWindowCurrentAverage = new RollingAverage(10);
-        firstSpike = false;
-        spikeCounter = 0;
-
-        // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
-        // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
+        backSensor = new DigitalInput(RobotMap.kClawBackSensor);
+        frontSensor = new DigitalInput(RobotMap.kClawFrontSensor);
+        useSensors = true;
 
         cubeIntakeSpeed = ClawConstants.kCubeIntakeSpeed;
         coneIntakeSpeed = ClawConstants.kConeIntakeSpeed;
@@ -59,21 +51,23 @@ public class Claw extends SubsystemBase {
 
         SmartDashboard.putData(gamepieceChooser);
 
-        clawCurrentAverage = new RollingAverage();
-
         state = ClawState.EMPTY;
     }
     
     @Override
     public void periodic(){
-        // Keep track of current information for detecting spikes/trends (gamepiece detection)
-        currentAverage.add(clawMotor.getOutputCurrent());
-        prevWindowCurrentAverage.add(currentAverage.getMostRecentDeletedEntry());
-
-        // if(monitorCurrentForSuccessfulIntake() && currentAverage.getAverage() > 25){
-        //     setSpeed(0);
-        // }
-
+        if(useSensors){
+            if(isFrontSensor() && isBackSensor()){
+                state = ClawState.CONE;
+            }
+            else if(isFrontSensor() && !isBackSensor()){
+                state = ClawState.CUBE;
+            }
+            else if(state != ClawState.INTAKING && (!isFrontSensor() && !isBackSensor())){
+                state = ClawState.EMPTY;
+            }
+        }
+        
     }
 
     public static Claw getInstance(){
@@ -93,6 +87,14 @@ public class Claw extends SubsystemBase {
 
     public void setSpeed(double clawSpeed){
         clawMotor.set(clawSpeed);
+    }
+
+    public boolean isBackSensor(){
+        return !backSensor.get();
+    }
+
+    public boolean isFrontSensor(){
+        return !frontSensor.get();
     }
 
     public boolean hasCone(){
@@ -147,39 +149,14 @@ public class Claw extends SubsystemBase {
         return clawMotor.getAppliedOutput()*100;
     }
 
-    public boolean monitorCurrentForSuccessfulIntake(){
-                    // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
-            // if(currentAverage.getAverage() > 29 && prevWindowCurrentAverage.getAverage() > 29){
-            //     firstSpike = false; // reset first spike boolean
-            //     return true;
-            // }
-            // else{
-            //     return false;
-            // }
-        if(!firstSpike){
-            if(currentAverage.getAverage() > 25){
-                firstSpike = true;
-            }
-            
-            return false;
-        }
-        // If we've seen the first spike already...
-        else{
-            // If both windows now spike, then it must be a sustained signal that we have collected a gamepiece in the intake
-            if(currentAverage.getAverage() > 29 && prevWindowCurrentAverage.getAverage() > 29){
-                firstSpike = false; // reset first spike boolean
-                return true;
-            }
-            else{
-                spikeCounter++;
-                // If approx. 500 ms have passed without another spike, go back to looking for the first spike again.
-                if(spikeCounter > 25){
-                    firstSpike = false;
-                    spikeCounter = 0;
-                }
-                return false;
-            }
-        }
+        
+    public boolean isUseSensors() {
+        return useSensors;
     }
+
+    public void setUseSensors(boolean useSensors) {
+        this.useSensors = useSensors;
+    }
+
 
 }
