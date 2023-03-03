@@ -8,7 +8,7 @@ public class LockDrivetrain extends CommandBase{
     private Drivetrain drivetrain;
 
     public LockDrivetrain(){
-        drivetrain=Drivetrain.getInstance();
+        drivetrain = Drivetrain.getInstance();
         addRequirements(drivetrain);
     }
 

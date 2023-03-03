@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -12,9 +14,27 @@ public class Arm extends SubsystemBase {
     private final Shoulder shoulder;
     private final Wrist wrist;
 
+    public enum ArmState {MOVING, HOME, STOWED, TRANSITION, FLOOR_INTAKE_CUBE_COMPACT, FLOOR_INTAKE_CUBE_EXTENDED,
+        FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, LL_SEEK, SINGLE_SS, DOUBLE_SS_CONE,
+        L1, L2_CONE, L2_CUBE, L3_CUBE_FORWARD, L3_CONE_FORWARD, L3_CUBE_INVERTED, L3_CONE_INVERTED};
+    
+    private ArmState state;
+
+    private boolean stowingIntake;
+
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+        state = ArmState.HOME;
+        stowingIntake = false;
+    }
+
+    public ArmState getState() {
+        return state;
+    }
+
+    public void setState(ArmState state) {
+        this.state = state;
     }
 
     public void setShoulderMode(IdleMode mode){
@@ -53,8 +73,16 @@ public class Arm extends SubsystemBase {
         return wrist.getOutputCurrent();
     }
 
+    public void holdShoulderPosition(){
+        setShoulderPosition(shoulder.getAngle());
+    }
+
     public void setShoulderPosition(double setPoint){
-        shoulder.setPositionSmartMotion(setPoint);
+        shoulder.setPosition(setPoint);
+    }
+
+    public void setShoulderPositionSmartMotion(double setPoint, SmartMotionArmSpeed mode){
+        shoulder.setPositionSmartMotion(setPoint, mode);
     }
 
     public void setWristPosition(double setPoint){
@@ -105,6 +133,22 @@ public class Arm extends SubsystemBase {
         return getWristPosition() < angle;
     }
 
+    public boolean isShoulderFullyStowed(){
+        return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
+    }
+
+    public boolean getAllowStowIntake(){
+        return stowingIntake;
+    }
+
+    public void setAllowStowIntake(boolean stowingIntake){
+        this.stowingIntake = stowingIntake;
+    }
+
+    public boolean isInvertedL3Cone(){
+        return arm.getState() == ArmState.L3_CONE_INVERTED;
+    }
+
     public static Arm getInstance() {
         if (arm == null) {
             arm = new Arm();
@@ -114,6 +158,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("inverted l3 cone?", isInvertedL3Cone());
         shoulder.periodic();
         wrist.periodic();
     }

@@ -11,12 +11,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.LimelightBack;
+import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.OperatorOI;
@@ -31,7 +32,9 @@ public class RobotContainer {
     private final DriverOI driverOI;
     private final Autonomous autonomous;
     private final LimelightFront limelightFront;
-    // private final LimelightBack limelightBack;
+    private final LimelightBack limelightBack;
+
+    private ShuffleboardMain shuffleboard;
 
     private Command autoCommand;
 
@@ -44,18 +47,20 @@ public class RobotContainer {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
 
+        autonomous = Autonomous.getInstance();
+        limelightFront = LimelightFront.getInstance();
+        limelightBack = LimelightBack.getInstance();
+        // blinkin = Blinkin.getInstance();
+
         operatorOI = OperatorOI.getInstance();
         driverOI = DriverOI.getInstance();
 
-        autonomous = Autonomous.getInstance();
-        limelightFront = LimelightFront.getInstance();
-        // limelightBack = LimelightBack.getInstance();
-        // blinkin = Blinkin.getInstance();
+        shuffleboard = ShuffleboardMain.getInstance();
     }
 
     public Command getAutonomousCommand() {
         drivetrain.resetGyro();
-        return autonomous.getAutonomousCommand();
+        return shuffleboard.getAutonomousCommand();
     }
 
     public void resetGyro() {
@@ -84,6 +89,10 @@ public class RobotContainer {
 
     public double getAngleOffsetFromAuto() {
         return autonomous.getAngleOffsetFromAuto();
+    }
+
+    public void setFlipped(boolean bool){
+        drivetrain.setFlipped(bool);
     }
 
 }

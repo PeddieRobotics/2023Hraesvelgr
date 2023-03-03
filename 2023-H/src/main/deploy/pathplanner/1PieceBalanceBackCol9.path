@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.99,
-        "y": 5.0
+        "x": 1.7737935421845994,
+        "y": 5.00002264186052
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0310425575038074,
-        "y": 4.937448086673591
+        "x": 2.3242987265543547,
+        "y": 4.937505653335342
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -24,22 +26,22 @@
     },
     {
       "anchorPoint": {
-        "x": 6.37,
-        "y": 4.58
+        "x": 6.760776089312521,
+        "y": 4.5170058956380394
       },
       "prevControl": {
-        "x": 4.801474654377881,
-        "y": 4.646119235095613
+        "x": 6.753274722835865,
+        "y": 4.5170058956380394
       },
       "nextControl": {
-        "x": 4.801474654377881,
-        "y": 4.646119235095613
+        "x": 6.753274722835865,
+        "y": 4.5170058956380394
       },
       "holonomicAngle": 0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -49,26 +51,48 @@
     },
     {
       "anchorPoint": {
-        "x": 2.27,
-        "y": 4.4
+        "x": 5.266671886727233,
+        "y": 3.3049476625269048
       },
       "prevControl": {
-        "x": 3.2082304982769907,
-        "y": 4.56543535096978
+        "x": 6.075751696839423,
+        "y": 3.3049476625269048
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "BalanceFarBackLL",
+          "lock"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "IntakeCubePose"
+      ]
+    },
+    {
+      "position": 0.6363636363636364,
+      "names": [
+        "IntakeCube"
+      ]
+    },
+    {
+      "position": 1.01,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

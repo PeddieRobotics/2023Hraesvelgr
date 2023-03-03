@@ -12,7 +12,7 @@ public class WristTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
 
     private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
-            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint;
+            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mLimitSensor;
 
     public WristTab() {
     }
@@ -31,13 +31,15 @@ public class WristTab extends ShuffleboardTabBase {
                     .getEntry();
             mVoltage = tab.add("Voltage", 0.0)
                     .getEntry();
+        mLimitSensor = tab.add("Limit sensor", false)
+                .getEntry();
             mOpenLoopToggle = tab.add("Open Loop Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
             mPIDToggle = tab.add("PID Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
-            mPIDSetpoint = tab.add("PID Setpoint", WristConstants.kIz)
+            mPIDSetpoint = tab.add("PID Setpoint", WristConstants.kHomeAngle)
                     .getEntry();
             mArbitraryFF = tab.add("Arb FF", 0.0)
                     .getEntry();
@@ -70,16 +72,17 @@ public class WristTab extends ShuffleboardTabBase {
             mTemp.setDouble(wrist.getMotorTemperature());
             mVoltage.setDouble(wrist.getVoltage());
             mArbitraryFF.setDouble(wrist.getArbitraryFF());
+            mLimitSensor.setBoolean(wrist.atLimitSensor());
 
             if (mOpenLoopToggle.getBoolean(false)) {
                 wrist.setPercentOutput(DriverOI.getInstance().getArmSpeed());
             } else if (mPIDToggle.getBoolean(false)) {
-                wrist.setPIDController(mkP.getDouble(WristConstants.kP),
+                wrist.updatePIDController(mkP.getDouble(WristConstants.kP),
                         mkI.getDouble(WristConstants.kI),
                         mkD.getDouble(WristConstants.kD),
-                        mkIz.getDouble(WristConstants.kIz));
+                        mkIz.getDouble(WristConstants.kIz), 0);
 
-                wrist.setWristFeedforward(
+                wrist.updateWristFeedforward(
                         mkG.getDouble(0.0),
                         mkV.getDouble(0.0),
                         mkA.getDouble(0.0));

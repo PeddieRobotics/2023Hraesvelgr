@@ -27,7 +27,7 @@ public class LimelightFrontTab extends ShuffleboardTabBase {
         tab = Shuffleboard.getTab("Limelight Front");
 
         try{
-                tab.addCamera("Stream", "LL Front", "mjpg:http://10.58.95.12:5800")
+                tab.addCamera("Stream", "LL Front", "mjpg:http://10.58.95.11:5800")
                 .withSize(9, 6)
                 .withPosition(0, 1);
 

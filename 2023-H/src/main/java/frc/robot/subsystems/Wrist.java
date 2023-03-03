@@ -7,26 +7,51 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utils.Constants;
-import frc.robot.utils.DriverOI;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist {
     private static Wrist wrist;
 
     private CANSparkMax wristMotor;
 
-    // private DigitalInput limitSensor;
+    private DigitalInput limitSensor;
+    private boolean reachedLimitSensorDownward;
 
     private SparkMaxPIDController pidController;
 
     private ArmFeedforward wristFeedforward;
 
-    private double kP, kI, kD, kIz, kS, kG, kV, kA, arbitraryFF;
+    private double kP, kI, kD, kIz, kG, kV, kA, arbitraryFF;
+
+    // Angles (poses) start here
+    private double kHomeAngle = WristConstants.kHomeAngle;
+    private double kStowedAngle = WristConstants.kStowedAngle;
+    private double kL1Angle = WristConstants.kL1Angle;
+
+    // Shoulder is not fully extended out
+    private double kCompactFloorConeAngle = WristConstants.kCompactFloorConeAngle;
+    private double kCompactFloorCubeAngle = WristConstants.kCompactFloorCubeAngle;
+
+    // Shoulder is fully extended out
+    private double kExtendedFloorConeAngle = WristConstants.kExtendedFloorConeAngle;
+    private double kExtendedFloorCubeAngle = WristConstants.kExtendedFloorCubeAngle;
+
+    private double kL2ConeAngle = WristConstants.kL2ConeAngle;
+    private double kL2CubeAngle = WristConstants.kL2CubeAngle;
+
+    private double kL3CubeForwardAngle = WristConstants.kL3CubeForwardAngle;
+    private double kL3CubeInvertedAngle = WristConstants.kL3CubeInvertedAngle;
+    private double kL3ConeAngle = WristConstants.kL3ConeAngle;
+
+    private double kLLSeekAngle = WristConstants.kLLSeekAngle;
+    private double kDoubleSSConeAngle = WristConstants.kDoubleSSConeAngle;
+    private double kSingleSSAngle = WristConstants.kSingleSSAngle;
+    private double kTransitoryAngle = WristConstants.kTransitoryAngle;
+
 
     public Wrist() {
 
@@ -39,27 +64,27 @@ public class Wrist {
         kI = WristConstants.kI;
         kD = WristConstants.kD;
         kIz = WristConstants.kIz;
-        setPIDController(kP, kI, kD, kIz);
+        setupPIDController(kP, kI, kD, kIz, 0);
 
         kG = WristConstants.kGVolts;
-
         kV = WristConstants.kVVoltSecondPerRad;
         kA = WristConstants.kAVoltSecondSquaredPerRad;
 
-        wristFeedforward = new ArmFeedforward(kS, kG, kV, kA);
+        wristFeedforward = new ArmFeedforward(0.0, kG, kV, kA);
 
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kEncoderConversionFactor);
-        setEncoder(103);
+        wristMotor.getEncoder().setVelocityConversionFactor(WristConstants.kEncoderConversionFactor/60.0);
+        setEncoder(WristConstants.kHomeAngle);
 
-        // limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
+        limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
         wristMotor.setSoftLimit(SoftLimitDirection.kForward, WristConstants.kAngleMax);
         wristMotor.setSoftLimit(SoftLimitDirection.kReverse, WristConstants.kAngleMin);
 
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        //
-        wristMotor.setClosedLoopRampRate(0.01);
+        
+        wristMotor.setClosedLoopRampRate(0.2);
 
     }
 
@@ -73,9 +98,9 @@ public class Wrist {
         return arbitraryFF;
     }
 
-    // public boolean atLimitSensor(){
-    // return !limitSensor.get();
-    // }
+    public boolean atLimitSensor(){
+    return !limitSensor.get();
+    }
 
     public void resetEncoder() {
         setEncoder(0);
@@ -113,7 +138,7 @@ public class Wrist {
         wristMotor.set(0);
     }
 
-    public void setWristFeedforward(double dbkg, double dbkv, double dbka) {
+    public void updateWristFeedforward(double dbkg, double dbkv, double dbka) {
         if (kG != dbkg || kV != dbkv || kA != dbka) {
             kG = dbkg;
             kV = dbkv;
@@ -122,15 +147,39 @@ public class Wrist {
         }
     }
 
-    public void setPIDController(double p, double i, double d, double izone) {
-        pidController.setP(p);
-        pidController.setI(i);
-        pidController.setD(d);
-        pidController.setIZone(izone);
+    public void setupPIDController(double p, double i, double d, double izone, int pidslot) {
+        pidController.setP(p, pidslot);
+        pidController.setI(i, pidslot);
+        pidController.setD(d, pidslot);
+        pidController.setIZone(izone, pidslot);
+    }
+
+    public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
+        if(kP != p || kI != i || kD != d || kIz != izone){
+            kP = p;
+            kI = i;
+            kD = d;
+            kIz = izone;
+            pidController.setP(p, pidslot);
+            pidController.setI(i, pidslot);
+            pidController.setD(d, pidslot);
+            pidController.setIZone(izone, pidslot);
+        }
     }
 
     public void periodic() {
+        //Limit sensor triggered and wrist is moving down
+        if(atLimitSensor() && getVelocity() < 0){   
+            reachedLimitSensorDownward = true;
+        }
 
+        // If the wrist is moving down and leaves the limit sensor, reset the encoder
+        if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
+            wrist.setEncoder(75); 
+            reachedLimitSensorDownward = false;
+        }
+
+        if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
     }
 
     public void setMode(IdleMode mode) {
@@ -145,6 +194,139 @@ public class Wrist {
     }
 
     public double getVoltage(){
-        return wristMotor.getBusVoltage();
+        return wristMotor.getAppliedOutput()*100;
     }
+
+    public void disablePIDController() {
+        wristMotor.set(0);
+    }
+
+    public double getkHomeAngle() {
+        return kHomeAngle;
+    }
+
+    public void setkHomeAngle(double kHomeAngle) {
+        this.kHomeAngle = kHomeAngle;
+    }
+
+    public double getkStowedAngle() {
+        return kStowedAngle;
+    }
+
+    public void setkStowedAngle(double kStowedAngle) {
+        this.kStowedAngle = kStowedAngle;
+    }
+
+    public double getkL1Angle() {
+        return kL1Angle;
+    }
+
+    public void setkL1Angle(double kL1Angle) {
+        this.kL1Angle = kL1Angle;
+    }
+
+    public double getkCompactFloorConeAngle() {
+        return kCompactFloorConeAngle;
+    }
+
+    public void setkCompactFloorConeAngle(double kCompactFloorConeAngle) {
+        this.kCompactFloorConeAngle = kCompactFloorConeAngle;
+    }
+
+    public double getkCompactFloorCubeAngle() {
+        return kCompactFloorCubeAngle;
+    }
+
+    public void setkCompactFloorCubeAngle(double kCompactFloorCubeAngle) {
+        this.kCompactFloorCubeAngle = kCompactFloorCubeAngle;
+    }
+
+    public double getkExtendedFloorConeAngle() {
+        return kExtendedFloorConeAngle;
+    }
+
+    public void setkExtendedFloorConeAngle(double kExtendedFloorConeAngle) {
+        this.kExtendedFloorConeAngle = kExtendedFloorConeAngle;
+    }
+
+    public double getkExtendedFloorCubeAngle() {
+        return kExtendedFloorCubeAngle;
+    }
+
+    public void setkExtendedFloorCubeAngle(double kExtendedFloorCubeAngle) {
+        this.kExtendedFloorCubeAngle = kExtendedFloorCubeAngle;
+    }
+
+    public double getkL2ConeAngle() {
+        return kL2ConeAngle;
+    }
+
+    public void setkL2ConeAngle(double kL2ConeAngle) {
+        this.kL2ConeAngle = kL2ConeAngle;
+    }
+
+    public double getkL2CubeAngle() {
+        return kL2CubeAngle;
+    }
+
+    public void setkL2CubeAngle(double kL2CubeAngle) {
+        this.kL2CubeAngle = kL2CubeAngle;
+    }
+
+    public double getkL3CubeForwardAngle() {
+        return kL3CubeForwardAngle;
+    }
+
+    public void setkL3CubeForwardAngle(double kL3CubeForwardAngle) {
+        this.kL3CubeForwardAngle = kL3CubeForwardAngle;
+    }
+
+    public double getkL3CubeInvertedAngle() {
+        return kL3CubeInvertedAngle;
+    }
+
+    public void setkL3CubeInvertedAngle(double kL3CubeInvertedAngle) {
+        this.kL3CubeInvertedAngle = kL3CubeInvertedAngle;
+    }
+
+    public double getkL3ConeAngle() {
+        return kL3ConeAngle;
+    }
+
+    public void setkL3ConeAngle(double kL3ConeAngle) {
+        this.kL3ConeAngle = kL3ConeAngle;
+    }
+
+    public double getkLLSeekAngle() {
+        return kLLSeekAngle;
+    }
+
+    public void setkLLSeekAngle(double kLLSeekAngle) {
+        this.kLLSeekAngle = kLLSeekAngle;
+    }
+
+    public double getkDoubleSSConeAngle() {
+        return kDoubleSSConeAngle;
+    }
+
+    public void setkDoubleSSConeAngle(double kDoubleSSConeAngle) {
+        this.kDoubleSSConeAngle = kDoubleSSConeAngle;
+    }
+
+    public double getkSingleSSAngle() {
+        return kSingleSSAngle;
+    }
+
+    public void setkSingleSSAngle(double kSingleSSAngle) {
+        this.kSingleSSAngle = kSingleSSAngle;
+    }
+
+    public double getkTransitoryAngle() {
+        return kTransitoryAngle;
+    }
+
+    public void setkTransitoryAngle(double kTransitoryAngle) {
+        this.kTransitoryAngle = kTransitoryAngle;
+    }
+
 }

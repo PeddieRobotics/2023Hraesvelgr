@@ -4,10 +4,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
@@ -15,11 +19,10 @@ import frc.robot.utils.Constants.ClawConstants;
 public class Claw extends SubsystemBase {
     private static Claw instance;
     private CANSparkMax clawMotor;
-    private DigitalInput coneSensor, cubeSensor;
+    private DigitalInput backSensor, frontSensor;
+    private boolean useSensors;
 
-    private RollingAverage clawCurrentAverage;
-    
-    public enum ClawState {EMPTY, CUBE, CONE};
+    public enum ClawState {EMPTY, INTAKING, CUBE, CONE};
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
     private SendableChooser<String> gamepieceChooser;
@@ -31,10 +34,9 @@ public class Claw extends SubsystemBase {
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
 
-        clawCurrentAverage = new RollingAverage();
-
-        // coneSensor = new DigitalInput(RobotMap.kClawConeSensor);
-        // cubeSensor = new DigitalInput(RobotMap.kClawCubeSensor);
+        backSensor = new DigitalInput(RobotMap.kClawBackSensor);
+        frontSensor = new DigitalInput(RobotMap.kClawFrontSensor);
+        useSensors = true;
 
         cubeIntakeSpeed = ClawConstants.kCubeIntakeSpeed;
         coneIntakeSpeed = ClawConstants.kConeIntakeSpeed;
@@ -54,7 +56,18 @@ public class Claw extends SubsystemBase {
     
     @Override
     public void periodic(){
-        clawCurrentAverage.add(clawMotor.getOutputCurrent());
+        if(useSensors){
+            if(isFrontSensor() && isBackSensor()){
+                state = ClawState.CONE;
+            }
+            else if(isFrontSensor() && !isBackSensor()){
+                state = ClawState.CUBE;
+            }
+            else if(state != ClawState.INTAKING && (!isFrontSensor() && !isBackSensor())){
+                state = ClawState.EMPTY;
+            }
+        }
+        
     }
 
     public static Claw getInstance(){
@@ -76,16 +89,20 @@ public class Claw extends SubsystemBase {
         clawMotor.set(clawSpeed);
     }
 
+    public boolean isBackSensor(){
+        return !backSensor.get();
+    }
+
+    public boolean isFrontSensor(){
+        return !frontSensor.get();
+    }
+
     public boolean hasCone(){
         return state == ClawState.CONE;
-        // return gamepieceChooser.getSelected().equals("Cone"); // temporary until we get banner sensors installed
-        // return !coneSensor.get();
     }
 
     public boolean hasCube(){
         return state == ClawState.CUBE;
-        // return gamepieceChooser.getSelected().equals("Cube"); // temporary until we get banner sensor installed
-        // return !cubeSensor.get();
     }
 
     public boolean hasGamepiece(){
@@ -129,7 +146,17 @@ public class Claw extends SubsystemBase {
     }
 
     public double getVoltage(){
-        return clawMotor.getBusVoltage();
+        return clawMotor.getAppliedOutput()*100;
     }
+
+        
+    public boolean isUseSensors() {
+        return useSensors;
+    }
+
+    public void setUseSensors(boolean useSensors) {
+        this.useSensors = useSensors;
+    }
+
 
 }

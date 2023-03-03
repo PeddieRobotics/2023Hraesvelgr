@@ -2,12 +2,7 @@ package frc.robot.Shuffleboard;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTablesJNI;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Shuffleboard.tabs.*;
 
 public class ShuffleboardMain {
@@ -23,7 +18,7 @@ public class ShuffleboardMain {
     private WristTab wristTab;
     private DrivetrainTab drivetrainTab;
     private LimelightFrontTab limelightFrontTab;
-    // private LimelightBackTab limelightBackTab;
+    private LimelightBackTab limelightBackTab;
     private SystemsTab systemsTab;
 
     public ShuffleboardMain() {
@@ -37,7 +32,7 @@ public class ShuffleboardMain {
         return shuffleboard;
     }
 
-    public void setupTeleop(){
+    public void setupCompetitionMode(){
         operatorTab = new OperatorTab();
 
         tabs.add(operatorTab);
@@ -52,8 +47,8 @@ public class ShuffleboardMain {
 
         tabs.add(limelightFrontTab);
         
-        // limelightBackTab = new LimelightBackTab();
-        // tabs.add(limelightBackTab);
+        limelightBackTab = new LimelightBackTab();
+        tabs.add(limelightBackTab);
 
         for (ShuffleboardTabBase tab : tabs) {
             tab.createEntries();
@@ -61,7 +56,7 @@ public class ShuffleboardMain {
 
     }
 
-    public void setupTestMode(){
+    public void setupDebugMode(){
         operatorTab = new OperatorTab();
         tabs.add(operatorTab);
 
@@ -83,8 +78,8 @@ public class ShuffleboardMain {
         limelightFrontTab = new LimelightFrontTab();
         tabs.add(limelightFrontTab);
         
-        // limelightBackTab = new LimelightBackTab();
-        // tabs.add(limelightBackTab);
+        limelightBackTab = new LimelightBackTab();
+        tabs.add(limelightBackTab);
 
         for (ShuffleboardTabBase tab : tabs) {
             tab.createEntries();
@@ -96,6 +91,14 @@ public class ShuffleboardMain {
             tab.update();
         }
         
+    }
+
+    public Command getAutonomousCommand(){
+        return operatorTab.getAutonomousCommand();
+    }
+
+    public void setupAutoSelector(){
+        operatorTab.setupAutoSelector();
     }
 
 }

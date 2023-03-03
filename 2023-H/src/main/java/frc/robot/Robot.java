@@ -13,16 +13,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 // import org.littletonrobotics.junction.io.ByteLogReceiver;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Shuffleboard.ShuffleboardMain;
+import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.utils.Constants.OIConstants;
 
 /**
@@ -42,17 +39,21 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        // LiveWindow.setEnabled(false);
+
         robotContainer = new RobotContainer();
 
         shuffleboard = ShuffleboardMain.getInstance();
-        if(OIConstants.kUseTestModeLayout){
-            shuffleboard.setupTestMode();
+        if(OIConstants.kUseDebugModeLayout){
+            shuffleboard.setupDebugMode();
+            shuffleboard.setupAutoSelector();
         }
         else{
-            shuffleboard.setupTeleop();
+            shuffleboard.setupCompetitionMode();
+            shuffleboard.setupAutoSelector();
         }
 
-        PathPlannerServer.startServer(5895);
+        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
@@ -116,7 +117,7 @@ public class Robot extends TimedRobot {
         } else {
             // Always assume field orientation should be opposite
             // where the gyro is zeroed.
-            robotContainer.setupAngleOffsetFromAuto(180);
+            robotContainer.setFlipped(true);
 
             // For the sake of calculating odometry correctly,
             // make our initial pose on the field such that
@@ -129,6 +130,9 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        // Default pose for the robot to begin teleop is stowed.
+        CommandScheduler.getInstance().schedule(new SetStowedPose());
     }
 
     @Override
@@ -138,7 +142,14 @@ public class Robot extends TimedRobot {
         robotContainer.resetGyro();
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
-        LiveWindow.setEnabled(false);
+
+        shuffleboard = ShuffleboardMain.getInstance();
+        if(OIConstants.kUseDebugModeLayout){
+            shuffleboard.setupDebugMode();
+        }
+        else{
+            shuffleboard.setupCompetitionMode();
+        }
     }
 
     @Override

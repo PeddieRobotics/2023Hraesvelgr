@@ -2,36 +2,52 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
 public class SetDoubleSSConePose extends CommandBase{
     private Arm arm;
+    private Shoulder shoulder;
+    private Wrist wrist;
 
     public SetDoubleSSConePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
+
+        shoulder = Shoulder.getInstance();
+        wrist = Wrist.getInstance();
     }
 
     @Override
     public void initialize() {
-        arm.setShoulderPosition(ShoulderConstants.kDoubleSSConeAngle);
+        arm.setShoulderPositionSmartMotion(shoulder.getkDoubleSSConeAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setState(ArmState.MOVING);
+
     }
 
     @Override
     public void execute() {
         if(arm.isShoulderAboveAngle(-30)){
-            arm.setWristPosition(WristConstants.kDoubleSSConeAngle);
+            arm.setWristPosition(wrist.getkDoubleSSConeAngle());
         }
     }
 
     @Override
     public void end(boolean interrupted){
+        if(!interrupted){
+            arm.holdShoulderPosition();
+            arm.setState(ArmState.DOUBLE_SS_CONE);
+        }
+
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(ShoulderConstants.kDoubleSSConeAngle) && arm.isWristAtAngle(WristConstants.kDoubleSSConeAngle);
+        return arm.isShoulderAtAngle(shoulder.getkDoubleSSConeAngle()) && arm.isWristAtAngle(wrist.getkDoubleSSConeAngle());
     }
 
 
