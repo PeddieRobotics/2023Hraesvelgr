@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
@@ -13,8 +14,8 @@ public class ClimbCSAprilTag extends CommandBase{
     private Drivetrain drivetrain;
     private LimelightFront limelightFront;
     private LimelightBack limelightBack;
-    private double speed, robotHeading;
-    private boolean climbAwayFromScoringGrid, useLLFront;
+    private double speed, robotHeading, startX;
+    private boolean climbAwayFromScoringGrid, useLLFront,lostTarget;
 
     public ClimbCSAprilTag(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
         drivetrain = Drivetrain.getInstance();
@@ -35,10 +36,20 @@ public class ClimbCSAprilTag extends CommandBase{
         drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
 
         limelightBack.startAveragingX();
+        lostTarget=false;
     }
 
     @Override
     public void execute() {
+        if(!limelightBack.hasTarget() && !lostTarget) {
+            startX = drivetrain.getPose().getX();
+            SmartDashboard.putNumber("Start X", startX);
+            lostTarget=true;
+        }
+        if(lostTarget){
+            Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
+        drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
+        }
     }
 
     @Override
@@ -49,6 +60,12 @@ public class ClimbCSAprilTag extends CommandBase{
     @Override
     public boolean isFinished() {
         // Below, red side is untested, as is the entire climb towards grid (else case).
+        if(lostTarget){
+            double deltaX = Math.abs(drivetrain.getPose().getX()-startX);
+            SmartDashboard.putNumber("Delta X", deltaX);
+            return(Math.abs(drivetrain.getPose().getX()-startX)> 1);
+
+        }
         if(climbAwayFromScoringGrid){
             if(DriverStation.getAlliance() == Alliance.Blue){
                 if(useLLFront){
@@ -74,7 +91,7 @@ public class ClimbCSAprilTag extends CommandBase{
                     return limelightFront.getBotpose().getX() < 4.0;
                 }
                 else{
-                    return limelightBack.getAveragePoseX() < 4.2;
+                    return limelightBack.getAveragePoseX() < 4.0;
                 }
             }
             else if(DriverStation.getAlliance() == Alliance.Red){

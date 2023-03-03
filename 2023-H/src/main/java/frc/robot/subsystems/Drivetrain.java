@@ -196,8 +196,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        // limelightFront.checkForAprilTagUpdates(odometry);
-        // limelightBack.checkForAprilTagUpdates(odometry);
+        limelightFront.checkForAprilTagUpdates(odometry);
+        limelightBack.checkForAprilTagUpdates(odometry);
 
     }
 

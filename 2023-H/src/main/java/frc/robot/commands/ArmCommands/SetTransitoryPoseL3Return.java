@@ -29,7 +29,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
         stopped=false;
         if(arm.getState() != ArmState.L3_CONE_INVERTED) stopped=true;
         if(stopped) return;
-        arm.setWristPosition(103);
+        arm.setWristPosition(wrist.getkStowedAngle());
         arm.setState(ArmState.MOVING);
     }
 
@@ -53,7 +53,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderBelowAngle(75)||stopped;
+        return arm.isShoulderBelowAngle(90)||stopped;
     }
 
 

@@ -16,6 +16,7 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
@@ -93,8 +94,7 @@ public class OperatorOI {
         xButton.onTrue(new SetLevelOnePose());
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),
-                claw::hasCone));
+        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),claw::hasCone));
 
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue( new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));

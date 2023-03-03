@@ -104,6 +104,7 @@ public class DriverOI {
 
         //
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton.onTrue(new SequentialCommandGroup(new ClimbCSAprilTag(1.25, 0, false, false), new LockDrivetrain()));
 
         // 
         // Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
