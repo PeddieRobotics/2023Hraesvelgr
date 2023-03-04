@@ -14,10 +14,11 @@ public class ClimbCSOdometry extends CommandBase{
     private Drivetrain drivetrain;
     private LimelightFront limelightFront;
     private LimelightBack limelightBack;
-    private double speed, robotHeading;
+    private double speed, robotHeading, initialRobotX, deltaX;
     private boolean climbAwayFromScoringGrid, useLLFront;
 
     public ClimbCSOdometry(double speed, double robotHeading, boolean climbAwayFromScoringGrid, boolean useLLFront){
+        SmartDashboard.putNumber("Climbing Delta X", 0);
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
@@ -32,6 +33,8 @@ public class ClimbCSOdometry extends CommandBase{
 
     @Override
     public void initialize() {
+        deltaX = SmartDashboard.getNumber("Climbing Delta X", 0);
+        initialRobotX = drivetrain.getPose().getX();
         Translation2d chargeStationVector = new Translation2d(speed, new Rotation2d(Math.toRadians(robotHeading)));
         drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
 
@@ -45,7 +48,7 @@ public class ClimbCSOdometry extends CommandBase{
 
     @Override
     public void execute() {
-        Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
+        Translation2d chargeStationVector = new Translation2d(speed, new Rotation2d(Math.toRadians(robotHeading)));
         drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
     }
 
@@ -56,45 +59,7 @@ public class ClimbCSOdometry extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        // Below, red side is untested, as is the entire climb towards grid (else case).
-        if(climbAwayFromScoringGrid){
-            if(DriverStation.getAlliance() == Alliance.Blue){
-                if(useLLFront){
-                    return drivetrain.getPose().getX() > 3.75;
-                }
-                else{
-                    return drivetrain.getPose().getX() > 3.75;
-                }
-            }
-            else if(DriverStation.getAlliance() == Alliance.Red){
-                if(useLLFront){
-                    return drivetrain.getPose().getX() < 12.7;
-                }
-                else{
-                    return drivetrain.getPose().getX() < 12.7;
-                }
-            }
-            return false;
-        }
-        else{
-            if(DriverStation.getAlliance() == Alliance.Blue){
-                if(useLLFront){
-                    return drivetrain.getPose().getX() < 4.0;
-                }
-                else{
-                    return drivetrain.getPose().getX() < 4.0;
-                }
-            }
-            else if(DriverStation.getAlliance() == Alliance.Red){
-                if(useLLFront){
-                    return drivetrain.getPose().getX() > 12.9;
-                }
-                else{
-                    return drivetrain.getPose().getX() > 12.9;
-                }
-            }
-            return false;
-        }
+        return Math.abs(drivetrain.getPose().getX() - initialRobotX) > deltaX;
     }
 
     

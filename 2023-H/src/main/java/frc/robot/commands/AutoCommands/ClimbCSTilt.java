@@ -105,7 +105,7 @@ public class ClimbCSTilt extends CommandBase{
             if(!hasClimbed && (currentTime-initialTime) > minTimeToClimb && Math.abs(currentPitch-initialPitch) > pitchThreshold){
                 hasClimbed = true;
                 climbedTime = Timer.getFPGATimestamp();
-                Translation2d chargeStationVector = new Translation2d(speed/2, new Rotation2d(Math.toRadians(robotHeading)));
+                Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
                 drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
             }
 
@@ -113,7 +113,7 @@ public class ClimbCSTilt extends CommandBase{
                 if(pitchRate < pitchRateThreshold && !hasTilted) {
                     startX = drivetrain.getPose().getX();
                     hasTilted = true;
-                    Translation2d chargeStationVector = new Translation2d(speed/2, new Rotation2d(Math.toRadians(180-robotHeading)));
+                    Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(180-robotHeading)));
                     drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
                 }
              }
@@ -122,15 +122,16 @@ public class ClimbCSTilt extends CommandBase{
             if(!hasClimbed && (currentTime-initialTime) > minTimeToClimb && Math.abs(currentPitch-initialPitch) > pitchThreshold){
                 hasClimbed = true;
                 climbedTime = Timer.getFPGATimestamp();
-                Translation2d chargeStationVector = new Translation2d(speed/2, new Rotation2d(Math.toRadians(robotHeading)));
+                Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(robotHeading)));
                 drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
             }    
+            
             
             if((currentTime-climbedTime) > minTimeToWaitForTilt && hasClimbed){
                 if(pitchRate > pitchRateThreshold && !hasTilted) {
                     startX = drivetrain.getPose().getX();
                     hasTilted = true;
-                    Translation2d chargeStationVector = new Translation2d(speed/2, new Rotation2d(Math.toRadians(180-robotHeading)));
+                    Translation2d chargeStationVector = new Translation2d(speed/3, new Rotation2d(Math.toRadians(180-robotHeading)));
                     drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
                 }
              }
@@ -146,10 +147,14 @@ public class ClimbCSTilt extends CommandBase{
 
     @Override
     public boolean isFinished() {
+        if(DriverStation.getMatchTime() > 14.5){
+            return true;
+        }
         if(hasTilted){
-            double deltaX = Math.abs(drivetrain.getPose().getX()-startX);
-            SmartDashboard.putNumber("Delta X", deltaX);
-            return deltaX > SmartDashboard.getNumber("driveBackDistance", 0.3);
+            return true;
+            // double deltaX = Math.abs(drivetrain.getPose().getX()-startX);
+            // SmartDashboard.putNumber("Delta X", deltaX);
+            // return deltaX > SmartDashboard.getNumber("driveBackDistance", 0.3);
         }
         return false;
 

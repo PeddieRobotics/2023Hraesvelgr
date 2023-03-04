@@ -98,10 +98,12 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
+        // triangleButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 0, false, true), new LockDrivetrain()));
 
         // Single SS pose Button
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSPose(), new IntakeCone()), new SetStowedPose()));
+        // xButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, false), new LockDrivetrain()));
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(controller, 15);
@@ -125,7 +127,7 @@ public class DriverOI {
         // Square button unused. Temporarily used to test charge station.
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.onTrue(new SequentialCommandGroup(new ClimbCSOdometry(1, 0, false, false), new LockDrivetrain()));
-        squareButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, true), new LockDrivetrain()));
+        // squareButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, true), new LockDrivetrain()));
 
         // Slow Mode
         // Back Button / Option Button
