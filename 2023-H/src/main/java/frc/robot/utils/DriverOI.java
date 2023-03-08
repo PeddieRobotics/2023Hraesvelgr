@@ -87,13 +87,13 @@ public class DriverOI {
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
-                    new SetStowedPose()), claw::hasGamepiece));
+                    new SetStowedPose()), arm::isArmScoringPose));
 
         // Cube intake/eject gamepieces
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
-                    new SetStowedPose()), claw::hasGamepiece));
+                    new SetStowedPose()), arm::isArmScoringPose));
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
@@ -115,7 +115,7 @@ public class DriverOI {
 
         // LOck drivetrain
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
-        rightStickButton.onTrue(new LockDrivetrain());
+        rightStickButton.toggleOnTrue(new LockDrivetrain());
 
         // Does nothing
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);

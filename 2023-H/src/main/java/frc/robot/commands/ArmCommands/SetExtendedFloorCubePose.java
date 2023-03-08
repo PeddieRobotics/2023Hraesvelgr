@@ -42,7 +42,7 @@ public class SetExtendedFloorCubePose extends CommandBase{
         }
 
         arm.setWristPosition(wrist.getkStowedAngle());
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
 
     }
 

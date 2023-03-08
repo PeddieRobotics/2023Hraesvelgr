@@ -34,7 +34,7 @@ public class SetLevelOnePose extends CommandBase{
         else{
             arm.setWristPosition(60);
         }
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.L1);
 
     }
 

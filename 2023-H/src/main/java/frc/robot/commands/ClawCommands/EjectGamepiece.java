@@ -11,26 +11,29 @@ import frc.robot.subsystems.Claw.ClawState;
 
 public class EjectGamepiece extends CommandBase{
     private Claw claw;
+    private double initialTime, currentTime;
 
     public EjectGamepiece(){
         claw = Claw.getInstance();
         addRequirements(claw);
 
-
     }
 
     @Override
     public void initialize() {
-        if(claw.hasCone()){
+        initialTime = Timer.getFPGATimestamp();
+        currentTime = Timer.getFPGATimestamp();
+        if(Arm.getInstance().getState() == ArmState.L1 && claw.getState() == ClawState.CUBE){
+            claw.outtakeCube();
+        } else {
             claw.outtakeCone();
         }
-        else if(claw.hasCube()){
-            claw.outtakeCube();
-        }
+
     }
 
     @Override
     public void execute() {
+        currentTime = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -40,8 +43,7 @@ public class EjectGamepiece extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.getState() == ClawState.EMPTY;
+        return currentTime - initialTime > 0.5;
     }
-
-    
+        
 }

@@ -25,7 +25,7 @@ public class SetLLSeekPose extends CommandBase{
     @Override
     public void initialize() {
         arm.setWristPosition(40);
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.LL_SEEK);
 
     }
 

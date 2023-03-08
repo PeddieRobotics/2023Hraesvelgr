@@ -523,4 +523,18 @@ public class Shoulder {
     public void setCurrentPIDSetpointAngle(double currentPIDSetpointAngle) {
         this.currentPIDSetpointAngle = currentPIDSetpointAngle;
     }
+
+    public void turnOnSmartLimits(){
+        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, true);
+        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, true);
+        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    }
+
+    public void turnOffSmartLimits(){
+        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kForward, false);
+        shoulderMotorMaster.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kForward, false);
+        shoulderMotorFollower.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    }
 }

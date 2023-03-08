@@ -18,7 +18,8 @@
       "stopEvent": {
         "names": [
           "ConeL3",
-          "TransitoryPoseL3Return"
+          "TransitoryPoseL3Return",
+          "stow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -34,7 +35,10 @@
         "x": 2.322863320269377,
         "y": 2.7519865270422446
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 2.377136679730623,
+        "y": 2.7519865270422446
+      },
       "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": 1.0,
@@ -48,6 +52,30 @@
         "executionBehavior": "sequential",
         "waitBehavior": "after",
         "waitTime": 0.1
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.0,
+        "y": 2.75
+      },
+      "prevControl": {
+        "x": 3.2579104785495887,
+        "y": 2.744620572204311
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "lock"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     }
   ],

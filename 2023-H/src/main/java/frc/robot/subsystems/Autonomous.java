@@ -81,8 +81,8 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("TransitoryPoseL3Return", new SetTransitoryPoseL3Return());
 
-        eventMap.put("IntakeCone", new ParallelRaceGroup(new WaitCommand(4),new IntakeCone()));
-        eventMap.put("IntakeCube", new ParallelRaceGroup(new WaitCommand(4),new IntakeCube()));
+        eventMap.put("IntakeCone", new IntakeCone());
+        eventMap.put("IntakeCube", new IntakeCube());
 
         eventMap.put("ConeL3", new SequentialCommandGroup( new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3Return()));
         eventMap.put("CubeL3", new EjectGamepiece());
@@ -150,7 +150,7 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("1 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceCol9", 1.0, 1.0)));
 
         // 1 piece routines with charge station
-        autoRoutines.put("1 Piece Balance Back Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol1", 2.0, 2.0)));
+        // autoRoutines.put("1 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBumpCol1", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Back Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 1.5, 1.5)));
         autoRoutines.put("1 Piece Balance Column 3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol3", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Column 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol4", 1.0, 1.0)));
@@ -158,15 +158,15 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("1 Piece Balance Column 7", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceCol7", 1.0, 1.0)));
 
         // 2 piece routines without charge station
-        autoRoutines.put("2 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
-        autoRoutines.put("2 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTop", 0.5, 0.5)));
-        autoRoutines.put("2 Piece Prepare Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
+        // autoRoutines.put("2 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
+        autoRoutines.put("2 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTop", 2.0, 2.0)));
+        // autoRoutines.put("2 Piece Prepare Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
 
         // 2 piece routines with charge station
-        autoRoutines.put("2 Piece Balance Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceTop", 0.5, 0.5)));
+        // autoRoutines.put("2 Piece Balance Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceTop", 0.5, 0.5)));
 
         // 3 piece routines without charge station
-        autoRoutines.put("3 Piece L1 Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceL1Top", 0.5, 0.5)));
+        // autoRoutines.put("3 Piece L1 Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("3PieceL1Top", 0.5, 0.5)));
 
         // autoRoutines.put("3 Piece Balance Top", autobuilder.fullAuto(PathPlanner.loadPathGroup("3PieceBalanceTop", 0.5, 0.5)));
         // autoRoutines.put("3 Piece Top", autobuilder.fullAuto(PathPlanner.loadPathGroup("3PieceTop", 0.5, 0.5)))
@@ -183,8 +183,8 @@ public class Autonomous extends SubsystemBase{
         // autoRoutines.put("testPath4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath4", 0.5, 0.5)));
 
         //Testing auto paths 
-        autoRoutines.put("Testing Auto Path 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart1", 1.5, 1.5)));
-        autoRoutines.put("Testing Auto Path 2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart2", 1.5, 1.5)));
+        // autoRoutines.put("Testing Auto Path 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart1", 1.5, 1.5)));
+        // autoRoutines.put("Testing Auto Path 2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart2", 1.5, 1.5)));
     }   
 
     private void setFlipped(){ //used only in auto

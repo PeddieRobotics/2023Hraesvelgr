@@ -38,7 +38,7 @@ public class SetCompactFloorConePose extends CommandBase{
         }
 
         arm.setWristPosition(WristConstants.kStowedAngle);
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.FLOOR_INTAKE_CONE_COMPACT);
 
     }
 

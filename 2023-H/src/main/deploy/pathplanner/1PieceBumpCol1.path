@@ -26,51 +26,26 @@
     },
     {
       "anchorPoint": {
-        "x": 6.751229828990271,
+        "x": 6.85,
         "y": 0.941944468922951
       },
       "prevControl": {
-        "x": 5.794805603216649,
+        "x": 5.893575774226378,
         "y": 0.9982047174978699
-      },
-      "nextControl": {
-        "x": 5.794805603216649,
-        "y": 0.9982047174978699
-      },
-      "holonomicAngle": 0.0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.651536666839382,
-        "y": 2.2527852188371993
-      },
-      "prevControl": {
-        "x": 6.026604990672174,
-        "y": 1.8777168950044063
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "BalanceFarBackLL"
+          "stow"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "before",
+        "waitTime": 0.1
       }
     }
   ],
@@ -82,21 +57,15 @@
       ]
     },
     {
-      "position": 0.6690909090909122,
+      "position": 0.4818181818181818,
       "names": [
         "IntakeCube"
       ]
     },
     {
-      "position": 1.3090909090909086,
-      "names": [
-        "stow"
-      ]
-    },
-    {
       "position": 0.01,
       "names": [
-        "TransitoryPoseL3Return"
+        "stow"
       ]
     }
   ]

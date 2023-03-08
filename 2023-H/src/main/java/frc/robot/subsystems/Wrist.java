@@ -329,4 +329,14 @@ public class Wrist {
         this.kTransitoryAngle = kTransitoryAngle;
     }
 
+    public void turnOnSmartLimits(){
+        wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+        wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    }
+
+    public void turnOffSmartLimits(){
+        wristMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+        wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    }
+
 }

@@ -149,12 +149,26 @@ public class Arm extends SubsystemBase {
         return arm.getState() == ArmState.L3_CONE_INVERTED;
     }
 
+    public boolean isArmScoringPose(){
+        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED;
+    }
+
     public static Arm getInstance() {
         if (arm == null) {
             arm = new Arm();
         }
         return arm;
     }
+
+    public void turnOffSmartLimits(){
+        wrist.turnOffSmartLimits();
+        shoulder.turnOffSmartLimits();
+    }
+
+    public void turnOnSmartLimits(){
+        wrist.turnOnSmartLimits();
+        shoulder.turnOnSmartLimits();
+    }   
 
     @Override
     public void periodic() {

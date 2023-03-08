@@ -38,7 +38,7 @@ public class SetCompactFloorCubePose extends CommandBase{
         }
 
         arm.setWristPosition(wrist.getkStowedAngle());
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.FLOOR_INTAKE_CUBE_COMPACT);
 
     }
 

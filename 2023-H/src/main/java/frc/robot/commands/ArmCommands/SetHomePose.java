@@ -1,5 +1,6 @@
 package frc.robot.commands.ArmCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
@@ -13,12 +14,12 @@ public class SetHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
-    private boolean transitory;
+    private boolean wristHomed, shoulderHomed, shoulderHeld;
+    private double initialShoulderMoveTime, currentShoulderMoveTime;
 
     public SetHomePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
-        transitory = false;
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -27,33 +28,59 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkHomeAngle());
-        arm.setState(ArmState.MOVING);
+        arm.turnOffSmartLimits();
+        arm.setState(ArmState.HOME);
+        wristHomed = false;
+        shoulderHomed = false;
+        shoulderHeld = false;
+
+        initialShoulderMoveTime = Timer.getFPGATimestamp();
+        currentShoulderMoveTime = Timer.getFPGATimestamp();
+
+        wrist.setPercentOutput(0.3);
+        shoulder.setPercentOutput(0.3);
+
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(wrist.getkHomeAngle() - 40) && !transitory){
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-            transitory = true;
+        currentShoulderMoveTime = Timer.getFPGATimestamp();
+
+        if(wrist.atLimitSensor()){
+            wrist.setPercentOutput(0);
+            wristHomed = true;
         }
 
-        if(transitory && arm.isShoulderBelowAngle(-39)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkHomeAngle(), SmartMotionArmSpeed.SLOW);
+        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
+            arm.holdShoulderPosition();
+            shoulderHeld = true;
         }
+
+        if(wristHomed && !shoulderHomed && currentShoulderMoveTime - initialShoulderMoveTime > 0.5){
+            shoulder.setPercentOutput(-0.3);
+        }
+
+        if(shoulder.atLimitSensor()){
+            shoulder.setPercentOutput(0);
+            shoulderHomed = true;
+        }
+        
     }
 
     @Override
     public void end(boolean interrupted){
-        transitory = false;
+        wrist.setEncoder(103);
+        shoulder.setEncoder(-75);
+        arm.turnOnSmartLimits();
         arm.setState(ArmState.HOME);
-        arm.holdShoulderPosition();
+        arm.setShoulderPercentOutput(0);
+        wrist.setPercentOutput(0);
 
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(wrist.getkHomeAngle()) && arm.isShoulderAtAngle(shoulder.getkHomeAngle());
+        return wristHomed && shoulderHomed;
     }
 
 

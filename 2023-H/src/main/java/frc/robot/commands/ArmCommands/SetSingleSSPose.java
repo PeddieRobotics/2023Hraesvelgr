@@ -26,7 +26,7 @@ public class SetSingleSSPose extends CommandBase{
     public void initialize() {
         arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setWristPosition(wrist.getkSingleSSAngle());
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.STOWED);
     }
 
     @Override

@@ -16,7 +16,11 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ConeL3",
+          "TransitoryPoseL3Return",
+          "stow"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
         "waitTime": 0.1
@@ -53,8 +57,8 @@
         "y": 2.2
       },
       "prevControl": {
-        "x": 3.4799341800264227,
-        "y": 2.1811305661572367
+        "x": 3.4795919748521014,
+        "y": 2.2
       },
       "nextControl": null,
       "holonomicAngle": 0,

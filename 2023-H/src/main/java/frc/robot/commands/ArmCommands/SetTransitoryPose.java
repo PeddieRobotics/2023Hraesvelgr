@@ -25,7 +25,7 @@ public class SetTransitoryPose extends CommandBase{
     @Override
     public void initialize() {
         arm.setWristPosition(wrist.getkTransitoryAngle());
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.TRANSITION);
     }
 
     @Override

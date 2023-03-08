@@ -39,7 +39,7 @@ public final class Constants {
                 public static final double kWheelBase = Units.inchesToMeters(24.5);
 
                 public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
-                public static final double kMaxFloorSpeed = 0.75 * kRealMaxSpeedMetersPerSecond;
+                public static final double kMaxFloorSpeed = 0.9 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
                 public static final double kMaxAngularSpeed = 2 * Math.PI;
                 public static final double kMaxAngularAcceleration = 2 * Math.PI / 3;
@@ -321,7 +321,7 @@ public final class Constants {
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kConeOuttakeSpeed = 1;
                 public static final double kCubeIntakeSpeed = -1;
-                public static final double kCubeOuttakeSpeed = 1;
+                public static final double kCubeOuttakeSpeed = 0.5;
 
                 public static final double kCubeHoldSpeed = -0.1;
         }
