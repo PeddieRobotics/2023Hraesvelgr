@@ -84,7 +84,7 @@ public class Wrist {
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         
-        wristMotor.setClosedLoopRampRate(0.2);
+        wristMotor.setClosedLoopRampRate(0.2); // use a 200 ms ramp rate on closed loop control
 
     }
 

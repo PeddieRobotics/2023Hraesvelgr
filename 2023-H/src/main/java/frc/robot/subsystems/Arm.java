@@ -168,11 +168,10 @@ public class Arm extends SubsystemBase {
     public void turnOnSmartLimits(){
         wrist.turnOnSmartLimits();
         shoulder.turnOnSmartLimits();
-    }   
-
+    }
+    
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("inverted l3 cone?", isInvertedL3Cone());
         shoulder.periodic();
         wrist.periodic();
     }

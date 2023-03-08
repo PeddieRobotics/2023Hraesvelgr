@@ -30,9 +30,6 @@ import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPose;
-import frc.robot.commands.AutoCommands.AutonAlign;
-import frc.robot.commands.AutoCommands.ClimbCSAprilTag;
-import frc.robot.commands.AutoCommands.ClimbCSTilt;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
@@ -66,14 +63,7 @@ public class Autonomous extends SubsystemBase{
         autoRoutines = new Hashtable<String, Command>();
 
         HashMap<String, Command> eventMap = new HashMap<>();
-        // eventMap.put("dummyDashboardCommand", new DummyDashboardCommand());
-        // eventMap.put("DeployIntake", new DummyDeployIntakeCommand());
-        // eventMap.put("AimAndShoot", new DummyAimAndShootCommand()); //eventMap.put("AimAndShoot", new DummyAimAndShootCommand());
-        for(int i=1;i<=9;i++){
-            eventMap.put("AlignCol"+i, new AutonAlign(i));
-            eventMap.put("pipe"+i, new SetPipe(i));
-            eventMap.put("pipeType"+i, new SetPipeType(i));
-        }
+
         eventMap.put("pipe0", new SetPipe(0));
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
@@ -92,22 +82,6 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
-        // eventMap.put("StartIntakingCube", new SequentialCommandGroup( new ParallelRaceGroup( new IntakeCube(), new WaitCommand(4)),new SetStowedPose()));
-        eventMap.put("BalanceNearFrontLL", new ClimbCSTilt(1, 180, true, true));
-        eventMap.put("BalanceFarFrontLL", new ClimbCSTilt(1, 0, false, true));
-        eventMap.put("BalanceNearBackLL", new ClimbCSTilt(1, 180, true, false));
-        eventMap.put("BalanceFarBackLL", new ClimbCSTilt(1, 0, false, false));
-
-
-        // autoBuilder = new SwerveAutoBuilder(
-        //     drivetrain ::getPose, drivetrain ::resetRobotPoseAndGyro, 
-        //     DriveConstants.kinematics, 
-        //     new PIDConstants(AutoConstants.kPTranslationController, 0, 0), 
-        //     new PIDConstants(AutoConstants.kPThetaController, 0, 0), 
-        //     drivetrain::setSwerveModuleStates, 
-        //     eventMap, true, 
-        //     drivetrain
-        // );
 
         autoBuilder = new CustomAutoBuilder(
         drivetrain ::getPose, // Pose2d supplier
@@ -122,7 +96,6 @@ public class Autonomous extends SubsystemBase{
             drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
         );
 
-        //defineAutoPaths();
         setupAutoRoutines();
     }
 
@@ -136,10 +109,6 @@ public class Autonomous extends SubsystemBase{
         }
         return autonomous;
     }
-
-    public void defineAutoPaths(){
-    }
-
 
     public void setupAutoRoutines(){
 

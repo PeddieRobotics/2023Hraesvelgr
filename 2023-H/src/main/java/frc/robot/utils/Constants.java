@@ -185,7 +185,7 @@ public final class Constants {
                 public static final int kMaxCurrent = 60;
 
                 // Position PID contants
-                public static final double kPositionP = 0.013; // 0.013
+                public static final double kPositionP = 0.013;
                 public static final double kPositionI = 0.000001;
                 public static final double kPositionD = 0.00003;
                 public static final double kPositionIz = 7;
@@ -201,20 +201,20 @@ public final class Constants {
                 public static final double kD = 0.00004;
                 public static final double kIz = 5;
 
-                public static final double kSmartMotionSlowSetpointTol = 1.0;
+                public static final double kSmartMotionSlowSetpointTol = 0.5;
                 public static final double kSmartMotionSlowMinVel = 0.0; // rpm
-                public static final double kSmartMotionSlowMaxVel = 3000.0; // rpm
-                public static final double kSmartMotionSlowMaxAccel = 6000.0; // rpm / sec
+                public static final double kSmartMotionSlowMaxVel = 100.0; // rpm
+                public static final double kSmartMotionSlowMaxAccel = 100.0; // rpm / sec
 
-                public static final double kSmartMotionRegularSetpointTol = 1.0;
+                public static final double kSmartMotionRegularSetpointTol = 0.5;
                 public static final double kSmartMotionRegularMinVel = 0.0; // rpm
-                public static final double kSmartMotionRegularMaxVel = 10000.0; // rpm
-                public static final double kSmartMotionRegularMaxAccel = 15000.0; // rpm / sec
+                public static final double kSmartMotionRegularMaxVel = 300.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 300.0; // rpm / sec
                 
-                public static final double kSmartMotionFastSetpointTol = 1.0;
+                public static final double kSmartMotionFastSetpointTol = 0.5;
                 public static final double kSmartMotionFastMinVel = 0.0; // rpm
-                public static final double kSmartMotionFastMaxVel = 18000.0; // rpm
-                public static final double kSmartMotionFastMaxAccel = 20000.0; // rpm / sec
+                public static final double kSmartMotionFastMaxVel = 500.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 500.0; // rpm / sec
 
                 // Soft limits
                 public static final double kAngleMin = -75;
@@ -250,14 +250,9 @@ public final class Constants {
                 // Used generically in the code for checking if we are "close enough" to a pose
                 // Not currently the same as the Smart Motion tolerance used onboard the PID
                 // controller.
-                public static final double kSetpointTolerance = 1.5; // degrees
+                public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kMotorReduction = 246.857143; // 10368:35 or approximately 296:1;
-                
-                public static final double kSmartMotionSetpointTol = 1.0;
-                public static final double kSmartMotionMinVel = 0.0; // rpm
-                public static final double kSmartMotionMaxVel = 10000.0; //6000.0; // rpm
-                public static final double kSmartMotionMaxAccel = 17500; // rpm / sec
+                public static final double kMotorReduction = 192.0; // 192:1 shoulder reduction
                 public static final double kEncoderConversionFactor = 360.0/kMotorReduction;
 
         }

@@ -77,15 +77,15 @@ public class Shoulder {
           shoulderMotorMaster.setInverted(true);
           shoulderMotorFollower.setInverted(true);
   
-          shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-          shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-          setEncoder(ShoulderConstants.kHomeAngle);
+          shoulderMotorMaster.getEncoder().setPositionConversionFactor(1.0);
+          shoulderMotorFollower.getEncoder().setPositionConversionFactor(1.0);
+          setEncoder(-47.0);
   
-          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
-          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(1.0);
+          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1.0);
   
           // Safety: ramp rate and soft limits
-          shoulderMotorMaster.setClosedLoopRampRate(0.01);
+          shoulderMotorMaster.setClosedLoopRampRate(0.1); // use a 100 ms ramp rate on closed loop control
   
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
@@ -155,7 +155,6 @@ public class Shoulder {
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = -75.0;
 
-        SmartDashboard.putNumber("shoulder limit sensor", 0.0);
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -349,10 +348,6 @@ public class Shoulder {
         if(atLimitSensor() && getVelocity() > 0){   
             reachedLimitSensorUpward = true;
         }
-        // Limit sensor triggered at shoulder is moving down
-        // if(atLimitSensor() && getVelocity() < 0){
-        //     reachedLimitSensorDownward = true;
-        // }
 
         // If the shoulder is moving up and leaves the limit sensor, reset the encoder
         if(reachedLimitSensorUpward && !atLimitSensor()){
@@ -360,15 +355,6 @@ public class Shoulder {
 
             reachedLimitSensorUpward = false;
         }
-
-        // If the shoulder is moving down and leaves the limit sensor, stop the shoulder and hold its position below the sensor
-        // if(reachedLimitSensorDownward && !atLimitSensor()){
-        //     shoulder.stopShoulder();
-        //     shoulder.setEncoder(ShoulderConstants.kHomeAngle);
-        //     shoulder.setPosition(ShoulderConstants.kHomeAngle);
-        //     reachedLimitSensorDownward = false;
-
-        // }
 
     }
 
