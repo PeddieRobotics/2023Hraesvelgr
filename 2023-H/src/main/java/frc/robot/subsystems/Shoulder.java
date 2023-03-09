@@ -79,7 +79,7 @@ public class Shoulder {
   
           shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
           shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-          setEncoder(-47.0);
+          setEncoder(-75.0);
   
           shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
           shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);

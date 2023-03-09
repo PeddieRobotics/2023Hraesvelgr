@@ -104,8 +104,9 @@ public class DriverOI {
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        // Circle button unusued. 
+        // Circle button unused. (being used temporarily to test cone intaking inference for LL vision/alignment)
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton.toggleOnTrue(new IntakeCone());
 
         // Lock drivetrain
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);

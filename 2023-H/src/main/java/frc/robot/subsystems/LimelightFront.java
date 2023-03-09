@@ -139,6 +139,12 @@ public class LimelightFront extends Limelight {
         }
     }
 
+    public void resetRollingAverages(){
+        txAverage.clear();
+        tyAverage.clear();
+        taAverage.clear();
+    }
+
     public void setPipeline(int pipelineNum) {
         LimelightHelper.setPipelineIndex(limelightName, pipelineNum);
     }

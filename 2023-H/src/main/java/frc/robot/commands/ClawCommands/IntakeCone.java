@@ -44,6 +44,7 @@ public class IntakeCone extends CommandBase{
             }
             else{
                 claw.stopClaw();
+                claw.monitorNewConeIntake();
             }
         }
         else{

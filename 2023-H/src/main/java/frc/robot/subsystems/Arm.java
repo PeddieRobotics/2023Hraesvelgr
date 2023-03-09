@@ -25,8 +25,10 @@ public class Arm extends SubsystemBase {
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+
         state = ArmState.HOME;
         stowingIntake = false;
+
     }
 
     public ArmState getState() {
@@ -153,6 +155,10 @@ public class Arm extends SubsystemBase {
         return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED;
     }
 
+    public boolean isConeVisibleToFrontLL(){
+        return isShoulderBelowAngle(-70) && isWristAboveAngle(20.0) && isWristBelowAngle(60.0);
+    }
+
     public static Arm getInstance() {
         if (arm == null) {
             arm = new Arm();
@@ -169,11 +175,12 @@ public class Arm extends SubsystemBase {
         wrist.turnOnSmartLimits();
         shoulder.turnOnSmartLimits();
     }
-    
+
     @Override
     public void periodic() {
         shoulder.periodic();
         wrist.periodic();
+
     }
 
 }

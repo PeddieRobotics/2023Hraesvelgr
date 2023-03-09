@@ -25,9 +25,13 @@ public class Claw extends SubsystemBase {
     public enum ClawState {EMPTY, INTAKING, CUBE, CONE};
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
-    private SendableChooser<String> gamepieceChooser;
-
     private double cubeIntakeSpeed, coneIntakeSpeed, cubeOuttakeSpeed, coneOuttakeSpeed;
+
+    private final Arm arm;
+    private final LimelightFront limelightFront;
+    private double coneAlignmentError;
+    private boolean monitorNewConeIntake;
+    private int newConeCounter;
 
     public Claw() {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
@@ -43,15 +47,13 @@ public class Claw extends SubsystemBase {
         cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
         coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
 
-        gamepieceChooser = new SendableChooser<String>();
-        gamepieceChooser.addOption("Cone", "Cone");
-        gamepieceChooser.addOption("Cube", "Cube");
-        gamepieceChooser.addOption("None", "None");
-        gamepieceChooser.setDefaultOption("None", "None");
-
-        SmartDashboard.putData(gamepieceChooser);
-
         state = ClawState.EMPTY;
+
+        arm = Arm.getInstance();
+        limelightFront = LimelightFront.getInstance();
+        coneAlignmentError = 0.0;
+        monitorNewConeIntake = false;
+        newConeCounter = 0;
     }
     
     @Override
@@ -67,7 +69,24 @@ public class Claw extends SubsystemBase {
                 state = ClawState.EMPTY;
             }
         }
+
+        // If we've recently intaked a cone, and the arm is oriented such that we could see the cone, start looking at it.
+        if(monitorNewConeIntake && limelightFront.hasTarget() && arm.isConeVisibleToFrontLL()){
+            updateConeAlignmentError();
+            newConeCounter++;
+
+            // If we have looked the cone for at least 240 ms, we've gotten enough of a glimpse.
+            if(newConeCounter > 12){
+                monitorNewConeIntake = false; // Stop looking at cone alignment
+                newConeCounter = 0;
+                limelightFront.setPipeline(6); // Turn on cone placement pipeline (retroreflective tape)
+            }
+        }
         
+        SmartDashboard.putNumber("newConeCounter", newConeCounter);
+        SmartDashboard.putNumber("coneAlignmentError", coneAlignmentError);
+        SmartDashboard.putBoolean("monitorNewConeIntake", monitorNewConeIntake);
+
     }
 
     public static Claw getInstance(){
@@ -156,6 +175,27 @@ public class Claw extends SubsystemBase {
 
     public void setUseSensors(boolean useSensors) {
         this.useSensors = useSensors;
+    }
+
+    // Assumes you are on the correct pipeline (7) for monitoring cone alignment
+    public void updateConeAlignmentError(){
+        if(state != ClawState.CONE){
+            coneAlignmentError = 0.0;
+        }
+        else{
+            coneAlignmentError = convertConeTXToAlignmentError(limelightFront.getTxAverage());
+        }
+
+    }
+
+    public double convertConeTXToAlignmentError(double tx){
+        return tx/4.0; // Use y=1/4 x as a simple linear regression (based on some quick empirical data), where y is robot tx to goal, x is cone tx compared to center of intake.
+    }
+
+    public void monitorNewConeIntake(){
+        limelightFront.setPipeline(7);
+        limelightFront.resetRollingAverages();
+        monitorNewConeIntake = true;
     }
 
 
