@@ -40,7 +40,6 @@ import frc.robot.utils.Constants.OIConstants;
 
 public class DriverOI {
     public static DriverOI instance;
-
     private Drivetrain drivetrain;
     private Claw claw;
     private Arm arm;
@@ -55,6 +54,7 @@ public class DriverOI {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+    private boolean allowBackwardMovement = false; //prevent backward movement, stops from crashing into grid
 
     public enum DPadDirection {
         NONE, FORWARDS, LEFT, RIGHT, BACKWARDS
@@ -156,13 +156,24 @@ public class DriverOI {
     }
 
     public double getForward() {
-        return controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        double input = controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        if (!allowBackwardMovement && input > 0) { 
+            return 0;
+        } else if (!allowBackwardMovement && input <= 0) {
+            allowBackwardMovement = true;
+            return 0;
+        }
+        return input;
     }
 
     public double getStrafe() {
         return controller.getRawAxis(PS4Controller.Axis.kLeftX.value);
     }
 
+    public void setAllowBackward(boolean allow){
+        allowBackwardMovement = allow;
+    }
+    
     /* DRIVER METHODS */
     public Translation2d getSwerveTranslation() {
         double xSpeed = getForward();

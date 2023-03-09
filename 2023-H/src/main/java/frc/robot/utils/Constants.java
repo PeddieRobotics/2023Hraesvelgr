@@ -170,6 +170,14 @@ public final class Constants {
                 public static final double kLimelightHeight = 22.8346; // inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
+                public static final double kLimelightHeadingBound = 0.02;
+                public static final double kLimeLightTranslationAngleBound = 0.2;
+                //pipelines
+                public static final int kLLTagMainPipeline = 0;
+                public static final int kLLTagLeftPOIPipeline = 1;
+                public static final int kLLTagRightPOIPipeline = 2;
+                public static final int kLLTapeLowerPipeline = 4;
+                public static final int kLLTapeUpperPipeline = 5;
                 public static final double kLimeLightTranslationBound=.05;
                 public static final double kLimeLightAngleBound=1;
                 public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
