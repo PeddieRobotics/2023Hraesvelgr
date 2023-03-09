@@ -77,12 +77,12 @@ public class Shoulder {
           shoulderMotorMaster.setInverted(true);
           shoulderMotorFollower.setInverted(true);
   
-          shoulderMotorMaster.getEncoder().setPositionConversionFactor(1.0);
-          shoulderMotorFollower.getEncoder().setPositionConversionFactor(1.0);
+          shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
+          shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
           setEncoder(-47.0);
   
-          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(1.0);
-          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1.0);
+          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
   
           // Safety: ramp rate and soft limits
           shoulderMotorMaster.setClosedLoopRampRate(0.1); // use a 100 ms ramp rate on closed loop control
