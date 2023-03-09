@@ -170,7 +170,7 @@ public final class Constants {
                 public static final double kLimelightHeight = 22.8346; // inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
-                public static final double kLimelightHeadingBound = 0.02;
+                public static final double kLimelightHeadingBound = 1.5;
                 public static final double kLimeLightTranslationAngleBound = 0.2;
                 //pipelines
                 public static final int kLLTagMainPipeline = 0;

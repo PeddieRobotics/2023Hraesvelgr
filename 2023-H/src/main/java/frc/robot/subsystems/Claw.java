@@ -168,13 +168,20 @@ public class Claw extends SubsystemBase {
         return clawMotor.getAppliedOutput()*100;
     }
 
-        
     public boolean isUseSensors() {
         return useSensors;
     }
 
     public void setUseSensors(boolean useSensors) {
         this.useSensors = useSensors;
+    }
+
+    public double getConeAlignmentError() {
+        return coneAlignmentError;
+    }
+
+    public void setConeAlignmentError(double coneAlignmentError) {
+        this.coneAlignmentError = coneAlignmentError;
     }
 
     // Assumes you are on the correct pipeline (7) for monitoring cone alignment
@@ -189,7 +196,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double convertConeTXToAlignmentError(double tx){
-        return tx/4.0; // Use y=1/4 x as a simple linear regression (based on some quick empirical data), where y is robot tx to goal, x is cone tx compared to center of intake.
+        return tx/3.5; // Use y=2/7 x as a simple linear regression (based on some quick empirical data), where y is robot tx to goal, x is cone tx compared to center of intake.
     }
 
     public void monitorNewConeIntake(){

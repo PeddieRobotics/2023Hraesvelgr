@@ -32,6 +32,7 @@ import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.commands.DriveCommands.SimpleAlign;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -54,7 +55,7 @@ public class DriverOI {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-    private boolean allowBackwardMovement = false; //prevent backward movement, stops from crashing into grid
+    private boolean allowBackwardMovement = true; //prevent backward movement, stops from crashing into grid
 
     public enum DPadDirection {
         NONE, FORWARDS, LEFT, RIGHT, BACKWARDS
@@ -122,6 +123,7 @@ public class DriverOI {
 
         // Square button unused.
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        squareButton.whileTrue(new SimpleAlign());
 
         // Slow Mode
         // Back Button (Option button)
