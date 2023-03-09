@@ -83,14 +83,6 @@ public class RobotContainer {
         arm.setShoulderMode(mode);
     }
 
-    public void setupAngleOffsetFromAuto(double target) {
-        drivetrain.setTeleOpAngleOffset(target);
-    }
-
-    public double getAngleOffsetFromAuto() {
-        return autonomous.getAngleOffsetFromAuto();
-    }
-
     public void setFlipped(boolean bool){
         drivetrain.setFlipped(bool);
     }

@@ -156,17 +156,9 @@ public class Autonomous extends SubsystemBase{
         // autoRoutines.put("Testing Auto Path 2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("testingautopart2", 1.5, 1.5)));
     }   
 
-    private void setFlipped(){ //used only in auto
+    // Used only at the start of autonomous
+    private void setFlipped(){ 
         drivetrain.setFlipped();
-    }
-
-    //Does not reflect for red -- DO NOT CHANGE
-    public CommandBase createCommandFromTrajectory(List<PathPlannerTrajectory> trajectory){
-        return autoBuilder.fullAuto(trajectory);
-    }
-
-    public double getAngleOffsetFromAuto(){
-        return 180.0; // NEED TO IMPLEMENT BY RETURNING INITIAL POSE FROM AUTO. Defaulting to 180 degrees.
     }
 
     public Hashtable<String, Command> getAutoRoutines() {

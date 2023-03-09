@@ -35,7 +35,6 @@ public class Drivetrain extends SubsystemBase {
     private final ADIS16470_IMU gyro;
     private double heading;
     private boolean isFlipped;
-    private RollingAverage pitchRateAverage;
 
     // Swerve Drive
     private SwerveModuleState[] swerveModuleStates;
@@ -97,11 +96,10 @@ public class Drivetrain extends SubsystemBase {
 
         // Gyroscope Sensor
         gyro = new ADIS16470_IMU();
-        pitchRateAverage = new RollingAverage(4);
 
         // Teleop Angle offset from Autonomous to Teleop
         teleOpAngleOffset = 0;
-        isFlipped=false; //basically teleopAngleOffset for now
+        isFlipped = false; //basically teleopAngleOffset for now
 
         // Snap to Angle Algorithm
         snapToAngleHeading = 0;
@@ -142,15 +140,6 @@ public class Drivetrain extends SubsystemBase {
             swerveModulePositions[i] = swerveModules[i].getPosition();
         }
         updateOdometry();
-
-        pitchRateAverage.add(getPitchRate());
-
-        SmartDashboard.putNumber("Current pitch", getPitch());
-
-        double currentPitchRate = drivetrain.getAveragePitchRate();
-        SmartDashboard.putNumber("Current pitch rate", currentPitchRate);
-
-        SmartDashboard.putBoolean("isFlipped", isFlipped);
 
     }
 
@@ -206,9 +195,8 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
-    public void setFlipped(){//used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
+    public void setFlipped(){ //used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
         isFlipped = Math.abs(getPose().getRotation().getDegrees()) < 90;
-        //if(DriverStation.getAlliance()==DriverStation.Alliance.Red) isFlipped=!isFlipped;
     }
 
     public void setFlipped(boolean bool){
@@ -242,7 +230,6 @@ public class Drivetrain extends SubsystemBase {
         if (fieldOriented) {
             robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds,
                     Rotation2d.fromDegrees(((isFlipped)?180:0) + getHeading()));
-                    //Rotation2d.fromDegrees(teleopAngleOffset + getHeading()));
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
@@ -382,15 +369,10 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getRate(IMUAxis.kRoll);
     }
 
-    public double getAveragePitchRate(){
-        return pitchRateAverage.getAverage();
-    }
-
     // Autonomous Transformation
     public void setTeleOpAngleOffset(double target) {
         teleOpAngleOffset = target;
     }
-
 
     // Snap to angle algorithm
     private double snapToAngle() {
@@ -420,17 +402,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double[] getModuleRotations(){
-        double[] positions={frontLeftSwerveModule.getRotations(),
+        double[] positions = {frontLeftSwerveModule.getRotations(),
             backLeftSwerveModule.getRotations(),
             frontRightSwerveModule.getRotations(),
             backRightSwerveModule.getRotations()};
         return (positions);
     }
-
-    public void driveMetersInDirection(double meters, Rotation2d direction){
-        frontLeftSwerveModule.setDriveMotor(meters);
-    }
-
-
 
 }

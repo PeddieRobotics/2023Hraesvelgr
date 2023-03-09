@@ -7,6 +7,8 @@ package frc.robot;
 import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+
 // import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
 // import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
@@ -14,6 +16,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,15 +40,19 @@ public class Robot extends TimedRobot {
     private static RobotContainer robotContainer;
     private ShuffleboardMain shuffleboard;
     private boolean ranAutonomousRoutine;
+    private PowerDistribution pdh;
 
     @Override
     public void robotInit() {
-        // LiveWindow.setEnabled(false);
+        LiveWindow.setEnabled(false);
 
         robotContainer = new RobotContainer();
 
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
+            // Set up a REV PDH in order to get key status information
+            pdh = new PowerDistribution(1, ModuleType.kRev);
+
             shuffleboard.setupDebugMode();
             shuffleboard.setupAutoSelector();
         }
@@ -58,6 +65,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
+
 
     }
 
@@ -76,13 +84,20 @@ public class Robot extends TimedRobot {
         // This controls both keeping track of key information, as well as updating key parameters
         // from Shuffleboard.
         shuffleboard.update();
+
+        if(OIConstants.kUseDebugModeLayout){
+            double current8 = pdh.getCurrent(8);
+            double current9 = pdh.getCurrent(9);
+            SmartDashboard.putNumber("Current Channel 8", current8);
+            SmartDashboard.putNumber("Current Channel 9", current9);
+
+        }
     }
 
     @Override
     public void disabledInit() {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
-        // robotContainer.stopLogging();
     }
 
     @Override
@@ -109,24 +124,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        // If we are transitioning from autonomous,
-        // load in the correct angle offset compared
-        // to the initial pose of the path.
-        // (Tells us how the robot was setup).
-        if (ranAutonomousRoutine) {
-            double angle = robotContainer.getAngleOffsetFromAuto();
-            robotContainer.setupAngleOffsetFromAuto(angle);
-        } else {
-            // Always assume field orientation should be opposite
-            // where the gyro is zeroed.
-            robotContainer.setFlipped(true);
+        robotContainer.setFlipped(true);
 
-            // For the sake of calculating odometry correctly,
-            // make our initial pose on the field such that
-            // our robot faces the other alliance.
-            // This is only correct if you actually start
-            // the robot facing the other alliance!
+        if (!ranAutonomousRoutine) {
             robotContainer.resetPoseToFaceOtherAlliance();
+
         }
 
         if (autonomousCommand != null) {
