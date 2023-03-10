@@ -45,7 +45,7 @@ public class SetLevelOnePose extends CommandBase{
             transitory = true;
         }
 
-        if(transitory && arm.isShoulderBelowAngle(-39)){
+        if(transitory && arm.isShoulderBelowAngle(-30)){
             arm.setShoulderPositionSmartMotion(shoulder.getkL1Angle(), SmartMotionArmSpeed.SLOW);
         }
 

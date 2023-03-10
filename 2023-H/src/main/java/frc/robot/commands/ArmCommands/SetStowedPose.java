@@ -28,14 +28,20 @@ public class SetStowedPose extends CommandBase{
     public void initialize() {
         transitory = false;
         arm.setWristPosition(wrist.getkStowedAngle());
-        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.FAST);
+        if(arm.getState() == ArmState.L3_CONE_INVERTED){
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
+
+        }
+        else{
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
+        }
         arm.setState(ArmState.STOWED);
 
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderBelowAngle(-35)){
+        if(arm.isShoulderBelowAngle(-30)){
             arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
         }
     }

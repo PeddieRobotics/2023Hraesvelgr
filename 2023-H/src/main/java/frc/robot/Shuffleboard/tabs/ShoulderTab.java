@@ -13,7 +13,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
         private Shoulder shoulder = Shoulder.getInstance();
 
         private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
-                        mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
+                        mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mkFF, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
                         mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
 
         public ShoulderTab() {
@@ -63,6 +63,8 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mkD = tab.add("kD", ShoulderConstants.kD)
                                         .getEntry();
+                        mkFF = tab.add("kFF", ShoulderConstants.kFF)
+                                        .getEntry();
 
                         mSmartMotionAngleTol = tab.add("S.M. Setpoint Tol", ShoulderConstants.kSmartMotionRegularSetpointTol)
                                         .getEntry();
@@ -96,7 +98,8 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                 shoulder.updatePIDController(mkP.getDouble(ShoulderConstants.kP),
                                                 mkI.getDouble(ShoulderConstants.kI),
                                                 mkD.getDouble(ShoulderConstants.kD),
-                                                mkIz.getDouble(ShoulderConstants.kIz), 0);
+                                                mkIz.getDouble(ShoulderConstants.kIz), 
+                                                mkFF.getDouble(ShoulderConstants.kFF), 0);
 
                                 shoulder.updateShoulderFeedforward(
                                                 mkG.getDouble(0.0),

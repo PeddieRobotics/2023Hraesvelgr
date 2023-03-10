@@ -25,11 +25,11 @@ public class Shoulder {
     private DigitalInput limitSensor;
     private boolean reachedLimitSensorUpward, reachedLimitSensorDownward;
 
-    private double kP, kI, kD, kIz, kPositionP, kPositionI, kPositionD,
+    private double kP, kI, kD, kIz, kFF, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
     kSmartMotionRegularMaxVel, kSmartMotionRegularMaxAccel, kSmartMotionSlowSetpointTol, kSmartMotionSlowMinVel,
-    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionFastSetpointTol, kSmartMotionFastMinVel,
-    kSmartMotionFastMaxVel, kSmartMotionFastMaxAccel;
+    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionL3ConeSetpointTol, kSmartMotionL3ConeMinVel,
+    kSmartMotionL3ConeMaxVel, kSmartMotionL3ConeMaxAccel;
 
     // Angles (poses) start here
     private double kHomeAngle = ShoulderConstants.kHomeAngle;
@@ -56,7 +56,7 @@ public class Shoulder {
     private double kSingleSSAngle = ShoulderConstants.kSingleSSAngle;
     private double kTransitoryAngle = ShoulderConstants.kTransitoryAngle;
 
-    public enum SmartMotionArmSpeed {REGULAR, SLOW, FAST};
+    public enum SmartMotionArmSpeed {REGULAR, SLOW, L3_CONE};
 
     private double currentPIDSetpointAngle;
 
@@ -79,10 +79,10 @@ public class Shoulder {
   
           shoulderMotorMaster.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
           shoulderMotorFollower.getEncoder().setPositionConversionFactor(ShoulderConstants.kEncoderConversionFactor);
-          setEncoder(-75.0);
+          setEncoder(ShoulderConstants.kHomeAngle);
   
-          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
-          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(ShoulderConstants.kEncoderConversionFactor/60.0);
+          shoulderMotorMaster.getEncoder().setVelocityConversionFactor(1.0);
+          shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1.0);
   
           // Safety: ramp rate and soft limits
           shoulderMotorMaster.setClosedLoopRampRate(0.1); // use a 100 ms ramp rate on closed loop control
@@ -106,8 +106,9 @@ public class Shoulder {
           kI = ShoulderConstants.kI;
           kD = ShoulderConstants.kD;
           kIz = ShoulderConstants.kIz;
-          setupPIDController(kP, kI, kD, kIz, 0);
-  
+          kFF = ShoulderConstants.kFF;
+          setupPIDController(kP, kI, kD, kIz, kFF, 0);
+
           kSmartMotionRegularSetpointTol = ShoulderConstants.kSmartMotionRegularSetpointTol;
           kSmartMotionRegularMinVel = ShoulderConstants.kSmartMotionRegularMinVel;
           kSmartMotionRegularMaxVel = ShoulderConstants.kSmartMotionRegularMaxVel;
@@ -116,7 +117,7 @@ public class Shoulder {
           ShoulderConstants.kSmartMotionRegularMinVel, ShoulderConstants.kSmartMotionRegularMaxVel, ShoulderConstants.kSmartMotionRegularMaxAccel);
   
           // Set up SmartMotion PIDController (slow speed) on pid slot 2
-          setupPIDController(kP, kI, kD, kIz, 2);
+          setupPIDController(kP, kI, kD, kIz, kFF, 2);
           kSmartMotionSlowSetpointTol = ShoulderConstants.kSmartMotionSlowSetpointTol;
           kSmartMotionSlowMinVel = ShoulderConstants.kSmartMotionSlowMinVel;
           kSmartMotionSlowMaxVel = ShoulderConstants.kSmartMotionSlowMaxVel;
@@ -125,13 +126,13 @@ public class Shoulder {
           ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
   
           // Set up SmartMotion PIDController (fast speed) on pid slot 3
-          setupPIDController(kP, kI, kD, kIz, 3);
-          kSmartMotionFastSetpointTol = ShoulderConstants.kSmartMotionFastSetpointTol;
-          kSmartMotionFastMinVel = ShoulderConstants.kSmartMotionFastMinVel;
-          kSmartMotionFastMaxVel = ShoulderConstants.kSmartMotionFastMaxVel;
-          kSmartMotionFastMaxAccel = ShoulderConstants.kSmartMotionFastMaxAccel;
-          setFastSmartMotionParameters(ShoulderConstants.kSmartMotionFastSetpointTol,
-          ShoulderConstants.kSmartMotionFastMinVel, ShoulderConstants.kSmartMotionFastMaxVel, ShoulderConstants.kSmartMotionFastMaxAccel);
+          setupPIDController(kP, kI, kD, kIz, kFF, 3);
+          kSmartMotionL3ConeSetpointTol = ShoulderConstants.kSmartMotionL3ConeSetpointTol;
+          kSmartMotionL3ConeMinVel = ShoulderConstants.kSmartMotionL3ConeMinVel;
+          kSmartMotionL3ConeMaxVel = ShoulderConstants.kSmartMotionL3ConeMaxVel;
+          kSmartMotionL3ConeMaxAccel = ShoulderConstants.kSmartMotionL3ConeMaxAccel;
+          setFastSmartMotionParameters(ShoulderConstants.kSmartMotionL3ConeSetpointTol,
+          ShoulderConstants.kSmartMotionL3ConeMinVel, ShoulderConstants.kSmartMotionL3ConeMaxVel, ShoulderConstants.kSmartMotionL3ConeMaxAccel);
   
           // Set up position PIDController on pid slot 1
           kPositionP = ShoulderConstants.kPositionP;
@@ -180,14 +181,14 @@ public class Shoulder {
     }
 
     public void setFastSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
-        kSmartMotionFastSetpointTol = setpointTol;
-        kSmartMotionFastMinVel = minVel;
-        kSmartMotionFastMaxVel = maxVel;
-        kSmartMotionFastMaxAccel = maxAccel;
-        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionFastSetpointTol, 3);
-        pidController.setSmartMotionMinOutputVelocity(kSmartMotionFastMinVel, 3);
-        pidController.setSmartMotionMaxVelocity(kSmartMotionFastMaxVel, 3);
-        pidController.setSmartMotionMaxAccel(kSmartMotionFastMaxAccel, 3);
+        kSmartMotionL3ConeSetpointTol = setpointTol;
+        kSmartMotionL3ConeMinVel = minVel;
+        kSmartMotionL3ConeMaxVel = maxVel;
+        kSmartMotionL3ConeMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionL3ConeSetpointTol, 3);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionL3ConeMinVel, 3);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionL3ConeMaxVel, 3);
+        pidController.setSmartMotionMaxAccel(kSmartMotionL3ConeMaxAccel, 3);
     }
 
     public double getAngle() {
@@ -214,7 +215,7 @@ public class Shoulder {
 
     // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
-        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), Math.toRadians(setpointVel));
+        arbitraryFF = shoulderFeedforward.calculate(Math.toRadians(shoulder.getAngle()), 0);
 
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
@@ -231,7 +232,7 @@ public class Shoulder {
             case SLOW:
                 pidController.setReference(setpointDeg, ControlType.kSmartMotion, 2, arbitraryFF);
                 break;
-            case FAST:
+            case L3_CONE:
                 pidController.setReference(setpointDeg, ControlType.kSmartMotion, 3, arbitraryFF);
                 break;
             default:
@@ -292,6 +293,14 @@ public class Shoulder {
         pidController.setIZone(izone, pidslot);
     }
 
+    public void setupPIDController(double p, double i, double d, double izone, double ff, int pidslot) {
+        pidController.setP(p, pidslot);
+        pidController.setI(i, pidslot);
+        pidController.setD(d, pidslot);
+        pidController.setIZone(izone, pidslot);
+        pidController.setFF(ff, pidslot);
+    }
+
     public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
         if(pidslot == 0){
             if(kP != p || kI != i || kD != d || kIz != izone){
@@ -339,6 +348,71 @@ public class Shoulder {
                 pidController.setI(i, pidslot);
                 pidController.setD(d, pidslot);
                 pidController.setIZone(izone, pidslot);
+            }
+        }
+    }
+
+    public void updatePIDController(double p, double i, double d, double izone, double ff, int pidslot) {
+        if(pidslot == 0){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+
+            }
+        }
+        else if(pidslot == 1){
+            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone || kFF != ff){
+                kPositionP = p;
+                kPositionI = i;
+                kPositionD = d;
+                kPositionIz = izone;
+                kFF = ff;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+
+            }           
+        }
+        else if(pidslot == 2){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+            }
+        }
+        else if(pidslot == 3){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+
             }
         }
     }

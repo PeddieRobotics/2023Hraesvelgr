@@ -25,8 +25,8 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void initialize() {
 
-        if(arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderBelowAngle(70)){
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.L3_CONE);
         }
         
         arm.setWristPosition(100);
@@ -36,11 +36,13 @@ public class SetLevelThreeConePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(75)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.REGULAR);
+        if(arm.isShoulderAboveAngle(65.0)){
+            shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+            ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.SLOW);
         }
 
-        if(arm.isShoulderAboveAngle(100.0)){
+        if(arm.isShoulderAboveAngle(75.0)){
             arm.setWristPosition(wrist.getkL3ConeAngle());
         }
   
@@ -50,6 +52,8 @@ public class SetLevelThreeConePose extends CommandBase{
     public void end(boolean interrupted){
         arm.setState(ArmState.L3_CONE_INVERTED);
         arm.holdShoulderPosition();
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+        ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
     }
 
     @Override

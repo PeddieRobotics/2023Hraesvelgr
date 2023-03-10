@@ -199,30 +199,31 @@ public final class Constants {
                 public static final double kPositionIz = 7;
 
                 // Shoulder feedforward
-                public static final double kGVolts = 0.3;
-                public static final double kVVoltSecondPerRad = 5.77;
-                public static final double kAVoltSecondSquaredPerRad = 0.06;
+                public static final double kGVolts = 0.55;
+                public static final double kVVoltSecondPerRad = 0.0;
+                public static final double kAVoltSecondSquaredPerRad = 0.0;
 
                 // Smart Motion controller parameters (velocity PID constants)
-                public static final double kP = 0.0001;
-                public static final double kI = 0.000002;
-                public static final double kD = 0.00004;
-                public static final double kIz = 5;
+                public static final double kP = 0.0000005;
+                public static final double kI = 0.0000005;
+                public static final double kD = 0;
+                public static final double kIz = 1200;
+                public static final double kFF = 0.000162;
 
                 public static final double kSmartMotionSlowSetpointTol = 1.0;
                 public static final double kSmartMotionSlowMinVel = 0.0; // rpm
-                public static final double kSmartMotionSlowMaxVel = 3000.0; // rpm
-                public static final double kSmartMotionSlowMaxAccel = 6000.0; // rpm / sec
+                public static final double kSmartMotionSlowMaxVel = 1000.0; // rpm
+                public static final double kSmartMotionSlowMaxAccel = 5000.0; // rpm / sec
 
                 public static final double kSmartMotionRegularSetpointTol = 1.0;
                 public static final double kSmartMotionRegularMinVel = 0.0; // rpm
-                public static final double kSmartMotionRegularMaxVel = 10000.0; // rpm
-                public static final double kSmartMotionRegularMaxAccel = 15000.0; // rpm / sec
+                public static final double kSmartMotionRegularMaxVel = 5500.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 5000.0; // rpm / sec
                 
-                public static final double kSmartMotionFastSetpointTol = 1.0;
-                public static final double kSmartMotionFastMinVel = 0.0; // rpm
-                public static final double kSmartMotionFastMaxVel = 18000.0; // rpm
-                public static final double kSmartMotionFastMaxAccel = 20000.0; // rpm / sec
+                public static final double kSmartMotionL3ConeSetpointTol = 1.0;
+                public static final double kSmartMotionL3ConeMinVel = 0.0; // rpm
+                public static final double kSmartMotionL3ConeMaxVel = 5500.0; // rpm
+                public static final double kSmartMotionL3ConeMaxAccel = 30000.0; // rpm / sec
 
                 // Soft limits
                 public static final double kAngleMin = -75;
@@ -230,7 +231,7 @@ public final class Constants {
 
                 // Angles (poses) start here
                 public static final double kHomeAngle = -75.0;
-                public static final double kTransitoryAngle = -45.0;
+                public static final double kTransitoryAngle = -40.0;
                 public static final double kStowedAngle = -75.0;
                 public static final double kL1Angle = -75.0;
 

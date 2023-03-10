@@ -36,7 +36,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
     public void execute() {
         if(stopped) return;
         if(arm.isWristAboveAngle(75)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.L3_CONE);
         }
 
         if(arm.isShoulderBelowAngle(80)){
@@ -50,7 +50,7 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderBelowAngle(90)||stopped;
+        return arm.isShoulderBelowAngle(90) || stopped;
     }
 
 
