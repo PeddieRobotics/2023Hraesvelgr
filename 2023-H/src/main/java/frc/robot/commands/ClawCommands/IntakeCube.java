@@ -43,6 +43,7 @@ public class IntakeCube extends CommandBase{
             }
             else{
                 claw.stopClaw();
+                claw.monitorNewConeIntake();
             }
         }
         else{

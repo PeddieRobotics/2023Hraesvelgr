@@ -33,6 +33,7 @@ import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.SimpleAlign;
+import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -90,7 +91,7 @@ public class DriverOI {
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
-                    new SetStowedPose()), arm::isArmScoringPose));
+                    new SetStowedPose()), arm::isValidEjectPose));
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
@@ -105,9 +106,8 @@ public class DriverOI {
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        // Circle button unused. (being used temporarily to test cone intaking inference for LL vision/alignment)
+        // Circle button unused.
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.toggleOnTrue(new IntakeCone());
 
         // Lock drivetrain
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
@@ -121,9 +121,9 @@ public class DriverOI {
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
-        // Square button unused.
+        // Square button auto-align
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new SimpleAlign());
+        squareButton.whileTrue(new ConditionalCommand(new SimpleAlign(), new SingleSSAlign(), claw::hasGamepiece));
 
         // Slow Mode
         // Back Button (Option button)

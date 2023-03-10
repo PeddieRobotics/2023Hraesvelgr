@@ -25,7 +25,7 @@ public class SetLevelThreeConePose extends CommandBase{
     @Override
     public void initialize() {
 
-        if(arm.isShoulderBelowAngle(70)){
+        if(arm.isShoulderBelowAngle(65)){
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.L3_CONE);
         }
         

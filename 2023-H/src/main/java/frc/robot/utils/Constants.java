@@ -23,7 +23,7 @@ public final class Constants {
                 public static final double kDrivingDeadband = 0.1;
 
                 // If claw speed is over this, then it is considered max speed
-                public static final double kMaxSpeedThreshold = 0.9;
+                public static final double kMaxSpeedThreshold = 1.0;
         }
 
         public static class BlinkinConstants {
@@ -220,6 +220,8 @@ public final class Constants {
                 public static final double kSmartMotionRegularMaxVel = 5500.0; // rpm
                 public static final double kSmartMotionRegularMaxAccel = 5000.0; // rpm / sec
                 
+                // ONLY FOR INVERSION FROM STATIONARY POSE.  Do not use to "uninvert" or while robot is moving....
+                // Be warned...
                 public static final double kSmartMotionL3ConeSetpointTol = 1.0;
                 public static final double kSmartMotionL3ConeMinVel = 0.0; // rpm
                 public static final double kSmartMotionL3ConeMaxVel = 5500.0; // rpm
@@ -311,6 +313,7 @@ public final class Constants {
                 public static final double kDoubleSSConeAngle = -89.0;
                 public static final double kSingleSSAngle = 30.0;
                 public static final double kTransitoryAngle = 70.0;
+                public static final double kMonitorConeAlignmentAngle = 45;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 

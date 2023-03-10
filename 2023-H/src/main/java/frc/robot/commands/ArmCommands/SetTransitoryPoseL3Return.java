@@ -11,7 +11,6 @@ import frc.robot.utils.Constants.WristConstants;
 
 public class SetTransitoryPoseL3Return extends CommandBase{
     private Arm arm;
-    private boolean stopped;
     private Shoulder shoulder;
     private Wrist wrist;
 
@@ -25,32 +24,31 @@ public class SetTransitoryPoseL3Return extends CommandBase{
 
     @Override
     public void initialize() {
-        stopped=false;
-        if(arm.getState() != ArmState.L3_CONE_INVERTED) stopped=true;
-        if(stopped) return;
         arm.setWristPosition(wrist.getkStowedAngle());
-        arm.setState(ArmState.MOVING);
+        arm.setState(ArmState.TRANSITION);
+
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+            ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
     }
 
     @Override
     public void execute() {
-        if(stopped) return;
-        if(arm.isWristAboveAngle(75)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.L3_CONE);
-        }
-
-        if(arm.isShoulderBelowAngle(80)){
+        if(arm.isShoulderBelowAngle(90)){
             arm.setWristPosition(wrist.getkTransitoryAngle());
         }
     }
 
     @Override
     public void end(boolean interrupted){
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+        ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderBelowAngle(90) || stopped;
+        return arm.isShoulderBelowAngle(80);
     }
 
 

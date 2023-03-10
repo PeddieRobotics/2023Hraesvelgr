@@ -22,7 +22,7 @@ public class LimelightFront extends Limelight {
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
-
+        setPipeline(7);
     }
 
     public static LimelightFront getInstance() {

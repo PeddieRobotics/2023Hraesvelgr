@@ -39,6 +39,7 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
+        claw.resetConeAlignmentError();
     }
 
     @Override

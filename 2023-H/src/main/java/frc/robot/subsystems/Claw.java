@@ -15,6 +15,7 @@ import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
+import frc.robot.utils.Constants.WristConstants;
 
 public class Claw extends SubsystemBase {
     private static Claw instance;
@@ -22,7 +23,10 @@ public class Claw extends SubsystemBase {
     private DigitalInput backSensor, frontSensor;
     private boolean useSensors;
 
-    public enum ClawState {EMPTY, INTAKING, CUBE, CONE};
+    public enum ClawState {
+        EMPTY, INTAKING, CUBE, CONE
+    };
+
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
     private double cubeIntakeSpeed, coneIntakeSpeed, cubeOuttakeSpeed, coneOuttakeSpeed;
@@ -55,42 +59,41 @@ public class Claw extends SubsystemBase {
         monitorNewConeIntake = false;
         newConeCounter = 0;
     }
-    
+
     @Override
-    public void periodic(){
-        if(useSensors){
-            if(isFrontSensor() && isBackSensor()){
+    public void periodic() {
+        if (useSensors) {
+            if (isFrontSensor() && isBackSensor()) {
                 state = ClawState.CONE;
-            }
-            else if(isFrontSensor() && !isBackSensor()){
+            } else if (isFrontSensor() && !isBackSensor()) {
                 state = ClawState.CUBE;
-            }
-            else if(state != ClawState.INTAKING && (!isFrontSensor() && !isBackSensor())){
+            } else if (state != ClawState.INTAKING && (!isFrontSensor() && !isBackSensor())) {
                 state = ClawState.EMPTY;
             }
         }
 
-        // If we've recently intaked a cone, and the arm is oriented such that we could see the cone, start looking at it.
-        if(monitorNewConeIntake && limelightFront.hasTarget() && arm.isConeVisibleToFrontLL()){
+        // If we've recently intaked a cone, and the arm is oriented such that we could
+        // see the cone, start looking at it.
+        if (monitorNewConeIntake && limelightFront.hasTarget() && arm.isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
             updateConeAlignmentError();
             newConeCounter++;
 
-            // If we have looked the cone for at least 240 ms, we've gotten enough of a glimpse.
-            if(newConeCounter > 12){
+            // If we have looked the cone for at least 240 ms, we've gotten enough of a
+            // glimpse.
+            if (newConeCounter > 4) {
                 monitorNewConeIntake = false; // Stop looking at cone alignment
                 newConeCounter = 0;
-                limelightFront.setPipeline(6); // Turn on cone placement pipeline (retroreflective tape)
             }
         }
-        
+
         SmartDashboard.putNumber("newConeCounter", newConeCounter);
         SmartDashboard.putNumber("coneAlignmentError", coneAlignmentError);
         SmartDashboard.putBoolean("monitorNewConeIntake", monitorNewConeIntake);
 
     }
 
-    public static Claw getInstance(){
-        if(instance == null){
+    public static Claw getInstance() {
+        if (instance == null) {
             instance = new Claw();
         }
         return instance;
@@ -104,51 +107,51 @@ public class Claw extends SubsystemBase {
         this.state = state;
     }
 
-    public void setSpeed(double clawSpeed){
+    public void setSpeed(double clawSpeed) {
         clawMotor.set(clawSpeed);
     }
 
-    public boolean isBackSensor(){
+    public boolean isBackSensor() {
         return !backSensor.get();
     }
 
-    public boolean isFrontSensor(){
+    public boolean isFrontSensor() {
         return !frontSensor.get();
     }
 
-    public boolean hasCone(){
+    public boolean hasCone() {
         return state == ClawState.CONE;
     }
 
-    public boolean hasCube(){
+    public boolean hasCube() {
         return state == ClawState.CUBE;
     }
 
-    public boolean hasGamepiece(){
+    public boolean hasGamepiece() {
         return hasCone() || hasCube();
     }
 
-    public double getClawSpeed(){
+    public double getClawSpeed() {
         return clawMotor.get();
     }
 
-    public void stopClaw(){
+    public void stopClaw() {
         clawMotor.set(0);
     }
 
-    public void intakeCube(){
+    public void intakeCube() {
         setSpeed(cubeIntakeSpeed);
     }
 
-    public void intakeCone(){
+    public void intakeCone() {
         setSpeed(coneIntakeSpeed);
     }
 
-    public void outtakeCube(){
+    public void outtakeCube() {
         setSpeed(cubeOuttakeSpeed);
     }
 
-    public void outtakeCone(){
+    public void outtakeCone() {
         setSpeed(coneOuttakeSpeed);
     }
 
@@ -164,8 +167,8 @@ public class Claw extends SubsystemBase {
         return clawMotor.getOutputCurrent();
     }
 
-    public double getVoltage(){
-        return clawMotor.getAppliedOutput()*100;
+    public double getVoltage() {
+        return clawMotor.getAppliedOutput() * 100;
     }
 
     public boolean isUseSensors() {
@@ -185,25 +188,32 @@ public class Claw extends SubsystemBase {
     }
 
     // Assumes you are on the correct pipeline (7) for monitoring cone alignment
-    public void updateConeAlignmentError(){
-        if(state != ClawState.CONE){
+    public void updateConeAlignmentError() {
+        if (state != ClawState.CONE) {
             coneAlignmentError = 0.0;
-        }
-        else{
+        } else {
             coneAlignmentError = convertConeTXToAlignmentError(limelightFront.getTxAverage());
         }
 
     }
 
-    public double convertConeTXToAlignmentError(double tx){
-        return tx/3.5; // Use y=2/7 x as a simple linear regression (based on some quick empirical data), where y is robot tx to goal, x is cone tx compared to center of intake.
+    public double convertConeTXToAlignmentError(double tx) {
+        return tx / 3.5; // Use y=2/7 x as a simple linear regression (based on some quick empirical
+                         // data), where y is robot tx to goal, x is cone tx compared to center of
+                         // intake.
     }
 
-    public void monitorNewConeIntake(){
+    public void monitorNewConeIntake() {
         limelightFront.setPipeline(7);
         limelightFront.resetRollingAverages();
         monitorNewConeIntake = true;
     }
 
+    public boolean isMonitorNewConeIntake(){
+        return monitorNewConeIntake;
+    }
 
+    public void resetConeAlignmentError(){
+        coneAlignmentError = 0;
+    }
 }
