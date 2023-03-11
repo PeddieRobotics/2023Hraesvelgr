@@ -36,12 +36,7 @@ public class SetStowedPose extends CommandBase {
             arm.setWristPosition(wrist.getkStowedAngle());
         }
 
-        if (arm.getState() == ArmState.L3_CONE_INVERTED) {
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
-
-        } else {
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-        }
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.STOWED);
 
     }

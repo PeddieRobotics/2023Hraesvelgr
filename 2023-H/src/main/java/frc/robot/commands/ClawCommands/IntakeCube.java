@@ -14,7 +14,7 @@ public class IntakeCube extends CommandBase{
     private boolean hasPiece;
 
     public IntakeCube(){
-        blinkin.getInstance();
+        blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
         addRequirements(claw);
 
