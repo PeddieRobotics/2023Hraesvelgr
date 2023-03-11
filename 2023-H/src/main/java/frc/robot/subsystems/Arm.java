@@ -20,7 +20,6 @@ public class Arm extends SubsystemBase {
 
     private final Shoulder shoulder;
     private final Wrist wrist;
-    private final Claw claw;
 
     public enum ArmState {NONE, HOME, STOWED, TRANSITORY, PRE_SCORE, FLOOR_INTAKE_CUBE_COMPACT,
         FLOOR_INTAKE_CUBE_EXTENDED, FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, SINGLE_SS, DOUBLE_SS_CONE,
@@ -31,7 +30,6 @@ public class Arm extends SubsystemBase {
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
-        claw = Claw.getInstance();
 
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
@@ -151,7 +149,15 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isInvertedL3Cone(){
-        return arm.getState() == ArmState.L3_CONE_INVERTED;
+        return state == ArmState.L3_CONE_INVERTED;
+    }
+
+    public boolean isInvertedL3Cube(){
+        return state == ArmState.L3_CUBE_INVERTED;
+    }
+
+    public boolean isInvertedL3(){
+        return state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED;
     }
 
     public boolean isArmScoringPose(){
@@ -251,7 +257,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isValidEjectPose(){
-        return (getState() != ArmState.STOWED && getState() != ArmState.HOME) && claw.hasGamepiece();
+        return (getState() != ArmState.STOWED && getState() != ArmState.HOME) && Claw.getInstance().hasGamepiece();
     }
 
     @Override

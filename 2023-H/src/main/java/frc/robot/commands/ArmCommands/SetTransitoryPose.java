@@ -25,7 +25,7 @@ public class SetTransitoryPose extends CommandBase{
     @Override
     public void initialize() {
         arm.setWristPosition(wrist.getkTransitoryAngle());
-        arm.setState(ArmState.TRANSITION);
+        arm.setState(ArmState.TRANSITORY);
     }
 
     @Override
@@ -39,7 +39,6 @@ public class SetTransitoryPose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.TRANSITION);
             arm.holdShoulderPosition();
         }
 

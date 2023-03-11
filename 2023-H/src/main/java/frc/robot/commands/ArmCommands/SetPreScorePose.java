@@ -29,18 +29,6 @@ public class SetPreScorePose extends CommandBase{
         arm.setWristPosition(wrist.getkPreScoreAngle());
         arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.PRE_SCORE);
-        
-    }
-
-    @Override
-    public void execute() {
-    }
-
-    @Override
-    public void end(boolean interrupted){
-        if(!interrupted){
-            arm.holdShoulderPosition();
-        }
 
         String limelightName;
         switch (arm.getGoalPose()) {
@@ -58,6 +46,18 @@ public class SetPreScorePose extends CommandBase{
             LimelightHelper.setPipelineIndex(limelightName, 6); // Retroreflective tape pipeline
         } else {
             LimelightHelper.setPipelineIndex(limelightName, 0); // April tag pipeline
+        }
+        
+    }
+
+    @Override
+    public void execute() {
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        if(!interrupted){
+            arm.holdShoulderPosition();
         }
     }
 

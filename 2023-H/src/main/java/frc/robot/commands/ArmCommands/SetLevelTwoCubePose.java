@@ -39,7 +39,6 @@ public class SetLevelTwoCubePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.L2_CUBE);
             arm.holdShoulderPosition();
         }
 

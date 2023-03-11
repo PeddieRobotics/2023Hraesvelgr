@@ -11,9 +11,9 @@ import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
-import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
+import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
@@ -59,8 +59,8 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
         eventMap.put("CubeL3", new EjectGamepiece());
-        eventMap.put("CubeL3Pose", new SetLevelThreeCubePose());
-        eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
+        eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
+        eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
     
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());

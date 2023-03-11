@@ -32,6 +32,10 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public void execute() {
+        if(!claw.hasGamepiece()){
+            hasPiece = false;
+        }
+
         if(claw.hasGamepiece() && !hasPiece){
             initialTime = Timer.getFPGATimestamp();
             hasPiece = true;
@@ -61,7 +65,7 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && (currentTime - initialTime) > 0.75;
+        return hasPiece && (currentTime - initialTime) > 0.5;
     }
 
     

@@ -76,7 +76,7 @@ public class DriverOI {
         leftBumperButton.onTrue(new ConditionalCommand(
             new SequentialCommandGroup(new EjectGamepiece(),
                 new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                                        new InstantCommand(), arm::isInvertedL3Cone)),
+                                        new InstantCommand(), arm::isInvertedL3)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
                     new SetStowedPose()), arm::isValidEjectPose));
 
@@ -85,7 +85,7 @@ public class DriverOI {
         rightBumperButton.onTrue(new ConditionalCommand(
             new SequentialCommandGroup(new EjectGamepiece(),
                 new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                                        new InstantCommand(), arm::isInvertedL3Cone)),
+                                        new InstantCommand(), arm::isInvertedL3)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), arm::isValidEjectPose));
 
@@ -123,8 +123,8 @@ public class DriverOI {
             new ConditionalCommand(
                 new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())),
                     new InstantCommand(), arm::isPreScorePose),
-                new ConditionalCommand(new SingleSSAlign(), new InstantCOmmand(), arm::isSingleSSPose)
-                , claw::hasGamepiece));
+                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(), arm::isSingleSSPose),
+            claw::hasGamepiece));
 
         // Slow Mode
         // Back Button (Option button)

@@ -183,8 +183,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        limelightFront.checkForAprilTagUpdates(odometry);
-        limelightBack.checkForAprilTagUpdates(odometry);
+        // limelightFront.checkForAprilTagUpdates(odometry);
+        // limelightBack.checkForAprilTagUpdates(odometry);
     }
 
     public void setFlipped(){ //used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.

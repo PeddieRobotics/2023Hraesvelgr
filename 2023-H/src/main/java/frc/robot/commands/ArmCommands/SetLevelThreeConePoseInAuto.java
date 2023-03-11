@@ -30,7 +30,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         arm.setState(ArmState.L3_CONE_INVERTED);
 
         if(arm.isShoulderBelowAngle(65)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.L3_CONE);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }
         
         arm.setWristPosition(wrist.getkHomeAngle());
@@ -42,11 +42,11 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         if(arm.isShoulderAboveAngle(65.0)){
             shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
             ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.SLOW);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.SLOW);
         }
 
         if(arm.isShoulderAboveAngle(75.0)){
-            arm.setWristPosition(wrist.getkL3ConeAngle());
+            arm.setWristPosition(wrist.getkL3ConeInvertedAngle());
         }
 
         if(arm.isShoulderAboveAngle(153)){

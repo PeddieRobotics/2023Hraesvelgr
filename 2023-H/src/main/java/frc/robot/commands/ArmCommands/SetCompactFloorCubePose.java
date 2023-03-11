@@ -68,8 +68,6 @@ public class SetCompactFloorCubePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.FLOOR_INTAKE_CUBE_COMPACT);
-
     }
 
     @Override

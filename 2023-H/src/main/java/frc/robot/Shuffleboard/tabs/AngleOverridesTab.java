@@ -132,9 +132,6 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkStowedAngle(mStowedShoulder.getDouble(ShoulderConstants.kStowedAngle));
         wrist.setkStowedAngle(mStowedWrist.getDouble(WristConstants.kStowedAngle));
 
-        shoulder.setkTransitoryAngle(mTransitoryShoulder.getDouble(ShoulderConstants.kTransitoryAngle));
-        wrist.setkTransitoryAngle(mTransitoryWrist.getDouble(WristConstants.kTransitoryAngle));
-
         shoulder.setkPreScoreAngle(mPreScoreShoulder.getDouble(ShoulderConstants.kPreScoreAngle));
         wrist.setkPreScoreAngle(mPreScoreWrist.getDouble(WristConstants.kPreScoreAngle));
 

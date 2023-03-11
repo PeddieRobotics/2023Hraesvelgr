@@ -40,7 +40,6 @@ public class SetDoubleSSConePose extends CommandBase{
     public void end(boolean interrupted){
         if(!interrupted){
             arm.holdShoulderPosition();
-            arm.setState(ArmState.DOUBLE_SS_CONE);
         }
 
     }

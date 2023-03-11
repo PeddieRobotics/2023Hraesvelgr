@@ -29,7 +29,6 @@ public class Claw extends SubsystemBase {
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
-    private final Arm arm;
     private final LimelightFront limelightFront;
     private double coneAlignmentError;
     private boolean monitorNewConeIntake;
@@ -46,7 +45,6 @@ public class Claw extends SubsystemBase {
 
         state = ClawState.EMPTY;
 
-        arm = Arm.getInstance();
         limelightFront = LimelightFront.getInstance();
         coneAlignmentError = 0.0;
         monitorNewConeIntake = false;
@@ -67,7 +65,7 @@ public class Claw extends SubsystemBase {
 
         // If we've recently intaked a cone, and the arm is oriented such that we could
         // see the cone, start looking at it.
-        if (monitorNewConeIntake && limelightFront.hasTarget() && arm.isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
+        if (monitorNewConeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
             updateConeAlignmentError();
             newConeCounter++;
 
@@ -141,13 +139,42 @@ public class Claw extends SubsystemBase {
     }
 
     public void outtakeCube() {
-        setSpeed(ClawConstants.kCubeL1OuttakeSpeed);
+        ArmState armState = Arm.getInstance().getState();
+        if(armState == ArmState.L1){
+            setSpeed(ClawConstants.kCubeL1OuttakeSpeed);
+        }
+        else if(armState == ArmState.L2_CONE){
+            setSpeed(ClawConstants.kCubeL2OuttakeSpeed);
+        }
+        else if(armState == ArmState.L3_CUBE_INVERTED){
+            setSpeed(ClawConstants.kCubeL3InvertedOuttakeSpeed);
+        }
+        else if(armState == ArmState.L3_CUBE_FORWARD){
+            setSpeed(ClawConstants.kCubeL3ForwardOuttakeSpeed);
+        }
+        else{
+            setSpeed(ClawConstants.kConeL1OuttakeSpeed);
+        }
     }
 
     public void outtakeCone() {
-        ArmState armState = arm.getInstance().getState();
-        if( == )
-        setSpeed(ClawConstants.kConeL1OuttakeSpeed);
+        ArmState armState = Arm.getInstance().getState();
+        if(armState == ArmState.L1){
+            setSpeed(ClawConstants.kConeL1OuttakeSpeed);
+        }
+        else if(armState == ArmState.L2_CONE){
+            setSpeed(ClawConstants.kConeL2OuttakeSpeed);
+        }
+        else if(armState == ArmState.L3_CONE_INVERTED){
+            setSpeed(ClawConstants.kConeL3InvertedOuttakeSpeed);
+        }
+        else if(armState == ArmState.L3_CONE_FORWARD){
+            setSpeed(ClawConstants.kConeL3ForwardOuttakeSpeed);
+        }
+        else{
+            setSpeed(ClawConstants.kConeL1OuttakeSpeed);
+        }
+
     }
 
     public double getMotorTemperature() {
@@ -182,7 +209,6 @@ public class Claw extends SubsystemBase {
         this.coneAlignmentError = coneAlignmentError;
     }
 
-    // Assumes you are on the correct pipeline (7) for monitoring cone alignment
     public void updateConeAlignmentError() {
         if (state != ClawState.CONE) {
             coneAlignmentError = 0.0;

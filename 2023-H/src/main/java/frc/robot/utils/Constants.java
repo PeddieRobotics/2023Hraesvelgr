@@ -184,7 +184,7 @@ public final class Constants {
 
         public static final class ShoulderConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 50;
+                public static final int kMaxCurrent = 60;
 
                 // Position PID contants
                 public static final double kPositionP = 0.013;
@@ -240,14 +240,14 @@ public final class Constants {
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
-                public static final double kExtendedFloorCubeAngle = -39.0;
+                public static final double kExtendedFloorCubeAngle = -37.5;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeForwardAngle = 25.0;
+                public static final double kL3ConeForwardAngle = 19.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
                 public static final double kDoubleSSConeAngle = 25.0;
@@ -326,7 +326,7 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = -5.0;
                 public static final double kL3CubeInvertedAngle = 2.5;
-                public static final double kL3ConeForwardAngle = 20.0;
+                public static final double kL3ConeForwardAngle = -16.0;
                 public static final double kL3ConeInvertedAngle = 0.0;
 
                 public static final double kDoubleSSConeAngle = -89.0;

@@ -37,7 +37,6 @@ public class SetSingleSSPose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.STOWED);
             arm.holdShoulderPosition();
         }
 

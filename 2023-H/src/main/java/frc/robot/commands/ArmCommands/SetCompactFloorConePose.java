@@ -69,8 +69,6 @@ public class SetCompactFloorConePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.FLOOR_INTAKE_CONE_COMPACT);
-
     }
 
     @Override

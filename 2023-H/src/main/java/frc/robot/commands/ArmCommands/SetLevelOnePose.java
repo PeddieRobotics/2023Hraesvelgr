@@ -57,7 +57,6 @@ public class SetLevelOnePose extends CommandBase{
     @Override
     public void end(boolean interrupted){ 
         if(!interrupted){
-            arm.setState(ArmState.L1);
             arm.holdShoulderPosition();
         }
     }

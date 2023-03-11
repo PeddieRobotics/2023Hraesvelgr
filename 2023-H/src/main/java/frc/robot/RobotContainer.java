@@ -44,8 +44,8 @@ public class RobotContainer {
         drivetrain = Drivetrain.getInstance();
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-        claw = Claw.getInstance();
         arm = Arm.getInstance();
+        claw = Claw.getInstance();
 
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
