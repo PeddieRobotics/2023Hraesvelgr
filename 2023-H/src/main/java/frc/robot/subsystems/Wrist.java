@@ -11,7 +11,6 @@ import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist {
     private static Wrist wrist;
@@ -25,7 +24,11 @@ public class Wrist {
 
     private ArmFeedforward wristFeedforward;
 
-    private double kP, kI, kD, kIz, kG, kV, kA, arbitraryFF;
+    private double kPositionP, kPositionI, kPositionD, kPositionIz, kP, kI, kD, kIz, kFF, kG, kV, kA, arbitraryFF,
+    kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
+    kSmartMotionRegularMaxVel, kSmartMotionRegularMaxAccel, kSmartMotionSlowSetpointTol, kSmartMotionSlowMinVel,
+    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionFastSetpointTol, kSmartMotionFastMinVel,
+    kSmartMotionFastMaxVel, kSmartMotionFastMaxAccel;;
 
     // Angles (poses) start here
     private double kHomeAngle = WristConstants.kHomeAngle;
@@ -55,6 +58,10 @@ public class Wrist {
     private double kSingleSSAngle = WristConstants.kSingleSSAngle;
     private double kTransitoryAngle = WristConstants.kTransitoryAngle;
 
+    public enum SmartMotionWristSpeed {REGULAR, SLOW, FAST};
+
+    private double currentPIDSetpointAngle;
+
 
     public Wrist() {
 
@@ -63,20 +70,54 @@ public class Wrist {
         wristMotor.setIdleMode(IdleMode.kBrake);
 
         pidController = wristMotor.getPIDController();
+
+        // Set up SmartMotion PIDController (regular speed) on pid slot 0
         kP = WristConstants.kP;
         kI = WristConstants.kI;
         kD = WristConstants.kD;
         kIz = WristConstants.kIz;
-        setupPIDController(kP, kI, kD, kIz, 0);
+        kFF = WristConstants.kFF;
+        setupPIDController(kP, kI, kD, kIz, kFF, 0);
+
+        kSmartMotionRegularSetpointTol = WristConstants.kSmartMotionRegularSetpointTol;
+        kSmartMotionRegularMinVel = WristConstants.kSmartMotionRegularMinVel;
+        kSmartMotionRegularMaxVel = WristConstants.kSmartMotionRegularMaxVel;
+        kSmartMotionRegularMaxAccel = WristConstants.kSmartMotionRegularMaxAccel;
+        setRegularSmartMotionParameters(WristConstants.kSmartMotionRegularSetpointTol,
+        WristConstants.kSmartMotionRegularMinVel, WristConstants.kSmartMotionRegularMaxVel, WristConstants.kSmartMotionRegularMaxAccel);
+
+        // Set up SmartMotion PIDController (slow speed) on pid slot 2
+        setupPIDController(kP, kI, kD, kIz, kFF, 2);
+        kSmartMotionSlowSetpointTol = WristConstants.kSmartMotionSlowSetpointTol;
+        kSmartMotionSlowMinVel = WristConstants.kSmartMotionSlowMinVel;
+        kSmartMotionSlowMaxVel = WristConstants.kSmartMotionSlowMaxVel;
+        kSmartMotionSlowMaxAccel = WristConstants.kSmartMotionSlowMaxAccel;
+        setSlowSmartMotionParameters(WristConstants.kSmartMotionSlowSetpointTol,
+        WristConstants.kSmartMotionSlowMinVel, WristConstants.kSmartMotionSlowMaxVel, WristConstants.kSmartMotionSlowMaxAccel);
+
+        // Set up SmartMotion PIDController (fast speed) on pid slot 3
+        setupPIDController(kP, kI, kD, kIz, kFF, 3);
+        kSmartMotionFastSetpointTol = WristConstants.kSmartMotionFastSetpointTol;
+        kSmartMotionFastMinVel = WristConstants.kSmartMotionFastMinVel;
+        kSmartMotionFastMaxVel = WristConstants.kSmartMotionFastMaxVel;
+        kSmartMotionFastMaxAccel = WristConstants.kSmartMotionFastMaxAccel;
+        setFastSmartMotionParameters(WristConstants.kSmartMotionFastSetpointTol,
+        WristConstants.kSmartMotionFastMinVel, WristConstants.kSmartMotionFastMaxVel, WristConstants.kSmartMotionFastMaxAccel);
+
+        // Set up position PIDController on pid slot 1
+        kPositionP = WristConstants.kPositionP;
+        kPositionI = WristConstants.kPositionI;
+        kPositionD = WristConstants.kPositionD;
+        kPositionIz = WristConstants.kPositionIz;
+        setupPIDController(kPositionP, kPositionI, kPositionD, kPositionIz, 1);
 
         kG = WristConstants.kGVolts;
         kV = WristConstants.kVVoltSecondPerRad;
         kA = WristConstants.kAVoltSecondSquaredPerRad;
-
         wristFeedforward = new ArmFeedforward(0.0, kG, kV, kA);
 
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kEncoderConversionFactor);
-        wristMotor.getEncoder().setVelocityConversionFactor(WristConstants.kEncoderConversionFactor/60.0);
+        wristMotor.getEncoder().setVelocityConversionFactor(1.0);
         setEncoder(WristConstants.kHomeAngle);
 
         limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
@@ -89,16 +130,162 @@ public class Wrist {
         
         wristMotor.setClosedLoopRampRate(0.2); // use a 200 ms ramp rate on closed loop control
 
+        // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
+        currentPIDSetpointAngle = WristConstants.kHomeAngle;
+
+    }
+
+    public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionRegularSetpointTol = setpointTol;
+        kSmartMotionRegularMinVel = minVel;
+        kSmartMotionRegularMaxVel = maxVel;
+        kSmartMotionRegularMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionRegularSetpointTol, 0);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionRegularMinVel, 0);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionRegularMaxVel, 0);
+        pidController.setSmartMotionMaxAccel(kSmartMotionRegularMaxAccel, 0);
+    }
+
+    public void setSlowSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionSlowSetpointTol = setpointTol;
+        kSmartMotionSlowMinVel = minVel;
+        kSmartMotionSlowMaxVel = maxVel;
+        kSmartMotionSlowMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionSlowSetpointTol, 2);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionSlowMinVel, 2);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionSlowMaxVel, 2);
+        pidController.setSmartMotionMaxAccel(kSmartMotionSlowMaxAccel, 2);
+    }
+
+    public void setFastSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
+        kSmartMotionFastSetpointTol = setpointTol;
+        kSmartMotionFastMinVel = minVel;
+        kSmartMotionFastMaxVel = maxVel;
+        kSmartMotionFastMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionFastSetpointTol, 3);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionFastMinVel, 3);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionFastMaxVel, 3);
+        pidController.setSmartMotionMaxAccel(kSmartMotionFastMaxAccel, 3);
+    }
+
+    public double getAngle() {
+        return wristMotor.getEncoder().getPosition();
     }
 
     public void setPosition(double setpointDeg) {
+        currentPIDSetpointAngle = setpointDeg;
+
         arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        pidController.setReference(setpointDeg, ControlType.kPosition, 0, arbitraryFF);
+        pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
+    }
+
+    // Currently only used to hold the position of the arm after a smart motion call.
+    // See Arm class method holdPosition
+    // public void setPosition(double setpointDeg) {
+    //     currentPIDSetpointAngle = setpointDeg;
+
+    //     arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
+
+    //     pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
+    // }
+
+    // Velocity PID is currently only used for testing Smart Motion velocity tuning
+    public void setVelocity(double setpointVel){
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
+
+        pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
+    }
+
+    public void setPositionSmartMotion(double setpointDeg, SmartMotionWristSpeed mode){
+        currentPIDSetpointAngle = setpointDeg;
+
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
+
+        switch(mode){
+            case REGULAR:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
+                break;
+            case SLOW:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 2, arbitraryFF);
+                break;
+            case FAST:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 3, arbitraryFF);
+                break;
+            default:
+                pidController.setReference(setpointDeg, ControlType.kSmartMotion, 0, arbitraryFF);
+        }
     }
 
     public double getArbitraryFF() {
         return arbitraryFF;
+    }
+
+    public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
+        updatePIDController(p, i, d, izone, kFF, pidslot);
+    }
+
+    public void updatePIDController(double p, double i, double d, double izone, double ff, int pidslot) {
+        if(pidslot == 0){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+
+            }
+        }
+        else if(pidslot == 1){
+            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone){
+                kPositionP = p;
+                kPositionI = i;
+                kPositionD = d;
+                kPositionIz = izone;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+
+            }           
+        }
+        else if(pidslot == 2){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+            }
+        }
+        else if(pidslot == 3){
+            if(kP != p || kI != i || kD != d || kIz != izone || kFF != ff){
+                kP = p;
+                kI = i;
+                kD = d;
+                kIz = izone;
+                kFF = ff;
+
+                pidController.setP(p, pidslot);
+                pidController.setI(i, pidslot);
+                pidController.setD(d, pidslot);
+                pidController.setIZone(izone, pidslot);
+                pidController.setFF(ff, pidslot);
+
+            }
+        }
     }
 
     public boolean atLimitSensor(){
@@ -157,17 +344,12 @@ public class Wrist {
         pidController.setIZone(izone, pidslot);
     }
 
-    public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
-        if(kP != p || kI != i || kD != d || kIz != izone){
-            kP = p;
-            kI = i;
-            kD = d;
-            kIz = izone;
-            pidController.setP(p, pidslot);
-            pidController.setI(i, pidslot);
-            pidController.setD(d, pidslot);
-            pidController.setIZone(izone, pidslot);
-        }
+    public void setupPIDController(double p, double i, double d, double izone, double ff, int pidslot) {
+        pidController.setP(p, pidslot);
+        pidController.setI(i, pidslot);
+        pidController.setD(d, pidslot);
+        pidController.setIZone(izone, pidslot);
+        pidController.setFF(ff, pidslot);
     }
 
     public void periodic() {

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.SmartMotionWristSpeed;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -12,7 +13,8 @@ public class WristTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
 
     private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
-            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mPIDSetpoint, mLimitSensor;
+            mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mkFF, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
+            mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
 
     public WristTab() {
     }
@@ -80,14 +82,19 @@ public class WristTab extends ShuffleboardTabBase {
                 wrist.updatePIDController(mkP.getDouble(WristConstants.kP),
                         mkI.getDouble(WristConstants.kI),
                         mkD.getDouble(WristConstants.kD),
-                        mkIz.getDouble(WristConstants.kIz), 0);
+                        mkIz.getDouble(WristConstants.kIz),
+                        mkFF.getDouble(WristConstants.kFF), 0);
+                        wrist.updateWristFeedforward(
+                                        mkG.getDouble(0.0),
+                                        mkV.getDouble(0.0),
+                                        mkA.getDouble(0.0));
 
-                wrist.updateWristFeedforward(
-                        mkG.getDouble(0.0),
-                        mkV.getDouble(0.0),
-                        mkA.getDouble(0.0));
+                        wrist.setVelocity(mPIDSetpoint.getDouble(0.0));
+                        //wrist.setPositionSmartMotion(mPIDSetpoint.getDouble(0.0), SmartMotionWristSpeed.REGULAR);
+                        wrist.setRegularSmartMotionParameters(mSmartMotionAngleTol.getDouble(0.0),
+                                        mSmartMotionMinVel.getDouble(0.0), mSmartMotionMaxVel.getDouble(0.0),
+                                        mSmartMotionMaxAccel.getDouble(0.0));
 
-                wrist.setPosition(mPIDSetpoint.getDouble(0.0));
 
             }
         } catch (NullPointerException e) {

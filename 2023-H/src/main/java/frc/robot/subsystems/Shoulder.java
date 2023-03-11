@@ -58,7 +58,7 @@ public class Shoulder {
     private double kSingleSSAngle = ShoulderConstants.kSingleSSAngle;
     private double kTransitoryAngle = ShoulderConstants.kTransitoryAngle;
 
-    public enum SmartMotionArmSpeed {REGULAR, SLOW, L3_CONE};
+    public enum SmartMotionArmSpeed {REGULAR, SLOW, FAST};
 
     private double currentPIDSetpointAngle;
 
@@ -87,7 +87,7 @@ public class Shoulder {
           shoulderMotorFollower.getEncoder().setVelocityConversionFactor(1.0);
   
           // Safety: ramp rate and soft limits
-          shoulderMotorMaster.setClosedLoopRampRate(0.1); // use a 100 ms ramp rate on closed loop control
+          shoulderMotorMaster.setClosedLoopRampRate(0.05); // use a 50 ms ramp rate on closed loop control
   
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kForward, 155);
           shoulderMotorMaster.setSoftLimit(SoftLimitDirection.kReverse, -75);
@@ -155,7 +155,7 @@ public class Shoulder {
         reachedLimitSensorUpward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
-        currentPIDSetpointAngle = -75.0;
+        currentPIDSetpointAngle = ShoulderConstants.kHomeAngle;
 
     }
 
@@ -233,7 +233,7 @@ public class Shoulder {
             case SLOW:
                 pidController.setReference(setpointDeg, ControlType.kSmartMotion, 2, arbitraryFF);
                 break;
-            case L3_CONE:
+            case FAST:
                 pidController.setReference(setpointDeg, ControlType.kSmartMotion, 3, arbitraryFF);
                 break;
             default:
@@ -303,54 +303,7 @@ public class Shoulder {
     }
 
     public void updatePIDController(double p, double i, double d, double izone, int pidslot) {
-        if(pidslot == 0){
-            if(kP != p || kI != i || kD != d || kIz != izone){
-                kP = p;
-                kI = i;
-                kD = d;
-                kIz = izone;
-                pidController.setP(p, pidslot);
-                pidController.setI(i, pidslot);
-                pidController.setD(d, pidslot);
-                pidController.setIZone(izone, pidslot);
-            }
-        }
-        else if(pidslot == 1){
-            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone){
-                kPositionP = p;
-                kPositionI = i;
-                kPositionD = d;
-                kPositionIz = izone;
-                pidController.setP(p, pidslot);
-                pidController.setI(i, pidslot);
-                pidController.setD(d, pidslot);
-                pidController.setIZone(izone, pidslot);
-            }           
-        }
-        else if(pidslot == 2){
-            if(kP != p || kI != i || kD != d || kIz != izone){
-                kP = p;
-                kI = i;
-                kD = d;
-                kIz = izone;
-                pidController.setP(p, pidslot);
-                pidController.setI(i, pidslot);
-                pidController.setD(d, pidslot);
-                pidController.setIZone(izone, pidslot);
-            }
-        }
-        else if(pidslot == 3){
-            if(kP != p || kI != i || kD != d || kIz != izone){
-                kP = p;
-                kI = i;
-                kD = d;
-                kIz = izone;
-                pidController.setP(p, pidslot);
-                pidController.setI(i, pidslot);
-                pidController.setD(d, pidslot);
-                pidController.setIZone(izone, pidslot);
-            }
-        }
+        updatePIDController(p, i, d, izone, kFF, pidslot);
     }
 
     public void updatePIDController(double p, double i, double d, double izone, double ff, int pidslot) {
@@ -370,18 +323,16 @@ public class Shoulder {
             }
         }
         else if(pidslot == 1){
-            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone || kFF != ff){
+            if(kPositionP != p || kPositionI != i || kPositionD != d || kPositionIz != izone){
                 kPositionP = p;
                 kPositionI = i;
                 kPositionD = d;
                 kPositionIz = izone;
-                kFF = ff;
 
                 pidController.setP(p, pidslot);
                 pidController.setI(i, pidslot);
                 pidController.setD(d, pidslot);
                 pidController.setIZone(izone, pidslot);
-                pidController.setFF(ff, pidslot);
 
             }           
         }

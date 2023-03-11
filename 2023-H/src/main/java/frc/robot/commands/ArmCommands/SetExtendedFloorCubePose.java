@@ -61,18 +61,18 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
         if((arm.isShoulderAtAngle(shoulder.getkStowedAngle()) && shoulderStowing) || !allowStowing){
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
             shoulderStowed = true;
         }
 
-        if(arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && shoulderStowed){
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
-        }
+        // if(arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()) && shoulderStowed){
+        //     arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
+        // }
     }
 
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
             arm.holdShoulderPosition();
         }
     }

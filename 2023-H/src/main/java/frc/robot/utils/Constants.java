@@ -239,8 +239,8 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -32.0;
-                public static final double kExtendedFloorCubeAngle = -40.0;
+                public static final double kExtendedFloorConeAngle = -30.0;
+                public static final double kExtendedFloorCubeAngle = -39.0;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
@@ -268,20 +268,42 @@ public final class Constants {
                 public static final int kMaxCurrent = 25;
 
                 // Position PID constants
-                public static final double kP = 0.015;
-                public static final double kI = 0.000005;
-                public static final double kD = 0.0001;
-                public static final double kIz = 4.0;
+                public static final double kPositionP = 0.015;
+                public static final double kPositionI = 0.000005;
+                public static final double kPositionD = 0.0001;
+                public static final double kPositionIz = 4.0;
+                public static final double kPositionFF = 0.0;
 
                 // Soft limits
                 public static final float kAngleMin = -140;
                 public static final float kAngleMax = 104;
             
                 // Wrist feedforward
-                // Currently unused
                 public static final double kGVolts = 0.0;
                 public static final double kVVoltSecondPerRad = 0.0;
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
+
+                // Smart Motion controller parameters (velocity PID constants)
+                public static final double kP = 0.0;
+                public static final double kI = 0.0;
+                public static final double kD = 0;
+                public static final double kIz = 0;
+                public static final double kFF = 0;
+
+                public static final double kSmartMotionSlowSetpointTol = 1.0;
+                public static final double kSmartMotionSlowMinVel = 0.0; // rpm
+                public static final double kSmartMotionSlowMaxVel = 1000.0; // rpm
+                public static final double kSmartMotionSlowMaxAccel = 1000.0; // rpm / sec
+
+                public static final double kSmartMotionRegularSetpointTol = 1.0;
+                public static final double kSmartMotionRegularMinVel = 0.0; // rpm
+                public static final double kSmartMotionRegularMaxVel = 2000.0; // rpm
+                public static final double kSmartMotionRegularMaxAccel = 2000.0; // rpm / sec
+
+                public static final double kSmartMotionFastSetpointTol = 1.0;
+                public static final double kSmartMotionFastMinVel = 0.0; // rpm
+                public static final double kSmartMotionFastMaxVel = 3000.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 3000.0; // rpm / sec
         
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;

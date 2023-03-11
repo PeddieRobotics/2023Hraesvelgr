@@ -28,8 +28,6 @@ public class Arm extends SubsystemBase {
     
     private ArmState state, goalPose;
 
-    private boolean stowingIntake;
-
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -37,7 +35,6 @@ public class Arm extends SubsystemBase {
 
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
-        stowingIntake = false;
 
     }
 
@@ -147,14 +144,6 @@ public class Arm extends SubsystemBase {
 
     public boolean isShoulderFullyStowed(){
         return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
-    }
-
-    public boolean getAllowStowIntake(){
-        return stowingIntake;
-    }
-
-    public void setAllowStowIntake(boolean stowingIntake){
-        this.stowingIntake = stowingIntake;
     }
 
     public boolean isInvertedL3Cone(){
