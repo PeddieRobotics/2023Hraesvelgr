@@ -15,6 +15,7 @@ import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.commands.DriveCommands.SwerveDriveCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Autonomous;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
@@ -27,6 +28,7 @@ public class RobotContainer {
 
     private final Claw claw;
     private final Arm arm;
+    private final Blinkin blinkin;
 
     private final OperatorOI operatorOI;
     private final DriverOI driverOI;
@@ -38,7 +40,6 @@ public class RobotContainer {
 
     private Command autoCommand;
 
-    // private final Blinkin blinkin;
 
     public RobotContainer() {
         drivetrain = Drivetrain.getInstance();
@@ -46,6 +47,7 @@ public class RobotContainer {
 
         arm = Arm.getInstance();
         claw = Claw.getInstance();
+        blinkin = Blinkin.getInstance();
 
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
@@ -73,6 +75,14 @@ public class RobotContainer {
         } else {
             drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(180))));
         }
+    }
+
+    public void defaultColor() {
+        blinkin.neutral();
+    }
+
+    public void autonomousColor() {
+        blinkin.autoColor();
     }
 
     public void setWristMode(IdleMode mode) {

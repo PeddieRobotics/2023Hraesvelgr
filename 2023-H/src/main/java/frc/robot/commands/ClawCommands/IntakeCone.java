@@ -2,16 +2,19 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.ClawConstants;
 
 public class IntakeCone extends CommandBase{
+    private Blinkin blinkin;
     private Claw claw;
     private double initialTime, currentTime;
     private boolean hasPiece;
 
     public IntakeCone(){
+        blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
         addRequirements(claw);
 
@@ -28,6 +31,8 @@ public class IntakeCone extends CommandBase{
         initialTime = Timer.getFPGATimestamp();
         currentTime = initialTime;
         hasPiece = false;
+
+        blinkin.intakeCone();
     }
 
     @Override
@@ -50,6 +55,7 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         if(!interrupted){
+            blinkin.acquiredGamePiece();
             if(claw.hasCube()){
                 claw.setSpeed(ClawConstants.kCubeHoldSpeed);
             }
@@ -60,6 +66,7 @@ public class IntakeCone extends CommandBase{
         }
         else{
             claw.stopClaw();
+            blinkin.neutral();
         }
     }
 

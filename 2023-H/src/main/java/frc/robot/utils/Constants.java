@@ -38,7 +38,7 @@ public final class Constants {
                 // Distance between the front and back wheels on the robot
                 public static final double kWheelBase = Units.inchesToMeters(24.5);
 
-                public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
+                public static final double kRealMaxSpeedMetersPerSecond = 4.459224;
                 public static final double kMaxFloorSpeed = 1.0 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
                 public static final double kMaxAngularSpeed = 2 * Math.PI;
@@ -93,7 +93,7 @@ public final class Constants {
                 // 13T, or 14T.
                 // This changes the drive speed of the module (a pinion gear with more teeth
                 // will result in a robot that drives faster).
-                public static final int kDrivingMotorPinionTeeth = 12;
+                public static final int kDrivingMotorPinionTeeth = 13;
 
                 // Invert the turning encoder, since the output shaft rotates in the opposite
                 // direction of

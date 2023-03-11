@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -21,6 +22,7 @@ public class SimpleAlign extends CommandBase {
     private PIDController thetaController, yController;
     private DriverOI oi;
     private Arm arm;
+    private Blinkin blinkin;
     private Claw claw;
     private String limelightName;
     private int scoreSetpoint;
@@ -31,6 +33,7 @@ public class SimpleAlign extends CommandBase {
         limelightFront = LimelightFront.getInstance();
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
+        blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
         thetaController = new PIDController(0.05, 0.0001, 0);
@@ -66,6 +69,8 @@ public class SimpleAlign extends CommandBase {
         }
 
         oi = DriverOI.getInstance();
+
+        blinkin.seekingTargetSlow();
     }
 
     @Override
@@ -81,6 +86,18 @@ public class SimpleAlign extends CommandBase {
             alignError = -alignError;
         } else {
             txAvg = limelightFront.getTxAverage();
+        }
+
+        if (!LimelightHelper.getTV(limelightName)) {
+            blinkin.noTarget();
+        } else if(txAvg > 3){
+            blinkin.seekingTargetSlow();
+        } else if (txAvg > 1.5) {
+            blinkin.seekingTargetMedium();
+        } else if (txAvg > 0.5) {
+            blinkin.seekingTargetFast();
+        } else {
+            blinkin.atTarget();
         }
 
         if (!initialHeadingCorrectionComplete && Math
@@ -109,6 +126,7 @@ public class SimpleAlign extends CommandBase {
         drivetrain.stopSwerveModules();
         limelightBack.setPipeline(0);
         limelightFront.setPipeline(7);
+        blinkin.neutral();
     }
 
     @Override

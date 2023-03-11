@@ -14,6 +14,7 @@ import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
+import frc.robot.subsystems.Blinkin;
 
 public class SingleSSAlign extends CommandBase {
     private final LimelightFront limelightFront;
@@ -21,6 +22,7 @@ public class SingleSSAlign extends CommandBase {
     private PIDController thetaController, xController;
     private DriverOI oi;
     private Arm arm;
+    private Blinkin blinkin;
     private Claw claw;
     private int scoreSetpoint;
     private boolean initialHeadingCorrectionComplete;
@@ -29,6 +31,7 @@ public class SingleSSAlign extends CommandBase {
         limelightFront = LimelightFront.getInstance();
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
+        blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
         thetaController = new PIDController(0.05, 0.0001, 0);
@@ -56,6 +59,7 @@ public class SingleSSAlign extends CommandBase {
 
         oi = DriverOI.getInstance();
 
+        blinkin.seekingTargetSlow();
     }
 
     @Override
@@ -65,6 +69,18 @@ public class SingleSSAlign extends CommandBase {
         double turnFF = 0.2;
 
         double txAvg = limelightFront.getTxAverage();
+
+        if (!limelightFront.hasTarget()) {
+            blinkin.noTarget();
+        } else if(txAvg > 3){
+            blinkin.seekingTargetSlow();
+        } else if (txAvg > 1.5) {
+            blinkin.seekingTargetMedium();
+        } else if (txAvg > 0.5) {
+            blinkin.seekingTargetFast();
+        } else {
+            blinkin.atTarget();
+        }
 
         if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
@@ -88,6 +104,7 @@ public class SingleSSAlign extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        blinkin.neutral();
         drivetrain.stopSwerveModules();
         limelightFront.setPipeline(7);
     }

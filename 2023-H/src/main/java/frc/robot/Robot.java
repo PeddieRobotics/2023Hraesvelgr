@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
 
         ranAutonomousRoutine = false;
 
-
+        robotContainer.defaultColor();
     }
 
     @Override
@@ -116,6 +116,8 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
+        //turns to the default color for LEDS
+        robotContainer.autonomousColor();
     }
 
     @Override
@@ -137,6 +139,8 @@ public class Robot extends TimedRobot {
 
         // Default pose for the robot to begin teleop is stowed.
         // CommandScheduler.getInstance().schedule(new SetStowedPose());
+        //turns to the default color for LEDS
+        robotContainer.defaultColor();
     }
 
     @Override

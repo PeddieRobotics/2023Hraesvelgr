@@ -19,6 +19,7 @@ import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
@@ -47,10 +48,12 @@ public class OperatorOI {
     private AlignGoalColumn alignGoalColumn = AlignGoalColumn.kCenter;
 
     private Arm arm;
+    private Blinkin blinkin;
     private Claw claw;    
 
     public OperatorOI() {
         arm = Arm.getInstance();
+        blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
         configureController();
     }
@@ -154,20 +157,20 @@ public class OperatorOI {
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
-                claw.setState(ClawState.EMPTY);
+                blinkin.neutral();
             }
             else{
-                claw.setState(ClawState.CONE);
+                blinkin.intakeCone();
             }
         }));
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
-                claw.setState(ClawState.EMPTY);
+                blinkin.neutral();
             }
             else{
-                claw.setState(ClawState.CUBE);
+                blinkin.intakeCube();
             }
         }));
 

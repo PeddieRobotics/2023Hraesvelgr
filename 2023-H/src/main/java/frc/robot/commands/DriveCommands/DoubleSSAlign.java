@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightBack;
@@ -14,7 +15,7 @@ import frc.robot.utils.DriverOI;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
 
-public class HPStationAlign extends CommandBase {
+public class DoubleSSAlign extends CommandBase {
     private final Drivetrain drivetrain;
     private PIDController thetaController, yController;
     private DriverOI oi;
@@ -25,11 +26,13 @@ public class HPStationAlign extends CommandBase {
     LimelightFront limelightFront;
     LimelightBack limelightBack;
     private Arm arm;
+    private Blinkin blinkin;
     private boolean isCube;
 
-    public HPStationAlign() {
+    public DoubleSSAlign() {
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
+        blinkin = Blinkin.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = limelightBack.getInstance();
         thetaController = new PIDController(0.035, 0, 0);
@@ -52,6 +55,8 @@ public class HPStationAlign extends CommandBase {
         oi = DriverOI.getInstance();
         state = "6-3";
         destinationXY = LimelightHelper.getCurrentAprilTagCoordinates(limelightName);
+
+        blinkin.seekingTargetSlow();
     }
 
     @Override
