@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.ADIS16470_IMU;
 import frc.robot.utils.RobotMap;
-import frc.robot.utils.RollingAverage;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
@@ -184,9 +183,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        // limelightFront.checkForAprilTagUpdates(odometry);
-        // limelightBack.checkForAprilTagUpdates(odometry);
-
+        limelightFront.checkForAprilTagUpdates(odometry);
+        limelightBack.checkForAprilTagUpdates(odometry);
     }
 
     public void setFlipped(){ //used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.

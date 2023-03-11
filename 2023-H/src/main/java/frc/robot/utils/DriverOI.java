@@ -119,7 +119,12 @@ public class DriverOI {
 
         // Square button auto-align
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new ConditionalCommand(new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())), new SingleSSAlign(), claw::hasGamepiece));
+        squareButton.whileTrue(new ConditionalCommand(
+            new ConditionalCommand(
+                new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())),
+                    new InstantCommand(), arm::isPreScorePose),
+                new ConditionalCommand(new SingleSSAlign(), new InstantCOmmand(), arm::isSingleSSPose)
+                , claw::hasGamepiece));
 
         // Slow Mode
         // Back Button (Option button)

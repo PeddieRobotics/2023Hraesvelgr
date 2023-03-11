@@ -94,6 +94,10 @@ public class Arm extends SubsystemBase {
         shoulder.setPositionSmartMotion(setPoint, mode);
     }
 
+    public void holdWristPosition(){
+        setWristPosition(wrist.getAngle());
+    }
+
     public void setWristPosition(double setPoint){
         wrist.setPosition(setPoint);
     }
@@ -159,6 +163,18 @@ public class Arm extends SubsystemBase {
             arm = new Arm();
         }
         return arm;
+    }
+
+    public boolean isPreScorePose(){
+        return state == ArmState.PRE_SCORE;
+    }
+
+    public boolean isSingleSSPose(){
+        return state == ArmState.SINGLE_SS;
+    }
+
+    public ArmState getGoalPose() {
+        return goalPose;
     }
 
     public void setGoalPoseToLevelTwoCone(){

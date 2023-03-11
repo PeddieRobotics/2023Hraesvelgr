@@ -25,7 +25,7 @@ public class SetLevelThreeConeInvertedPose extends CommandBase{
     public void initialize() {
 
         if(arm.isShoulderBelowAngle(65)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.L3_CONE);
+            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }
         
         arm.setWristPosition(wrist.getkHomeAngle());

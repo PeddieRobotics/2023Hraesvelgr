@@ -59,13 +59,13 @@ public class SimpleAlign extends CommandBase {
                 scoreSetpoint = 180;
         }
 
-        oi = DriverOI.getInstance();
-
         if (claw.hasCone()) {
             LimelightHelper.setPipelineIndex(limelightName, 6); // Retroreflective tape pipeline
         } else {
             LimelightHelper.setPipelineIndex(limelightName, 0); // April tag pipeline
         }
+
+        oi = DriverOI.getInstance();
     }
 
     @Override

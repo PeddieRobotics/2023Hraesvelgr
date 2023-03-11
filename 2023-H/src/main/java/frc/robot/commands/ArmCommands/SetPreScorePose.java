@@ -2,17 +2,18 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ShoulderConstants;
-import frc.robot.utils.Constants.WristConstants;
+import frc.robot.utils.LimelightHelper;
 
 public class SetPreScorePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
+    private Claw claw;
 
     public SetPreScorePose() {
         arm = Arm.getInstance();
@@ -20,12 +21,13 @@ public class SetPreScorePose extends CommandBase{
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+        claw = Claw.getInstance();
     }
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkPrePoseAngle());
-        arm.setShoulderPositionSmartMotion(shoulder.getkPrePoseAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setWristPosition(wrist.getkPreScoreAngle());
+        arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.PRE_SCORE);
         
     }
@@ -40,11 +42,28 @@ public class SetPreScorePose extends CommandBase{
             arm.holdShoulderPosition();
         }
 
+        String limelightName;
+        switch (arm.getGoalPose()) {
+            case L3_CUBE_INVERTED:
+                limelightName = "limelight-back";
+                break;
+            case L3_CONE_INVERTED:
+                limelightName = "limelight-back";
+                break;
+            default:
+                limelightName = "limelight-front";
+        }
+
+        if (claw.hasCone()) {
+            LimelightHelper.setPipelineIndex(limelightName, 6); // Retroreflective tape pipeline
+        } else {
+            LimelightHelper.setPipelineIndex(limelightName, 0); // April tag pipeline
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkPrePoseAngle()) && arm.isWristAtAngle(wrist.getkPrePoseAngle());
+        return arm.isShoulderAtAngle(shoulder.getkPreScoreAngle()) && arm.isWristAtAngle(wrist.getkPreScoreAngle());
     }
 
 
