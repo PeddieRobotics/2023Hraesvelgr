@@ -205,21 +205,21 @@ public class Arm extends SubsystemBase {
          // For L3 poses, check pose rotation to decide whether the goal pose is still correct.
          // Case 1: The robot is facing away from the goal.
         if(poseDeg > -90 && poseDeg < 90){
-            if(goalPose == ArmState.L3_CUBE_FORWARD){
-                goalPose = ArmState.L3_CUBE_INVERTED;
-            }
-            else if(goalPose == ArmState.L3_CONE_FORWARD){
-                goalPose = ArmState.L3_CONE_INVERTED;
-            }
-        }
-        // Case 2: The robot is facing toward the goal.
-        else{
             if(goalPose == ArmState.L3_CUBE_INVERTED){
                 goalPose = ArmState.L3_CUBE_FORWARD;
             }
             else if(goalPose == ArmState.L3_CONE_INVERTED){
                 goalPose = ArmState.L3_CONE_FORWARD;
-            }    
+            } 
+        }
+        // Case 2: The robot is facing toward the goal.
+        else{
+            if(goalPose == ArmState.L3_CUBE_FORWARD){
+                goalPose = ArmState.L3_CUBE_INVERTED;
+            }
+            else if(goalPose == ArmState.L3_CONE_FORWARD){
+                goalPose = ArmState.L3_CONE_INVERTED;
+            }   
         }
 
          // Now execute the goal pose

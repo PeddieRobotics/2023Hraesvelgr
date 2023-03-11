@@ -104,20 +104,20 @@ public class SimpleAlign extends CommandBase {
                 .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.3, oi.getStrafe() * 0.3),
+            drivetrain.drive(new Translation2d(oi.getForward() * 0.4, oi.getStrafe() * 0.4),
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
         } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
             initialHeadingCorrectionComplete = true;
 
             yMove = yController.calculate(txAvg, alignError);
 
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.3, yMove), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(oi.getForward() * 0.4, yMove), 0, true, new Translation2d(0, 0));
 
         } else {
             if (Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound/3) {
                 turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
             }
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.3, 0), turn, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(oi.getForward() * 0.4, 0), turn, true, new Translation2d(0, 0));
         }
     }
 

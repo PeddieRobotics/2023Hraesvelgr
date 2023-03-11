@@ -103,7 +103,8 @@ public class DriverOI {
 
         // Circle button hold allows for manual April Tag localization override continuously while held.
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.whileTrue(new LocalizeWithLL());
+        circleButton.whileTrue(new SimpleAlign());
+        //circleButton.whileTrue(new LocalizeWithLL());
 
         // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
@@ -119,12 +120,12 @@ public class DriverOI {
 
         // Square button auto-align
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new ConditionalCommand(
-            new ConditionalCommand(
-                new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())),
-                    new InstantCommand(), arm::isPreScorePose),
-                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(), arm::isSingleSSPose),
-            claw::hasGamepiece));
+        // squareButton.whileTrue(new ConditionalCommand(
+        //     new ConditionalCommand(
+        //         new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())),
+        //             new InstantCommand(), arm::isPreScorePose),
+        //         new ConditionalCommand(new SingleSSAlign(), new InstantCommand(), arm::isSingleSSPose),
+        //     claw::hasGamepiece));
 
         // Slow Mode
         // Back Button (Option button)
