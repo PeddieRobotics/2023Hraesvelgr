@@ -29,8 +29,6 @@ public class Claw extends SubsystemBase {
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
-    private double cubeIntakeSpeed, coneIntakeSpeed, cubeOuttakeSpeed, coneOuttakeSpeed;
-
     private final Arm arm;
     private final LimelightFront limelightFront;
     private double coneAlignmentError;
@@ -45,11 +43,6 @@ public class Claw extends SubsystemBase {
         backSensor = new DigitalInput(RobotMap.kClawBackSensor);
         frontSensor = new DigitalInput(RobotMap.kClawFrontSensor);
         useSensors = true;
-
-        cubeIntakeSpeed = ClawConstants.kCubeIntakeSpeed;
-        coneIntakeSpeed = ClawConstants.kConeIntakeSpeed;
-        cubeOuttakeSpeed = ClawConstants.kCubeOuttakeSpeed;
-        coneOuttakeSpeed = ClawConstants.kConeOuttakeSpeed;
 
         state = ClawState.EMPTY;
 
@@ -140,19 +133,21 @@ public class Claw extends SubsystemBase {
     }
 
     public void intakeCube() {
-        setSpeed(cubeIntakeSpeed);
+        setSpeed(ClawConstants.kCubeIntakeSpeed);
     }
 
     public void intakeCone() {
-        setSpeed(coneIntakeSpeed);
+        setSpeed(ClawConstants.kConeIntakeSpeed);
     }
 
     public void outtakeCube() {
-        setSpeed(cubeOuttakeSpeed);
+        setSpeed(ClawConstants.kCubeL1OuttakeSpeed);
     }
 
     public void outtakeCone() {
-        setSpeed(coneOuttakeSpeed);
+        ArmState armState = arm.getInstance().getState();
+        if( == )
+        setSpeed(ClawConstants.kConeL1OuttakeSpeed);
     }
 
     public double getMotorTemperature() {

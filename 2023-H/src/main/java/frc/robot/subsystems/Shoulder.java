@@ -9,7 +9,6 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.RobotMap;
 
@@ -23,17 +22,19 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorUpward, reachedLimitSensorDownward;
+    private boolean reachedLimitSensorUpward;
 
     private double kP, kI, kD, kIz, kFF, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
     kSmartMotionRegularMaxVel, kSmartMotionRegularMaxAccel, kSmartMotionSlowSetpointTol, kSmartMotionSlowMinVel,
-    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionL3ConeSetpointTol, kSmartMotionL3ConeMinVel,
-    kSmartMotionL3ConeMaxVel, kSmartMotionL3ConeMaxAccel;
+    kSmartMotionSlowMaxVel, kSmartMotionSlowMaxAccel, kSmartMotionFastSetpointTol, kSmartMotionFastMinVel,
+    kSmartMotionFastMaxVel, kSmartMotionFastMaxAccel;
 
     // Angles (poses) start here
     private double kHomeAngle = ShoulderConstants.kHomeAngle;
     private double kStowedAngle = ShoulderConstants.kStowedAngle;
+    private double kPreScoreAngle = ShoulderConstants.kPreScoreAngle;
+
     private double kL1Angle = ShoulderConstants.kL1Angle;
 
     // Shoulder is not fully extended out
@@ -49,9 +50,10 @@ public class Shoulder {
 
     private double kL3CubeForwardAngle = ShoulderConstants.kL3CubeForwardAngle;
     private double kL3CubeInvertedAngle = ShoulderConstants.kL3CubeInvertedAngle;
-    private double kL3ConeAngle = ShoulderConstants.kL3ConeAngle;
+    private double kL3ConeForwardAngle = ShoulderConstants.kL3ConeForwardAngle;
 
-    private double kLLSeekAngle = ShoulderConstants.kLLSeekAngle;
+    private double kL3ConeInvertedAngle = ShoulderConstants.kL3ConeInvertedAngle;
+
     private double kDoubleSSConeAngle = ShoulderConstants.kDoubleSSConeAngle;
     private double kSingleSSAngle = ShoulderConstants.kSingleSSAngle;
     private double kTransitoryAngle = ShoulderConstants.kTransitoryAngle;
@@ -127,12 +129,12 @@ public class Shoulder {
   
           // Set up SmartMotion PIDController (fast speed) on pid slot 3
           setupPIDController(kP, kI, kD, kIz, kFF, 3);
-          kSmartMotionL3ConeSetpointTol = ShoulderConstants.kSmartMotionL3ConeSetpointTol;
-          kSmartMotionL3ConeMinVel = ShoulderConstants.kSmartMotionL3ConeMinVel;
-          kSmartMotionL3ConeMaxVel = ShoulderConstants.kSmartMotionL3ConeMaxVel;
-          kSmartMotionL3ConeMaxAccel = ShoulderConstants.kSmartMotionL3ConeMaxAccel;
-          setFastSmartMotionParameters(ShoulderConstants.kSmartMotionL3ConeSetpointTol,
-          ShoulderConstants.kSmartMotionL3ConeMinVel, ShoulderConstants.kSmartMotionL3ConeMaxVel, ShoulderConstants.kSmartMotionL3ConeMaxAccel);
+          kSmartMotionFastSetpointTol = ShoulderConstants.kSmartMotionFastSetpointTol;
+          kSmartMotionFastMinVel = ShoulderConstants.kSmartMotionFastMinVel;
+          kSmartMotionFastMaxVel = ShoulderConstants.kSmartMotionFastMaxVel;
+          kSmartMotionFastMaxAccel = ShoulderConstants.kSmartMotionFastMaxAccel;
+          setFastSmartMotionParameters(ShoulderConstants.kSmartMotionFastSetpointTol,
+          ShoulderConstants.kSmartMotionFastMinVel, ShoulderConstants.kSmartMotionFastMaxVel, ShoulderConstants.kSmartMotionFastMaxAccel);
   
           // Set up position PIDController on pid slot 1
           kPositionP = ShoulderConstants.kPositionP;
@@ -151,7 +153,6 @@ public class Shoulder {
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
         reachedLimitSensorUpward = false;
-        reachedLimitSensorDownward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = -75.0;
@@ -181,14 +182,14 @@ public class Shoulder {
     }
 
     public void setFastSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
-        kSmartMotionL3ConeSetpointTol = setpointTol;
-        kSmartMotionL3ConeMinVel = minVel;
-        kSmartMotionL3ConeMaxVel = maxVel;
-        kSmartMotionL3ConeMaxAccel = maxAccel;
-        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionL3ConeSetpointTol, 3);
-        pidController.setSmartMotionMinOutputVelocity(kSmartMotionL3ConeMinVel, 3);
-        pidController.setSmartMotionMaxVelocity(kSmartMotionL3ConeMaxVel, 3);
-        pidController.setSmartMotionMaxAccel(kSmartMotionL3ConeMaxAccel, 3);
+        kSmartMotionFastSetpointTol = setpointTol;
+        kSmartMotionFastMinVel = minVel;
+        kSmartMotionFastMaxVel = maxVel;
+        kSmartMotionFastMaxAccel = maxAccel;
+        pidController.setSmartMotionAllowedClosedLoopError(kSmartMotionFastSetpointTol, 3);
+        pidController.setSmartMotionMinOutputVelocity(kSmartMotionFastMinVel, 3);
+        pidController.setSmartMotionMaxVelocity(kSmartMotionFastMaxVel, 3);
+        pidController.setSmartMotionMaxAccel(kSmartMotionFastMaxAccel, 3);
     }
 
     public double getAngle() {
@@ -464,6 +465,14 @@ public class Shoulder {
         this.kStowedAngle = kStowedAngle;
     }
 
+    public double getkPreScoreAngle() {
+        return kPreScoreAngle;
+    }
+
+    public void setkPreScoreAngle(double kPreScoreAngle) {
+        this.kPreScoreAngle = kPreScoreAngle;
+    }
+
     public double getkL1Angle() {
         return kL1Angle;
     }
@@ -536,20 +545,20 @@ public class Shoulder {
         this.kL3CubeInvertedAngle = kL3CubeInvertedAngle;
     }
 
-    public double getkL3ConeAngle() {
-        return kL3ConeAngle;
+    public double getkL3ConeForwardAngle() {
+        return kL3ConeForwardAngle;
     }
 
-    public void setkL3ConeAngle(double kL3ConeAngle) {
-        this.kL3ConeAngle = kL3ConeAngle;
+    public void setkL3ConeForwardAngle(double kL3ConeForwardAngle) {
+        this.kL3ConeForwardAngle = kL3ConeForwardAngle;
     }
 
-    public double getkLLSeekAngle() {
-        return kLLSeekAngle;
+    public double getkL3ConeInvertedAngle() {
+        return kL3ConeInvertedAngle;
     }
 
-    public void setkLLSeekAngle(double kLLSeekAngle) {
-        this.kLLSeekAngle = kLLSeekAngle;
+    public void setkL3ConeInvertedAngle(double kL3ConeInvertedAngle) {
+        this.kL3ConeInvertedAngle = kL3ConeInvertedAngle;
     }
 
     public double getkDoubleSSConeAngle() {

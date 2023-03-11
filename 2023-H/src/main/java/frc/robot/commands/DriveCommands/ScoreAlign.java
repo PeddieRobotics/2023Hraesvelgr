@@ -59,7 +59,7 @@ public class ScoreAlign extends CommandBase{
         SmartDashboard.putNumber("DEST X", destinationXY.getX());
         SmartDashboard.putBoolean("over??", false);
 
-        LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagMainPipeline);
+        LimelightHelper.setPipelineIndex(limelightName, 0);
     }
 
     @Override
@@ -73,11 +73,11 @@ public class ScoreAlign extends CommandBase{
         }
 
         if (SmartDashboard.getString("side", "left").equals("right")) {
-            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagRightPOIPipeline);
+            LimelightHelper.setPipelineIndex(limelightName, 2);
         } else if (SmartDashboard.getString("side", "left").equals("left")) {
-            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagLeftPOIPipeline);
+            LimelightHelper.setPipelineIndex(limelightName, 1);
         } else {
-            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagMainPipeline);
+            LimelightHelper.setPipelineIndex(limelightName, 0);
         }
         double txAvg;
         if(limelightName.equals("limelightBack")){
@@ -112,9 +112,9 @@ public class ScoreAlign extends CommandBase{
                         if (SmartDashboard.getString("side", "left").equals("center")) {
                             // april tag, don't do anything
                         } else if (SmartDashboard.getString("whichTape", "lower").equals("lower")) {
-                            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTapeLowerPipeline);
+                            LimelightHelper.setPipelineIndex(limelightName, 3);
                         } else if (SmartDashboard.getString("whichTape", "lower").equals("upper")) {
-                            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTapeUpperPipeline);
+                            LimelightHelper.setPipelineIndex(limelightName, 4);
                         }
                         yController.setP(SmartDashboard.getNumber("yControllerP", 0.02));
                         yMove = yController.calculate(txAvg, 0);

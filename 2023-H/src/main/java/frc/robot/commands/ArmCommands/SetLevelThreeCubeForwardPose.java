@@ -6,15 +6,13 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ShoulderConstants;
-import frc.robot.utils.Constants.WristConstants;
 
-public class SetLLSeekPose extends CommandBase{
+public class SetLevelThreeCubeForwardPose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetLLSeekPose() {
+    public SetLevelThreeCubeForwardPose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
@@ -24,32 +22,30 @@ public class SetLLSeekPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(40);
-        arm.setState(ArmState.LL_SEEK);
-
+        arm.setWristPosition(30);
+        arm.setShoulderPositionSmartMotion(shoulder.getkL3CubeForwardAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setState(ArmState.L3_CUBE_FORWARD);
     }
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(30)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkLLSeekAngle(), SmartMotionArmSpeed.REGULAR);
-        }
-
-        if(arm.isShoulderBelowAngle(-55)){
-            arm.setWristPosition(wrist.getkLLSeekAngle());
+        if(arm.isShoulderAboveAngle(-20)){
+            arm.setWristPosition(wrist.getkL3CubeForwardAngle());
         }
     }
 
     @Override
-    public void end(boolean interrupted) {
+    public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.LL_SEEK);
             arm.holdShoulderPosition();
         }
+
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkLLSeekAngle()) && arm.isWristAtAngle(wrist.getkLLSeekAngle());
+        return arm.isShoulderAtAngle(shoulder.getkL3CubeForwardAngle()) && arm.isWristAtAngle(wrist.getkL3CubeForwardAngle());
     }
+
+
 }

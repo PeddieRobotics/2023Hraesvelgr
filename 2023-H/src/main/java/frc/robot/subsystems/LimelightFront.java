@@ -4,7 +4,9 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
@@ -47,7 +49,14 @@ public class LimelightFront extends Limelight {
     }
 
     public Translation2d getBotXY() {
-        double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        double[] result;
+        if(DriverStation.getAlliance() == Alliance.Red){
+            result = LimelightHelper.getBotPose_wpiRed(limelightName);
+        }
+        else{
+            result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        }
+        
         if (result.length > 0.0) {
             return new Translation2d(result[0], result[1]);
         }
@@ -55,7 +64,14 @@ public class LimelightFront extends Limelight {
     }
 
     public Pose2d getBotpose() {
-        double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        double[] result;
+        if(DriverStation.getAlliance() == Alliance.Red){
+            result = LimelightHelper.getBotPose_wpiRed(limelightName);
+        }
+        else{
+            result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        }
+
         if (result.length > 0.0) {
             return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
         }
@@ -179,10 +195,13 @@ public class LimelightFront extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        // this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm()<.5;
-        if (tagsSeen > 1) {
+        if (tagsSeen > 1 && this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm() < 0.5) {
             odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
         }
+    }
+
+    public void forceAprilTagLocalization(SwerveDrivePoseEstimator odometry){
+        odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
     }
 
     // public Translation2d getCurrentAprilTag() { // gets the april tag the limelight is currently seeing

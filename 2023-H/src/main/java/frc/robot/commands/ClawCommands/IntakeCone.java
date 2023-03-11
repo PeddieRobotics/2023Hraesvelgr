@@ -9,6 +9,7 @@ import frc.robot.utils.Constants.ClawConstants;
 public class IntakeCone extends CommandBase{
     private Claw claw;
     private double initialTime, currentTime;
+    private boolean hasPiece;
 
     public IntakeCone(){
         claw = Claw.getInstance();
@@ -16,6 +17,7 @@ public class IntakeCone extends CommandBase{
 
         initialTime = 0.0;
         currentTime = 0.0;
+
     }
 
     @Override
@@ -25,13 +27,18 @@ public class IntakeCone extends CommandBase{
 
         initialTime = Timer.getFPGATimestamp();
         currentTime = initialTime;
+        hasPiece = false;
     }
 
     @Override
     public void execute() {
+        if(claw.hasGamepiece() && !hasPiece){
+            initialTime = Timer.getFPGATimestamp();
+            hasPiece = true;
+        } 
         currentTime = Timer.getFPGATimestamp();
 
-        if(claw.isFrontSensor()){
+        if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
             claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
         }
     }
@@ -54,7 +61,7 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && (currentTime - initialTime) > 0.5;
+        return claw.hasGamepiece() && (currentTime - initialTime) > 0.75;
     }
 
     

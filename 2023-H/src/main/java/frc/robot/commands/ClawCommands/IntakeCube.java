@@ -28,11 +28,19 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void execute() {
+        if(!claw.hasGamepiece()){
+            hasPiece = false;
+        }
+
         if(claw.hasGamepiece() && !hasPiece){
             initialTime = Timer.getFPGATimestamp();
             hasPiece = true;
         } 
         currentTime = Timer.getFPGATimestamp();
+
+        if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
+            claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
+        }
     }
 
     @Override

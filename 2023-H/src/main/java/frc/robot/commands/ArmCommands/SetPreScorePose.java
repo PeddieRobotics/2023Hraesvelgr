@@ -9,12 +9,12 @@ import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetLevelThreeCubePose extends CommandBase{
+public class SetPreScorePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetLevelThreeCubePose() {
+    public SetPreScorePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
@@ -24,22 +24,19 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(30);
-        arm.setShoulderPositionSmartMotion(shoulder.getkL3CubeForwardAngle(), SmartMotionArmSpeed.REGULAR);
-        arm.setState(ArmState.L3_CUBE_FORWARD);
+        arm.setWristPosition(wrist.getkPrePoseAngle());
+        arm.setShoulderPositionSmartMotion(shoulder.getkPrePoseAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setState(ArmState.PRE_SCORE);
+        
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(-20)){
-            arm.setWristPosition(wrist.getkL3CubeForwardAngle());
-        }
     }
 
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            arm.setState(ArmState.L3_CUBE_FORWARD);
             arm.holdShoulderPosition();
         }
 
@@ -47,7 +44,7 @@ public class SetLevelThreeCubePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkL3CubeForwardAngle()) && arm.isWristAtAngle(wrist.getkL3CubeForwardAngle());
+        return arm.isShoulderAtAngle(shoulder.getkPrePoseAngle()) && arm.isWristAtAngle(wrist.getkPrePoseAngle());
     }
 
 

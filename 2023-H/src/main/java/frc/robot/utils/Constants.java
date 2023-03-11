@@ -23,7 +23,7 @@ public final class Constants {
                 public static final double kDrivingDeadband = 0.1;
 
                 // If claw speed is over this, then it is considered max speed
-                public static final double kMaxSpeedThreshold = 1.0;
+                public static final double kMaxSpeedThreshold = 0.9;
         }
 
         public static class BlinkinConstants {
@@ -39,7 +39,7 @@ public final class Constants {
                 public static final double kWheelBase = Units.inchesToMeters(24.5);
 
                 public static final double kRealMaxSpeedMetersPerSecond = 4.117848;
-                public static final double kMaxFloorSpeed = 0.9 * kRealMaxSpeedMetersPerSecond;
+                public static final double kMaxFloorSpeed = 1.0 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
                 public static final double kMaxAngularSpeed = 2 * Math.PI;
                 public static final double kMaxAngularAcceleration = 2 * Math.PI / 3;
@@ -172,14 +172,8 @@ public final class Constants {
                 public static final double kLimelightAngle = 0;
                 public static final double kLimelightHeadingBound = 1.5;
                 public static final double kLimeLightTranslationAngleBound = 0.2;
-                //pipelines
-                public static final int kLLTagMainPipeline = 0;
-                public static final int kLLTagLeftPOIPipeline = 1;
-                public static final int kLLTagRightPOIPipeline = 2;
-                public static final int kLLTapeLowerPipeline = 4;
-                public static final int kLLTapeUpperPipeline = 5;
-                public static final double kLimeLightTranslationBound=.05;
-                public static final double kLimeLightAngleBound=1;
+                public static final double kLimeLightTranslationBound = 0.05;
+                public static final double kLimeLightAngleBound = 1;
                 public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
                                                 new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
                                                 new Translation2d(1.02743,3.306826),new Translation2d(1.02743,3.865626),new Translation2d(1.02743,4.424426),
@@ -190,7 +184,7 @@ public final class Constants {
 
         public static final class ShoulderConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 60;
+                public static final int kMaxCurrent = 50;
 
                 // Position PID contants
                 public static final double kPositionP = 0.013;
@@ -222,10 +216,10 @@ public final class Constants {
                 
                 // ONLY FOR INVERSION FROM STATIONARY POSE.  Do not use to "uninvert" or while robot is moving....
                 // Be warned...
-                public static final double kSmartMotionL3ConeSetpointTol = 1.0;
-                public static final double kSmartMotionL3ConeMinVel = 0.0; // rpm
-                public static final double kSmartMotionL3ConeMaxVel = 5500.0; // rpm
-                public static final double kSmartMotionL3ConeMaxAccel = 30000.0; // rpm / sec
+                public static final double kSmartMotionFastSetpointTol = 1.0;
+                public static final double kSmartMotionFastMinVel = 0.0; // rpm
+                public static final double kSmartMotionFastMaxVel = 5500.0; // rpm
+                public static final double kSmartMotionFastMaxAccel = 30000.0; // rpm / sec
 
                 // Soft limits
                 public static final double kAngleMin = -75;
@@ -235,6 +229,8 @@ public final class Constants {
                 public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -40.0;
                 public static final double kStowedAngle = -75.0;
+                public static final double kPreScoreAngle = 0.0;
+
                 public static final double kL1Angle = -75.0;
 
                 // Shoulder is not fully extended out
@@ -251,10 +247,9 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 15.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConePart1Angle = 85.0;
-                public static final double kL3ConeAngle = 155.0;
+                public static final double kL3ConeForwardAngle = 25.0;
+                public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kLLSeekAngle = -75.0;
                 public static final double kDoubleSSConeAngle = 25.0;
                 public static final double kSingleSSAngle = -75.0;
 
@@ -291,7 +286,9 @@ public final class Constants {
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
                 public static final double kStowedAngle = 80.0;
-                public static final double kL1Angle = -10.0;
+                public static final double kPreScoreAngle = 103.0;
+
+                public static final double kL1Angle = -25.0;
 
                 // Shoulder is not fully extended out
                 // Currently unused
@@ -307,9 +304,9 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = -5.0;
                 public static final double kL3CubeInvertedAngle = 2.5;
-                public static final double kL3ConeAngle = 0.0;
+                public static final double kL3ConeForwardAngle = 20.0;
+                public static final double kL3ConeInvertedAngle = 0.0;
 
-                public static final double kLLSeekAngle = -25.0;
                 public static final double kDoubleSSConeAngle = -89.0;
                 public static final double kSingleSSAngle = 30.0;
                 public static final double kTransitoryAngle = 70.0;
@@ -326,9 +323,17 @@ public final class Constants {
                 public static final int kClawMotorCurrentLimit = 25;
 
                 public static final double kConeIntakeSpeed = -1;
-                public static final double kConeOuttakeSpeed = 1;
                 public static final double kCubeIntakeSpeed = -1;
-                public static final double kCubeOuttakeSpeed = 0.5;
+
+                public static final double kConeL1OuttakeSpeed = 0.5;
+                public static final double kConeL2OuttakeSpeed = 0.5;
+                public static final double kConeL3ForwardOuttakeSpeed = 1;
+                public static final double kConeL3InvertedOuttakeSpeed = 1;
+
+                public static final double kCubeL1OuttakeSpeed = 0.3;
+                public static final double kCubeL2OuttakeSpeed = 0.5;
+                public static final double kCubeL3ForwardOuttakeSpeed = 0.5;
+                public static final double kCubeL3InvertedOuttakeSpeed = 0.5;
 
                 public static final double kCubeHoldSpeed = -0.1;
         }

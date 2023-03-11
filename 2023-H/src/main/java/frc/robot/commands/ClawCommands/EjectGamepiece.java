@@ -23,7 +23,7 @@ public class EjectGamepiece extends CommandBase{
     public void initialize() {
         initialTime = Timer.getFPGATimestamp();
         currentTime = Timer.getFPGATimestamp();
-        if(Arm.getInstance().getState() == ArmState.L1 && claw.getState() == ClawState.CUBE){
+        if(claw.getState() == ClawState.CUBE){
             claw.outtakeCube();
         } else {
             claw.outtakeCone();

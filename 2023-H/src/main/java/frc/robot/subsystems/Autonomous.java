@@ -1,45 +1,28 @@
 package frc.robot.subsystems;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
-
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
-import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
+import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.LimelightCommands.SetPipe;
-import frc.robot.commands.LimelightCommands.SetPipeType;
 import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
-import frc.robot.utils.Constants.WristConstants;
 
 public class Autonomous extends SubsystemBase{
     // Subsystems
@@ -74,12 +57,11 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeCone", new IntakeCone());
         eventMap.put("IntakeCube", new IntakeCube());
 
-        eventMap.put("ConeL3", new SequentialCommandGroup( new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3Return()));
+        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
         eventMap.put("CubeL3", new EjectGamepiece());
         eventMap.put("CubeL3Pose", new SetLevelThreeCubePose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConePose());
     
-
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
 

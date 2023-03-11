@@ -9,12 +9,12 @@ import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetLevelThreeConePose extends CommandBase{
+public class SetTransitoryPoseL3ReturnInAuto extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetLevelThreeConePose() {
+    public SetTransitoryPoseL3ReturnInAuto() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
@@ -24,41 +24,31 @@ public class SetLevelThreeConePose extends CommandBase{
 
     @Override
     public void initialize() {
+        arm.setWristPosition(wrist.getkStowedAngle());
+        arm.setState(ArmState.TRANSITORY);
 
-        if(arm.isShoulderBelowAngle(65)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.L3_CONE);
-        }
-        
-        arm.setWristPosition(100);
-        arm.setState(ArmState.L3_CONE_INVERTED);
-
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+            ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(65.0)){
-            shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
-            ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
-            arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeAngle(), SmartMotionArmSpeed.SLOW);
+        if(arm.isShoulderBelowAngle(90)){
+            arm.setWristPosition(wrist.getkTransitoryAngle());
         }
-
-        if(arm.isShoulderAboveAngle(75.0)){
-            arm.setWristPosition(wrist.getkL3ConeAngle());
-        }
-  
     }
 
     @Override
     public void end(boolean interrupted){
-        arm.setState(ArmState.L3_CONE_INVERTED);
-        arm.holdShoulderPosition();
+        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
         ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkL3ConeAngle()) && arm.isWristAtAngle(wrist.getkL3ConeAngle());
+        return arm.isShoulderBelowAngle(80);
     }
 
 

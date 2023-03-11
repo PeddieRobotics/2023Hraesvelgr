@@ -1,32 +1,21 @@
 package frc.robot.utils;
 
-import javax.sound.midi.Instrument;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmCommands.SetCompactFloorConePose;
-import frc.robot.commands.ArmCommands.SetCompactFloorCubePose;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetLevelOnePose;
-import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
-import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
-import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetSingleSSPose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ArmCommands.SetTransitoryPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
@@ -34,6 +23,7 @@ import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.SimpleAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
+import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -83,13 +73,19 @@ public class DriverOI {
 
         // Cone intake/eject gamepiece
         Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
+        leftBumperButton.onTrue(new ConditionalCommand(
+            new SequentialCommandGroup(new EjectGamepiece(),
+                new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
+                                        new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
-                    new SetStowedPose()), arm::isArmScoringPose));
+                    new SetStowedPose()), arm::isValidEjectPose));
 
-        // Cube intake/eject gamepieces
+        // Cube intake/eject gamepiece
         Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new EjectGamepiece(), new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()), new InstantCommand(), arm::isInvertedL3Cone)),
+        rightBumperButton.onTrue(new ConditionalCommand(
+            new SequentialCommandGroup(new EjectGamepiece(),
+                new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
+                                        new InstantCommand(), arm::isInvertedL3Cone)),
                 new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
                     new SetStowedPose()), arm::isValidEjectPose));
 
@@ -97,19 +93,19 @@ public class DriverOI {
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
 
-        // Single SS pose Button
+        // Single SS (human player) pose
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSPose(), new IntakeCone()), new SetStowedPose()));
-        // xButton.onTrue(new SequentialCommandGroup(new ClimbCSTilt(1, 180, true, false), new LockDrivetrain()));
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(controller, 15);
         muteButton.onTrue(new SetStowedPose());
 
-        // Circle button unused.
+        // Circle button hold allows for manual April Tag localization override continuously while held.
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton.whileTrue(new LocalizeWithLL());
 
-        // Lock drivetrain
+        // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
         rightStickButton.toggleOnTrue(new LockDrivetrain());
 
@@ -123,7 +119,7 @@ public class DriverOI {
 
         // Square button auto-align
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new ConditionalCommand(new SimpleAlign(), new SingleSSAlign(), claw::hasGamepiece));
+        squareButton.whileTrue(new ConditionalCommand(new ParallelCommandGroup(new SimpleAlign(), new InstantCommand(() -> arm.moveToScoringPose())), new SingleSSAlign(), claw::hasGamepiece));
 
         // Slow Mode
         // Back Button (Option button)

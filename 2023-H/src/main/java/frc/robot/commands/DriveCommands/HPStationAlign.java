@@ -65,14 +65,14 @@ public class HPStationAlign extends CommandBase {
         }
         if (!state.equals("6-3")) {
             if (SmartDashboard.getString("side", "right").equals("right")) {
-                LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagRightPOIPipeline); // POI right
+                LimelightHelper.setPipelineIndex(limelightName, 2); // POI right
             } else {
-                LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagLeftPOIPipeline); // POI left
+                LimelightHelper.setPipelineIndex(limelightName, 1); // POI left
             }
         } else {
             // we might be able to just set this according to the "default lane"
             //SET THIS BASED ON DEFAULT LANE!!!!
-            LimelightHelper.setPipelineIndex(limelightName, LimelightConstants.kLLTagMainPipeline);
+            LimelightHelper.setPipelineIndex(limelightName, 0);
         }
         double txAvg;
         if(limelightName.equals("limelightBack")){

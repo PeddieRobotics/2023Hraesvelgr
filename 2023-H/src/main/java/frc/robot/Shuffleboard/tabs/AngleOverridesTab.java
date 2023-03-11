@@ -3,7 +3,6 @@ package frc.robot.Shuffleboard.tabs;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.utils.Constants.ShoulderConstants;
@@ -13,13 +12,13 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
     private Shoulder shoulder = Shoulder.getInstance();
 
-    private GenericEntry mTransitoryShoulder, mTransitoryWrist, mLLSeekShoulder, mLLSeekWrist,
+    private GenericEntry mTransitoryShoulder, mTransitoryWrist, mPreScoreShoulder, mPreScoreWrist,
     mL1Shoulder, mL1Wrist, mL2ConeShoulder, mL2ConeWrist, mL2CubeShoulder, mL2CubeWrist,
-    mL3ConeShoulder, mL3ConeWrist, mL3CubeShoulder, mL3CubeWrist,
-    mStowedShoulder, mStowedWrist, mCompactFloorConeShoulder, mCompactFloorConeWrist,
-    mCompactFloorCubeShoulder, mCompactFloorCubeWrist, mExtendedFloorConeShoulder, mExtendedFloorConeWrist,
-    mExtendedFloorCubeShoulder, mExtendedFloorCubeWrist, mDoubleSSConeShoulder, mDoubleSSConeWrist,
-    mSingleSSShoulder, mSingleSSWrist;
+    mL3ConeForwardShoulder, mL3ConeForwardWrist, mL3ConeInvertedShoulder, mL3ConeInvertedWrist,
+    mL3CubeForwardShoulder, mL3CubeForwardWrist, mStowedShoulder, mStowedWrist, mCompactFloorConeShoulder,
+    mCompactFloorConeWrist, mCompactFloorCubeShoulder, mCompactFloorCubeWrist, mExtendedFloorConeShoulder,
+    mExtendedFloorConeWrist, mExtendedFloorCubeShoulder, mExtendedFloorCubeWrist,
+    mDoubleSSConeShoulder, mDoubleSSConeWrist, mSingleSSShoulder, mSingleSSWrist;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("Angle Overrides");
@@ -33,25 +32,23 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
                 .withSize(2, 1)
                 .withPosition(0, 1)
                 .getEntry();
-                mTransitoryShoulder = tab.add("Transitory Shoulder", ShoulderConstants.kTransitoryAngle)
+                mSingleSSShoulder = tab.add("Single Substation Shoulder", ShoulderConstants.kSingleSSAngle)
                 .withSize(2, 1)
                 .withPosition(0, 2)
-                .getEntry();
-
-                mTransitoryWrist = tab.add("Transitory Wrist", WristConstants.kTransitoryAngle)
+                        .getEntry();
+                mSingleSSWrist = tab.add("Single Substation Wrist", WristConstants.kSingleSSAngle)
                 .withSize(2, 1)
                 .withPosition(0, 3)
-                .getEntry();
-
-                mLLSeekShoulder = tab.add("LL Seek Shoulder", ShoulderConstants.kLLSeekAngle)
+                        .getEntry();
+                mDoubleSSConeShoulder = tab.add("Double Substation Cone Shoulder", ShoulderConstants.kDoubleSSConeAngle)
                 .withSize(2, 1)
-                .withPosition(0, 4)
-                .getEntry();
-
-                mLLSeekWrist = tab.add("LL Seek Wrist", WristConstants.kLLSeekAngle)
+                .withPosition(4, 4)
+                        .getEntry();
+                mDoubleSSConeWrist = tab.add("Double Substation Cone Wrist", WristConstants.kDoubleSSConeAngle)
                 .withSize(2, 1)
-                .withPosition(0, 5)
-                .getEntry();
+                .withPosition(4, 5)
+                        .getEntry();
+
 
             mL1Shoulder = tab.add("L1 Shoulder", ShoulderConstants.kL1Angle)
             .withSize(2, 1)
@@ -77,30 +74,30 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
             .withSize(2, 1)
             .withPosition(2, 5)
                     .getEntry();
-            mL3CubeShoulder = tab.add("L3 Cube Shoulder", ShoulderConstants.kL3CubeForwardAngle)
+            mL3CubeForwardShoulder = tab.add("L3 Cube Forward Shoulder", ShoulderConstants.kL3CubeForwardAngle)
             .withSize(2, 1)
             .withPosition(4, 0)
                     .getEntry();
-            mL3CubeWrist = tab.add("L3 Cube Wrist", WristConstants.kL3CubeForwardAngle)
+            mL3CubeForwardWrist = tab.add("L3 Cube Forward Wrist", WristConstants.kL3CubeForwardAngle)
             .withSize(2, 1)
             .withPosition(4, 1)
                     .getEntry();
-            mL3ConeShoulder = tab.add("L3 Cone Shoulder", ShoulderConstants.kL3ConeAngle)
+            mL3ConeForwardShoulder = tab.add("L3 Cone Forward Shoulder", ShoulderConstants.kL3ConeForwardAngle)
             .withSize(2, 1)
             .withPosition(4, 2)
                     .getEntry();
-            mL3ConeWrist = tab.add("L3 Cone Wrist", WristConstants.kL3ConeAngle)
+            mL3ConeForwardWrist = tab.add("L3 Cone Forward Wrist", WristConstants.kL3ConeForwardAngle)
             .withSize(2, 1)
             .withPosition(4, 3)
                     .getEntry();
-        mDoubleSSConeShoulder = tab.add("Double Substation Cone Shoulder", ShoulderConstants.kDoubleSSConeAngle)
-        .withSize(2, 1)
-        .withPosition(4, 4)
-                .getEntry();
-        mDoubleSSConeWrist = tab.add("Double Substation Cone Wrist", WristConstants.kDoubleSSConeAngle)
-        .withSize(2, 1)
-        .withPosition(4, 5)
-                .getEntry();
+                    mL3ConeInvertedShoulder = tab.add("L3 Cone Inverted Shoulder", ShoulderConstants.kL3ConeInvertedAngle)
+                    .withSize(2, 1)
+                    .withPosition(4, 2)
+                            .getEntry();
+                    mL3ConeInvertedWrist = tab.add("L3 Cone Inverted Wrist", WristConstants.kL3ConeInvertedAngle)
+                    .withSize(2, 1)
+                    .withPosition(4, 3)
+                            .getEntry();
             mExtendedFloorConeShoulder = tab.add("Extended Floor Cone Shoulder", ShoulderConstants.kExtendedFloorConeAngle)
             .withSize(2, 1)
             .withPosition(6, 0)
@@ -117,14 +114,15 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
             .withSize(2, 1)
             .withPosition(6, 3)
                     .getEntry();
-                mSingleSSShoulder = tab.add("Single Substation Shoulder", ShoulderConstants.kSingleSSAngle)
+                mPreScoreShoulder = tab.add("Pre-score Shoulder", ShoulderConstants.kPreScoreAngle)
                 .withSize(2, 1)
                 .withPosition(6, 4)
-                        .getEntry();
-                mSingleSSWrist = tab.add("Single Substation Wrist", WristConstants.kSingleSSAngle)
+                .getEntry();
+                mPreScoreWrist = tab.add("Pre-score Wrist", WristConstants.kPreScoreAngle)
                 .withSize(2, 1)
                 .withPosition(6, 5)
-                        .getEntry();
+                .getEntry();
+
         } catch(IllegalArgumentException e){
         }
     }
@@ -137,8 +135,8 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkTransitoryAngle(mTransitoryShoulder.getDouble(ShoulderConstants.kTransitoryAngle));
         wrist.setkTransitoryAngle(mTransitoryWrist.getDouble(WristConstants.kTransitoryAngle));
 
-        shoulder.setkLLSeekAngle(mLLSeekShoulder.getDouble(ShoulderConstants.kLLSeekAngle));
-        wrist.setkLLSeekAngle(mLLSeekWrist.getDouble(WristConstants.kLLSeekAngle));
+        shoulder.setkPreScoreAngle(mPreScoreShoulder.getDouble(ShoulderConstants.kPreScoreAngle));
+        wrist.setkPreScoreAngle(mPreScoreWrist.getDouble(WristConstants.kPreScoreAngle));
 
         shoulder.setkL1Angle(mL1Shoulder.getDouble(ShoulderConstants.kL1Angle));
         wrist.setkL1Angle(mL1Wrist.getDouble(WristConstants.kL1Angle));
@@ -149,11 +147,14 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkL2CubeAngle(mL2CubeShoulder.getDouble(ShoulderConstants.kL2CubeAngle));
         wrist.setkL2CubeAngle(mL2CubeWrist.getDouble(WristConstants.kL2CubeAngle));
 
-        shoulder.setkL3ConeAngle(mL3ConeShoulder.getDouble(ShoulderConstants.kL3ConeAngle));
-        wrist.setkL3ConeAngle(mL3ConeWrist.getDouble(WristConstants.kL3ConeAngle));
+        shoulder.setkL3ConeForwardAngle(mL3ConeForwardShoulder.getDouble(ShoulderConstants.kL3ConeForwardAngle));
+        wrist.setkL3ConeForwardAngle(mL3ConeForwardWrist.getDouble(WristConstants.kL3ConeForwardAngle));
 
-        shoulder.setkL3CubeForwardAngle(mL3CubeShoulder.getDouble(ShoulderConstants.kL3CubeForwardAngle));
-        wrist.setkL3CubeForwardAngle(mL3CubeWrist.getDouble(WristConstants.kL3CubeForwardAngle));
+        shoulder.setkL3ConeInvertedAngle(mL3ConeInvertedShoulder.getDouble(ShoulderConstants.kL3ConeInvertedAngle));
+        wrist.setkL3ConeInvertedAngle(mL3ConeInvertedWrist.getDouble(WristConstants.kL3ConeInvertedAngle));
+
+        shoulder.setkL3CubeForwardAngle(mL3CubeForwardShoulder.getDouble(ShoulderConstants.kL3CubeForwardAngle));
+        wrist.setkL3CubeForwardAngle(mL3CubeForwardWrist.getDouble(WristConstants.kL3CubeForwardAngle));
 
         shoulder.setkExtendedFloorConeAngle(mExtendedFloorConeShoulder.getDouble(ShoulderConstants.kExtendedFloorConeAngle));
         wrist.setkExtendedFloorConeAngle(mExtendedFloorConeWrist.getDouble(WristConstants.kExtendedFloorConeAngle));

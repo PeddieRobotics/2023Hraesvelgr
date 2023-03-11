@@ -49,9 +49,6 @@ public class Drivetrain extends SubsystemBase {
     private double snapToAngleHeading;
     private boolean snapped;
 
-    // Autonomous
-    private double teleOpAngleOffset;
-
     // Correct angle algorithm variables
     private boolean useHeadingCorrection;
     private Rotation2d correctHeadingTargetHeading;
@@ -96,10 +93,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Gyroscope Sensor
         gyro = new ADIS16470_IMU();
-
-        // Teleop Angle offset from Autonomous to Teleop
-        teleOpAngleOffset = 0;
-        isFlipped = false; //basically teleopAngleOffset for now
+        isFlipped = false;
 
         // Snap to Angle Algorithm
         snapToAngleHeading = 0;
@@ -369,11 +363,6 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getRate(IMUAxis.kRoll);
     }
 
-    // Autonomous Transformation
-    public void setTeleOpAngleOffset(double target) {
-        teleOpAngleOffset = target;
-    }
-
     // Snap to angle algorithm
     private double snapToAngle() {
         // If a button is pressed, use the snapToAngle pid controller to calculate a
@@ -408,5 +397,10 @@ public class Drivetrain extends SubsystemBase {
             backRightSwerveModule.getRotations()};
         return (positions);
     }
+
+    public SwerveDrivePoseEstimator getOdometry() {
+        return odometry;
+    }
+
 
 }

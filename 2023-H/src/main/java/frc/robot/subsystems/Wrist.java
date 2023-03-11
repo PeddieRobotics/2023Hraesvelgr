@@ -30,6 +30,8 @@ public class Wrist {
     // Angles (poses) start here
     private double kHomeAngle = WristConstants.kHomeAngle;
     private double kStowedAngle = WristConstants.kStowedAngle;
+    private double kPreScoreAngle = WristConstants.kPreScoreAngle;
+
     private double kL1Angle = WristConstants.kL1Angle;
 
     // Shoulder is not fully extended out
@@ -45,9 +47,10 @@ public class Wrist {
 
     private double kL3CubeForwardAngle = WristConstants.kL3CubeForwardAngle;
     private double kL3CubeInvertedAngle = WristConstants.kL3CubeInvertedAngle;
-    private double kL3ConeAngle = WristConstants.kL3ConeAngle;
 
-    private double kLLSeekAngle = WristConstants.kLLSeekAngle;
+    private double kL3ConeForwardAngle = WristConstants.kL3ConeForwardAngle;
+    private double kL3ConeInvertedAngle = WristConstants.kL3ConeInvertedAngle;
+
     private double kDoubleSSConeAngle = WristConstants.kDoubleSSConeAngle;
     private double kSingleSSAngle = WristConstants.kSingleSSAngle;
     private double kTransitoryAngle = WristConstants.kTransitoryAngle;
@@ -217,6 +220,14 @@ public class Wrist {
         this.kStowedAngle = kStowedAngle;
     }
 
+    public double getkPreScoreAngle() {
+        return kPreScoreAngle;
+    }
+
+    public void setkPreScoreAngle(double kPreScoreAngle) {
+        this.kPreScoreAngle = kPreScoreAngle;
+    }
+
     public double getkL1Angle() {
         return kL1Angle;
     }
@@ -289,20 +300,20 @@ public class Wrist {
         this.kL3CubeInvertedAngle = kL3CubeInvertedAngle;
     }
 
-    public double getkL3ConeAngle() {
-        return kL3ConeAngle;
+    public double getkL3ConeForwardAngle() {
+        return kL3ConeForwardAngle;
     }
 
-    public void setkL3ConeAngle(double kL3ConeAngle) {
-        this.kL3ConeAngle = kL3ConeAngle;
+    public void setkL3ConeForwardAngle(double kL3ConeForwardAngle) {
+        this.kL3ConeForwardAngle = kL3ConeForwardAngle;
     }
 
-    public double getkLLSeekAngle() {
-        return kLLSeekAngle;
+    public double getkL3ConeInvertedAngle() {
+        return kL3ConeInvertedAngle;
     }
 
-    public void setkLLSeekAngle(double kLLSeekAngle) {
-        this.kLLSeekAngle = kLLSeekAngle;
+    public void setkL3ConeInvertedAngle(double kL3ConeInvertedAngle) {
+        this.kL3ConeInvertedAngle = kL3ConeInvertedAngle;
     }
 
     public double getkDoubleSSConeAngle() {

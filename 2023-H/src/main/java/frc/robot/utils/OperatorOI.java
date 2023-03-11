@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.ManualShoulderControl;
@@ -15,7 +16,9 @@ import frc.robot.commands.ArmCommands.SetLevelThreeConePose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
@@ -41,10 +44,13 @@ public class OperatorOI {
      * the center depending on aliance
      */
     private int alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 7 : 2;
-    private Claw claw;
     private AlignGoalColumn alignGoalColumn = AlignGoalColumn.kCenter;
 
+    private Arm arm;
+    private Claw claw;    
+
     public OperatorOI() {
+        arm = Arm.getInstance();
         claw = Claw.getInstance();
         configureController();
     }
@@ -93,13 +99,17 @@ public class OperatorOI {
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SetLevelOnePose());
 
-        // L2 score
+        // Request L2 score / transition to pre-score pose
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ConditionalCommand(new SetLevelTwoConePose(), new SetLevelTwoCubePose(),claw::hasCone));
+        circleButton.onTrue(new ParallelCommandGroup(new SetPreScorePose(), new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelTwoCone), new InstantCommand(arm::setGoalPoseToLevelTwoCube), claw::hasCone)));
 
-        // L3 score
+        // Request L3 score / transition to pre-score pose
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue( new ConditionalCommand(new SetLevelThreeConePose(), new SetLevelThreeCubePose(), claw::hasCone));
+        triangleButton.onTrue(new ParallelCommandGroup(new SetPreScorePose(), new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCone), new InstantCommand(arm::setGoalPoseToLevelThreeCube), claw::hasCone)));
+
+        // Force score pose
+        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        squareButton.onTrue(new InstantCommand(() -> arm.moveToScoringPose()));
 
         // Stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
@@ -141,14 +151,25 @@ public class OperatorOI {
         }));
 
         // Game Piece Selection
-        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new InstantCommand(() -> claw.setState(ClawState.EMPTY)));
-
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        L1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CONE)));
+        L1Bumper.onTrue(new InstantCommand(() -> {
+            if(bothBumpersHeld()){
+                claw.setState(ClawState.EMPTY);
+            }
+            else{
+                claw.setState(ClawState.CONE);
+            }
+        }));
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        R1Bumper.onTrue(new InstantCommand(() -> claw.setState(ClawState.CUBE)));
+        R1Bumper.onTrue(new InstantCommand(() -> {
+            if(bothBumpersHeld()){
+                claw.setState(ClawState.EMPTY);
+            }
+            else{
+                claw.setState(ClawState.CUBE);
+            }
+        }));
 
     }
 
