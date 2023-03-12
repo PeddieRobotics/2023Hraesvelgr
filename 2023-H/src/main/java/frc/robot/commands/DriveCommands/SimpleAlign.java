@@ -26,7 +26,7 @@ public class SimpleAlign extends CommandBase {
     private Claw claw;
     private String limelightName;
     private int scoreSetpoint;
-    private boolean initialHeadingCorrectionComplete;
+    private boolean initialHeadingCorrectionComplete, initialTargetNotFound;
 
     public SimpleAlign() {
         limelightBack = LimelightBack.getInstance();
@@ -47,6 +47,7 @@ public class SimpleAlign extends CommandBase {
     @Override
     public void initialize() {
         initialHeadingCorrectionComplete = false;
+        initialTargetNotFound = false;
 
         switch (arm.getState()) {
             case L3_CUBE_INVERTED:
@@ -68,9 +69,15 @@ public class SimpleAlign extends CommandBase {
             LimelightHelper.setPipelineIndex(limelightName, 0); // April tag pipeline
         }
 
-        oi = DriverOI.getInstance();
+        // Only proceed if we see a target, otherwise fail on purpose and give up.
+        if (!LimelightHelper.getTV(limelightName)) {
+            blinkin.failure();
+            initialTargetNotFound = true;
+        } else{
+            blinkin.acquiringTarget();
+        }
 
-        blinkin.seekingTargetSlow();
+        oi = DriverOI.getInstance();
     }
 
     @Override
@@ -86,18 +93,6 @@ public class SimpleAlign extends CommandBase {
             alignError = -alignError;
         } else {
             txAvg = limelightFront.getTxAverage();
-        }
-
-        if (!LimelightHelper.getTV(limelightName)) {
-            blinkin.noTarget();
-        } else if(txAvg > 3){
-            blinkin.seekingTargetSlow();
-        } else if (txAvg > 1.5) {
-            blinkin.seekingTargetMedium();
-        } else if (txAvg > 0.5) {
-            blinkin.seekingTargetFast();
-        } else {
-            blinkin.atTarget();
         }
 
         if (!initialHeadingCorrectionComplete && Math
@@ -126,11 +121,10 @@ public class SimpleAlign extends CommandBase {
         drivetrain.stopSwerveModules();
         limelightBack.setPipeline(0);
         limelightFront.setPipeline(7);
-        blinkin.neutral();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return initialTargetNotFound;
     }
 }

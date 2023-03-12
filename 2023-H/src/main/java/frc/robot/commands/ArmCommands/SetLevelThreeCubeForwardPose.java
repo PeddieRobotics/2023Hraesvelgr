@@ -25,6 +25,8 @@ public class SetLevelThreeCubeForwardPose extends CommandBase{
         arm.setWristPosition(30);
         arm.setShoulderPositionSmartMotion(shoulder.getkL3CubeForwardAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L3_CUBE_FORWARD);
+        arm.setGoalPose(ArmState.NONE);
+
     }
 
     @Override

@@ -1,9 +1,7 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Wrist;
 import frc.robot.utils.OperatorOI;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -14,7 +12,6 @@ public class ManualWristControl extends CommandBase{
 
     public ManualWristControl() {
         arm = Arm.getInstance();
-        // addRequirements(arm);
     }
 
     @Override

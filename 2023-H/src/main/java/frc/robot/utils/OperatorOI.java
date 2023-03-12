@@ -17,12 +17,16 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
+import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.ArmCommands.SetWristHomePose;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Constants.GlobalConstants;
+import frc.robot.utils.Constants.OIConstants;
 
 public class OperatorOI {
     public enum AlignGoalColumn {
@@ -51,11 +55,16 @@ public class OperatorOI {
     private Blinkin blinkin;
     private Claw claw;    
 
+    private boolean usePreScorePose;
+
     public OperatorOI() {
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
-        configureController();
+
+        usePreScorePose = OIConstants.kUsePreScorePose;
+
+        configureController(usePreScorePose);
     }
 
     public int getAlignGoalAprilTagID() {
@@ -66,8 +75,178 @@ public class OperatorOI {
         return alignGoalColumn;
     }
 
-    public void configureController() {
+    public void configureController(boolean usePreScorePose) {
         controller = new PS4Controller(1);
+
+        // Arm Poses
+        // L1 score (will move to this pose regardless of having a gamepiece)
+        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        xButton.onTrue(new SetLevelOnePose());
+
+        /**
+         * The following button bindings are for the mode where the robot 'pre-poses' to score.
+         * We go to the Pre-Score pose and wait for either operator override to force the final scoring pose,
+         * or the driver to call for auto-alignment.
+         */
+        if(usePreScorePose){
+            // Request L2 score / transition to pre-score pose
+            // If we're already in a scoring pose, just go there directly.
+            // Refuse to do anything if we don't have a game piece yet.
+            Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+            circleButton.onTrue(new ConditionalCommand(
+                /*
+                 * This code runs if we are in an arm scoring pose.
+                 */
+                // Go directly to the appropriate L2 scoring pose dependent on the game piece.
+                new ConditionalCommand(new SetLevelTwoCubePose(),
+                    new ConditionalCommand(new SetLevelTwoConePose(),
+                        new InstantCommand(() -> {blinkin.failure();}),
+                        claw::hasCone),
+                    claw::hasCube),
+                /**
+                 * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
+                 */
+                // If we have a game piece, pre-pose the arm for L2 cube or L2 cone based on intake state.
+                new ConditionalCommand(new ParallelCommandGroup(new SetPreScorePose(),
+                    new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
+                        new InstantCommand(arm::setGoalPoseToLevelTwoCone),
+                        claw::hasCube)),
+                    // If we do not have a game piece, indicate failure.
+                    new InstantCommand(() -> {blinkin.failure();}),
+                    claw::hasGamepiece),
+                arm::isArmScoringPose));
+
+            // Request L3 score / transition to pre-score pose
+            // If we're already in a scoring pose, just go there directly.
+            // Refuse to do anything if we don't have a game piece yet.
+            Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+            triangleButton.onTrue(new ConditionalCommand(
+                /*
+                 * This code runs if we are in an arm scoring pose.
+                 */
+                // Go directly to the appropriate L3 scoring pose dependent on the game piece.
+                new ConditionalCommand(new SetLevelThreeCubeForwardPose(),
+                    new ConditionalCommand(new SetLevelThreeConeInvertedPose(),
+                        new InstantCommand(() -> {blinkin.failure();}),
+                        claw::hasCone),
+                    claw::hasCube),
+                /**
+                 * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
+                 */
+                // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
+                new ConditionalCommand(new ParallelCommandGroup(new SetPreScorePose(),
+                    new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
+                        new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
+                        claw::hasCube)),
+                    // If we do not have a game piece, indicate failure.
+                    new InstantCommand(() -> {blinkin.failure();}),
+                    claw::hasGamepiece),
+                arm::isArmScoringPose));
+
+            // Force score pose from pre-score pose
+            Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+            squareButton.onTrue(new InstantCommand(() -> arm.moveToScoringPose()));
+        }
+        /**
+         * The following button bindings are for the mode where the robot goes directly to each scoring pose.
+         * Refuse to do anything if we don't have a game piece yet.
+         */ 
+        else{
+            // L2 scoring pose (provided we have a gamepiece)
+            Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+            circleButton.onTrue(new ConditionalCommand(new SetLevelTwoCubePose(),
+                new ConditionalCommand(new SetLevelTwoConePose(),
+                        new InstantCommand(() -> {blinkin.failure();}),
+                        claw::hasCone),
+                    claw::hasCube));
+
+            // L3 scoring pose (provided we have a gamepiece)
+            Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+            triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeCubeForwardPose(),
+                new ConditionalCommand(new SetLevelThreeConeInvertedPose(),
+                        new InstantCommand(() -> {blinkin.failure();}),
+                        claw::hasCone),
+                    claw::hasCube));
+
+            // Square button forces the robot into a neutral horizontal pose.
+            // Can be used as an override along with operator thumbsticks into order to execute a completely manual score.
+            Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+            squareButton.onTrue(new SetPreScorePose());
+        }
+
+        // Stowed pose
+        Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
+        touchpadButton.onTrue(new SetStowedPose());
+
+        // Mute + left trigger ONLY homes the wrist without moving the shoulder
+        // Mute + right trigger ONLY homes the shoulder without moving the wrist
+        // Mute + both triggers homes the entire arm subsystem (full system reset, a bit slower)
+        Trigger muteButton = new JoystickButton(controller, 15);
+        muteButton.onTrue(new ConditionalCommand(new SetHomePose(),
+            new ConditionalCommand(new SetWristHomePose(),
+                new ConditionalCommand(new SetShoulderHomePose(), new InstantCommand(), this::onlyRightTriggerHeld),
+                this::onlyLeftTriggerHeld),
+            this::bothTriggersHeld));
+
+        // Manual Wrist and Shoulder Override Controls
+        Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
+        L2Trigger.whileTrue(new ManualWristControl());
+
+        Trigger R2Trigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
+        R2Trigger.whileTrue(new ManualShoulderControl());
+
+        // Gyro reset
+        Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
+        ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
+
+        // Toggle outtake at varying speeds depending on trigger modification
+        // Default behavior is slow
+        // Medium and fast speeds can be accessed with left/right trigger modification, respectively
+        Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
+        startButton.onTrue(new InstantCommand(() -> {
+            if (leftTriggerHeld()) {
+                claw.setSpeed(0.5);
+            } else if(rightTriggerHeld()){
+                claw.setSpeed(1.0);
+            } else {
+                claw.setSpeed(0.2);
+            }
+        }));
+
+        // Toggle intake at varying speeds depending on trigger modification
+        // Default behavior is slow
+        // Medium and fast speeds can be accessed with left/right trigger modification, respectively
+        Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
+        shareButton.onTrue(new InstantCommand(() -> {
+            if (leftTriggerHeld()) {
+                claw.setSpeed(-0.5);
+            } else if(rightTriggerHeld()){
+                claw.setSpeed(-1.0);
+            } else {
+                claw.setSpeed(-0.2);
+            }
+        }));
+
+        // Game piece selection / LED indication requests to human player
+        Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
+        L1Bumper.onTrue(new InstantCommand(() -> {
+            if(bothBumpersHeld()){
+                blinkin.returnToRobotState();
+            }
+            else{
+                blinkin.intakingCone();
+            }
+        }));
+
+        Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
+        R1Bumper.onTrue(new InstantCommand(() -> {
+            if(bothBumpersHeld()){
+                blinkin.returnToRobotState();
+            }
+            else{
+                blinkin.intakingCube();
+            }
+        }));
 
         // Column Selection
         Trigger dpadUpTrigger = new Trigger(() -> controller.getPOV() == 0);
@@ -97,87 +276,35 @@ public class OperatorOI {
             }
         }));
 
-        // Arm Poses
-        // L1 score
-        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SetLevelOnePose());
-
-        // Request L2 score / transition to pre-score pose
-        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.onTrue(new ParallelCommandGroup(new SetPreScorePose(), new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelTwoCone), new InstantCommand(arm::setGoalPoseToLevelTwoCube), claw::hasCone)));
-
-        // Request L3 score / transition to pre-score pose
-        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ParallelCommandGroup(new SetPreScorePose(), new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCone), new InstantCommand(arm::setGoalPoseToLevelThreeCube), claw::hasCone)));
-
-        // Force score pose
-        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new InstantCommand(() -> arm.moveToScoringPose()));
-
-        // Stowed pose
-        Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new SetStowedPose());
-
-        // Home the entire arm subsystem (full system reset)
-        Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new SetHomePose());
-
-        // Manual Wrist and Shoulder Override Controls
-        Trigger leftTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
-        leftTriggerPressedTrigger.whileTrue(new ManualWristControl());
-
-        Trigger rightTriggerPressedTrigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
-        rightTriggerPressedTrigger.whileTrue(new ManualShoulderControl());
-
-        // Gyro reset
-        Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
-
-        // toggle outtake full speed or off
-        Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        startButton.onTrue(new InstantCommand(() -> {
-            if (claw.getClawSpeed() > Constants.OIConstants.kMaxSpeedThreshold) {
-                claw.stopClaw();
-            } else {
-                claw.setSpeed(1);
-            }
-        }));
-
-        // toggle intake full reverse speed or off
-        Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
-        shareButton.onTrue(new InstantCommand(() -> {
-            if (claw.getClawSpeed() < -Constants.OIConstants.kMaxSpeedThreshold) {
-                claw.stopClaw();
-            } else {
-                claw.setSpeed(-1);
-            }
-        }));
-
-        // Game Piece Selection
-        Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        L1Bumper.onTrue(new InstantCommand(() -> {
-            if(bothBumpersHeld()){
-                blinkin.neutral();
-            }
-            else{
-                blinkin.intakeCone();
-            }
-        }));
-
-        Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        R1Bumper.onTrue(new InstantCommand(() -> {
-            if(bothBumpersHeld()){
-                blinkin.neutral();
-            }
-            else{
-                blinkin.intakeCube();
-            }
-        }));
 
     }
 
     private boolean bothBumpersHeld() {
         return controller.getL1Button() && controller.getR1Button();
+    }
+
+    private boolean bothTriggersHeld() {
+        return leftTriggerHeld() & rightTriggerHeld();
+    }
+
+    private boolean leftTriggerHeld(){
+        return controller.getL2Button();
+    }
+
+    private boolean onlyLeftTriggerHeld(){
+        return leftTriggerHeld() && !rightTriggerHeld();
+    }
+
+    private boolean rightTriggerHeld(){
+        return controller.getR2Button();
+    }
+
+    private boolean onlyRightTriggerHeld(){
+        return !leftTriggerHeld() && rightTriggerHeld();
+    }
+
+    private boolean onlyOneTriggerHeld() {
+        return leftTriggerHeld() ^ rightTriggerHeld();
     }
 
     public double getShoulderPIDOffset() {
@@ -196,4 +323,19 @@ public class OperatorOI {
         }
         return -1*rawAxis;
     }
+
+    public boolean isUsePreScorePose() {
+        return usePreScorePose;
+    }
+
+    // Only update the boolean for using the pre-score pose if it is a state change
+    // This is especially important since this requires configuring the controller mapping
+    // for the operator, which should be done infrequently/minimally.
+    public void setUsePreScorePose(boolean usePreScorePose) {
+        if(this.usePreScorePose != usePreScorePose){
+            this.usePreScorePose = usePreScorePose;
+            configureController(usePreScorePose);
+        }
+    }
+
 }

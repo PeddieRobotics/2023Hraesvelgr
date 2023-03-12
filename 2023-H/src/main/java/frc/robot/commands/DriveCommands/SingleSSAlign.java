@@ -59,7 +59,11 @@ public class SingleSSAlign extends CommandBase {
 
         oi = DriverOI.getInstance();
 
-        blinkin.seekingTargetSlow();
+        if (!limelightFront.hasTarget()) {
+            blinkin.failure();
+        } else{
+            blinkin.acquiringTarget();
+        }
     }
 
     @Override
@@ -69,18 +73,6 @@ public class SingleSSAlign extends CommandBase {
         double turnFF = 0.2;
 
         double txAvg = limelightFront.getTxAverage();
-
-        if (!limelightFront.hasTarget()) {
-            blinkin.noTarget();
-        } else if(txAvg > 3){
-            blinkin.seekingTargetSlow();
-        } else if (txAvg > 1.5) {
-            blinkin.seekingTargetMedium();
-        } else if (txAvg > 0.5) {
-            blinkin.seekingTargetFast();
-        } else {
-            blinkin.atTarget();
-        }
 
         if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
@@ -104,7 +96,6 @@ public class SingleSSAlign extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        blinkin.neutral();
         drivetrain.stopSwerveModules();
         limelightFront.setPipeline(7);
     }

@@ -42,17 +42,23 @@ public class RobotContainer {
 
 
     public RobotContainer() {
+        /**
+         * The order of initialization matters here.
+         * DO NOT CHANGE unless you enjoy infinite recursive loops and/or null pointer errors.
+         * Also, minimize the amount that you "getInstance()" for various subsystems in each other's constructors.
+         * This is one thing that can be tricky with singleton design pattern. Try to be modular and minimize
+         * too many interdepencies.
+         */
         drivetrain = Drivetrain.getInstance();
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
         arm = Arm.getInstance();
         claw = Claw.getInstance();
-        blinkin = Blinkin.getInstance();
 
+        blinkin = Blinkin.getInstance();
         autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
-        // blinkin = Blinkin.getInstance();
 
         operatorOI = OperatorOI.getInstance();
         driverOI = DriverOI.getInstance();

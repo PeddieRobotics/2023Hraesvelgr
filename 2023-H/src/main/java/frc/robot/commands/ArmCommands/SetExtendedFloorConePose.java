@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 
 public class SetExtendedFloorConePose extends CommandBase{
@@ -26,6 +27,8 @@ public class SetExtendedFloorConePose extends CommandBase{
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
 
+        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+        arm.setGoalPose(ArmState.NONE);
     }
 
     @Override

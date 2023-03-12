@@ -30,6 +30,7 @@ public class SetLevelThreeCubeInvertedPose extends CommandBase{
         
         arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.L3_CUBE_INVERTED);
+        arm.setGoalPose(ArmState.NONE);
 
     }
 

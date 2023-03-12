@@ -18,7 +18,8 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
     mL3CubeForwardShoulder, mL3CubeForwardWrist, mStowedShoulder, mStowedWrist, mCompactFloorConeShoulder,
     mCompactFloorConeWrist, mCompactFloorCubeShoulder, mCompactFloorCubeWrist, mExtendedFloorConeShoulder,
     mExtendedFloorConeWrist, mExtendedFloorCubeShoulder, mExtendedFloorCubeWrist,
-    mDoubleSSConeShoulder, mDoubleSSConeWrist, mSingleSSShoulder, mSingleSSWrist;
+    mDoubleSSConeShoulder, mDoubleSSConeWrist, mSingleSSConeShoulder, mSingleSSConeWrist,
+    mSingleSSCubeShoulder, mSingleSSCubeWrist;
 
     public void createEntries() {
         tab = Shuffleboard.getTab("Angle Overrides");
@@ -32,11 +33,11 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
                 .withSize(2, 1)
                 .withPosition(0, 1)
                 .getEntry();
-                mSingleSSShoulder = tab.add("Single Substation Shoulder", ShoulderConstants.kSingleSSAngle)
+                mSingleSSConeShoulder = tab.add("Single Substation Cone Shoulder", ShoulderConstants.kSingleSSConeAngle)
                 .withSize(2, 1)
                 .withPosition(0, 2)
                         .getEntry();
-                mSingleSSWrist = tab.add("Single Substation Wrist", WristConstants.kSingleSSAngle)
+                mSingleSSConeWrist = tab.add("Single Substation Cone Wrist", WristConstants.kSingleSSConeAngle)
                 .withSize(2, 1)
                 .withPosition(0, 3)
                         .getEntry();
@@ -48,8 +49,6 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
                 .withSize(2, 1)
                 .withPosition(4, 5)
                         .getEntry();
-
-
             mL1Shoulder = tab.add("L1 Shoulder", ShoulderConstants.kL1Angle)
             .withSize(2, 1)
             .withPosition(2, 0)
@@ -98,6 +97,14 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
                     .withSize(2, 1)
                     .withPosition(4, 3)
                             .getEntry();
+                mSingleSSCubeShoulder = tab.add("Single Substation Cube Shoulder", ShoulderConstants.kSingleSSCubeAngle)
+                .withSize(2, 1)
+                .withPosition(0, 2)
+                        .getEntry();
+                mSingleSSCubeWrist = tab.add("Single Substation Cube Wrist", WristConstants.kSingleSSCubeAngle)
+                .withSize(2, 1)
+                .withPosition(0, 3)
+                        .getEntry();
             mExtendedFloorConeShoulder = tab.add("Extended Floor Cone Shoulder", ShoulderConstants.kExtendedFloorConeAngle)
             .withSize(2, 1)
             .withPosition(6, 0)
@@ -162,8 +169,11 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkDoubleSSConeAngle(mDoubleSSConeShoulder.getDouble(ShoulderConstants.kDoubleSSConeAngle));
         wrist.setkDoubleSSConeAngle(mDoubleSSConeWrist.getDouble(WristConstants.kDoubleSSConeAngle));
 
-        shoulder.setkSingleSSAngle(mSingleSSShoulder.getDouble(ShoulderConstants.kSingleSSAngle));
-        wrist.setkSingleSSAngle(mSingleSSWrist.getDouble(WristConstants.kSingleSSAngle));
+        shoulder.setkSingleSSConeAngle(mSingleSSConeShoulder.getDouble(ShoulderConstants.kSingleSSConeAngle));
+        wrist.setkSingleSSConeAngle(mSingleSSConeWrist.getDouble(WristConstants.kSingleSSConeAngle));
+
+        shoulder.setkSingleSSCubeAngle(mSingleSSCubeShoulder.getDouble(ShoulderConstants.kSingleSSCubeAngle));
+        wrist.setkSingleSSCubeAngle(mSingleSSCubeWrist.getDouble(WristConstants.kSingleSSCubeAngle));
         
     }
 

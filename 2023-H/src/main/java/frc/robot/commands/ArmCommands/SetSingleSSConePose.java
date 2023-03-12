@@ -9,14 +9,14 @@ import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetTransitoryPose extends CommandBase{
+public class SetSingleSSConePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetTransitoryPose() {
+    public SetSingleSSConePose() {
         arm = Arm.getInstance();
-        addRequirements(arm);   
+        addRequirements(arm);
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -24,18 +24,16 @@ public class SetTransitoryPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkTransitoryAngle());
-        arm.setState(ArmState.TRANSITORY);
+        arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSConeAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setWristPosition(wrist.getkSingleSSConeAngle());
+        arm.setState(ArmState.SINGLE_SS_CONE);
         arm.setGoalPose(ArmState.NONE);
 
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(shoulder.getkTransitoryAngle()) || arm.isShoulderBelowAngle(-65) || arm.isWristAboveAngle(30)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-        }
-
+        
     }
 
     @Override
@@ -48,7 +46,7 @@ public class SetTransitoryPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isWristAtAngle(wrist.getkTransitoryAngle()) && arm.isShoulderAtAngle(shoulder.getkTransitoryAngle());
+        return arm.isShoulderAtAngle(shoulder.getkSingleSSConeAngle()) && arm.isWristAtAngle(wrist.getkSingleSSConeAngle());
     }
 
 

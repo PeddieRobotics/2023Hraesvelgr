@@ -27,6 +27,8 @@ public class SetLevelTwoCubePose extends CommandBase{
         arm.setWristPosition(40);
         arm.setShoulderPositionSmartMotion(shoulder.getkL2CubeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L2_CUBE);
+        arm.setGoalPose(ArmState.NONE);
+
     }
 
     @Override

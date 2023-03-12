@@ -2,13 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
@@ -21,8 +18,10 @@ public class Arm extends SubsystemBase {
     private final Shoulder shoulder;
     private final Wrist wrist;
 
+    // Some of these states are currently unused but possible.
     public enum ArmState {NONE, HOME, STOWED, TRANSITORY, PRE_SCORE, FLOOR_INTAKE_CUBE_COMPACT,
-        FLOOR_INTAKE_CUBE_EXTENDED, FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, SINGLE_SS, DOUBLE_SS_CONE,
+        FLOOR_INTAKE_CUBE_EXTENDED, FLOOR_INTAKE_CONE_COMPACT, FLOOR_INTAKE_CONE_EXTENDED, SINGLE_SS_CUBE,
+        SINGLE_SS_CONE, DOUBLE_SS_CUBE, DOUBLE_SS_CONE,
         L1, L2_CONE, L2_CUBE, L3_CUBE_FORWARD, L3_CONE_FORWARD, L3_CUBE_INVERTED, L3_CONE_INVERTED};
     
     private ArmState state, goalPose;
@@ -175,19 +174,35 @@ public class Arm extends SubsystemBase {
         return state == ArmState.PRE_SCORE;
     }
 
+    public boolean isScoringAutoAlignPose(){
+        return isPreScorePose() || isArmScoringPose();
+    }
+
     public boolean isSingleSSPose(){
-        return state == ArmState.SINGLE_SS;
+        return state == ArmState.SINGLE_SS_CUBE || state == ArmState.SINGLE_SS_CONE;
+    }
+
+    public boolean isDoubleSSPose(){
+        return state == ArmState.DOUBLE_SS_CUBE || state == ArmState.DOUBLE_SS_CONE;
     }
 
     public ArmState getGoalPose() {
         return goalPose;
     }
 
+    public void setGoalPose(ArmState pose){
+        goalPose = pose;
+    }
+
     public void setGoalPoseToLevelTwoCone(){
         goalPose = ArmState.L2_CONE;
     }
 
-    public void setGoalPoseToLevelThreeCone(){
+    public void setGoalPoseToLevelThreeConeForward(){
+        goalPose = ArmState.L3_CONE_FORWARD;
+    }
+
+    public void setGoalPoseToLevelThreeConeInverted(){
         goalPose = ArmState.L3_CONE_INVERTED;
     }
 
@@ -195,33 +210,16 @@ public class Arm extends SubsystemBase {
         goalPose = ArmState.L2_CUBE;
     }
 
-    public void setGoalPoseToLevelThreeCube(){
+    public void setGoalPoseToLevelThreeCubeForward(){
         goalPose = ArmState.L3_CUBE_FORWARD;
+    }
+
+    public void setGoalPoseToLevelThreeCubeInverted(){
+        goalPose = ArmState.L3_CUBE_INVERTED;
     }
 
     // Moves from the pre-pose state into a scoring pose.
     public void moveToScoringPose(){
-        double poseDeg = Drivetrain.getInstance().getPose().getRotation().getDegrees();
-         // For L3 poses, check pose rotation to decide whether the goal pose is still correct.
-         // Case 1: The robot is facing away from the goal.
-        if(poseDeg > -90 && poseDeg < 90){
-            if(goalPose == ArmState.L3_CUBE_INVERTED){
-                goalPose = ArmState.L3_CUBE_FORWARD;
-            }
-            else if(goalPose == ArmState.L3_CONE_INVERTED){
-                goalPose = ArmState.L3_CONE_FORWARD;
-            } 
-        }
-        // Case 2: The robot is facing toward the goal.
-        else{
-            if(goalPose == ArmState.L3_CUBE_FORWARD){
-                goalPose = ArmState.L3_CUBE_INVERTED;
-            }
-            else if(goalPose == ArmState.L3_CONE_FORWARD){
-                goalPose = ArmState.L3_CONE_INVERTED;
-            }   
-        }
-
          // Now execute the goal pose
         if(goalPose == ArmState.L2_CONE){
             CommandScheduler.getInstance().schedule(new SetLevelTwoConePose());
@@ -232,14 +230,18 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CUBE_FORWARD){
             CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
         }
-        else if(goalPose == ArmState.L3_CUBE_INVERTED){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
-        }
-        else if(goalPose == ArmState.L3_CONE_FORWARD){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
-        }
+        // These forbidden states do exist, but don't allow them.
+        // else if(goalPose == ArmState.L3_CUBE_INVERTED){
+        //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
+        // }
+        // else if(goalPose == ArmState.L3_CONE_FORWARD){
+        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
+        // }
         else if(goalPose == ArmState.L3_CONE_INVERTED){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+        }
+        else{
+            Blinkin.getInstance().failure();
         }
 
         // The next goal pose for this method to execute is now "none" unless otherwise set by the operator.
@@ -257,7 +259,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isValidEjectPose(){
-        return (getState() != ArmState.STOWED && getState() != ArmState.HOME) && Claw.getInstance().hasGamepiece();
+        return (state != ArmState.STOWED && state != ArmState.HOME) && Claw.getInstance().hasGamepiece();
     }
 
     @Override

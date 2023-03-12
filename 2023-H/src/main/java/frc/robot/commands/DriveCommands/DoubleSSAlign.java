@@ -56,7 +56,6 @@ public class DoubleSSAlign extends CommandBase {
         state = "6-3";
         destinationXY = LimelightHelper.getCurrentAprilTagCoordinates(limelightName);
 
-        blinkin.seekingTargetSlow();
     }
 
     @Override

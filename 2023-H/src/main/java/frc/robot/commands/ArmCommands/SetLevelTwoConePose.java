@@ -27,6 +27,7 @@ public class SetLevelTwoConePose extends CommandBase{
         arm.setWristPosition(40);
         arm.setShoulderPositionSmartMotion(shoulder.getkL2ConeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L2_CONE);
+        arm.setGoalPose(ArmState.NONE);
         
     }
 

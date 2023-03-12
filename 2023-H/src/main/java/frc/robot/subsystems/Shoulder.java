@@ -55,7 +55,9 @@ public class Shoulder {
     private double kL3ConeInvertedAngle = ShoulderConstants.kL3ConeInvertedAngle;
 
     private double kDoubleSSConeAngle = ShoulderConstants.kDoubleSSConeAngle;
-    private double kSingleSSAngle = ShoulderConstants.kSingleSSAngle;
+    private double kSingleSSConeAngle = ShoulderConstants.kSingleSSConeAngle;
+    private double kSingleSSCubeAngle = ShoulderConstants.kSingleSSCubeAngle;
+
     private double kTransitoryAngle = ShoulderConstants.kTransitoryAngle;
 
     public enum SmartMotionArmSpeed {REGULAR, SLOW, FAST};
@@ -520,12 +522,20 @@ public class Shoulder {
         this.kDoubleSSConeAngle = kDoubleSSConeAngle;
     }
 
-    public double getkSingleSSAngle() {
-        return kSingleSSAngle;
+    public double getkSingleSSConeAngle() {
+        return kSingleSSConeAngle;
     }
 
-    public void setkSingleSSAngle(double kSingleSSAngle) {
-        this.kSingleSSAngle = kSingleSSAngle;
+    public void setkSingleSSConeAngle(double kSingleSSConeAngle) {
+        this.kSingleSSConeAngle = kSingleSSConeAngle;
+    }
+
+    public double getkSingleSSCubeAngle() {
+        return kSingleSSCubeAngle;
+    }
+
+    public void setkSingleSSCubeAngle(double kSingleSSCubeAngle) {
+        this.kSingleSSCubeAngle = kSingleSSCubeAngle;
     }
 
     public double getkTransitoryAngle() {

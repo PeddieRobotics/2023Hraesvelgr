@@ -55,7 +55,9 @@ public class Wrist {
     private double kL3ConeInvertedAngle = WristConstants.kL3ConeInvertedAngle;
 
     private double kDoubleSSConeAngle = WristConstants.kDoubleSSConeAngle;
-    private double kSingleSSAngle = WristConstants.kSingleSSAngle;
+    private double kSingleSSConeAngle = WristConstants.kSingleSSConeAngle;
+    private double kSingleSSCubeAngle = WristConstants.kSingleSSCubeAngle;
+    
     private double kTransitoryAngle = WristConstants.kTransitoryAngle;
 
     public enum SmartMotionWristSpeed {REGULAR, SLOW, FAST};
@@ -506,12 +508,20 @@ public class Wrist {
         this.kDoubleSSConeAngle = kDoubleSSConeAngle;
     }
 
-    public double getkSingleSSAngle() {
-        return kSingleSSAngle;
+    public double getkSingleSSConeAngle() {
+        return kSingleSSConeAngle;
     }
 
-    public void setkSingleSSAngle(double kSingleSSAngle) {
-        this.kSingleSSAngle = kSingleSSAngle;
+    public void setkSingleSSConeAngle(double kSingleSSConeAngle) {
+        this.kSingleSSConeAngle = kSingleSSConeAngle;
+    }
+
+    public double getkSingleSSCubeAngle() {
+        return kSingleSSCubeAngle;
+    }
+
+    public void setkSingleSSCubeAngle(double kSingleSSCubeAngle) {
+        this.kSingleSSCubeAngle = kSingleSSCubeAngle;
     }
 
     public double getkTransitoryAngle() {

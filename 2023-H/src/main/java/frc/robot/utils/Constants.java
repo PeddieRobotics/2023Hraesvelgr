@@ -16,14 +16,14 @@ public final class Constants {
 
         public static class GlobalConstants {
                 public static final double kVoltCompensation = 12.6;
+                public static final boolean kUseLEDLights = true;
         }
 
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
-                public static final double kDrivingDeadband = 0.1;
+                public static final boolean kUsePreScorePose = false;
 
-                // If claw speed is over this, then it is considered max speed
-                public static final double kMaxSpeedThreshold = 0.9;
+                public static final double kDrivingDeadband = 0.1;
         }
 
         public static class BlinkinConstants {
@@ -251,7 +251,8 @@ public final class Constants {
                 public static final double kL3ConeInvertedAngle = 155.0;
 
                 public static final double kDoubleSSConeAngle = 25.0;
-                public static final double kSingleSSAngle = -75.0;
+                public static final double kSingleSSConeAngle = -75.0;
+                public static final double kSingleSSCubeAngle = -75.0;
 
                 // Used generically in the code for checking if we are "close enough" to a pose
                 // Not currently the same as the Smart Motion tolerance used onboard the PID
@@ -330,7 +331,9 @@ public final class Constants {
                 public static final double kL3ConeInvertedAngle = 0.0;
 
                 public static final double kDoubleSSConeAngle = -89.0;
-                public static final double kSingleSSAngle = 30.0;
+                public static final double kSingleSSConeAngle = 30.0;
+                public static final double kSingleSSCubeAngle = 60.0;
+
                 public static final double kTransitoryAngle = 70.0;
                 public static final double kMonitorConeAlignmentAngle = 45;
 

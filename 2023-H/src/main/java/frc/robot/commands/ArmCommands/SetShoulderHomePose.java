@@ -8,41 +8,37 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 
-public class SetHomePose extends CommandBase{
+public class SetShoulderHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
-    private Wrist wrist;
-    private boolean wristHomed, shoulderHomed, shoulderHeld;
+    private boolean shoulderMovedUp, shoulderHomed;
     private double initialShoulderMoveTime, currentShoulderMoveTime;
 
     private Blinkin blinkin;
 
-    public SetHomePose() {
+    public SetShoulderHomePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
         shoulder = Shoulder.getInstance();
-        wrist = Wrist.getInstance();
         blinkin = Blinkin.getInstance();
         
     }
 
     @Override
     public void initialize() {
-        arm.turnOffSmartLimits();
+        shoulder.turnOffSmartLimits();
         arm.setState(ArmState.HOME);
         arm.setGoalPose(ArmState.NONE);
 
         blinkin.homingArm();
 
-        wristHomed = false;
+        shoulderMovedUp = false;
         shoulderHomed = false;
-        shoulderHeld = false;
 
         initialShoulderMoveTime = Timer.getFPGATimestamp();
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        wrist.setPercentOutput(0.3);
         shoulder.setPercentOutput(0.3);
 
     }
@@ -51,21 +47,13 @@ public class SetHomePose extends CommandBase{
     public void execute() {
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        if(wrist.atLimitSensor()){
-            wrist.setPercentOutput(0);
-            wristHomed = true;
-        }
-
-        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
-            arm.holdShoulderPosition();
-            shoulderHeld = true;
-        }
-
-        if(wristHomed && !shoulderHomed && currentShoulderMoveTime - initialShoulderMoveTime > 0.5){
+        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderMovedUp){
             shoulder.setPercentOutput(-0.3);
+            shoulderMovedUp = true;
+
         }
 
-        if(shoulder.atLimitSensor()){
+        if(shoulder.atLimitSensor() && shoulderMovedUp){
             shoulder.setPercentOutput(0);
             shoulderHomed = true;
         }
@@ -75,11 +63,9 @@ public class SetHomePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         shoulder.setPercentOutput(0);
-        wrist.setPercentOutput(0);
 
-        arm.turnOnSmartLimits();
-
-        wrist.setEncoder(wrist.getkHomeAngle());
+        shoulder.turnOnSmartLimits();
+        
         shoulder.setEncoder(shoulder.getkHomeAngle());
 
         blinkin.returnToRobotState();
@@ -87,7 +73,7 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return wristHomed && shoulderHomed;
+        return shoulderHomed;
     }
 
 

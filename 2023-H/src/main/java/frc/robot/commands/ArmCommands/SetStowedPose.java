@@ -38,6 +38,7 @@ public class SetStowedPose extends CommandBase {
 
         arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.STOWED);
+        arm.setGoalPose(ArmState.NONE);
 
     }
 

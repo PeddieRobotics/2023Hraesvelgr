@@ -26,13 +26,13 @@ public class IntakeCone extends CommandBase{
     @Override
     public void initialize() {
         claw.intakeCone();
-        claw.setState(ClawState.INTAKING);
+        claw.setState(ClawState.INTAKING_CONE);
 
         initialTime = Timer.getFPGATimestamp();
         currentTime = initialTime;
         hasPiece = false;
 
-        blinkin.intakeCone();
+        blinkin.intakingCone();
     }
 
     @Override
@@ -55,18 +55,23 @@ public class IntakeCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         if(!interrupted){
-            blinkin.acquiredGamePiece();
             if(claw.hasCube()){
+                blinkin.acquiredGamePiece();
                 claw.setSpeed(ClawConstants.kCubeHoldSpeed);
             }
-            else{
+            else if(claw.hasCone()){
+                blinkin.acquiredGamePiece();
                 claw.stopClaw();
                 claw.monitorNewConeIntake();
+            }
+            else{
+                blinkin.failure();
+                claw.stopClaw();
             }
         }
         else{
             claw.stopClaw();
-            blinkin.neutral();
+            blinkin.black();
         }
     }
 

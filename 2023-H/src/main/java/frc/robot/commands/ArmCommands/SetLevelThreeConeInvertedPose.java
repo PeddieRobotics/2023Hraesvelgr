@@ -30,6 +30,8 @@ public class SetLevelThreeConeInvertedPose extends CommandBase{
         
         arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.L3_CONE_INVERTED);
+        arm.setGoalPose(ArmState.NONE);
+
 
     }
 

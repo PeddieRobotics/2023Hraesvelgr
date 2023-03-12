@@ -15,6 +15,7 @@ import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
+import frc.robot.utils.OperatorOI;
 
 public class OperatorTab extends ShuffleboardTabBase {
     private Arm arm = Arm.getInstance();
@@ -22,9 +23,10 @@ public class OperatorTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
     private Shoulder shoulder = Shoulder.getInstance();
     private Autonomous autonomous = Autonomous.getInstance();
+    private OperatorOI operatorOI = OperatorOI.getInstance();
 
     // private FieldView fieldView;
-    private GenericEntry mArmState, mStowingIntake, mClawState, mGamepieceState;
+    private GenericEntry mArmState, mUsePreScorePose, mClawState, mGamepieceState;
     private ComplexWidget mAutoChooser;
 
     // Sendable Chooser
@@ -42,7 +44,7 @@ public class OperatorTab extends ShuffleboardTabBase {
 
         try {
             mArmState = tab.add("Arm State", "Home").withSize(2,2).withPosition(24,1).getEntry();
-            // mStowingIntake = tab.add("Stowing Intake", false).getEntry();
+            mUsePreScorePose = tab.add("Use Pre-Score Pose", false).getEntry();
             mClawState = tab
             .add("Game piece?", "Empty").withSize(2,2).withPosition(22,1)
             .getEntry();
@@ -61,7 +63,7 @@ public class OperatorTab extends ShuffleboardTabBase {
         mArmState.setString(arm.getState().toString());
         mClawState.setString(claw.getState().toString());
         mGamepieceState.setBoolean(claw.hasGamepiece());
-        // arm.setAllowStowIntake(mStowingIntake.getBoolean(false));
+        operatorOI.setUsePreScorePose(mUsePreScorePose.getBoolean(false));
     }
 
     public void setupAutoSelector(){

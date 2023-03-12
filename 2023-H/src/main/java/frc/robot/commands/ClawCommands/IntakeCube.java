@@ -24,12 +24,12 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void initialize() {
-        blinkin.intakeCube();
+        blinkin.intakingCube();
         claw.intakeCube();
-        claw.setState(ClawState.INTAKING);     
+        claw.setState(ClawState.INTAKING_CUBE);     
         hasPiece = false;   
 
-        blinkin.intakeCube();
+        blinkin.intakingCube();
     }
 
     @Override
@@ -52,18 +52,23 @@ public class IntakeCube extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         if(!interrupted){
-            blinkin.acquiredGamePiece();
             if(claw.hasCube()){
+                blinkin.acquiredGamePiece();
                 claw.setSpeed(ClawConstants.kCubeHoldSpeed);
             }
-            else{
+            else if(claw.hasCone()){
+                blinkin.acquiredGamePiece();
                 claw.stopClaw();
                 claw.monitorNewConeIntake();
+            }
+            else{
+                blinkin.failure();
+                claw.stopClaw();
             }
         }
         else{
             claw.stopClaw();
-            blinkin.neutral();
+            blinkin.black();
         }
     }
 

@@ -17,13 +17,13 @@ public class LockDrivetrain extends CommandBase{
 
     @Override
     public void initialize(){
-        blinkin.noTarget();
+        blinkin.aqua();
         drivetrain.lock();
     }
 
     //Called once the command ends or is interrupted
     public void end(boolean interrupted) {
-        blinkin.neutral();
+        blinkin.returnToRobotState();
         drivetrain.stopSwerveModules(); // Unlock/reset swerve modules when toggled off
     }
 

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
@@ -19,7 +18,6 @@ import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
-import frc.robot.commands.LimelightCommands.SetPipe;
 import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
@@ -47,18 +45,15 @@ public class Autonomous extends SubsystemBase{
 
         HashMap<String, Command> eventMap = new HashMap<>();
 
-        eventMap.put("pipe0", new SetPipe(0));
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
         eventMap.put("lock", new LockDrivetrain());
-
-        eventMap.put("TransitoryPoseL3Return", new SetTransitoryPoseL3Return());
 
         eventMap.put("IntakeCone", new IntakeCone());
         eventMap.put("IntakeCube", new IntakeCube());
 
         eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
-        eventMap.put("CubeL3", new EjectGamepiece());
+
         eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
     

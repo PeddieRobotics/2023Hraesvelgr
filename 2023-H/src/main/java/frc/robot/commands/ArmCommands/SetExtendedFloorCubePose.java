@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 
 public class SetExtendedFloorCubePose extends CommandBase{
@@ -26,6 +27,8 @@ public class SetExtendedFloorCubePose extends CommandBase{
             arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
         }
 
+        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
+        arm.setGoalPose(ArmState.NONE);
     }
 
     @Override

@@ -26,6 +26,7 @@ public class SetDoubleSSConePose extends CommandBase{
     public void initialize() {
         arm.setShoulderPositionSmartMotion(shoulder.getkDoubleSSConeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.DOUBLE_SS_CONE);
+        arm.setGoalPose(ArmState.NONE);
 
     }
 

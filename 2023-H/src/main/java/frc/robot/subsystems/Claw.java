@@ -4,16 +4,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
-import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -23,13 +18,16 @@ public class Claw extends SubsystemBase {
     private DigitalInput backSensor, frontSensor;
     private boolean useSensors;
 
+    // Keep in mind when using ClawState that the floor cube intake picks up tipped over cones,
+    // so "INTAKING_CUBE" state may encompass this possibility.
     public enum ClawState {
-        EMPTY, INTAKING, CUBE, CONE
+        EMPTY, INTAKING_CUBE, INTAKING_CONE, CUBE, CONE
     };
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
-    private final LimelightFront limelightFront;
+    private final LimelightFront limelightFront; // Used to help with cone alignment monitoring /calculating offset
+
     private double coneAlignmentError;
     private boolean monitorNewConeIntake;
     private int newConeCounter;
@@ -58,8 +56,9 @@ public class Claw extends SubsystemBase {
                 state = ClawState.CONE;
             } else if (isFrontSensor() && !isBackSensor()) {
                 state = ClawState.CUBE;
-            } else if (state != ClawState.INTAKING && (!isFrontSensor() && !isBackSensor())) {
+            } else if (state != ClawState.INTAKING_CONE && state != ClawState.INTAKING_CUBE && (!isFrontSensor() && !isBackSensor())) {
                 state = ClawState.EMPTY;
+                Blinkin.getInstance().emptyCheckForFailure();
             }
         }
 
@@ -69,7 +68,7 @@ public class Claw extends SubsystemBase {
             updateConeAlignmentError();
             newConeCounter++;
 
-            // If we have looked the cone for at least 240 ms, we've gotten enough of a
+            // If we have looked the cone for at least 100 ms, we've gotten enough of a
             // glimpse.
             if (newConeCounter > 4) {
                 monitorNewConeIntake = false; // Stop looking at cone alignment

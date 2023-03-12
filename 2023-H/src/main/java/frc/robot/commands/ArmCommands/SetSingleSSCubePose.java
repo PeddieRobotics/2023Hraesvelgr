@@ -6,15 +6,13 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.Constants.ShoulderConstants;
-import frc.robot.utils.Constants.WristConstants;
 
-public class SetSingleSSPose extends CommandBase{
+public class SetSingleSSCubePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetSingleSSPose() {
+    public SetSingleSSCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
@@ -24,9 +22,11 @@ public class SetSingleSSPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSAngle(), SmartMotionArmSpeed.REGULAR);
-        arm.setWristPosition(wrist.getkSingleSSAngle());
+        arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSCubeAngle(), SmartMotionArmSpeed.REGULAR);
+        arm.setWristPosition(wrist.getkSingleSSCubeAngle());
         arm.setState(ArmState.STOWED);
+        arm.setGoalPose(ArmState.NONE);
+
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SetSingleSSPose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkSingleSSAngle()) && arm.isWristAtAngle(wrist.getkSingleSSAngle());
+        return arm.isShoulderAtAngle(shoulder.getkSingleSSCubeAngle()) && arm.isWristAtAngle(wrist.getkSingleSSCubeAngle());
     }
 
 

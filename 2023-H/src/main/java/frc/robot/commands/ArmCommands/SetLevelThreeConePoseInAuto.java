@@ -27,14 +27,14 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setState(ArmState.L3_CONE_INVERTED);
-
         if(arm.isShoulderBelowAngle(65)){
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }
         
         arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.L3_CONE_INVERTED);
+        arm.setGoalPose(ArmState.NONE);
+
     }
 
     @Override
