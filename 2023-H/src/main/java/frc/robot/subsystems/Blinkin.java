@@ -15,7 +15,7 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN_ACQUIRED, BLINK_GREEN_SCORED, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE};
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE};
 
     private BlinkinState state;
 
@@ -95,7 +95,7 @@ public class Blinkin extends SubsystemBase{
     // Blinks green then briefly goes solid green when you have acquired a game piece
     public void acquiredGamePiece() {
         initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN_ACQUIRED;
+        state = BlinkinState.BLINK_GREEN;
     }
 
     // Blinks the appropriate color when trying to auto-target
@@ -125,10 +125,10 @@ public class Blinkin extends SubsystemBase{
         }
     }
     
-    // Blinks green twice, then turns the LEDs to solid Green when you have scored a game piece
+    // Blinks green twice, then turns the LEDs to solid green when you have scored a game piece
     public void scoredGamePiece(){
         initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN_SCORED;
+        state = BlinkinState.BLINK_GREEN;
     }
 
     // Turns the LEDS to flashing purple when intaking a cube
@@ -199,10 +199,8 @@ public class Blinkin extends SubsystemBase{
                 case AQUA_SOLID:
                     aqua();
                     break;
-                case BLINK_GREEN_SCORED:
-                    blinkGreenScoredGamepiece();
-                case BLINK_GREEN_ACQUIRED:
-                    blinkGreenAcquiredGamepiece();
+                case BLINK_GREEN:
+                    blinkGreen();
                 case BLINK_RED:
                     blinkRed();
                 case FLASH_PINK:
@@ -236,22 +234,7 @@ public class Blinkin extends SubsystemBase{
         }
     }
 
-    private void blinkGreenAcquiredGamepiece() {
-        green();
-        if(currentTime - initialTime > 0.2){
-            black();
-        } else if(currentTime - initialTime > 0.4){
-            green();
-        } else if(currentTime - initialTime > 0.6){
-            black();
-        } else if(currentTime - initialTime > 0.8){
-            green();
-        } else if(currentTime - initialTime > 1){
-            returnToRobotState();
-        }
-    }
-
-    private void blinkGreenScoredGamepiece() {
+    private void blinkGreen() {
         green();
         if(currentTime - initialTime > 0.2){
             black();
