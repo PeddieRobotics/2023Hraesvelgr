@@ -20,9 +20,13 @@ import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
+import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
 import frc.robot.commands.ClawCommands.IntakeCube;
+import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SimpleAlign;
+import frc.robot.commands.DriveCommands.SimpleAlignOld;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
@@ -119,11 +123,11 @@ public class DriverOI {
 
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeCone()), new SetStowedPose()));
+        xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCube()), new SetStowedPose()));
+        squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose
         Trigger muteButton = new JoystickButton(controller, 15);
@@ -139,10 +143,10 @@ public class DriverOI {
                  * If we have a gamepiece, perform auto-align to score.
                  * Also: transition from pre-score pose to scoring pose if needed.
                  */
-                new ConditionalCommand(new ParallelCommandGroup(new SimpleAlign(),
+                new ConditionalCommand(new ParallelCommandGroup(new SimpleAlignOld(),
                     new ConditionalCommand(new InstantCommand(() -> {arm.moveToScoringPose();}), new InstantCommand(), arm::isPreScorePose)),
                 new InstantCommand(() -> {blinkin.failure();}),
-                arm::isScoringAutoAlignPose),
+                arm::isAutoAlignValid),
                 /*
                  * If we do not have a gamepiece, perform auto-align to the single substation,
                  * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
@@ -195,7 +199,14 @@ public class DriverOI {
     }
 
     public double getForward() {
-        return controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        double input = controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+        if(Math.abs(input) < 0.9){
+            input *= 0.7777;
+        }
+        else{
+            input = Math.pow(input, 3);
+        }
+        return input;
     }
 
     public double getStrafe() {

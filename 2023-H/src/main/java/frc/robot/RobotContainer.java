@@ -83,14 +83,6 @@ public class RobotContainer {
         }
     }
 
-    public void defaultColor() {
-        //blinkin.neutral();
-    }
-
-    public void autonomousColor() {
-        //blinkin.autoColor();
-    }
-
     public void setWristMode(IdleMode mode) {
         arm.setWristMode(mode);
     }

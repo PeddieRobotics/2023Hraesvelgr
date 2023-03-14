@@ -30,23 +30,7 @@ public class SetPreScorePose extends CommandBase{
         arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.PRE_SCORE);
 
-        String limelightName;
-        switch (arm.getGoalPose()) {
-            case L3_CUBE_INVERTED:
-                limelightName = "limelight-back";
-                break;
-            case L3_CONE_INVERTED:
-                limelightName = "limelight-back";
-                break;
-            default:
-                limelightName = "limelight-front";
-        }
-
-        if (claw.hasCone()) {
-            LimelightHelper.setPipelineIndex(limelightName, 6); // Retroreflective tape pipeline
-        } else {
-            LimelightHelper.setPipelineIndex(limelightName, 0); // April tag pipeline
-        }
+        claw.prepareLimelightForScoring();
         
     }
 
@@ -58,6 +42,9 @@ public class SetPreScorePose extends CommandBase{
     public void end(boolean interrupted){
         if(!interrupted){
             arm.holdShoulderPosition();
+        }
+        else{
+            
         }
     }
 

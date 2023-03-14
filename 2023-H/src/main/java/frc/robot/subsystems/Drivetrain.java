@@ -116,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
                         backRightSwerveModule.getPosition() },
                 new Pose2d(),
                 VecBuilder.fill(0.1, 0.1, 0.1),
-                VecBuilder.fill(0.4, 0.4, 0.4));
+                VecBuilder.fill(0.9, 0.9, 0.9));
 
         allowDriving = true;
 
@@ -183,8 +183,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        // limelightFront.checkForAprilTagUpdates(odometry);
-        // limelightBack.checkForAprilTagUpdates(odometry);
+        limelightFront.checkForAprilTagUpdates(odometry);
+        limelightBack.checkForAprilTagUpdates(odometry);
     }
 
     public void setFlipped(){ //used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.

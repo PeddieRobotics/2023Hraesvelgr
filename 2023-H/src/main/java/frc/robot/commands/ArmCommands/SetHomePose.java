@@ -42,8 +42,8 @@ public class SetHomePose extends CommandBase{
         initialShoulderMoveTime = Timer.getFPGATimestamp();
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        wrist.setPercentOutput(0.3);
-        shoulder.setPercentOutput(0.3);
+        arm.setWristPercentOutput(0.3);
+        arm.setShoulderPercentOutput(0.3);
 
     }
 
@@ -52,7 +52,7 @@ public class SetHomePose extends CommandBase{
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
         if(wrist.atLimitSensor()){
-            wrist.setPercentOutput(0);
+            arm.setWristPercentOutput(0);
             wristHomed = true;
         }
 
@@ -61,12 +61,12 @@ public class SetHomePose extends CommandBase{
             shoulderHeld = true;
         }
 
-        if(wristHomed && !shoulderHomed && currentShoulderMoveTime - initialShoulderMoveTime > 0.5){
-            shoulder.setPercentOutput(-0.3);
+        if(wristHomed && !shoulderHomed && shoulderHeld){
+            arm.setShoulderPercentOutput(-0.3);
         }
 
         if(shoulder.atLimitSensor()){
-            shoulder.setPercentOutput(0);
+            arm.setShoulderPercentOutput(0);
             shoulderHomed = true;
         }
         
@@ -74,15 +74,19 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulder.setPercentOutput(0);
-        wrist.setPercentOutput(0);
+        arm.setShoulderPercentOutput(0);
+        arm.setWristPercentOutput(0);
+
+        if(!interrupted){
+            wrist.setEncoder(wrist.getkStowedAngle());
+            shoulder.setEncoder(shoulder.getkStowedAngle());
+            blinkin.success();
+        } else{
+            blinkin.failure();
+        }
 
         arm.turnOnSmartLimits();
 
-        wrist.setEncoder(wrist.getkHomeAngle());
-        shoulder.setEncoder(shoulder.getkHomeAngle());
-
-        blinkin.returnToRobotState();
     }
 
     @Override

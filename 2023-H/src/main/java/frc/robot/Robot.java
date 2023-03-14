@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LimelightBack;
+import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.OIConstants;
 
 /**
@@ -51,7 +53,7 @@ public class Robot extends TimedRobot {
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
             // Set up a REV PDH in order to get key status information
-            pdh = new PowerDistribution(1, ModuleType.kRev);
+            // pdh = new PowerDistribution(1, ModuleType.kRev);
 
             shuffleboard.setupDebugMode();
             shuffleboard.setupAutoSelector();
@@ -61,12 +63,13 @@ public class Robot extends TimedRobot {
             shuffleboard.setupAutoSelector();
         }
 
-        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
+        // PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
 
-        robotContainer.defaultColor();
+        LimelightFront.getInstance().setPipeline(7);
+        LimelightBack.getInstance().setPipeline(0);
     }
 
     @Override
@@ -85,13 +88,13 @@ public class Robot extends TimedRobot {
         // from Shuffleboard.
         shuffleboard.update();
 
-        if(OIConstants.kUseDebugModeLayout){
-            double current8 = pdh.getCurrent(8);
-            double current9 = pdh.getCurrent(9);
-            SmartDashboard.putNumber("Current Channel 8", current8);
-            SmartDashboard.putNumber("Current Channel 9", current9);
+        // if(OIConstants.kUseDebugModeLayout){
+        //     double current8 = pdh.getCurrent(8);
+        //     double current9 = pdh.getCurrent(9);
+        //     SmartDashboard.putNumber("Current Channel 8", current8);
+        //     SmartDashboard.putNumber("Current Channel 9", current9);
 
-        }
+        // }
     }
 
     @Override
@@ -116,8 +119,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-        //turns to the default color for LEDS
-        robotContainer.autonomousColor();
+
     }
 
     @Override
@@ -138,9 +140,10 @@ public class Robot extends TimedRobot {
         }
 
         // Default pose for the robot to begin teleop is stowed.
-        // CommandScheduler.getInstance().schedule(new SetStowedPose());
-        //turns to the default color for LEDS
-        robotContainer.defaultColor();
+        CommandScheduler.getInstance().schedule(new SetStowedPose());
+        LimelightFront.getInstance().setPipeline(7);
+        LimelightBack.getInstance().setPipeline(0);
+
     }
 
     @Override

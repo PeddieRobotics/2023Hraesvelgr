@@ -5,9 +5,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.WristConstants;
@@ -30,7 +32,13 @@ public class Claw extends SubsystemBase {
 
     private double coneAlignmentError;
     private boolean monitorNewConeIntake;
+    
+    private double ejectionTime;
+    private boolean justEjectedGamepiece;
+
     private int newConeCounter;
+
+    private String currentLLForAutoAlign;
 
     public Claw() {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
@@ -42,11 +50,15 @@ public class Claw extends SubsystemBase {
         useSensors = true;
 
         state = ClawState.EMPTY;
+        ejectionTime = -1;
+        justEjectedGamepiece = false;
 
         limelightFront = LimelightFront.getInstance();
         coneAlignmentError = 0.0;
         monitorNewConeIntake = false;
         newConeCounter = 0;
+        currentLLForAutoAlign = "limelight-front";
+        
     }
 
     @Override
@@ -58,7 +70,9 @@ public class Claw extends SubsystemBase {
                 state = ClawState.CUBE;
             } else if (state != ClawState.INTAKING_CONE && state != ClawState.INTAKING_CUBE && (!isFrontSensor() && !isBackSensor())) {
                 state = ClawState.EMPTY;
-                Blinkin.getInstance().emptyCheckForFailure();
+                if(!justEjectedGamepiece){
+                    Blinkin.getInstance().emptyCheckForFailure();
+                }
             }
         }
 
@@ -74,6 +88,10 @@ public class Claw extends SubsystemBase {
                 monitorNewConeIntake = false; // Stop looking at cone alignment
                 newConeCounter = 0;
             }
+        }
+
+        if(justEjectedGamepiece && ejectionTime - Timer.getFPGATimestamp() > 1){
+            justEjectedGamepiece = false;
         }
 
         SmartDashboard.putNumber("newConeCounter", newConeCounter);
@@ -130,7 +148,14 @@ public class Claw extends SubsystemBase {
     }
 
     public void intakeCube() {
-        setSpeed(ClawConstants.kCubeIntakeSpeed);
+        if(Arm.getInstance().getState() == ArmState.SINGLE_SS_CUBE){
+            setSpeed(ClawConstants.kCubeSingleSSIntakeSpeed);
+        } else if(Arm.getInstance().getState() == ArmState.SINGLE_SS_CONE){
+            setSpeed(ClawConstants.kConeSingleSSIntakeSpeed);
+        }
+        else{
+            setSpeed(ClawConstants.kCubeIntakeSpeed);
+        }
     }
 
     public void intakeCone() {
@@ -235,5 +260,51 @@ public class Claw extends SubsystemBase {
 
     public void resetConeAlignmentError(){
         coneAlignmentError = 0;
+    }
+
+    public double getEjectionTime() {
+        return ejectionTime;
+    }
+
+    public void setEjectionTime(double ejectionTime) {
+        this.ejectionTime = ejectionTime;
+    }
+
+    public boolean isJustEjectedGamepiece() {
+        return justEjectedGamepiece;
+    }
+
+    public void setJustEjectedGamepiece(boolean justEjectedGamepiece) {
+        this.justEjectedGamepiece = justEjectedGamepiece;
+    }
+
+    public void prepareLimelightForScoring() {
+        switch (Arm.getInstance().getGoalPose()) {
+            case L3_CUBE_INVERTED:
+                currentLLForAutoAlign = "limelight-back";
+                break;
+            case L3_CONE_INVERTED:
+                currentLLForAutoAlign = "limelight-back";
+                break;
+            default:
+                currentLLForAutoAlign = "limelight-front";
+        }
+
+        if (hasCone()) {
+            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 6); // Retroreflective tape pipeline
+        } else {
+            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 0); // April tag pipeline
+        }
+
+    }
+
+    public void returnLimelightToDefaultState(){
+        LimelightHelper.setPipelineIndex("limelight-front", 7); // Retroreflective tape pipeline
+        LimelightHelper.setPipelineIndex("limelight-back", 0); // Retroreflective tape pipeline
+
+    }
+
+    public String getCurrentLLForAutoAlign(){
+        return currentLLForAutoAlign;
     }
 }

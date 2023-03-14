@@ -25,15 +25,15 @@ public class IntakeCube extends CommandBase{
     @Override
     public void initialize() {
         blinkin.intakingCube();
-        claw.intakeCube();
         claw.setState(ClawState.INTAKING_CUBE);     
         hasPiece = false;   
-
-        blinkin.intakingCube();
+        claw.intakeCube();
     }
 
     @Override
     public void execute() {
+        currentTime = Timer.getFPGATimestamp();
+
         if(!claw.hasGamepiece()){
             hasPiece = false;
         }
@@ -42,7 +42,6 @@ public class IntakeCube extends CommandBase{
             initialTime = Timer.getFPGATimestamp();
             hasPiece = true;
         } 
-        currentTime = Timer.getFPGATimestamp();
 
         if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
             claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
@@ -53,11 +52,11 @@ public class IntakeCube extends CommandBase{
     public void end(boolean interrupted) {
         if(!interrupted){
             if(claw.hasCube()){
-                blinkin.acquiredGamePiece();
+                blinkin.success();
                 claw.setSpeed(ClawConstants.kCubeHoldSpeed);
             }
             else if(claw.hasCone()){
-                blinkin.acquiredGamePiece();
+                blinkin.success();
                 claw.stopClaw();
                 claw.monitorNewConeIntake();
             }
@@ -67,8 +66,9 @@ public class IntakeCube extends CommandBase{
             }
         }
         else{
+            claw.setState(ClawState.EMPTY);     
             claw.stopClaw();
-            blinkin.black();
+            blinkin.returnToRobotState();
         }
     }
 

@@ -2,6 +2,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.LimelightFront;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
@@ -28,6 +29,7 @@ public class SetSingleSSConePose extends CommandBase{
         arm.setWristPosition(wrist.getkSingleSSConeAngle());
         arm.setState(ArmState.SINGLE_SS_CONE);
         arm.setGoalPose(ArmState.NONE);
+        LimelightFront.getInstance().setPipeline(5); // Pipeline for cone detection from human player
 
     }
 

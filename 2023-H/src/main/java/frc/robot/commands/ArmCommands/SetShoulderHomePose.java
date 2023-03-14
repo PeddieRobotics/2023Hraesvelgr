@@ -39,7 +39,7 @@ public class SetShoulderHomePose extends CommandBase{
         initialShoulderMoveTime = Timer.getFPGATimestamp();
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        shoulder.setPercentOutput(0.3);
+        arm.setShoulderPercentOutput(0.3);
 
     }
 
@@ -48,13 +48,13 @@ public class SetShoulderHomePose extends CommandBase{
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
         if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderMovedUp){
-            shoulder.setPercentOutput(-0.3);
+            arm.setShoulderPercentOutput(-0.3);
             shoulderMovedUp = true;
 
         }
 
-        if(shoulder.atLimitSensor() && shoulderMovedUp){
-            shoulder.setPercentOutput(0);
+        if(shoulder.atLimitSensor()){
+            arm.setShoulderPercentOutput(0);
             shoulderHomed = true;
         }
         
@@ -62,13 +62,17 @@ public class SetShoulderHomePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        shoulder.setPercentOutput(0);
+        arm.setShoulderPercentOutput(0);
+
+        if(!interrupted){
+            shoulder.setEncoder(shoulder.getkStowedAngle());
+            blinkin.success();
+        }
+        else{
+            blinkin.failure();
+        }
 
         shoulder.turnOnSmartLimits();
-        
-        shoulder.setEncoder(shoulder.getkHomeAngle());
-
-        blinkin.returnToRobotState();
     }
 
     @Override

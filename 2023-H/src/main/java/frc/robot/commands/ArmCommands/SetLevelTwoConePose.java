@@ -28,7 +28,6 @@ public class SetLevelTwoConePose extends CommandBase{
         arm.setShoulderPositionSmartMotion(shoulder.getkL2ConeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L2_CONE);
         arm.setGoalPose(ArmState.NONE);
-        
     }
 
     @Override

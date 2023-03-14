@@ -25,7 +25,7 @@ public class SingleSSAlign extends CommandBase {
     private Blinkin blinkin;
     private Claw claw;
     private int scoreSetpoint;
-    private boolean initialHeadingCorrectionComplete;
+    private boolean initialHeadingCorrectionComplete, finalStage;
 
     public SingleSSAlign() {
         limelightFront = LimelightFront.getInstance();
@@ -45,7 +45,8 @@ public class SingleSSAlign extends CommandBase {
     @Override
     public void initialize() {
         initialHeadingCorrectionComplete = false;
-        limelightFront.setPipeline(5);
+        finalStage = false;
+
         switch (DriverStation.getAlliance()) {
             case Red:
                 scoreSetpoint = -90;
@@ -77,27 +78,32 @@ public class SingleSSAlign extends CommandBase {
         if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.3, oi.getStrafe() * 0.3),
+            drivetrain.drive(new Translation2d(oi.getForward() * 0.7, oi.getStrafe() * 0.7),
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
-        } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
+        } else if (!finalStage && Math.abs(txAvg) > 2.0) {
             initialHeadingCorrectionComplete = true;
 
             xMove = xController.calculate(txAvg, 0);
 
-            drivetrain.drive(new Translation2d(xMove, oi.getStrafe()*0.3), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(xMove, oi.getStrafe()*0.7), 0, true, new Translation2d(0, 0));
 
         } else {
+            finalStage = true;
             if (Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound/3) {
                 turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
             }
-            drivetrain.drive(new Translation2d(0, oi.getStrafe()*0.3), turn, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(0, oi.getStrafe()*0.7), 0, true, new Translation2d(0, 0));
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.stopSwerveModules();
-        limelightFront.setPipeline(7);
+        if(claw.hasGamepiece()){
+            limelightFront.setPipeline(7);
+        }
+        blinkin.returnToRobotState();
+
     }
 
     @Override

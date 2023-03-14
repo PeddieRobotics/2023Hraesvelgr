@@ -9,6 +9,7 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -176,6 +177,10 @@ public class Arm extends SubsystemBase {
 
     public boolean isScoringAutoAlignPose(){
         return isPreScorePose() || isArmScoringPose();
+    }
+
+    public boolean isAutoAlignValid(){
+        return isScoringAutoAlignPose() && LimelightHelper.getTV(Claw.getInstance().getCurrentLLForAutoAlign());
     }
 
     public boolean isSingleSSPose(){

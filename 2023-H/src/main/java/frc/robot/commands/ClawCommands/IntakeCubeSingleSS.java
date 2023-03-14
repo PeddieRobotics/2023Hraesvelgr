@@ -7,49 +7,32 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.ClawConstants;
 
-public class IntakeCone extends CommandBase{
+public class IntakeCubeSingleSS extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
     private double initialTime, currentTime;
-    private boolean hasPiece;
 
-    public IntakeCone(){
+    public IntakeCubeSingleSS(){
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
         addRequirements(claw);
 
         initialTime = 0.0;
         currentTime = 0.0;
-
     }
 
     @Override
     public void initialize() {
-        claw.intakeCone();
-        claw.setState(ClawState.INTAKING_CONE);
-
-        initialTime = Timer.getFPGATimestamp();
-        currentTime = initialTime;
-        hasPiece = false;
-
-        blinkin.intakingCone();
+        blinkin.intakingCube();
+        claw.setState(ClawState.INTAKING_CUBE);     
+        claw.intakeCube();
+ 
     }
 
     @Override
     public void execute() {
-        if(!claw.hasGamepiece()){
-            hasPiece = false;
-        }
-
-        if(claw.hasGamepiece() && !hasPiece){
-            initialTime = Timer.getFPGATimestamp();
-            hasPiece = true;
-        } 
         currentTime = Timer.getFPGATimestamp();
 
-        if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
-            claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
-        }
     }
 
     @Override
@@ -78,7 +61,7 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return hasPiece && (currentTime - initialTime) > 0.5;
+        return claw.hasGamepiece() && (currentTime - initialTime) > 0.5;
     }
 
     

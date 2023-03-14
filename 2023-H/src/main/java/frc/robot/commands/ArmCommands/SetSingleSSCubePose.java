@@ -24,7 +24,7 @@ public class SetSingleSSCubePose extends CommandBase{
     public void initialize() {
         arm.setShoulderPositionSmartMotion(shoulder.getkSingleSSCubeAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setWristPosition(wrist.getkSingleSSCubeAngle());
-        arm.setState(ArmState.STOWED);
+        arm.setState(ArmState.SINGLE_SS_CUBE);
         arm.setGoalPose(ArmState.NONE);
 
     }

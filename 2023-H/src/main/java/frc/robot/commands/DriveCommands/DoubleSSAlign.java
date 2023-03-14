@@ -34,7 +34,7 @@ public class DoubleSSAlign extends CommandBase {
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
         limelightFront = LimelightFront.getInstance();
-        limelightBack = limelightBack.getInstance();
+        limelightBack = LimelightBack.getInstance();
         thetaController = new PIDController(0.035, 0, 0);
         yController = new PIDController(0.055, 0, 0);
         SmartDashboard.putString("side", "right");

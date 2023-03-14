@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.BlinkinConstants;
@@ -60,11 +61,11 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void purple(){
-        set(0.91);
+        set(0.89);
     }
 
     public void gold(){
-        set(0.67);
+        set(0.63);
     }
 
     public void pink(){
@@ -86,17 +87,22 @@ public class Blinkin extends SubsystemBase{
         set(0.81);
     }
 
+    // Blinks red (for various failure modes)
+    public void none() {
+        state = BlinkinState.NONE;
+    }   
+
+    // Blinks green then briefly goes solid green (for various success modes)
+    public void success(){
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.BLINK_GREEN;
+    }
+
      // Blinks red then briefly goes solid red (for various failure modes)
      public void failure() {
         initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.BLINK_RED;
     }   
-
-    // Blinks green then briefly goes solid green when you have acquired a game piece
-    public void acquiredGamePiece() {
-        initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN;
-    }
 
     // Blinks the appropriate color when trying to auto-target
     public void acquiringTarget() {
@@ -124,12 +130,6 @@ public class Blinkin extends SubsystemBase{
             }
         }
     }
-    
-    // Blinks green twice, then turns the LEDs to solid green when you have scored a game piece
-    public void scoredGamePiece(){
-        initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN;
-    }
 
     // Turns the LEDS to flashing purple when intaking a cube
     public void intakingCube() {
@@ -150,9 +150,14 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void emptyCheckForFailure(){
-        if(!claw.hasGamepiece() && (state == BlinkinState.GOLD_SOLID || state == BlinkinState.PURPLE_SOLID)){
+        if(state == BlinkinState.GOLD_SOLID || state == BlinkinState.PURPLE_SOLID){
             failure();
+            claw.stopClaw();
         }
+    }
+
+    public void lockedWheels(){
+        state = BlinkinState.AQUA_SOLID;
     }
 
     public void returnToRobotState(){
@@ -175,6 +180,7 @@ public class Blinkin extends SubsystemBase{
 
     @Override
     public void periodic() {
+        SmartDashboard.putString("LED state", state.toString());
         if(GlobalConstants.kUseLEDLights){
             currentTime = Timer.getFPGATimestamp();
             switch(state){
@@ -201,18 +207,25 @@ public class Blinkin extends SubsystemBase{
                     break;
                 case BLINK_GREEN:
                     blinkGreen();
+                    break;
                 case BLINK_RED:
                     blinkRed();
+                    break;
                 case FLASH_PINK:
                     flashPink();
+                    break;
                 case FLASH_GOLD:
                     flashGold();
+                    break;
                 case FLASH_PURPLE:
                     flashPurple();
+                    break;
                 case PULSE_GOLD:
                     pulseGold();
+                    break;
                 case PULSE_PURPLE:
                     pulsePurple();
+                    break;
                 default:
                     black();
             }
@@ -220,32 +233,30 @@ public class Blinkin extends SubsystemBase{
     }
 
     private void blinkRed() {
-        red();
-        if(currentTime - initialTime > 0.2){
-            black();
-        } else if(currentTime - initialTime > 0.4){
+        if(currentTime - initialTime < 0.15){
             red();
-        } else if(currentTime - initialTime > 0.6){
+        } else if(currentTime - initialTime < 0.3){
             black();
-        } else if(currentTime - initialTime > 0.8){
+        } else if(currentTime - initialTime < 0.45){
             red();
-        } else if(currentTime - initialTime > 1){
-            returnToRobotState();
+        } else{
+            returnToRobotState();  
         }
     }
 
     private void blinkGreen() {
-        green();
-        if(currentTime - initialTime > 0.2){
-            black();
-        } else if(currentTime - initialTime > 0.4){
+        if(currentTime - initialTime < 0.15){
             green();
-        } else if(currentTime - initialTime > 0.6){
+        } else if(currentTime - initialTime < 0.3){
             black();
-        } else if(currentTime - initialTime > 0.8){
+        } else if(currentTime - initialTime < 0.45){
             green();
-        } else if(currentTime - initialTime > 1){
-            returnToRobotState();
+        } else if(currentTime - initialTime < 0.6){
+            black();
+        } else if(currentTime - initialTime < 1.75){
+            green();
+        } else{
+            returnToRobotState();  
         }
     }
 

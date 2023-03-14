@@ -15,7 +15,7 @@ import frc.robot.utils.DriverOI;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
 
-public class SimpleAlign extends CommandBase {
+public class SimpleAlignOld extends CommandBase {
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
     private final Drivetrain drivetrain;
@@ -26,9 +26,9 @@ public class SimpleAlign extends CommandBase {
     private Claw claw;
     private String limelightName;
     private int scoreSetpoint;
-    private boolean initialHeadingCorrectionComplete;
+    private boolean initialHeadingCorrectionComplete, initialTargetNotFound;
 
-    public SimpleAlign() {
+    public SimpleAlignOld() {
         limelightBack = LimelightBack.getInstance();
         limelightFront = LimelightFront.getInstance();
         drivetrain = Drivetrain.getInstance();
@@ -36,9 +36,9 @@ public class SimpleAlign extends CommandBase {
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
-        thetaController = new PIDController(0.005, 0.0001, 0);
+        thetaController = new PIDController(0.05, 0.0001, 0);
         thetaController.enableContinuousInput(-180, 180);
-        yController = new PIDController(0.07, 0.0001, 0);
+        yController = new PIDController(0.055, 0, 0);
 
         addRequirements(drivetrain);
 
@@ -47,6 +47,7 @@ public class SimpleAlign extends CommandBase {
     @Override
     public void initialize() {
         initialHeadingCorrectionComplete = false;
+        initialTargetNotFound = false;
 
         switch (arm.getState()) {
             case L3_CUBE_INVERTED:
@@ -62,7 +63,13 @@ public class SimpleAlign extends CommandBase {
                 scoreSetpoint = 180;
         }
 
-        blinkin.acquiringTarget();
+        // Only proceed if we see a target, otherwise fail on purpose and give up.
+        if (!LimelightHelper.getTV(limelightName)) {
+            blinkin.failure();
+            initialTargetNotFound = true;
+        } else{
+            blinkin.acquiringTarget();
+        }
 
         oi = DriverOI.getInstance();
     }
@@ -71,7 +78,6 @@ public class SimpleAlign extends CommandBase {
     public void execute() {
         double yMove = 0.0;
         double turn = 0.0;
-        double moveFF = 0.05;
         double turnFF = 0.2;
         double alignError = claw.getConeAlignmentError();
 
@@ -83,41 +89,25 @@ public class SimpleAlign extends CommandBase {
             txAvg = limelightFront.getTxAverage();
         }
 
-        double angularError = Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint);
-        SmartDashboard.putNumber("auto-align angular error", angularError);
-        if (!initialHeadingCorrectionComplete && angularError > LimelightConstants.kLimelightHeadingBound) {  
-                SmartDashboard.putNumber("stage", 1);        
-                turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
+        if (!initialHeadingCorrectionComplete && Math
+                .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
+            turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-                if(Math.abs(txAvg) > 1.0){
-                    yMove = yController.calculate(txAvg, alignError);
-                }
-                else{
-                    yMove = 0;
-                }
-
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.7, oi.getStrafe() + yMove),
+            drivetrain.drive(new Translation2d(oi.getForward() * 0.7, oi.getStrafe() * 0.7),
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
-        } else if (Math.abs(txAvg) > 1.0) {
-            SmartDashboard.putNumber("stage", 2);        
+        } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
             initialHeadingCorrectionComplete = true;
 
             yMove = yController.calculate(txAvg, alignError);
 
             drivetrain.drive(new Translation2d(oi.getForward() * 0.7, yMove), 0, true, new Translation2d(0, 0));
-        } else {
-            SmartDashboard.putNumber("stage", 3);        
 
-            if (Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
+        } else {
+            if (Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound/3) {
                 turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
             }
-            else{
-                turn = 0;
-            }
-
             drivetrain.drive(new Translation2d(oi.getForward() * 0.7, 0), turn, true, new Translation2d(0, 0));
         }
-
     }
 
     @Override
@@ -127,11 +117,13 @@ public class SimpleAlign extends CommandBase {
             limelightBack.setPipeline(0);
             limelightFront.setPipeline(7);
         }
-        blinkin.returnToRobotState();
+        if(!initialTargetNotFound){
+            blinkin.returnToRobotState();
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return initialTargetNotFound;
     }
 }

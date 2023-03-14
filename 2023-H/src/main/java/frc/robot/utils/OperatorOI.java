@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.ManualShoulderControl;
@@ -20,6 +21,7 @@ import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetWristHomePose;
+import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
@@ -81,7 +83,8 @@ public class OperatorOI {
         // Arm Poses
         // L1 score (will move to this pose regardless of having a gamepiece)
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SetLevelOnePose());
+        xButton.onTrue(new SequentialCommandGroup(
+            new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelOnePose()));
 
         /**
          * The following button bindings are for the mode where the robot 'pre-poses' to score.
@@ -98,8 +101,10 @@ public class OperatorOI {
                  * This code runs if we are in an arm scoring pose.
                  */
                 // Go directly to the appropriate L2 scoring pose dependent on the game piece.
-                new ConditionalCommand(new SetLevelTwoCubePose(),
-                    new ConditionalCommand(new SetLevelTwoConePose(),
+                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
+                new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelTwoCubePose()),
+                    new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelTwoCone),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelTwoConePose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube),
@@ -107,10 +112,10 @@ public class OperatorOI {
                  * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
                  */
                 // If we have a game piece, pre-pose the arm for L2 cube or L2 cone based on intake state.
-                new ConditionalCommand(new ParallelCommandGroup(new SetPreScorePose(),
+                new ConditionalCommand(new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
                         new InstantCommand(arm::setGoalPoseToLevelTwoCone),
-                        claw::hasCube)),
+                        claw::hasCube), new SetPreScorePose()),
                     // If we do not have a game piece, indicate failure.
                     new InstantCommand(() -> {blinkin.failure();}),
                     claw::hasGamepiece),
@@ -125,8 +130,10 @@ public class OperatorOI {
                  * This code runs if we are in an arm scoring pose.
                  */
                 // Go directly to the appropriate L3 scoring pose dependent on the game piece.
-                new ConditionalCommand(new SetLevelThreeCubeForwardPose(),
-                    new ConditionalCommand(new SetLevelThreeConeInvertedPose(),
+                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
+                new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
+                    new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube),
@@ -134,10 +141,10 @@ public class OperatorOI {
                  * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
                  */
                 // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
-                new ConditionalCommand(new ParallelCommandGroup(new SetPreScorePose(),
+                new ConditionalCommand(new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-                        new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
-                        claw::hasCube)),
+                        new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), 
+                        claw::hasCube), new SetPreScorePose()),
                     // If we do not have a game piece, indicate failure.
                     new InstantCommand(() -> {blinkin.failure();}),
                     claw::hasGamepiece),
@@ -154,39 +161,38 @@ public class OperatorOI {
         else{
             // L2 scoring pose (provided we have a gamepiece)
             Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-            circleButton.onTrue(new ConditionalCommand(new SetLevelTwoCubePose(),
-                new ConditionalCommand(new SetLevelTwoConePose(),
+            circleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
+                new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelTwoCubePose()),
+                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelTwoCone),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelTwoConePose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube));
 
             // L3 scoring pose (provided we have a gamepiece)
             Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-            triangleButton.onTrue(new ConditionalCommand(new SetLevelThreeCubeForwardPose(),
-                new ConditionalCommand(new SetLevelThreeConeInvertedPose(),
+            triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
+                new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
+                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube));
 
-            // Square button forces the robot into a neutral horizontal pose.
-            // Can be used as an override along with operator thumbsticks into order to execute a completely manual score.
+
+            // Square button forces the robot to look at odometry updates.
             Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-            squareButton.onTrue(new SetPreScorePose());
+            squareButton.onTrue(new LocalizeWithLL());
         }
 
         // Stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
-        // Mute + left trigger ONLY homes the wrist without moving the shoulder
-        // Mute + right trigger ONLY homes the shoulder without moving the wrist
-        // Mute + both triggers homes the entire arm subsystem (full system reset, a bit slower)
+        // Mute ONLY homes the wrist without moving the shoulder
+        // Mute + d-pad (down) homes the entire arm subsystem (full system reset, a bit slower)
         Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new ConditionalCommand(new SetHomePose(),
-            new ConditionalCommand(new SetWristHomePose(),
-                new ConditionalCommand(new SetShoulderHomePose(), new InstantCommand(), this::onlyRightTriggerHeld),
-                this::onlyLeftTriggerHeld),
-            this::bothTriggersHeld));
+        muteButton.onTrue(new ConditionalCommand(new SetHomePose(), new SetWristHomePose(), this::dPadDownHeld));
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
@@ -197,7 +203,8 @@ public class OperatorOI {
 
         // Gyro reset
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
+        ps5Button.onTrue(new SetPreScorePose());
+        //ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 
         // Toggle outtake at varying speeds depending on trigger modification
         // Default behavior is slow
@@ -205,11 +212,11 @@ public class OperatorOI {
         Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
         startButton.onTrue(new InstantCommand(() -> {
             if (leftTriggerHeld()) {
-                claw.setSpeed(0.5);
+                claw.setSpeed(0.1);
             } else if(rightTriggerHeld()){
                 claw.setSpeed(1.0);
             } else {
-                claw.setSpeed(0.2);
+                claw.setSpeed(0.05);
             }
         }));
 
@@ -217,13 +224,13 @@ public class OperatorOI {
         // Default behavior is slow
         // Medium and fast speeds can be accessed with left/right trigger modification, respectively
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
-        shareButton.onTrue(new InstantCommand(() -> {
+        shareButton.whileTrue(new InstantCommand(() -> {
             if (leftTriggerHeld()) {
-                claw.setSpeed(-0.5);
+                claw.setSpeed(-0.1);
             } else if(rightTriggerHeld()){
                 claw.setSpeed(-1.0);
             } else {
-                claw.setSpeed(-0.2);
+                claw.setSpeed(-0.05);
             }
         }));
 
@@ -276,6 +283,7 @@ public class OperatorOI {
             }
         }));
 
+        Trigger dpadDownTrigger = new Trigger(() -> controller.getPOV() == 180);
 
     }
 
@@ -305,6 +313,10 @@ public class OperatorOI {
 
     private boolean onlyOneTriggerHeld() {
         return leftTriggerHeld() ^ rightTriggerHeld();
+    }
+
+    private boolean dPadDownHeld(){
+        return controller.getPOV() == 180;
     }
 
     public double getShoulderPIDOffset() {

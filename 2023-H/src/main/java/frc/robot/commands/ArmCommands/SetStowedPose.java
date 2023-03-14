@@ -40,6 +40,7 @@ public class SetStowedPose extends CommandBase {
         arm.setState(ArmState.STOWED);
         arm.setGoalPose(ArmState.NONE);
 
+        claw.returnLimelightToDefaultState();
     }
 
     @Override

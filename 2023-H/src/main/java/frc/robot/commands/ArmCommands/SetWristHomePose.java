@@ -38,22 +38,21 @@ public class SetWristHomePose extends CommandBase{
         initialWristMoveTime = Timer.getFPGATimestamp();
         currentWristMoveTime = Timer.getFPGATimestamp();
 
-        wrist.setPercentOutput(-0.3);
+        arm.setWristPercentOutput(-0.3);
 
     }
 
     @Override
     public void execute() {
         currentWristMoveTime = Timer.getFPGATimestamp();
-
         if(currentWristMoveTime - initialWristMoveTime > 0.5 && !wristMovedDown){
-            wrist.setPercentOutput(0.3);
+            arm.setWristPercentOutput(0.3);
             wristMovedDown = true;
 
         }
 
-        if(wrist.atLimitSensor() && wristMovedDown){
-            wrist.setPercentOutput(0);
+        if(wrist.atLimitSensor()){
+            arm.setWristPercentOutput(0);
             wristHomed = true;
         }
         
@@ -61,13 +60,17 @@ public class SetWristHomePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        wrist.setPercentOutput(0);
+        arm.setWristPercentOutput(0);
+        
+        if(!interrupted){
+            wrist.setEncoder(wrist.getkStowedAngle());
+            blinkin.success();
+        }
+        else{
+            blinkin.failure();
+        }
 
         wrist.turnOnSmartLimits();
-        
-        wrist.setEncoder(wrist.getkHomeAngle());
-
-        blinkin.returnToRobotState();
     }
 
     @Override

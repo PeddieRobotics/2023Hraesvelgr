@@ -21,14 +21,13 @@ public final class Constants {
 
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
-                public static final boolean kUsePreScorePose = false;
+                public static final boolean kUsePreScorePose = true;
 
                 public static final double kDrivingDeadband = 0.1;
         }
 
         public static class BlinkinConstants {
-                public static final int kPwmPort = 1; // DETERMINE REAL PWM PORT FOR BLINKIN CONTROLLER!!! 1 is an
-                                                      // arbitrary filler value
+                public static final int kPwmPort = 1;
         }
 
         public static class DriveConstants {
@@ -46,8 +45,8 @@ public final class Constants {
 
                 public static final double kNormalModeTranslationSpeedScale = 1.0;
                 public static final double kNormalModeRotationSpeedScale = 1.0;
-                public static final double kSlowModeTranslationSpeedScale = 0.25;
-                public static final double kSlowModeRotationSpeedScale = 0.55;
+                public static final double kSlowModeTranslationSpeedScale = 0.4;
+                public static final double kSlowModeRotationSpeedScale = 0.4;
                 public static final double kCardinalDirectionSpeedScale = 0.3;
 
                 public static final Translation2d[] swerveModuleLocations = {
@@ -309,7 +308,7 @@ public final class Constants {
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
                 public static final double kStowedAngle = 80.0;
-                public static final double kPreScoreAngle = 103.0;
+                public static final double kPreScoreAngle = 100.0;
 
                 public static final double kL1Angle = -25.0;
 
@@ -332,7 +331,7 @@ public final class Constants {
 
                 public static final double kDoubleSSConeAngle = -89.0;
                 public static final double kSingleSSConeAngle = 30.0;
-                public static final double kSingleSSCubeAngle = 60.0;
+                public static final double kSingleSSCubeAngle = 70.0;
 
                 public static final double kTransitoryAngle = 70.0;
                 public static final double kMonitorConeAlignmentAngle = 45;
@@ -349,6 +348,8 @@ public final class Constants {
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kCubeIntakeSpeed = -1;
+                public static final double kCubeSingleSSIntakeSpeed = -0.4;
+                public static final double kConeSingleSSIntakeSpeed = -1;
 
                 public static final double kConeL1OuttakeSpeed = 0.5;
                 public static final double kConeL2OuttakeSpeed = 0.5;
