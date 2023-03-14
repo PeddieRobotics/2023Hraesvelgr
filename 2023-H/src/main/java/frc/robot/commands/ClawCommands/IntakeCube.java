@@ -11,7 +11,7 @@ public class IntakeCube extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
     private double initialTime, currentTime;
-    private boolean hasPiece;
+    private boolean hasCone, hasCube;
 
     public IntakeCube(){
         blinkin = Blinkin.getInstance();
@@ -26,30 +26,36 @@ public class IntakeCube extends CommandBase{
     public void initialize() {
         blinkin.intakingCube();
         claw.setState(ClawState.INTAKING_CUBE);     
-        hasPiece = false;   
+        hasCone = false;
+        hasCube = false;
         claw.intakeCube();
+        claw.startMonitoringCurrent();
     }
 
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-
-        if(!claw.hasGamepiece()){
-            hasPiece = false;
+        if(claw.analyzeCurrentForCube()){
+            hasCube = true;
+            initialTime = Timer.getFPGATimestamp();
+        }
+        else if(!claw.hasGamepiece()){
+            hasCube = false;
         }
 
-        if(claw.hasGamepiece() && !hasPiece){
+        if(claw.hasCone()){
+            hasCone = true;
             initialTime = Timer.getFPGATimestamp();
-            hasPiece = true;
-        } 
-
-        if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
-            claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
+        }
+        else{
+            hasCone = false;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
+        claw.stopMonitoringCurrent();
+
         if(!interrupted){
             if(claw.hasCube()){
                 blinkin.success();
@@ -74,7 +80,7 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return hasPiece && (currentTime - initialTime) > 0.5;
+        return (hasCube && (currentTime - initialTime) > 0.5) || (hasCone && (currentTime - initialTime) > 0.25);
     }
 
     

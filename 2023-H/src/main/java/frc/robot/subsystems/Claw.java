@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -19,6 +20,9 @@ public class Claw extends SubsystemBase {
     private CANSparkMax clawMotor;
     private DigitalInput backSensor, frontSensor;
     private boolean useSensors;
+
+    private RollingAverage currentAverage;
+    private boolean monitorCurrent;
 
     // Keep in mind when using ClawState that the floor cube intake picks up tipped over cones,
     // so "INTAKING_CUBE" state may encompass this possibility.
@@ -58,6 +62,9 @@ public class Claw extends SubsystemBase {
         monitorNewConeIntake = false;
         newConeCounter = 0;
         currentLLForAutoAlign = "limelight-front";
+
+        currentAverage = new RollingAverage(4);
+        monitorCurrent = false;
         
     }
 
@@ -94,9 +101,9 @@ public class Claw extends SubsystemBase {
             justEjectedGamepiece = false;
         }
 
-        SmartDashboard.putNumber("newConeCounter", newConeCounter);
-        SmartDashboard.putNumber("coneAlignmentError", coneAlignmentError);
-        SmartDashboard.putBoolean("monitorNewConeIntake", monitorNewConeIntake);
+        if(monitorCurrent){
+            currentAverage.add(clawMotor.getOutputCurrent());
+        }
 
     }
 
@@ -306,5 +313,21 @@ public class Claw extends SubsystemBase {
 
     public String getCurrentLLForAutoAlign(){
         return currentLLForAutoAlign;
+    }
+
+    public void startMonitoringCurrent() {
+        monitorCurrent = true;
+    }
+
+    public void stopMonitoringCurrent() {
+        monitorCurrent = false;
+        currentAverage.clear();
+    }
+
+    public boolean analyzeCurrentForCube() {
+        if(currentAverage.getAverage() > 25 && hasCube() && !hasCone()){
+            return true;
+        }
+        return false;
     }
 }

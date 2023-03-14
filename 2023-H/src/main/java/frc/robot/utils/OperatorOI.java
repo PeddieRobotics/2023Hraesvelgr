@@ -196,15 +196,14 @@ public class OperatorOI {
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
-        L2Trigger.whileTrue(new ManualWristControl());
+        L2Trigger.whileTrue(new ConditionalCommand(new ManualWristControl(), new InstantCommand(), this::isLeftStickActive));
 
         Trigger R2Trigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
-        R2Trigger.whileTrue(new ManualShoulderControl());
+        R2Trigger.whileTrue(new ConditionalCommand(new ManualShoulderControl(), new InstantCommand(), this::isRightStickActive));
 
         // Gyro reset
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        ps5Button.onTrue(new SetPreScorePose());
-        //ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
+        ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 
         // Toggle outtake at varying speeds depending on trigger modification
         // Default behavior is slow
@@ -317,6 +316,14 @@ public class OperatorOI {
 
     private boolean dPadDownHeld(){
         return controller.getPOV() == 180;
+    }
+
+    public boolean isLeftStickActive(){
+        return controller.getRawAxis(PS4Controller.Axis.kLeftY.value) != 0;
+    }
+
+    public boolean isRightStickActive(){
+        return controller.getRawAxis(PS4Controller.Axis.kRightY.value) != 0;
     }
 
     public double getShoulderPIDOffset() {

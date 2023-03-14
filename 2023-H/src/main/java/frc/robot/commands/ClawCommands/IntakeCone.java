@@ -10,8 +10,8 @@ import frc.robot.utils.Constants.ClawConstants;
 public class IntakeCone extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
-    private double initialTime, currentTime;
-    private boolean hasPiece;
+    private double initialTime, initialReverseTime, initialConeTime, currentTime;
+    private boolean fixedCone, hasCone;
 
     public IntakeCone(){
         blinkin = Blinkin.getInstance();
@@ -19,6 +19,8 @@ public class IntakeCone extends CommandBase{
         addRequirements(claw);
 
         initialTime = 0.0;
+        initialReverseTime = 0.0;
+        initialConeTime = 0.0;
         currentTime = 0.0;
 
     }
@@ -28,27 +30,26 @@ public class IntakeCone extends CommandBase{
         claw.intakeCone();
         claw.setState(ClawState.INTAKING_CONE);
 
+        hasCone = false;
+        fixedCone = false;
+
         initialTime = Timer.getFPGATimestamp();
-        currentTime = initialTime;
-        hasPiece = false;
+        currentTime = Timer.getFPGATimestamp();
 
         blinkin.intakingCone();
     }
 
     @Override
     public void execute() {
-        if(!claw.hasGamepiece()){
-            hasPiece = false;
-        }
-
-        if(claw.hasGamepiece() && !hasPiece){
-            initialTime = Timer.getFPGATimestamp();
-            hasPiece = true;
-        } 
         currentTime = Timer.getFPGATimestamp();
-
-        if(claw.isFrontSensor() && (currentTime - initialTime) > 0.25){
-            claw.setSpeed(ClawConstants.kConeIntakeSpeed/3);
+        if(!hasCone && claw.hasCone()){
+            initialConeTime = Timer.getFPGATimestamp();
+            hasCone = true;
+        }
+        if(!fixedCone && hasCone && currentTime - initialConeTime > 0.1){
+            initialReverseTime = Timer.getFPGATimestamp();
+            claw.setSpeed(-ClawConstants.kConeSingleSSIntakeSpeed/10);
+            fixedCone = true;
         }
     }
 
@@ -78,7 +79,7 @@ public class IntakeCone extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return hasPiece && (currentTime - initialTime) > 0.5;
+        return claw.hasGamepiece() && fixedCone && (currentTime - initialReverseTime) > 0.35;
     }
 
     

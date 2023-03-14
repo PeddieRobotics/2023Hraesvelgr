@@ -239,7 +239,16 @@ public class Blinkin extends SubsystemBase{
             black();
         } else if(currentTime - initialTime < 0.45){
             red();
-        } else{
+        } else if(currentTime - initialTime < 0.6){
+            black();
+        } else if(currentTime - initialTime < 0.75){
+            red();
+        } else if(currentTime - initialTime < 0.9){
+            black();
+        } else if(currentTime - initialTime < 2){
+            red();
+        } 
+        else{
             returnToRobotState();  
         }
     }
@@ -253,7 +262,11 @@ public class Blinkin extends SubsystemBase{
             green();
         } else if(currentTime - initialTime < 0.6){
             black();
-        } else if(currentTime - initialTime < 1.75){
+        } else if(currentTime - initialTime < 0.75){
+            green();
+        } else if(currentTime - initialTime < 0.9){
+            black();
+        } else if(currentTime - initialTime < 2){
             green();
         } else{
             returnToRobotState();  
