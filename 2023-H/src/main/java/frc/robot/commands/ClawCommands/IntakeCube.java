@@ -2,6 +2,7 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
@@ -35,7 +36,7 @@ public class IntakeCube extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-        if(claw.analyzeCurrentForCube()){
+        if(claw.analyzeCurrentForCube() && !hasCube){
             hasCube = true;
             initialTime = Timer.getFPGATimestamp();
         }
@@ -43,11 +44,11 @@ public class IntakeCube extends CommandBase{
             hasCube = false;
         }
 
-        if(claw.hasCone()){
+        if(claw.hasCone() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else{
+        else if(!claw.hasCone()){
             hasCone = false;
         }
     }
@@ -67,20 +68,32 @@ public class IntakeCube extends CommandBase{
                 claw.monitorNewConeIntake();
             }
             else{
+                claw.setState(ClawState.EMPTY);     
                 blinkin.failure();
                 claw.stopClaw();
             }
         }
         else{
-            claw.setState(ClawState.EMPTY);     
-            claw.stopClaw();
-            blinkin.returnToRobotState();
+            if(claw.hasCube()){
+                blinkin.success();
+                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            }
+            else if(claw.hasCone()){
+                blinkin.success();
+                claw.stopClaw();
+                claw.monitorNewConeIntake();
+            }
+            else{
+                claw.setState(ClawState.EMPTY);   
+                blinkin.returnToRobotState();  
+                claw.stopClaw();
+            }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return (hasCube && (currentTime - initialTime) > 0.5) || (hasCone && (currentTime - initialTime) > 0.25);
+        return (hasCube && (currentTime - initialTime) > 0.2) || (hasCone && (currentTime - initialTime) > 0.2);
     }
 
     

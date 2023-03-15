@@ -25,7 +25,7 @@ public class SingleSSAlign extends CommandBase {
     private Blinkin blinkin;
     private Claw claw;
     private int scoreSetpoint;
-    private boolean initialHeadingCorrectionComplete, finalStage;
+    private boolean initialHeadingCorrectionComplete, initialTargetNotFound;
 
     public SingleSSAlign() {
         limelightFront = LimelightFront.getInstance();
@@ -34,9 +34,9 @@ public class SingleSSAlign extends CommandBase {
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
-        thetaController = new PIDController(0.05, 0.0001, 0);
+        thetaController = new PIDController(0.09, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
-        xController = new PIDController(0.055, 0, 0);
+        xController = new PIDController(0.06, 0, 0);
 
         addRequirements(drivetrain);
 
@@ -45,7 +45,7 @@ public class SingleSSAlign extends CommandBase {
     @Override
     public void initialize() {
         initialHeadingCorrectionComplete = false;
-        finalStage = false;
+        initialTargetNotFound = false;
 
         switch (DriverStation.getAlliance()) {
             case Red:
@@ -74,25 +74,28 @@ public class SingleSSAlign extends CommandBase {
         double turnFF = 0.2;
 
         double txAvg = limelightFront.getTxAverage();
-
-        if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
+        if (!initialHeadingCorrectionComplete && Math
+                .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-            drivetrain.drive(new Translation2d(oi.getForward() * 0.7, oi.getStrafe() * 0.7),
+            drivetrain.drive(new Translation2d(oi.getForward() * 1.0, oi.getStrafe() * 1.0),
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
-        } else if (!finalStage && Math.abs(txAvg) > 2.0) {
+        } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
+            // If we still don't see a target after the first heading correction stage is complete, stop.
+            // Otherwise, proceed indefinitely.
+            if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV("limelight-front")) {
+                blinkin.failure();
+                initialTargetNotFound = true;
+                return;
+            }
             initialHeadingCorrectionComplete = true;
 
-            xMove = xController.calculate(txAvg, 0);
+           xMove = xController.calculate(txAvg, 0);
 
-            drivetrain.drive(new Translation2d(xMove, oi.getStrafe()*0.7), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(xMove, 0.05 + oi.getStrafe() * 1.0), 0, true, new Translation2d(0, 0));
 
         } else {
-            finalStage = true;
-            if (Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound/3) {
-                turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
-            }
-            drivetrain.drive(new Translation2d(0, oi.getStrafe()*0.7), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(0, 0.05 + oi.getStrafe() * 1.0), 0, true, new Translation2d(0, 0));
         }
     }
 
@@ -108,6 +111,6 @@ public class SingleSSAlign extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return initialTargetNotFound;
     }
 }

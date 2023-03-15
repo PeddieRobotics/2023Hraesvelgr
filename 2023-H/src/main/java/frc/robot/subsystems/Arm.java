@@ -34,6 +34,8 @@ public class Arm extends SubsystemBase {
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
 
+        holdShoulderPosition();
+
     }
 
     public ArmState getState() {
@@ -180,7 +182,14 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isAutoAlignValid(){
-        return isScoringAutoAlignPose() && LimelightHelper.getTV(Claw.getInstance().getCurrentLLForAutoAlign());
+        boolean headingIsCorrect = false;
+        if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED){
+            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
+        }
+        else{
+            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
+        }
+        return isScoringAutoAlignPose() && headingIsCorrect; // LimelightHelper.getTV(Claw.getInstance().getCurrentLLForAutoAlign());
     }
 
     public boolean isSingleSSPose(){
@@ -189,6 +198,10 @@ public class Arm extends SubsystemBase {
 
     public boolean isDoubleSSPose(){
         return state == ArmState.DOUBLE_SS_CUBE || state == ArmState.DOUBLE_SS_CONE;
+    }
+
+    public boolean isL1Pose(){
+        return state == ArmState.L1;
     }
 
     public ArmState getGoalPose() {

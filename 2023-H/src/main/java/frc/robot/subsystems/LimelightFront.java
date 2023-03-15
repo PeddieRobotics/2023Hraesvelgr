@@ -201,7 +201,9 @@ public class LimelightFront extends Limelight {
     }
 
     public void forceAprilTagLocalization(SwerveDrivePoseEstimator odometry){
-        odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        if(getTv()){
+            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        }
     }
 
     // public Translation2d getCurrentAprilTag() { // gets the april tag the limelight is currently seeing

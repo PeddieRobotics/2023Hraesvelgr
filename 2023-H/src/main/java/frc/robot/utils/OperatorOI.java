@@ -27,6 +27,7 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.GlobalConstants;
 import frc.robot.utils.Constants.OIConstants;
 
@@ -182,7 +183,7 @@ public class OperatorOI {
 
             // Square button forces the robot to look at odometry updates.
             Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-            squareButton.onTrue(new LocalizeWithLL());
+            squareButton.whileTrue(new LocalizeWithLL());
         }
 
         // Stowed pose
@@ -196,42 +197,44 @@ public class OperatorOI {
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
-        L2Trigger.whileTrue(new ConditionalCommand(new ManualWristControl(), new InstantCommand(), this::isLeftStickActive));
+        L2Trigger.whileTrue(new ManualWristControl());
 
         Trigger R2Trigger = new JoystickButton(controller, PS4Controller.Button.kR2.value);
-        R2Trigger.whileTrue(new ConditionalCommand(new ManualShoulderControl(), new InstantCommand(), this::isRightStickActive));
+        R2Trigger.whileTrue(new ManualShoulderControl());
 
         // Gyro reset
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 
-        // Toggle outtake at varying speeds depending on trigger modification
+        // Toggle outtake at varying speeds depending on left stick modification
         // Default behavior is slow
         // Medium and fast speeds can be accessed with left/right trigger modification, respectively
         Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        startButton.onTrue(new InstantCommand(() -> {
-            if (leftTriggerHeld()) {
-                claw.setSpeed(0.1);
-            } else if(rightTriggerHeld()){
-                claw.setSpeed(1.0);
-            } else {
+        startButton.whileTrue(new InstantCommand(() -> {
+            double leftStickInput = controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
+            if (Math.abs(leftStickInput) < 0.1) {
                 claw.setSpeed(0.05);
+            } else{
+                claw.setSpeed(leftStickInput);
             }
-        }));
+        }).andThen(new ConditionalCommand(
+            new InstantCommand(() -> {claw.setSpeed(ClawConstants.kCubeHoldSpeed);}),
+            new InstantCommand(() -> {claw.stopClaw();}),
+            claw::hasCube)));
 
-        // Toggle intake at varying speeds depending on trigger modification
-        // Default behavior is slow
-        // Medium and fast speeds can be accessed with left/right trigger modification, respectively
+        // Toggle intake at varying speeds depending on right stick modification
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
         shareButton.whileTrue(new InstantCommand(() -> {
-            if (leftTriggerHeld()) {
-                claw.setSpeed(-0.1);
-            } else if(rightTriggerHeld()){
-                claw.setSpeed(-1.0);
-            } else {
+            double rightStickInput = controller.getRawAxis(PS4Controller.Axis.kRightY.value);
+            if (Math.abs(rightStickInput) < 0.1) {
                 claw.setSpeed(-0.05);
+            } else{
+                claw.setSpeed(rightStickInput);
             }
-        }));
+        }).andThen(new ConditionalCommand(
+            new InstantCommand(() -> {claw.setSpeed(ClawConstants.kCubeHoldSpeed);}),
+            new InstantCommand(() -> {claw.stopClaw();}),
+            claw::hasCube)));
 
         // Game piece selection / LED indication requests to human player
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
@@ -316,14 +319,6 @@ public class OperatorOI {
 
     private boolean dPadDownHeld(){
         return controller.getPOV() == 180;
-    }
-
-    public boolean isLeftStickActive(){
-        return controller.getRawAxis(PS4Controller.Axis.kLeftY.value) != 0;
-    }
-
-    public boolean isRightStickActive(){
-        return controller.getRawAxis(PS4Controller.Axis.kRightY.value) != 0;
     }
 
     public double getShoulderPIDOffset() {

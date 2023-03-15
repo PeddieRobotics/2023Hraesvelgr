@@ -169,9 +169,8 @@ public final class Constants {
                 public static final double kLimelightHeight = 22.8346; // inches
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
-                public static final double kLimelightHeadingBound = 1.5;
-                public static final double kLimeLightTranslationAngleBound = 0.2;
-                public static final double kLimeLightTranslationBound = 0.05;
+                public static final double kLimelightHeadingBound = 1.0;
+                public static final double kLimeLightTranslationAngleBound = 1.0;
                 public static final double kLimeLightAngleBound = 1;
                 public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
                                                 new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
@@ -318,7 +317,7 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -25.0;
+                public static final double kExtendedFloorConeAngle = -27.0;
                 public static final double kExtendedFloorCubeAngle = -13;
 
                 public static final double kL2ConeAngle = -78.0;
@@ -331,7 +330,7 @@ public final class Constants {
 
                 public static final double kDoubleSSConeAngle = -89.0;
                 public static final double kSingleSSConeAngle = 30.0;
-                public static final double kSingleSSCubeAngle = 70.0;
+                public static final double kSingleSSCubeAngle = 68.0;
 
                 public static final double kTransitoryAngle = 70.0;
                 public static final double kMonitorConeAlignmentAngle = 45;
@@ -347,8 +346,9 @@ public final class Constants {
                 public static final int kClawMotorCurrentLimit = 25;
 
                 public static final double kConeIntakeSpeed = -1;
-                public static final double kCubeIntakeSpeed = -1;
-                public static final double kCubeSingleSSIntakeSpeed = -0.4;
+                public static final double kCubeIntakeSpeed = -
+                1;
+                public static final double kCubeSingleSSIntakeSpeed = -0.6;
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
                 public static final double kConeL1OuttakeSpeed = 0.5;

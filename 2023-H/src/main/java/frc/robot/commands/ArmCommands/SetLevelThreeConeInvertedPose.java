@@ -37,7 +37,7 @@ public class SetLevelThreeConeInvertedPose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(65.0)){
+        if(arm.isShoulderAboveAngle(65)){
             shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
             ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.SLOW);

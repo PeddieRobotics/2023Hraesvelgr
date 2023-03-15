@@ -8,7 +8,8 @@ import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 
 public class LocalizeWithLL extends CommandBase {
-    private final Limelight limelightFront, limelightBack;
+    private final LimelightFront limelightFront;
+    private final LimelightBack limelightBack;
     private SwerveDrivePoseEstimator odometry;
 
     public LocalizeWithLL() {
@@ -20,6 +21,8 @@ public class LocalizeWithLL extends CommandBase {
     @Override
     public void initialize() {
         odometry = Drivetrain.getInstance().getOdometry();
+        limelightFront.setPipeline(0);
+        limelightBack.setPipeline(0);
     }
 
     @Override

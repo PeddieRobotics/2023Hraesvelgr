@@ -29,27 +29,28 @@ public class SetTransitoryPoseL3Return extends CommandBase{
         arm.setGoalPose(ArmState.NONE);
 
         shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
-            ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+            ShoulderConstants.kSmartMotionSlowMinVel, 5500, 3000);
         arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.SLOW);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderBelowAngle(90)){
+        if(arm.isShoulderBelowAngle(80)){
             arm.setWristPosition(wrist.getkTransitoryAngle());
+            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         }
+        
     }
 
     @Override
     public void end(boolean interrupted){
-        arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
         shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
         ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderBelowAngle(80);
+        return arm.isShoulderBelowAngle(0);
     }
 
 

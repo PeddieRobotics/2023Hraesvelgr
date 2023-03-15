@@ -52,7 +52,7 @@ public class SetHomePose extends CommandBase{
         currentShoulderMoveTime = Timer.getFPGATimestamp();
 
         if(wrist.atLimitSensor()){
-            arm.setWristPercentOutput(0);
+            arm.holdWristPosition();
             wristHomed = true;
         }
 
@@ -66,7 +66,7 @@ public class SetHomePose extends CommandBase{
         }
 
         if(shoulder.atLimitSensor()){
-            arm.setShoulderPercentOutput(0);
+            arm.holdShoulderPosition();
             shoulderHomed = true;
         }
         
@@ -74,9 +74,6 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        arm.setShoulderPercentOutput(0);
-        arm.setWristPercentOutput(0);
-
         if(!interrupted){
             wrist.setEncoder(wrist.getkStowedAngle());
             shoulder.setEncoder(shoulder.getkStowedAngle());

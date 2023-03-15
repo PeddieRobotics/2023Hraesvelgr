@@ -52,16 +52,14 @@ public class SetWristHomePose extends CommandBase{
         }
 
         if(wrist.atLimitSensor()){
-            arm.setWristPercentOutput(0);
+            arm.holdWristPosition();
             wristHomed = true;
         }
         
     }
 
     @Override
-    public void end(boolean interrupted){
-        arm.setWristPercentOutput(0);
-        
+    public void end(boolean interrupted){        
         if(!interrupted){
             wrist.setEncoder(wrist.getkStowedAngle());
             blinkin.success();

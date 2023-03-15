@@ -2,6 +2,7 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
@@ -48,7 +49,7 @@ public class IntakeCone extends CommandBase{
         }
         if(!fixedCone && hasCone && currentTime - initialConeTime > 0.1){
             initialReverseTime = Timer.getFPGATimestamp();
-            claw.setSpeed(-ClawConstants.kConeSingleSSIntakeSpeed/10);
+            claw.setSpeed(-ClawConstants.kConeIntakeSpeed/10);
             fixedCone = true;
         }
     }
@@ -66,20 +67,32 @@ public class IntakeCone extends CommandBase{
                 claw.monitorNewConeIntake();
             }
             else{
+                claw.setState(ClawState.EMPTY);     
                 blinkin.failure();
                 claw.stopClaw();
             }
         }
         else{
-            claw.setState(ClawState.EMPTY);     
-            claw.stopClaw();
-            blinkin.returnToRobotState();
+            if(claw.hasCube()){
+                blinkin.success();
+                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            }
+            else if(claw.hasCone()){
+                blinkin.success();
+                claw.stopClaw();
+                claw.monitorNewConeIntake();
+            }
+            else{
+                claw.setState(ClawState.EMPTY);     
+                blinkin.failure();
+                claw.stopClaw();
+            }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && fixedCone && (currentTime - initialReverseTime) > 0.35;
+        return claw.hasGamepiece() && fixedCone && (currentTime - initialReverseTime) > 0.1;
     }
 
     

@@ -18,6 +18,7 @@ import frc.robot.commands.ArmCommands.SetSingleSSConePose;
 import frc.robot.commands.ArmCommands.SetSingleSSCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
+import frc.robot.commands.ClawCommands.AlignConeAfterIntake;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeCone;
 import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
@@ -25,8 +26,6 @@ import frc.robot.commands.ClawCommands.IntakeCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.ScoreAlign;
-import frc.robot.commands.DriveCommands.SimpleAlign;
-import frc.robot.commands.DriveCommands.SimpleAlignOld;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
@@ -84,18 +83,19 @@ public class DriverOI {
         leftBumperButton.onTrue(new ConditionalCommand(
             /*
              * If we're in a valid ejection pose, eject, and then if we're L3 inverted, un-invert and stow.
+             * Or, if we are L1 pose, stow automatically.
              * Otherwise do nothing.
              */
             new SequentialCommandGroup(new EjectGamepiece(),
                 new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                                        new InstantCommand(),
+                                        new ConditionalCommand(new SetStowedPose(), new InstantCommand(), arm::isL1Pose),
                                         arm::isInvertedL3)),
             /*
              * If we are not in a valid ejection pose, then we should do floor cone intake, and stow when we have
              * a gamepiece.
              */
             new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
-                new SetStowedPose()),
+                new SequentialCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Cube intake/eject gamepiece
@@ -103,18 +103,19 @@ public class DriverOI {
         rightBumperButton.onTrue(new ConditionalCommand(
             /*
              * If we're in a valid ejection pose, eject, and then if we're L3 inverted, un-invert and stow.
+             * Or, if we are L1 pose, stow automatically.
              * Otherwise do nothing.
              */
             new SequentialCommandGroup(new EjectGamepiece(),
                 new ConditionalCommand(new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                                        new InstantCommand(),
+                                        new ConditionalCommand(new SetStowedPose(), new InstantCommand(), arm::isL1Pose),
                                         arm::isInvertedL3)),
             /*
              * If we are not in a valid ejection pose, then we should do floor cube intake, and stow when we have
              * a gamepiece.
              */
             new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
-                new SetStowedPose()),
+                new SequentialCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading
@@ -143,7 +144,7 @@ public class DriverOI {
                  * If we have a gamepiece, perform auto-align to score.
                  * Also: transition from pre-score pose to scoring pose if needed.
                  */
-                new ConditionalCommand(new ParallelCommandGroup(new SimpleAlignOld(),
+                new ConditionalCommand(new ParallelCommandGroup(new ScoreAlign(),
                     new ConditionalCommand(new InstantCommand(() -> {arm.moveToScoringPose();}), new InstantCommand(), arm::isPreScorePose)),
                 new InstantCommand(() -> {blinkin.failure();}),
                 arm::isAutoAlignValid),

@@ -105,6 +105,8 @@ public class Claw extends SubsystemBase {
             currentAverage.add(clawMotor.getOutputCurrent());
         }
 
+        SmartDashboard.putNumber("intake current avg", currentAverage.getAverage());
+
     }
 
     public static Claw getInstance() {
@@ -324,8 +326,12 @@ public class Claw extends SubsystemBase {
         currentAverage.clear();
     }
 
+    public double getCurrentAverage(){
+        return currentAverage.getAverage();
+    }
+
     public boolean analyzeCurrentForCube() {
-        if(currentAverage.getAverage() > 25 && hasCube() && !hasCone()){
+        if(currentAverage.getAverage() > 20 && hasCube() && !hasCone()){
             return true;
         }
         return false;

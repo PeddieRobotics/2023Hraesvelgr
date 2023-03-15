@@ -21,8 +21,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
@@ -140,7 +143,6 @@ public class Robot extends TimedRobot {
         }
 
         // Default pose for the robot to begin teleop is stowed.
-        CommandScheduler.getInstance().schedule(new SetStowedPose());
         LimelightFront.getInstance().setPipeline(7);
         LimelightBack.getInstance().setPipeline(0);
 
