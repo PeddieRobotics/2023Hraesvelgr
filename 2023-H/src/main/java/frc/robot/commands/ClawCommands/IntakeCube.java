@@ -25,7 +25,7 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void initialize() {
-        blinkin.intakingCube();
+        // blinkin.intakingCube();
         claw.setState(ClawState.INTAKING_CUBE);     
         hasCone = false;
         hasCube = false;
@@ -57,37 +57,20 @@ public class IntakeCube extends CommandBase{
     public void end(boolean interrupted) {
         claw.stopMonitoringCurrent();
 
-        if(!interrupted){
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                claw.setState(ClawState.EMPTY);     
-                blinkin.failure();
-                claw.stopClaw();
-            }
+        if(claw.hasCube()){
+            blinkin.success();
+            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            claw.monitorNewCubeIntake();
+        }
+        else if(claw.hasCone()){
+            blinkin.success();
+            claw.stopClaw();
+            claw.monitorNewConeIntake();
         }
         else{
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                claw.setState(ClawState.EMPTY);   
-                blinkin.returnToRobotState();  
-                claw.stopClaw();
-            }
+            claw.setState(ClawState.EMPTY);     
+            blinkin.returnToRobotState();
+            claw.stopClaw();
         }
     }
 

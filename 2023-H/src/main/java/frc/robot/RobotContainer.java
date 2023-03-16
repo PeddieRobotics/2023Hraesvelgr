@@ -40,6 +40,7 @@ public class RobotContainer {
 
     private Command autoCommand;
 
+    private boolean ranAutonomousRoutine;
 
     public RobotContainer() {
         /**
@@ -64,6 +65,8 @@ public class RobotContainer {
         driverOI = DriverOI.getInstance();
 
         shuffleboard = ShuffleboardMain.getInstance();
+
+        ranAutonomousRoutine = false;
     }
 
     public Command getAutonomousCommand() {
@@ -93,6 +96,14 @@ public class RobotContainer {
 
     public void setFlipped(boolean bool){
         drivetrain.setFlipped(bool);
+    }
+    
+    public boolean isRanAutonomousRoutine() {
+        return ranAutonomousRoutine;
+    }
+
+    public void setRanAutonomousRoutine(boolean ranAutonomousRoutine) {
+        this.ranAutonomousRoutine = ranAutonomousRoutine;
     }
 
 }

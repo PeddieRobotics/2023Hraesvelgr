@@ -34,13 +34,13 @@ public class Claw extends SubsystemBase {
 
     private final LimelightFront limelightFront; // Used to help with cone alignment monitoring /calculating offset
 
-    private double coneAlignmentError;
-    private boolean monitorNewConeIntake;
+    private double gamepieceAlignmentError;
+    private boolean monitorNewConeIntake, monitorNewCubeIntake;
     
     private double ejectionTime;
     private boolean justEjectedGamepiece;
 
-    private int newConeCounter;
+    private int newGamepieceCounter;
 
     private String currentLLForAutoAlign;
 
@@ -58,9 +58,11 @@ public class Claw extends SubsystemBase {
         justEjectedGamepiece = false;
 
         limelightFront = LimelightFront.getInstance();
-        coneAlignmentError = 0.0;
+        gamepieceAlignmentError = 0.0;
         monitorNewConeIntake = false;
-        newConeCounter = 0;
+        monitorNewCubeIntake = false;
+
+        newGamepieceCounter = 0;
         currentLLForAutoAlign = "limelight-front";
 
         currentAverage = new RollingAverage(4);
@@ -86,16 +88,33 @@ public class Claw extends SubsystemBase {
         // If we've recently intaked a cone, and the arm is oriented such that we could
         // see the cone, start looking at it.
         if (monitorNewConeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
-            updateConeAlignmentError();
-            newConeCounter++;
+            updateGamepieceAlignmentError();
+            newGamepieceCounter++;
 
             // If we have looked the cone for at least 100 ms, we've gotten enough of a
             // glimpse.
-            if (newConeCounter > 4) {
+            if (newGamepieceCounter > 4) {
                 monitorNewConeIntake = false; // Stop looking at cone alignment
-                newConeCounter = 0;
+                newGamepieceCounter = 0;
+                returnLimelightToDefaultState();
             }
         }
+
+        // If we've recently intaked a cube, and the arm is oriented such that we could
+        // see the cone, start looking at it.
+        if (monitorNewCubeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)) {
+            updateGamepieceAlignmentError();
+            newGamepieceCounter++;
+
+            // If we have looked the cube for at least 100 ms, we've gotten enough of a
+            // glimpse.
+            if (newGamepieceCounter > 4) {
+                monitorNewCubeIntake = false; // Stop looking at cone alignment
+                newGamepieceCounter = 0;
+                returnLimelightToDefaultState();
+            }
+        }
+
 
         if(justEjectedGamepiece && ejectionTime - Timer.getFPGATimestamp() > 1){
             justEjectedGamepiece = false;
@@ -234,26 +253,38 @@ public class Claw extends SubsystemBase {
         this.useSensors = useSensors;
     }
 
-    public double getConeAlignmentError() {
-        return coneAlignmentError;
+    public double getGamepieceAlignmentError() {
+        return gamepieceAlignmentError;
     }
 
-    public void setConeAlignmentError(double coneAlignmentError) {
-        this.coneAlignmentError = coneAlignmentError;
+    public void setGamepieceAlignmentError(double coneAlignmentError) {
+        this.gamepieceAlignmentError = coneAlignmentError;
     }
 
-    public void updateConeAlignmentError() {
-        if (state != ClawState.CONE) {
-            coneAlignmentError = 0.0;
-        } else {
-            coneAlignmentError = convertConeTXToAlignmentError(limelightFront.getTxAverage());
+    public void updateGamepieceAlignmentError() {
+        double tx = limelightFront.getTxAverage();
+        SmartDashboard.putNumber("raw gamepiece tx error", tx);
+        if(state == ClawState.CUBE) {
+            gamepieceAlignmentError = convertCubeTXToAlignmentError(tx);
+        } else if(state == ClawState.CONE){
+            gamepieceAlignmentError = convertConeTXToAlignmentError(tx);
         }
+        else{
+            gamepieceAlignmentError = 0.0;
+        }
+        SmartDashboard.putNumber("converted gamepiece tx error", gamepieceAlignmentError);
 
     }
 
     public double convertConeTXToAlignmentError(double tx) {
-        return tx / 3.5; // Use y=2/7 x as a simple linear regression (based on some quick empirical
+        return tx / 3; // Use y=1/3 x as a simple linear regression (based on some quick empirical
                          // data), where y is robot tx to goal, x is cone tx compared to center of
+                         // intake.
+    }
+
+    public double convertCubeTXToAlignmentError(double tx) {
+        return tx / 3; // Use y=1/3 x as a simple linear regression (based on some quick empirical
+                         // data), where y is robot tx to goal, x is cube tx compared to center of
                          // intake.
     }
 
@@ -263,12 +294,30 @@ public class Claw extends SubsystemBase {
         monitorNewConeIntake = true;
     }
 
+    public void monitorNewCubeIntake() {
+        limelightFront.setPipeline(4);
+        limelightFront.resetRollingAverages();
+        monitorNewCubeIntake = true;
+    }
+
     public boolean isMonitorNewConeIntake(){
         return monitorNewConeIntake;
     }
 
-    public void resetConeAlignmentError(){
-        coneAlignmentError = 0;
+    public void setMonitorNewConeIntake(boolean monitorNewConeIntake) {
+        this.monitorNewConeIntake = monitorNewConeIntake;
+    }
+
+    public boolean isMonitorNewCubeIntake() {
+        return monitorNewCubeIntake;
+    }
+
+    public void setMonitorNewCubeIntake(boolean monitorNewCubeIntake) {
+        this.monitorNewCubeIntake = monitorNewCubeIntake;
+    }
+
+    public void resetGamepieceAlignmentError(){
+        gamepieceAlignmentError = 0;
     }
 
     public double getEjectionTime() {

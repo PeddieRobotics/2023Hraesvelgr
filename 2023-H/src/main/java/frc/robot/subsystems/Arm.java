@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
@@ -27,6 +28,9 @@ public class Arm extends SubsystemBase {
     
     private ArmState state, goalPose;
 
+    private double shoulderCurrentSpikeTime;
+    private boolean shoulderCurrentSpiked;
+
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -34,8 +38,8 @@ public class Arm extends SubsystemBase {
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
 
-        holdShoulderPosition();
-
+        shoulderCurrentSpikeTime = 0;
+        shoulderCurrentSpiked = false;
     }
 
     public ArmState getState() {
@@ -183,7 +187,7 @@ public class Arm extends SubsystemBase {
 
     public boolean isAutoAlignValid(){
         boolean headingIsCorrect = false;
-        if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED){
+        if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
             headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
         }
         else{
@@ -282,6 +286,31 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // Make sure the shoulder doesn't slip off the fulcrum when it starts in the home position
+        if(shoulder.atLimitSensor() && state == ArmState.HOME){
+            // holdShoulderPosition();
+        }
+
+        // Keep track if shoulder current is continuously above 40 amps
+        if(shoulder.getOutputCurrent() > 40.0){
+            if(!shoulderCurrentSpiked){
+                shoulderCurrentSpikeTime = Timer.getFPGATimestamp();
+                shoulderCurrentSpiked = true;
+            }
+        }
+        else{
+            shoulderCurrentSpiked = false;
+        }
+
+        // Do not let the shoulder pull 40+ amps for more than 20 seconds.
+        // Shut off the motor if so.
+        if(shoulderCurrentSpiked){
+            if(shoulderCurrentSpikeTime - Timer.getFPGATimestamp() > 20.0){
+                shoulder.setPercentOutput(0);
+                Blinkin.getInstance().homingArm();
+            }
+        }
+
         shoulder.periodic();
         wrist.periodic();
 

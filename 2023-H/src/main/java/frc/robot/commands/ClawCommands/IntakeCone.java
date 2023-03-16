@@ -49,44 +49,28 @@ public class IntakeCone extends CommandBase{
         }
         if(!fixedCone && hasCone && currentTime - initialConeTime > 0.1){
             initialReverseTime = Timer.getFPGATimestamp();
-            claw.setSpeed(-ClawConstants.kConeIntakeSpeed/10);
+            claw.setSpeed(-ClawConstants.kConeIntakeSpeed/20);
             fixedCone = true;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        if(!interrupted){
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                claw.setState(ClawState.EMPTY);     
-                blinkin.failure();
-                claw.stopClaw();
-            }
+
+        if(claw.hasCube()){
+            blinkin.success();
+            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            claw.monitorNewCubeIntake();
+        }
+        else if(claw.hasCone()){
+            blinkin.success();
+            claw.stopClaw();
+            claw.monitorNewConeIntake();
         }
         else{
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                claw.setState(ClawState.EMPTY);     
-                blinkin.failure();
-                claw.stopClaw();
-            }
+            claw.setState(ClawState.EMPTY);     
+            blinkin.returnToRobotState();
+            claw.stopClaw();
         }
     }
 

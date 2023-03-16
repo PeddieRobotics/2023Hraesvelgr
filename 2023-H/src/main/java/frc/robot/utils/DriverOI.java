@@ -95,7 +95,7 @@ public class DriverOI {
              * a gamepiece.
              */
             new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeCone()),
-                new SequentialCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
+                new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Cube intake/eject gamepiece
@@ -115,12 +115,13 @@ public class DriverOI {
              * a gamepiece.
              */
             new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeCube()),
-                new SequentialCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
+                new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new AlignConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeCone()));
+
 
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
@@ -136,8 +137,6 @@ public class DriverOI {
 
         // Auto-align to score, or to single substation
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        //circleButton.whileTrue(new SimpleAlign());
-
         circleButton.whileTrue(
             new ConditionalCommand(
                 /*
@@ -165,7 +164,7 @@ public class DriverOI {
         // Stowed pose
         // Back button (Touchpad button on front)
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new SetStowedPose());
+        // touchpadButton.onTrue(new SetStowedPose());
 
         // Slow Mode
         // Back button (Option button on front)
@@ -211,7 +210,14 @@ public class DriverOI {
     }
 
     public double getStrafe() {
-        return controller.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        double input = controller.getRawAxis(PS4Controller.Axis.kLeftX.value);
+        if(Math.abs(input) < 0.9){
+            input *= 0.7777;
+        }
+        else{
+            input = Math.pow(input, 3);
+        }
+        return input;
     }
 
     /* DRIVER METHODS */

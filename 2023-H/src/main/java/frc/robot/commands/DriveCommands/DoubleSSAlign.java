@@ -84,7 +84,7 @@ public class DoubleSSAlign extends CommandBase {
         } else {
             txAvg = limelightFront.getTxAverage();
         }
-        if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
+        if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             yMove = yController.calculate(txAvg, 0);
         }
 

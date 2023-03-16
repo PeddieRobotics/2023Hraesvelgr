@@ -70,8 +70,8 @@ public final class Constants {
 
                 // Translation and Rotation Slew Rates
                 public static final boolean kUseRateLimit = true;
-                public static final double kDirectionSlewRate = 3; // radians per second
-                public static final double kMagnitudeSlewRate = 3; // percent per second (1 = 100%)
+                public static final double kDirectionSlewRate = 4; // 3; // radians per second
+                public static final double kMagnitudeSlewRate = 3; // 3; // percent per second (1 = 100%)
                 public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
@@ -170,7 +170,8 @@ public final class Constants {
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
                 public static final double kLimelightHeadingBound = 1.0;
-                public static final double kLimeLightTranslationAngleBound = 1.0;
+                public static final double kLimeLightTranslationScoringAngleBound = 0.1;
+                public static final double kLimeLightTranslationSingleSSAngleBound = 1.0;
                 public static final double kLimeLightAngleBound = 1;
                 public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
                                                 new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
@@ -334,6 +335,7 @@ public final class Constants {
 
                 public static final double kTransitoryAngle = 70.0;
                 public static final double kMonitorConeAlignmentAngle = 45;
+                public static final double kMonitorCubeAlignmentAngle = 60;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
@@ -346,8 +348,7 @@ public final class Constants {
                 public static final int kClawMotorCurrentLimit = 25;
 
                 public static final double kConeIntakeSpeed = -1;
-                public static final double kCubeIntakeSpeed = -
-                1;
+                public static final double kCubeIntakeSpeed = -1;
                 public static final double kCubeSingleSSIntakeSpeed = -0.6;
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
@@ -361,6 +362,8 @@ public final class Constants {
                 public static final double kCubeL3ForwardOuttakeSpeed = 0.5;
                 public static final double kCubeL3InvertedOuttakeSpeed = 0.5;
 
-                public static final double kCubeHoldSpeed = -0.1;
+                public static final double kCubeHoldSpeed = -0.05;
+
+                public static final double maximumGamepieceMonitorTime = 1.0;
         }
 }

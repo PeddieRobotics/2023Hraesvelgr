@@ -34,9 +34,9 @@ public class SingleSSAlign extends CommandBase {
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
-        thetaController = new PIDController(0.09, 0.0003, 0);
+        thetaController = new PIDController(0.07, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
-        xController = new PIDController(0.06, 0, 0);
+        xController = new PIDController(0.08, 0, 0);
 
         addRequirements(drivetrain);
 
@@ -72,15 +72,19 @@ public class SingleSSAlign extends CommandBase {
         double xMove = 0.0;
         double turn = 0.0;
         double turnFF = 0.2;
+        double xFF = 0.06;
+
+        Translation2d swerveTranslation = oi.getSwerveTranslation();
+        swerveTranslation = swerveTranslation.times(1.0);
 
         double txAvg = limelightFront.getTxAverage();
         if (!initialHeadingCorrectionComplete && Math
                 .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-            drivetrain.drive(new Translation2d(oi.getForward() * 1.0, oi.getStrafe() * 1.0),
+            drivetrain.drive(swerveTranslation,
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
-        } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationAngleBound) {
+        } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationSingleSSAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
             if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV("limelight-front")) {
@@ -92,19 +96,16 @@ public class SingleSSAlign extends CommandBase {
 
            xMove = xController.calculate(txAvg, 0);
 
-            drivetrain.drive(new Translation2d(xMove, 0.05 + oi.getStrafe() * 1.0), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(xMove + xFF * Math.signum(xMove), swerveTranslation.getY()), oi.getRotation(), true, new Translation2d(0, 0));
 
         } else {
-            drivetrain.drive(new Translation2d(0, 0.05 + oi.getStrafe() * 1.0), 0, true, new Translation2d(0, 0));
+            drivetrain.drive(new Translation2d(0, swerveTranslation.getY()), oi.getRotation(), true, new Translation2d(0, 0));
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.stopSwerveModules();
-        if(claw.hasGamepiece()){
-            limelightFront.setPipeline(7);
-        }
         blinkin.returnToRobotState();
 
     }

@@ -35,9 +35,9 @@ public class EjectGamepiece extends CommandBase{
             claw.outtakeCone();
         }
 
-        if(Arm.getInstance().isArmScoringPose()){
-            blinkin.success();
-        }
+        // if(Arm.getInstance().isArmScoringPose()){
+        //     blinkin.success();
+        // }
 
     }
 
@@ -49,7 +49,7 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
-        claw.resetConeAlignmentError();
+        claw.resetGamepieceAlignmentError();
         blinkin.returnToRobotState();
     }
 

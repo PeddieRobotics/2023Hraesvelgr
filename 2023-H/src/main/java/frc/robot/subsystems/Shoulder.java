@@ -9,7 +9,9 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
 
 public class Shoulder {
@@ -372,9 +374,13 @@ public class Shoulder {
     }
 
     public void periodic() {
+        SmartDashboard.putBoolean("reached limit upward", reachedLimitSensorUpward);
+
         // Limit sensor triggered and shoulder is moving up
         if(atLimitSensor() && getVelocity() > 0){   
             reachedLimitSensorUpward = true;
+        } else if(getVelocity() < 0){
+            reachedLimitSensorUpward = false;
         }
 
         // If the shoulder is moving up and leaves the limit sensor, reset the encoder

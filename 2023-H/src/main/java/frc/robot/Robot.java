@@ -132,11 +132,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         robotContainer.setFlipped(true);
+        robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
 
         if (!ranAutonomousRoutine) {
             robotContainer.resetPoseToFaceOtherAlliance();
-
         }
+
 
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
