@@ -35,16 +35,15 @@ public class OperatorTab extends ShuffleboardTabBase {
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
 
-        fieldView = new FieldView();
-        tab.add(fieldView.getField()).
-        withSize(8, 5).
-        withPosition(0,0);
+        // fieldView = new FieldView();
+        // tab.add(fieldView.getField()).
+        // withSize(8, 5).
+        // withPosition(0,0);
 
         autoRoutineSelector = new SendableChooser<Command>();
 
         try {
             mArmState = tab.add("Arm State", "Home").withSize(2,2).withPosition(24,1).getEntry();
-            mUsePreScorePose = tab.add("Use Pre-Score Pose", false).getEntry();
             mClawState = tab
             .add("Game piece?", "Empty").withSize(2,2).withPosition(22,1)
             .getEntry();
@@ -59,11 +58,10 @@ public class OperatorTab extends ShuffleboardTabBase {
 
     @Override
     public void update() {
-        fieldView.update();
+        // fieldView.update();
         mArmState.setString(arm.getState().toString());
         mClawState.setString(claw.getState().toString());
         // mGamepieceState.setBoolean(claw.hasGamepiece());
-        // operatorOI.setUsePreScorePose(mUsePreScorePose.getBoolean(false));
     }
 
     public void setupAutoSelector(){
@@ -74,7 +72,7 @@ public class OperatorTab extends ShuffleboardTabBase {
             String autoRoutineName = e.nextElement();
             autoRoutineSelector.addOption(autoRoutineName, autoRoutines.get(autoRoutineName));
         }
-        mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(16,1);
+        mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(1,1); // comp settings: withPosition(16,1);
 
     }
 
