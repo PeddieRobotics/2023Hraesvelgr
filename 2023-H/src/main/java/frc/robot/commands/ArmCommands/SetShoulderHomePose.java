@@ -31,7 +31,7 @@ public class SetShoulderHomePose extends CommandBase{
         arm.setState(ArmState.HOME);
         arm.setGoalPose(ArmState.NONE);
 
-        blinkin.homingArm();
+        blinkin.specialOperatorFunctionality();
 
         shoulderMovedUp = false;
         shoulderHomed = false;

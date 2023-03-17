@@ -2,22 +2,28 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.utils.OperatorOI;
 import frc.robot.utils.Constants.ShoulderConstants;
 
 public class ManualShoulderControl extends CommandBase{
     private Arm arm;
     private OperatorOI oi;
+    private Blinkin blinkin;
+
     private double currentShoulder, shoulderOffset;
 
     public ManualShoulderControl() {
         arm = Arm.getInstance();
+        blinkin = Blinkin.getInstance();
     }
 
     @Override
     public void initialize() {
         currentShoulder = arm.getShoulderPosition();
         oi = OperatorOI.getInstance();
+
+        blinkin.specialOperatorFunctionality();
     }
     
     @Override
@@ -35,7 +41,7 @@ public class ManualShoulderControl extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-
+        blinkin.returnToRobotState();
     }
 
     @Override

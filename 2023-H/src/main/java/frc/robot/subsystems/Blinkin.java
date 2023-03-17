@@ -16,7 +16,7 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE};
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE};
 
     private BlinkinState state;
 
@@ -87,6 +87,26 @@ public class Blinkin extends SubsystemBase{
         set(0.81);
     }
 
+    // Strobe gold (Color 1 pattern)
+    public void strobeGold() {
+        if(currentTime - initialTime < 1.0){
+            set(0.15);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+
+    // Strobe purple (Color 2 pattern)
+    public void strobePurple() {
+        if(currentTime - initialTime < 1.0){
+            set(0.35);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+
     // Blinks red (for various failure modes)
     public void none() {
         state = BlinkinState.NONE;
@@ -102,6 +122,19 @@ public class Blinkin extends SubsystemBase{
      public void failure() {
         initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.BLINK_RED;
+    }   
+
+    // Blinks red then briefly goes solid red (for various failure modes)
+    public void gamepieceAnalyzedSuccess() {
+        initialTime = Timer.getFPGATimestamp();
+
+        ClawState clawState = claw.getState();
+        if(clawState == ClawState.CONE){
+            state = BlinkinState.STROBE_GOLD;
+        }
+        else if(clawState == ClawState.CUBE){
+            state = BlinkinState.STROBE_PURPLE;
+        }
     }   
 
     // Blinks the appropriate color when trying to auto-target
@@ -144,7 +177,8 @@ public class Blinkin extends SubsystemBase{
     }
 
     // If the arm is being rehomed, flash pink during process (special status)
-    public void homingArm(){
+    // Also used for some other special operator overrides.
+    public void specialOperatorFunctionality(){
         initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.FLASH_PINK;
     }
@@ -180,7 +214,6 @@ public class Blinkin extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("LED state", state.toString());
         if(GlobalConstants.kUseLEDLights){
             currentTime = Timer.getFPGATimestamp();
             switch(state){
@@ -226,6 +259,12 @@ public class Blinkin extends SubsystemBase{
                 case PULSE_PURPLE:
                     pulsePurple();
                     break;
+                case STROBE_GOLD:
+                    strobeGold();
+                    break;
+                case STROBE_PURPLE:
+                    strobePurple();
+                    break;
                 default:
                     black();
             }
@@ -245,7 +284,11 @@ public class Blinkin extends SubsystemBase{
             red();
         } else if(currentTime - initialTime < 0.9){
             black();
-        } else if(currentTime - initialTime < 2){
+        } else if(currentTime - initialTime < 1.05){
+            red();
+        } else if(currentTime - initialTime < 1.2){
+            black();
+        } else if(currentTime - initialTime < 2.2){
             red();
         } 
         else{
@@ -266,7 +309,11 @@ public class Blinkin extends SubsystemBase{
             green();
         } else if(currentTime - initialTime < 0.9){
             black();
-        } else if(currentTime - initialTime < 2){
+        } else if(currentTime - initialTime < 1.05){
+            red();
+        } else if(currentTime - initialTime < 1.2){
+            black();
+        } else if(currentTime - initialTime < 2.2){
             green();
         } else{
             returnToRobotState();  

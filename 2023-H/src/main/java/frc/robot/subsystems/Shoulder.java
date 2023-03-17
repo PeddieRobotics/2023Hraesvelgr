@@ -374,8 +374,6 @@ public class Shoulder {
     }
 
     public void periodic() {
-        SmartDashboard.putBoolean("reached limit upward", reachedLimitSensorUpward);
-
         // Limit sensor triggered and shoulder is moving up
         if(atLimitSensor() && getVelocity() > 0){   
             reachedLimitSensorUpward = true;

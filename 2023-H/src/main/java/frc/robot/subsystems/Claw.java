@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,13 +37,16 @@ public class Claw extends SubsystemBase {
 
     private double gamepieceAlignmentError;
     private boolean monitorNewConeIntake, monitorNewCubeIntake;
-    
+    private InterpolatingTreeMap<Double,Double> coneL2AlignmentTable;
+
     private double ejectionTime;
     private boolean justEjectedGamepiece;
 
     private int newGamepieceCounter;
 
     private String currentLLForAutoAlign;
+
+    private boolean normalizingCone;
 
     public Claw() {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
@@ -67,11 +71,23 @@ public class Claw extends SubsystemBase {
 
         currentAverage = new RollingAverage(4);
         monitorCurrent = false;
+
+        normalizingCone = false;
+
+        // Linear interpolation calibrated points for L2 cone alignment
+        coneL2AlignmentTable = new InterpolatingTreeMap<>();
+        coneL2AlignmentTable.put(-17.228, -7.79); // Left calibration point
+        coneL2AlignmentTable.put(-4.946, -3.53); // Center calibration point
+        coneL2AlignmentTable.put(11.399, 2.04); // Right calibration point
         
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("monitor cones", monitorNewConeIntake);
+        SmartDashboard.putBoolean("monitor cubes", monitorNewCubeIntake);
+        SmartDashboard.putNumber("newGamepieceCounter", newGamepieceCounter);
+
         if (useSensors) {
             if (isFrontSensor() && isBackSensor()) {
                 state = ClawState.CONE;
@@ -87,9 +103,9 @@ public class Claw extends SubsystemBase {
 
         // If we've recently intaked a cone, and the arm is oriented such that we could
         // see the cone, start looking at it.
-        if (monitorNewConeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
-            updateGamepieceAlignmentError();
+        if (monitorNewConeIntake && !isNormalizingCone() && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
             newGamepieceCounter++;
+            updateGamepieceAlignmentError();
 
             // If we have looked the cone for at least 100 ms, we've gotten enough of a
             // glimpse.
@@ -97,24 +113,25 @@ public class Claw extends SubsystemBase {
                 monitorNewConeIntake = false; // Stop looking at cone alignment
                 newGamepieceCounter = 0;
                 returnLimelightToDefaultState();
+                Blinkin.getInstance().gamepieceAnalyzedSuccess();
             }
         }
 
         // If we've recently intaked a cube, and the arm is oriented such that we could
-        // see the cone, start looking at it.
+        // see the cube, start looking at it.
         if (monitorNewCubeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)) {
-            updateGamepieceAlignmentError();
             newGamepieceCounter++;
+            updateGamepieceAlignmentError();
 
             // If we have looked the cube for at least 100 ms, we've gotten enough of a
             // glimpse.
             if (newGamepieceCounter > 4) {
-                monitorNewCubeIntake = false; // Stop looking at cone alignment
+                monitorNewCubeIntake = false; // Stop looking at cube alignment
                 newGamepieceCounter = 0;
                 returnLimelightToDefaultState();
+                Blinkin.getInstance().gamepieceAnalyzedSuccess();
             }
         }
-
 
         if(justEjectedGamepiece && ejectionTime - Timer.getFPGATimestamp() > 1){
             justEjectedGamepiece = false;
@@ -123,8 +140,6 @@ public class Claw extends SubsystemBase {
         if(monitorCurrent){
             currentAverage.add(clawMotor.getOutputCurrent());
         }
-
-        SmartDashboard.putNumber("intake current avg", currentAverage.getAverage());
 
     }
 
@@ -262,30 +277,25 @@ public class Claw extends SubsystemBase {
     }
 
     public void updateGamepieceAlignmentError() {
-        double tx = limelightFront.getTxAverage();
-        SmartDashboard.putNumber("raw gamepiece tx error", tx);
-        if(state == ClawState.CUBE) {
-            gamepieceAlignmentError = convertCubeTXToAlignmentError(tx);
-        } else if(state == ClawState.CONE){
-            gamepieceAlignmentError = convertConeTXToAlignmentError(tx);
-        }
-        else{
-            gamepieceAlignmentError = 0.0;
-        }
-        SmartDashboard.putNumber("converted gamepiece tx error", gamepieceAlignmentError);
-
+        double sum = gamepieceAlignmentError * (newGamepieceCounter - 1); // recover the previous sum
+        gamepieceAlignmentError = (sum + limelightFront.getTxAverage())/newGamepieceCounter; // average any observations so far
+        SmartDashboard.putNumber("raw gamepiece tx error", gamepieceAlignmentError);
     }
 
-    public double convertConeTXToAlignmentError(double tx) {
-        return tx / 3; // Use y=1/3 x as a simple linear regression (based on some quick empirical
-                         // data), where y is robot tx to goal, x is cone tx compared to center of
-                         // intake.
+    public double convertL2ConeTXToAlignmentError(double tx) {
+        return coneL2AlignmentTable.get(tx);
     }
 
-    public double convertCubeTXToAlignmentError(double tx) {
-        return tx / 3; // Use y=1/3 x as a simple linear regression (based on some quick empirical
-                         // data), where y is robot tx to goal, x is cube tx compared to center of
-                         // intake.
+    public double convertL2CubeTXToAlignmentError(double tx) {
+        return coneL2AlignmentTable.get(tx);
+    }
+
+    public double convertL3ConeTXToAlignmentError(double tx) {
+        return coneL2AlignmentTable.get(tx);
+    }
+
+    public double convertL3CubeTXToAlignmentError(double tx) {
+        return coneL2AlignmentTable.get(tx);
     }
 
     public void monitorNewConeIntake() {
@@ -379,10 +389,19 @@ public class Claw extends SubsystemBase {
         return currentAverage.getAverage();
     }
 
+    // Used for detecting a positive cube intake
     public boolean analyzeCurrentForCube() {
         if(currentAverage.getAverage() > 20 && hasCube() && !hasCone()){
             return true;
         }
         return false;
+    }
+
+    public boolean isNormalizingCone() {
+        return normalizingCone;
+    }
+
+    public void setNormalizingCone(boolean normalizingCone) {
+        this.normalizingCone = normalizingCone;
     }
 }

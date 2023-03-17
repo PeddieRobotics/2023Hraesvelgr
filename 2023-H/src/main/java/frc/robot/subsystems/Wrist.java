@@ -358,6 +358,8 @@ public class Wrist {
         //Limit sensor triggered and wrist is moving down
         if(atLimitSensor() && getVelocity() < 0){   
             reachedLimitSensorDownward = true;
+        } else if(getVelocity() > 0){
+            reachedLimitSensorDownward = false;
         }
 
         // If the wrist is moving down and leaves the limit sensor, reset the encoder

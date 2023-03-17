@@ -33,7 +33,7 @@ public class SetHomePose extends CommandBase{
         arm.setState(ArmState.HOME);
         arm.setGoalPose(ArmState.NONE);
 
-        blinkin.homingArm();
+        blinkin.specialOperatorFunctionality();
 
         wristHomed = false;
         shoulderHomed = false;

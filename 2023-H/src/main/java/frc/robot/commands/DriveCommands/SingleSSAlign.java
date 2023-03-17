@@ -36,7 +36,7 @@ public class SingleSSAlign extends CommandBase {
 
         thetaController = new PIDController(0.07, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
-        xController = new PIDController(0.08, 0, 0);
+        xController = new PIDController(0.07, 0, 0);
 
         addRequirements(drivetrain);
 
@@ -72,10 +72,10 @@ public class SingleSSAlign extends CommandBase {
         double xMove = 0.0;
         double turn = 0.0;
         double turnFF = 0.2;
-        double xFF = 0.06;
+        double xFF = 0.05;
 
         Translation2d swerveTranslation = oi.getSwerveTranslation();
-        swerveTranslation = swerveTranslation.times(1.0);
+        swerveTranslation = swerveTranslation.times(LimelightConstants.kDriveScaleSingleSSAlign);
 
         double txAvg = limelightFront.getTxAverage();
         if (!initialHeadingCorrectionComplete && Math

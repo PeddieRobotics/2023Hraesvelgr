@@ -21,6 +21,8 @@ import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetWristHomePose;
+import frc.robot.commands.ClawCommands.OperatorEjectGamepiece;
+import frc.robot.commands.ClawCommands.OperatorIntakeGamepiece;
 import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
@@ -206,35 +208,13 @@ public class OperatorOI {
         Trigger ps5Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         ps5Button.onTrue(new InstantCommand(Drivetrain.getInstance()::resetGyro));
 
-        // Toggle outtake at varying speeds depending on left stick modification
-        // Default behavior is slow
-        // Medium and fast speeds can be accessed with left/right trigger modification, respectively
+        // Press and hold for outtaking slow (gamepiece adjustment), with down arrow this becomes full speed.
         Trigger startButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        startButton.whileTrue(new InstantCommand(() -> {
-            double leftStickInput = controller.getRawAxis(PS4Controller.Axis.kLeftY.value);
-            if (Math.abs(leftStickInput) < 0.1) {
-                claw.setSpeed(0.05);
-            } else{
-                claw.setSpeed(leftStickInput);
-            }
-        }).andThen(new ConditionalCommand(
-            new InstantCommand(() -> {claw.setSpeed(ClawConstants.kCubeHoldSpeed);}),
-            new InstantCommand(() -> {claw.stopClaw();}),
-            claw::hasCube)));
+        startButton.whileTrue(new OperatorEjectGamepiece());
 
-        // Toggle intake at varying speeds depending on right stick modification
+        // Press and hold for intaking slow (gamepiece adjustment), with down arrow this becomes full speed.
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
-        shareButton.whileTrue(new InstantCommand(() -> {
-            double rightStickInput = controller.getRawAxis(PS4Controller.Axis.kRightY.value);
-            if (Math.abs(rightStickInput) < 0.1) {
-                claw.setSpeed(-0.05);
-            } else{
-                claw.setSpeed(rightStickInput);
-            }
-        }).andThen(new ConditionalCommand(
-            new InstantCommand(() -> {claw.setSpeed(ClawConstants.kCubeHoldSpeed);}),
-            new InstantCommand(() -> {claw.stopClaw();}),
-            claw::hasCube)));
+        shareButton.whileTrue(new OperatorIntakeGamepiece());
 
         // Game piece selection / LED indication requests to human player
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
@@ -317,7 +297,7 @@ public class OperatorOI {
         return leftTriggerHeld() ^ rightTriggerHeld();
     }
 
-    private boolean dPadDownHeld(){
+    public boolean dPadDownHeld(){
         return controller.getPOV() == 180;
     }
 

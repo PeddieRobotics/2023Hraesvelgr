@@ -2,19 +2,18 @@ package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.ClawConstants;
 
-public class IntakeCube extends CommandBase{
+public class IntakeFloorCubeInAuto extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
     private double initialTime, currentTime;
     private boolean hasCone, hasCube;
 
-    public IntakeCube(){
+    public IntakeFloorCubeInAuto(){
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
         addRequirements(claw);
@@ -25,7 +24,7 @@ public class IntakeCube extends CommandBase{
 
     @Override
     public void initialize() {
-        // blinkin.intakingCube();
+        blinkin.intakingCube();
         claw.setState(ClawState.INTAKING_CUBE);     
         hasCone = false;
         hasCube = false;
@@ -60,12 +59,10 @@ public class IntakeCube extends CommandBase{
         if(claw.hasCube()){
             blinkin.success();
             claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            claw.monitorNewCubeIntake();
         }
         else if(claw.hasCone()){
             blinkin.success();
             claw.stopClaw();
-            claw.monitorNewConeIntake();
         }
         else{
             claw.setState(ClawState.EMPTY);     

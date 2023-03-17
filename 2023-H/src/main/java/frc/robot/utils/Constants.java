@@ -22,6 +22,8 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final boolean kUsePreScorePose = true;
+                public static final boolean kReturnL3ConeInvertedToPreScore = true;
+                public static final boolean kReturnForwardL2L3ScoringPosesToPreScore = true;
 
                 public static final double kDrivingDeadband = 0.1;
         }
@@ -166,18 +168,22 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double kLimelightHeight = 22.8346; // inches
+                public static final double kLimelightHeight = 22.8346; // inches... OLD, NEEDS UPDATING
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
+
                 public static final double kLimelightHeadingBound = 1.0;
-                public static final double kLimeLightTranslationScoringAngleBound = 0.1;
+                public static final double kLimeLightTranslationScoringAngleBound = 0.3;
                 public static final double kLimeLightTranslationSingleSSAngleBound = 1.0;
-                public static final double kLimeLightAngleBound = 1;
-                public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
-                                                new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
-                                                new Translation2d(1.02743,3.306826),new Translation2d(1.02743,3.865626),new Translation2d(1.02743,4.424426),
-                                                new Translation2d(1.02743,4.983226)};
-                public static final double robotOffsetToGoal = .37+.4+1;
+                
+                // public static final Translation2d[] columnDestinationCoords = {new Translation2d(),new Translation2d(1.02743,.512826),new Translation2d(1.02743,1.071626),
+                //                                 new Translation2d(1.02743,1.630426),new Translation2d(1.02743,2.189226),new Translation2d(1.02743,2.748026),
+                //                                 new Translation2d(1.02743,3.306826),new Translation2d(1.02743,3.865626),new Translation2d(1.02743,4.424426),
+                //                                 new Translation2d(1.02743,4.983226)};
+                // public static final double robotOffsetToGoal = .37+.4+1;
+
+                public static final double kDriveScaleScoreAlign = 1.0;
+                public static final double kDriveScaleSingleSSAlign = 1.0;
 
         }
 
@@ -239,7 +245,7 @@ public final class Constants {
 
                 // Shoulder is fully extended out
                 public static final double kExtendedFloorConeAngle = -30.0;
-                public static final double kExtendedFloorCubeAngle = -37.5;
+                public static final double kExtendedFloorCubeAngle = -39;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
@@ -364,6 +370,12 @@ public final class Constants {
 
                 public static final double kCubeHoldSpeed = -0.05;
 
-                public static final double maximumGamepieceMonitorTime = 1.0;
+                public static final double kMaximumGamepieceMonitorTime = 3.0;
+
+                public static final double kOperatorEjectSpeed = 0.1;
+                public static final double kOperatorFastEjectSpeed = 1.0;
+
+                public static final double kOperatorIntakeSpeed = -0.1;
+                public static final double kOperatorFastIntakeSpeed = -1.0;
         }
 }

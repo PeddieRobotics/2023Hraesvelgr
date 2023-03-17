@@ -29,28 +29,32 @@ public class EjectGamepiece extends CommandBase{
         claw.setEjectionTime(Timer.getFPGATimestamp());
         claw.setJustEjectedGamepiece(true);
 
-        if(claw.getState() == ClawState.CUBE){
+        if(claw.getState() == ClawState.CONE){
             claw.outtakeCube();
         } else {
-            claw.outtakeCone();
+            claw.stopClaw(); // Stop the motor just before ejection on cubes to minimize weird "pop-out" behaviors
         }
-
-        // if(Arm.getInstance().isArmScoringPose()){
-        //     blinkin.success();
-        // }
 
     }
 
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
+
+        // We are now good to eject the cube (200 ms delay)
+        if(currentTime - initialTime > 0.2 && claw.getState() == ClawState.CUBE){
+            claw.outtakeCube();
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         claw.stopClaw();
         claw.resetGamepieceAlignmentError();
-        blinkin.returnToRobotState();
+        if(Arm.getInstance().isArmScoringPose()){
+            blinkin.success();
+        }
+
     }
 
     @Override

@@ -10,7 +10,6 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
@@ -208,6 +207,10 @@ public class Arm extends SubsystemBase {
         return state == ArmState.L1;
     }
 
+    public boolean isL2L3ForwardScoringPose(){
+        return state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_FORWARD;
+    }
+
     public ArmState getGoalPose() {
         return goalPose;
     }
@@ -262,7 +265,7 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CONE_INVERTED){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
         }
-        else{
+        else if(!isArmScoringPose()){
             Blinkin.getInstance().failure();
         }
 
@@ -287,12 +290,12 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         // Make sure the shoulder doesn't slip off the fulcrum when it starts in the home position
-        if(shoulder.atLimitSensor() && state == ArmState.HOME){
-            // holdShoulderPosition();
-        }
+        // if(shoulder.atLimitSensor() && state == ArmState.HOME){
+        //     holdShoulderPosition();
+        // }
 
-        // Keep track if shoulder current is continuously above 40 amps
-        if(shoulder.getOutputCurrent() > 40.0){
+        // Keep track if shoulder current is continuously above 30 amps
+        if(shoulder.getOutputCurrent() > 30.0){
             if(!shoulderCurrentSpiked){
                 shoulderCurrentSpikeTime = Timer.getFPGATimestamp();
                 shoulderCurrentSpiked = true;
@@ -302,12 +305,12 @@ public class Arm extends SubsystemBase {
             shoulderCurrentSpiked = false;
         }
 
-        // Do not let the shoulder pull 40+ amps for more than 20 seconds.
+        // Do not let the shoulder pull 30+ amps for more than 20 seconds.
         // Shut off the motor if so.
-        if(shoulderCurrentSpiked){
+        if(shoulderCurrentSpiked || shoulder.getMotorTemperature() > 50.0){
             if(shoulderCurrentSpikeTime - Timer.getFPGATimestamp() > 20.0){
                 shoulder.setPercentOutput(0);
-                Blinkin.getInstance().homingArm();
+                Blinkin.getInstance().specialOperatorFunctionality();
             }
         }
 

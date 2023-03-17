@@ -11,6 +11,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
+import frc.robot.subsystems.Arm.ArmState;
+import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
@@ -28,7 +30,7 @@ public class ScoreAlign extends CommandBase {
     private int scoreSetpoint;
     private boolean initialHeadingCorrectionComplete, initialTargetNotFound;
 
-    private double thetaP, yP, yI;
+    private double convertedGamepieceAlignError;
 
     public ScoreAlign() {
         limelightBack = LimelightBack.getInstance();
@@ -38,12 +40,11 @@ public class ScoreAlign extends CommandBase {
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
-        thetaP = 0.07;
-        yP = 0.08;
+        convertedGamepieceAlignError = 0;
 
-        thetaController = new PIDController(thetaP, 0.0003, 0);
+        thetaController = new PIDController(0.07, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
-        yController = new PIDController(yP, 0, 0);
+        yController = new PIDController(0.07, 0, 0);
 
         addRequirements(drivetrain);
     }
@@ -73,6 +74,25 @@ public class ScoreAlign extends CommandBase {
 
         thetaController.reset();
         yController.reset();
+
+        ClawState state = claw.getState();
+        if(state == ClawState.CUBE) {
+            if(arm.getState() == ArmState.L2_CUBE || arm.getGoalPose() == ArmState.L2_CUBE){
+                convertedGamepieceAlignError = claw.convertL2CubeTXToAlignmentError(claw.getGamepieceAlignmentError());
+            }
+            else if(arm.getState() == ArmState.L3_CUBE_FORWARD || arm.getGoalPose() == ArmState.L3_CUBE_FORWARD){
+                convertedGamepieceAlignError = claw.convertL3CubeTXToAlignmentError(claw.getGamepieceAlignmentError());
+            }
+        } else if(state == ClawState.CONE){
+            if(arm.getState() == ArmState.L2_CONE || arm.getGoalPose() == ArmState.L2_CONE){
+                convertedGamepieceAlignError = claw.convertL2ConeTXToAlignmentError(claw.getGamepieceAlignmentError());
+            }
+            else if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED){
+                convertedGamepieceAlignError = claw.convertL3ConeTXToAlignmentError(claw.getGamepieceAlignmentError());
+            }
+        }
+
+        SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
     }
 
     @Override
@@ -80,16 +100,15 @@ public class ScoreAlign extends CommandBase {
         double yMove = 0.0;
         double turn = 0.0;
         double turnFF = 0.2;
-        double yFF = 0.06;
+        double yFF = 0.05;
 
-        double alignError = claw.getGamepieceAlignmentError();
         Translation2d swerveTranslation = oi.getSwerveTranslation();
-        swerveTranslation = swerveTranslation.times(1.0);
+        swerveTranslation = swerveTranslation.times(LimelightConstants.kDriveScaleScoreAlign);
 
         double txAvg;
         if (limelightName.equals("limelight-back")) {
             txAvg = limelightBack.getTxAverage();
-            alignError = -alignError;
+            convertedGamepieceAlignError = -convertedGamepieceAlignError;
         } else {
             txAvg = limelightFront.getTxAverage();
         }
@@ -100,7 +119,7 @@ public class ScoreAlign extends CommandBase {
 
             drivetrain.drive(swerveTranslation,
                     turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
-        } else if (Math.abs(txAvg-alignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
+        } else if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
             if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV(limelightName)) {
@@ -110,7 +129,7 @@ public class ScoreAlign extends CommandBase {
             }
             initialHeadingCorrectionComplete = true;
 
-            yMove = yController.calculate(txAvg, alignError);
+            yMove = yController.calculate(txAvg, convertedGamepieceAlignError);
 
             drivetrain.drive(new Translation2d(swerveTranslation.getX(), yMove + yFF * Math.signum(yMove)), oi.getRotation(), true, new Translation2d(0, 0));
 
@@ -123,8 +142,7 @@ public class ScoreAlign extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.stopSwerveModules();
         if(!claw.hasGamepiece()){
-            limelightBack.setPipeline(0);
-            limelightFront.setPipeline(7);
+            claw.returnLimelightToDefaultState();
         }
         if(!initialTargetNotFound){
             blinkin.returnToRobotState();

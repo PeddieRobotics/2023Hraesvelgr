@@ -60,6 +60,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 
 public class SetExtendedFloorCubePose extends CommandBase{
@@ -83,13 +84,16 @@ public class SetExtendedFloorCubePose extends CommandBase{
         if(arm.isShoulderAboveAngle(shoulder.getkExtendedFloorCubeAngle())){
             approachFromAbove = true;
             arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-            wrist.setPosition(wrist.getkStowedAngle());
+            wrist.setPosition(20);
         }
         else{
             approachFromAbove = false;
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setWristPosition(20);
         }
 
+        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+        arm.setGoalPose(ArmState.NONE);
     }
 
     @Override

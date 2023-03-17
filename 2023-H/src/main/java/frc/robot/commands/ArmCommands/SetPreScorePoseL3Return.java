@@ -2,58 +2,48 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
-import frc.robot.utils.LimelightHelper;
+import frc.robot.utils.Constants.ShoulderConstants;
 
-public class SetPreScorePose extends CommandBase{
+public class SetPreScorePoseL3Return extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
-    private Claw claw;
 
-    private ArmState previousState;
-
-    public SetPreScorePose() {
+    public SetPreScorePoseL3Return() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
-        claw = Claw.getInstance();
     }
 
     @Override
     public void initialize() {
-        previousState = arm.getState();
-
         arm.setWristPosition(wrist.getkPreScoreAngle());
-        if(previousState != ArmState.L2_CONE){
-            arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
-        }
         arm.setState(ArmState.PRE_SCORE);
+        arm.setGoalPose(ArmState.NONE);
 
-        claw.prepareLimelightForScoring();
-        
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+            ShoulderConstants.kSmartMotionSlowMinVel, 5500, 3000);
+        arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.SLOW);
     }
 
     @Override
     public void execute() {
-        if(previousState == ArmState.L2_CONE){
-            if(arm.isWristAboveAngle(0)){
-                arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.SLOW);
-            }
+        if(arm.isShoulderBelowAngle(80)){
+            arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
         }
+        
     }
 
     @Override
     public void end(boolean interrupted){
-        if(!interrupted){
-            arm.holdShoulderPosition();
-        }
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+        ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
     }
 
     @Override

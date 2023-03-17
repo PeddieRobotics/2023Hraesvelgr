@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
@@ -18,6 +19,7 @@ public class SetStowedPose extends CommandBase {
     private Shoulder shoulder;
     private Wrist wrist;
     private Claw claw;
+    private Blinkin blinkin;
 
     private boolean arrivedAtMonitorAngle;
     private double monitorGamepieceInitialTime, currentTime;
@@ -29,6 +31,7 @@ public class SetStowedPose extends CommandBase {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
         claw = Claw.getInstance();
+        blinkin = Blinkin.getInstance();
 
         SmartDashboard.putNumber("floorIntakeConeMaxVel", 1200);
         SmartDashboard.putNumber("floorIntakeConeMaxAccel", 2500);
@@ -38,6 +41,10 @@ public class SetStowedPose extends CommandBase {
 
         SmartDashboard.putNumber("scorePoseMaxVel", 1500);
         SmartDashboard.putNumber("scorePoseMaxAccel", 6000);
+
+        SmartDashboard.putBoolean("arrived at monitor angle", arrivedAtMonitorAngle);
+        SmartDashboard.putNumber("monitorGamepieceInitialTime", monitorGamepieceInitialTime);
+        SmartDashboard.putBoolean("alignment analysis timed out", false);
     }
 
     @Override
@@ -87,11 +94,15 @@ public class SetStowedPose extends CommandBase {
         if(!claw.isMonitorNewConeIntake() && !claw.isMonitorNewCubeIntake()){
             claw.returnLimelightToDefaultState();
         }
+
+        SmartDashboard.putBoolean("alignment analysis timed out", false);
     }
 
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
+        SmartDashboard.putBoolean("arrived at monitor angle", arrivedAtMonitorAngle);
+        SmartDashboard.putNumber("monitorGamepieceInitialTime", monitorGamepieceInitialTime);
 
         // Switch profiles into something slower so we don't smash the arm into the fulcrum.
         if (arm.isShoulderBelowAngle(-20)) {
@@ -99,9 +110,9 @@ public class SetStowedPose extends CommandBase {
         }
  
         // If we're monitoring alignment of new cones or cubes in the intake, keep track of when we got there.
-        // We need to make sure we don't spend too long looking at this.
+        // But don't start until we've finished normalizing the cone.
         if(claw.isMonitorNewConeIntake()){
-            if(arm.isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle) && !arrivedAtMonitorAngle){
+            if(arm.isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle) && !arrivedAtMonitorAngle && !claw.isNormalizingCone()){
                 arrivedAtMonitorAngle = true;
                 monitorGamepieceInitialTime = Timer.getFPGATimestamp();
             }
@@ -113,9 +124,14 @@ public class SetStowedPose extends CommandBase {
         }
 
         // Set a time limit how long we can look at the game piece for alignment
-        if(arrivedAtMonitorAngle && currentTime - monitorGamepieceInitialTime > ClawConstants.maximumGamepieceMonitorTime){
+        if(arrivedAtMonitorAngle && monitorGamepieceInitialTime - currentTime > ClawConstants.kMaximumGamepieceMonitorTime){
+            SmartDashboard.putBoolean("alignment analysis timed out", true);
             claw.setMonitorNewConeIntake(false);
             claw.setMonitorNewCubeIntake(false);
+            if(claw.getGamepieceAlignmentError() == 0){
+                blinkin.failure();
+            }
+            claw.returnLimelightToDefaultState();
         }
 
         // If we are done monitoring cone/cube alignment, proceed to stowed.

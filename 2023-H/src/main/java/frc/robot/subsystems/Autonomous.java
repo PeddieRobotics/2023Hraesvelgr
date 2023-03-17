@@ -15,8 +15,8 @@ import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
-import frc.robot.commands.ClawCommands.IntakeCone;
-import frc.robot.commands.ClawCommands.IntakeCube;
+import frc.robot.commands.ClawCommands.IntakeFloorCone;
+import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
@@ -49,8 +49,8 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("eject", new EjectGamepiece());
         eventMap.put("lock", new LockDrivetrain());
 
-        eventMap.put("IntakeCone", new IntakeCone());
-        eventMap.put("IntakeCube", new IntakeCube());
+        eventMap.put("IntakeCone", new IntakeFloorCone());
+        eventMap.put("IntakeCube", new IntakeFloorCube());
 
         eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
 
