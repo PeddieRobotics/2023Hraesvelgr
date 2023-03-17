@@ -54,18 +54,14 @@ public class ScoreAlign extends CommandBase {
         initialHeadingCorrectionComplete = false;
         initialTargetNotFound = false;
 
-        switch (arm.getState()) {
-            case L3_CUBE_INVERTED:
-                limelightName = "limelight-back";
-                scoreSetpoint = 0;
-                break;
-            case L3_CONE_INVERTED:
-                limelightName = "limelight-back";
-                scoreSetpoint = 0;
-                break;
-            default:
-                limelightName = "limelight-front";
-                scoreSetpoint = 180;
+        if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getState() == ArmState.L3_CUBE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CUBE_INVERTED){
+            scoreSetpoint = 0;
+            limelightName = "limelight-back";
+
+        }
+        else{
+            scoreSetpoint = 180;
+            limelightName = "limelight-front";
         }
 
         blinkin.acquiringTarget();
@@ -92,7 +88,6 @@ public class ScoreAlign extends CommandBase {
             }
         }
 
-        SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
     }
 
     @Override
@@ -108,17 +103,17 @@ public class ScoreAlign extends CommandBase {
         double txAvg;
         if (limelightName.equals("limelight-back")) {
             txAvg = limelightBack.getTxAverage();
-            convertedGamepieceAlignError = -convertedGamepieceAlignError;
         } else {
             txAvg = limelightFront.getTxAverage();
         }
+
+        SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
 
         if (!initialHeadingCorrectionComplete && Math
                 .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
-            drivetrain.drive(swerveTranslation,
-                    turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
+            drivetrain.drive(swerveTranslation, turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
         } else if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
@@ -130,7 +125,6 @@ public class ScoreAlign extends CommandBase {
             initialHeadingCorrectionComplete = true;
 
             yMove = yController.calculate(txAvg, convertedGamepieceAlignError);
-
             drivetrain.drive(new Translation2d(swerveTranslation.getX(), yMove + yFF * Math.signum(yMove)), oi.getRotation(), true, new Translation2d(0, 0));
 
         } else {

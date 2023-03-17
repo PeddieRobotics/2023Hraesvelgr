@@ -314,7 +314,7 @@ public final class Constants {
                 // Angles (poses) start here
                 public static final double kHomeAngle = 103.0;
                 public static final double kStowedAngle = 80.0;
-                public static final double kPreScoreAngle = 100.0;
+                public static final double kPreScoreAngle = 80.0;
 
                 public static final double kL1Angle = -25.0;
 

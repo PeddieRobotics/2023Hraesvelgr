@@ -22,7 +22,7 @@ public class NormalizeConeAfterIntake extends CommandBase{
         initialTime = Timer.getFPGATimestamp();
         currentTime = Timer.getFPGATimestamp();
 
-        claw.setSpeed(0.1);
+        claw.setSpeed(0.05);
 
         claw.setNormalizingCone(true);
     }

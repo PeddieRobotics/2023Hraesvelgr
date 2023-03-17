@@ -32,7 +32,7 @@ public class EjectGamepiece extends CommandBase{
         if(claw.getState() == ClawState.CONE){
             claw.outtakeCube();
         } else {
-            claw.stopClaw(); // Stop the motor just before ejection on cubes to minimize weird "pop-out" behaviors
+            claw.outtakeCube();
         }
 
     }
@@ -40,11 +40,6 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-
-        // We are now good to eject the cube (200 ms delay)
-        if(currentTime - initialTime > 0.2 && claw.getState() == ClawState.CUBE){
-            claw.outtakeCube();
-        }
     }
 
     @Override

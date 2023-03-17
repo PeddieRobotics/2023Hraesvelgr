@@ -23,7 +23,7 @@ public class SetPreScorePoseL3Return extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkPreScoreAngle());
+        arm.setWristPosition(100);
         arm.setState(ArmState.PRE_SCORE);
         arm.setGoalPose(ArmState.NONE);
 
@@ -36,6 +36,7 @@ public class SetPreScorePoseL3Return extends CommandBase{
     public void execute() {
         if(arm.isShoulderBelowAngle(80)){
             arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.REGULAR);
+            arm.setWristPosition(wrist.getkPreScoreAngle());
         }
         
     }

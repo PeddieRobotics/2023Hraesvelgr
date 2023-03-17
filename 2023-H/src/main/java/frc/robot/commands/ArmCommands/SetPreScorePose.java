@@ -43,7 +43,7 @@ public class SetPreScorePose extends CommandBase{
     @Override
     public void execute() {
         if(previousState == ArmState.L2_CONE){
-            if(arm.isWristAboveAngle(0)){
+            if(arm.isWristAboveAngle(30)){
                 arm.setShoulderPositionSmartMotion(shoulder.getkPreScoreAngle(), SmartMotionArmSpeed.SLOW);
             }
         }

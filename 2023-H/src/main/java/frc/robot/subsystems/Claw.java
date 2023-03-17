@@ -37,7 +37,7 @@ public class Claw extends SubsystemBase {
 
     private double gamepieceAlignmentError;
     private boolean monitorNewConeIntake, monitorNewCubeIntake;
-    private InterpolatingTreeMap<Double,Double> coneL2AlignmentTable;
+    private InterpolatingTreeMap<Double,Double> coneL2AlignmentTable, coneL3AlignmentTable;
 
     private double ejectionTime;
     private boolean justEjectedGamepiece;
@@ -79,8 +79,15 @@ public class Claw extends SubsystemBase {
         coneL2AlignmentTable.put(-17.228, -7.79); // Left calibration point
         coneL2AlignmentTable.put(-4.946, -3.53); // Center calibration point
         coneL2AlignmentTable.put(11.399, 2.04); // Right calibration point
+
+        // Linear interpolation calibrated points for L3 cone alignment
+        coneL3AlignmentTable = new InterpolatingTreeMap<>();
+        coneL3AlignmentTable.put(-17.583, 9.03); // Left calibration point
+        coneL3AlignmentTable.put(-5.442, 3.57); // Center calibration point
+        coneL3AlignmentTable.put(8.162, -2.7); // Right calibration point
         
     }
+
 
     @Override
     public void periodic() {
@@ -291,7 +298,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double convertL3ConeTXToAlignmentError(double tx) {
-        return coneL2AlignmentTable.get(tx);
+        return coneL3AlignmentTable.get(tx);
     }
 
     public double convertL3CubeTXToAlignmentError(double tx) {
