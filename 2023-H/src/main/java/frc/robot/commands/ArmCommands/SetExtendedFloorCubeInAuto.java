@@ -11,7 +11,6 @@ public class SetExtendedFloorCubeInAuto extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
-    private boolean overshotTargetAngle;
 
     public SetExtendedFloorCubeInAuto() {
         arm = Arm.getInstance();
@@ -23,24 +22,14 @@ public class SetExtendedFloorCubeInAuto extends CommandBase{
 
     @Override
     public void initialize() {
-        overshotTargetAngle = false;
-            arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-            wrist.setPosition(20);
-
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
+        arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-6);
+        arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle()-3, SmartMotionArmSpeed.REGULAR);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(shoulder.getkTransitoryAngle())){
-            overshotTargetAngle = true;
-        }
-
-        if(overshotTargetAngle){
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-3);
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle() + 1, SmartMotionArmSpeed.SLOW);
-        }
     }
 
     @Override
@@ -52,12 +41,7 @@ public class SetExtendedFloorCubeInAuto extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(overshotTargetAngle){
-            return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle() + 1) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle() -3);
-        }
-        else{
-            return false;
-        }
+            return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()-3) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle() -6);
     }
 
 

@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
             shuffleboard.setupAutoSelector();
         }
 
-        // PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
+        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;

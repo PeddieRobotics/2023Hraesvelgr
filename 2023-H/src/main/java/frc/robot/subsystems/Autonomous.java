@@ -120,6 +120,10 @@ public class Autonomous extends SubsystemBase{
         // 2 piece routines without charge station
         // autoRoutines.put("2 Piece Bump Column 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBump", 0.5, 0.5)));
         autoRoutines.put("2 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopSweep", 2.0, 2.5)));
+        autoRoutines.put("2 Piece Top Column 9 Curve", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopCurve", 2.0, 2.5)));
+        autoRoutines.put("2 Piece Top Column 9 Pivot", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopPivot", 2.0, 2.5)));
+
+
         autoRoutines.put("2 Piece Prepare Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
 
         // 2 piece routines with charge station
