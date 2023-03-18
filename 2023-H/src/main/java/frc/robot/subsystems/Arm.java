@@ -262,9 +262,9 @@ public class Arm extends SubsystemBase {
         // else if(goalPose == ArmState.L3_CONE_FORWARD){
         //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
         // }
-        // else if(goalPose == ArmState.L3_CONE_INVERTED){
-        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
-        // }
+        else if(goalPose == ArmState.L3_CONE_INVERTED){
+            CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+        }
         else if(!isArmScoringPose() || isPreScorePose()){
             Blinkin.getInstance().failure();
         }

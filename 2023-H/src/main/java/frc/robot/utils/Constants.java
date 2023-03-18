@@ -359,7 +359,7 @@ public final class Constants {
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
                 public static final double kConeL1OuttakeSpeed = 0.5;
-                public static final double kConeL2OuttakeSpeed = 0.5;
+                public static final double kConeL2OuttakeSpeed = 1;
                 public static final double kConeL3ForwardOuttakeSpeed = 1;
                 public static final double kConeL3InvertedOuttakeSpeed = 1;
 

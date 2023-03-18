@@ -26,9 +26,6 @@ public class EjectGamepiece extends CommandBase{
         initialTime = Timer.getFPGATimestamp();
         currentTime = Timer.getFPGATimestamp();
 
-        claw.setEjectionTime(Timer.getFPGATimestamp());
-        claw.setJustEjectedGamepiece(true);
-
         if(claw.getState() == ClawState.CONE){
             claw.outtakeCube();
         } else {
@@ -40,6 +37,11 @@ public class EjectGamepiece extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
+        if(!claw.hasCone() && !claw.isJustEjectedGamepiece()){
+            initialTime = Timer.getFPGATimestamp();
+            claw.setEjectionTime(Timer.getFPGATimestamp());
+            claw.setJustEjectedGamepiece(true);
+        }
     }
 
     @Override
