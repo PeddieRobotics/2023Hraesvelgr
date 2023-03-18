@@ -29,6 +29,7 @@ import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
+import frc.robot.commands.DriveCommands.StraightenDrivetrain;
 import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
@@ -197,10 +198,11 @@ public class DriverOI {
         // Left stick button unused
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
 
+
         // Stowed pose
         // Back button (Touchpad button on front)
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        // touchpadButton.onTrue(new SetStowedPose());
+        //touchpadButton.onTrue(new StraightenDrivetrain());
 
         // Slow Mode
         // Back button (Option button on front)

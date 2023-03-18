@@ -131,6 +131,7 @@ public class Drivetrain extends SubsystemBase {
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();
+            SmartDashboard.putNumber("swerve module position" + i,  swerveModulePositions[i].angle.getDegrees());
         }
         updateOdometry();
 
@@ -386,6 +387,13 @@ public class Drivetrain extends SubsystemBase {
         backLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(3 * Math.PI / 4)));
         frontRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
         backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
+    }
+
+    public void straighten() {
+        frontLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
+        backLeftSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
+        frontRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
+        backRightSwerveModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
     }
 
     public double[] getModuleRotations(){
