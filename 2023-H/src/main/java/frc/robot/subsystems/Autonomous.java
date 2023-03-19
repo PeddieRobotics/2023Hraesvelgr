@@ -9,16 +9,21 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAuto;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
+import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ArmCommands.SetPreScorePose;
+import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
 import frc.robot.commands.ArmCommands.SetTravelOverBridgePoseInAuto;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
+import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeFloorCubeInAuto;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -64,9 +69,18 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
-    
+
+        eventMap.put("PreScorePose", new SetPreScorePose());
+        eventMap.put("PreScorePoseWristDown", new SetPreScorePoseWristDown());
+
+        eventMap.put("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
+        eventMap.put("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
+
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubeInAuto());
+        eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
+        eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
+
 
         autoBuilder = new CustomAutoBuilder(
         drivetrain ::getPose, // Pose2d supplier
@@ -96,10 +110,6 @@ public class Autonomous extends SubsystemBase{
     }
 
     public void setupAutoRoutines(){
-
-        //Test Paths
-        autoRoutines.put("Loop", autoBuilder.fullAuto(PathPlanner.loadPathGroup("loop", 2.5, 2.5)));
-
         // Competition paths
 
         // 1 piece routines without charge station
@@ -122,7 +132,8 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("2 Piece Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopSweep", 2.0, 2.5)));
         autoRoutines.put("2 Piece Top Column 9 Curve", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopCurve", 2.0, 2.5)));
         autoRoutines.put("2 Piece Top Column 9 Pivot", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopPivot", 2.0, 2.5)));
-
+        autoRoutines.put("2 Piece Top Column 9 Inverted", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceTopInverted", 1, 1)));
+        autoRoutines.put("2 Piece Top Column 9 Collect One", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9CollectOne", 2.5, 3)));
 
         autoRoutines.put("2 Piece Prepare Top Column 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PiecePrepareTop", 0.5, 0.5)));
 
@@ -138,7 +149,7 @@ public class Autonomous extends SubsystemBase{
         // //test paths
         int i=10;
         while(i-->1){
-            autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1)));
+            autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 2.5, 2.5)));
         }
         autoRoutines.put("TestPath", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", 0.5, 0.5)));
         // autoRoutines.put("testPath1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath1", 0.5, 0.5)));

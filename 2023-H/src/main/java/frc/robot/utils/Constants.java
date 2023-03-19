@@ -144,17 +144,8 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kMaxAcceleration = 2.50;
-                public static final double kMaxSpeed = 3.25;
-                public static final double kMaxAngularSpeed = Math.PI / 2;
-                public static final double kMaxAngularAccel = Math.PI;
-                public static final double kPXController = 3.0;
-                public static final double kPYController = 3.0;
-                public static final double kPTranslationController = 3.0;
-                public static final double kPThetaController = 3.0;
-
-                public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-                                kMaxAngularSpeed, kMaxAngularAccel);
+                public static final double kPTranslationController = 1.0; // 4.0;
+                public static final double kPThetaController = 0.9; // 0.4;
 
                 // Charge station balance algorithm parameters
                 public static final double kPCSBalanceDrive = 0.03;
@@ -250,7 +241,7 @@ public final class Constants {
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
 
-                public static final double kL3CubeForwardAngle = 15.0;
+                public static final double kL3CubeForwardAngle = 6.0;
                 public static final double kL3CubeInvertedAngle = 155.0;
                 public static final double kL3ConeForwardAngle = 19.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
@@ -331,7 +322,7 @@ public final class Constants {
                 public static final double kL2CubeAngle = -85.0;
 
                 public static final double kL3CubeForwardAngle = -5.0;
-                public static final double kL3CubeInvertedAngle = 2.5;
+                public static final double kL3CubeInvertedAngle = -10;
                 public static final double kL3ConeForwardAngle = -16.0;
                 public static final double kL3ConeInvertedAngle = 0.0;
 
@@ -366,7 +357,7 @@ public final class Constants {
                 public static final double kCubeL1OuttakeSpeed = 0.3;
                 public static final double kCubeL2OuttakeSpeed = 0.5;
                 public static final double kCubeL3ForwardOuttakeSpeed = 0.5;
-                public static final double kCubeL3InvertedOuttakeSpeed = 0.5;
+                public static final double kCubeL3InvertedOuttakeSpeed = 0.3;
 
                 public static final double kCubeHoldSpeed = -0.05;
 
