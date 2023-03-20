@@ -133,6 +133,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         robotContainer.setFlipped(true);
         robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
+        Blinkin.getInstance().returnToRobotState();
 
         if (!ranAutonomousRoutine) {
             robotContainer.resetPoseToFaceOtherAlliance();

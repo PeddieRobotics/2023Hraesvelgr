@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +25,8 @@ public class Drivetrain extends SubsystemBase {
 
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
+
+    private BuiltInAccelerometer mRioAccel;
 
     // Swerve Modules
     private final MAXSwerveModule[] swerveModules;
@@ -124,10 +127,14 @@ public class Drivetrain extends SubsystemBase {
         correctHeadingTargetHeading = getHeadingAsRotation2d();
 
         SmartDashboard.putBoolean("isFlipped", isFlipped);
+
+        mRioAccel = new BuiltInAccelerometer();
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("IMU Pitch", getPitch());
+
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();

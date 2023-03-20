@@ -195,17 +195,17 @@ public class DriverOI {
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
         rightStickButton.toggleOnTrue(new LockDrivetrain());
 
-        // Left stick button, unused - BEING USED RIGHT NOW FOR CHARGE STATION TESTS, REMOVE WHEN DONE
+        // Left stick button, unused
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
-        leftStickButton.onTrue(new ClimbCSGyro(180));
 
-        // Back button (Touchpad button on front), unused - BEING USED RIGHT NOW FOR CHARGE STATION TESTS, REMOVE WHEN DONE
+        // Back button (Touchpad button on front), unused
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new ClimbCSGyro(0));
+        // touchpadButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));  // USE FOR TESTING GYRO CLIMBS
 
         // Slow Mode
         // Back button (Option button on front)
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
+        // optionsButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5)); // USE FOR TESTING GYRO CLIMBS
         optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Share button unused

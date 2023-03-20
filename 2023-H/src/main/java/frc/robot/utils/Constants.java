@@ -144,13 +144,14 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kPTranslationController = 1.0; // 4.0;
+                public static final double kPTranslationController = 4.0; // 4.0;
                 public static final double kPThetaController = 0.8; // 0.4;
 
                 // Charge station balance algorithm parameters
-                public static final double kPCSBalanceDrive = 0.03;
-                public static final double kCSGoalDegrees = 0.0; // Tune based on field
-                public static final double kCSAngleOnCSDegrees = 2.0;
+                // Tune based on field.
+                public static final double kCSDebounceTime = 0.1;
+                public static final double kOnCSDegree = 13.0;
+                public static final double kCSLevelDegree = 10.0;
                 
         }
 
@@ -257,6 +258,15 @@ public final class Constants {
 
                 public static final double kMotorReduction = 192.0; // 192:1 shoulder reduction
                 public static final double kEncoderConversionFactor = 360.0/kMotorReduction;
+
+                public static final double kFloorIntakeConeMaxVelToStow = 1200;
+                public static final double kFloorIntakeConeMaxAccelToStow = 2500;
+
+                public static final double kFloorIntakeCubeMaxVelToStow = 1500;
+                public static final double kFloorIntakeCubeMaxAccelToStow = 5000;
+
+                public static final double kScoringPoseMaxVelToStow = 1500;
+                public static final double kScoringPoseMaxAccelToStow = 6000;
 
         }
 

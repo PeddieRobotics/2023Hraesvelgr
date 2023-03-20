@@ -265,9 +265,6 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CONE_INVERTED){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
         }
-        else if(!isArmScoringPose() || isPreScorePose()){
-            Blinkin.getInstance().failure();
-        }
 
     }
 

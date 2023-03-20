@@ -80,11 +80,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.7,
+        "x": 5.5,
         "y": 3.3
       },
       "prevControl": {
-        "x": 4.5791411975032466,
+        "x": 6.379141197503246,
         "y": 3.3
       },
       "nextControl": null,
@@ -95,7 +95,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "lock"
+          "ClimbCSBackMedium"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
