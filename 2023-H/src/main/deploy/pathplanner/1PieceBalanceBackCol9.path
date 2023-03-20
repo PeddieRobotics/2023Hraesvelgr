@@ -17,7 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ConeL3"
+          "ConeL3",
+          "straighten"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -79,11 +80,11 @@
     },
     {
       "anchorPoint": {
-        "x": 4.0,
+        "x": 3.9,
         "y": 3.3
       },
       "prevControl": {
-        "x": 4.21473394706878,
+        "x": 4.11473394706878,
         "y": 3.3
       },
       "nextControl": null,
@@ -102,21 +103,19 @@
       }
     }
   ],
+  "maxVelocity": 1.5,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
   "markers": [
     {
-      "position": 0.01,
+      "position": 0.15272727272725783,
       "names": [
-        "IntakeCubePose"
-      ]
-    },
-    {
-      "position": 0.27272727272727265,
-      "names": [
+        "IntakeCubePose",
         "IntakeCube"
       ]
     },
     {
-      "position": 0.9818181818181818,
+      "position": 1.2436363636363486,
       "names": [
         "stow"
       ]

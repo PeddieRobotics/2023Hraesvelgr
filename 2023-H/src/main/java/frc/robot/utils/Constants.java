@@ -145,12 +145,12 @@ public final class Constants {
 
         public static final class AutoConstants {
                 public static final double kPTranslationController = 1.0; // 4.0;
-                public static final double kPThetaController = 0.9; // 0.4;
+                public static final double kPThetaController = 0.8; // 0.4;
 
                 // Charge station balance algorithm parameters
                 public static final double kPCSBalanceDrive = 0.03;
                 public static final double kCSGoalDegrees = 0.0; // Tune based on field
-                public static final double kCSAngleThresholdDegrees = 2.0;
+                public static final double kCSAngleOnCSDegrees = 2.0;
                 
         }
 
@@ -346,7 +346,7 @@ public final class Constants {
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kCubeIntakeSpeed = -1;
-                public static final double kCubeSingleSSIntakeSpeed = -0.6;
+                public static final double kCubeSingleSSIntakeSpeed = -0.3;
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
                 public static final double kConeL1OuttakeSpeed = 0.5;

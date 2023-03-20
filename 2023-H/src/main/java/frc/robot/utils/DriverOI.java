@@ -26,6 +26,7 @@ import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
+import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
@@ -159,7 +160,6 @@ public class DriverOI {
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
 
-
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
@@ -195,14 +195,13 @@ public class DriverOI {
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
         rightStickButton.toggleOnTrue(new LockDrivetrain());
 
-        // Left stick button unused
+        // Left stick button, unused - BEING USED RIGHT NOW FOR CHARGE STATION TESTS, REMOVE WHEN DONE
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
+        leftStickButton.onTrue(new ClimbCSGyro(180));
 
-
-        // Stowed pose
-        // Back button (Touchpad button on front)
+        // Back button (Touchpad button on front), unused - BEING USED RIGHT NOW FOR CHARGE STATION TESTS, REMOVE WHEN DONE
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        //touchpadButton.onTrue(new StraightenDrivetrain());
+        touchpadButton.onTrue(new ClimbCSGyro(0));
 
         // Slow Mode
         // Back button (Option button on front)

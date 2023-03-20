@@ -17,7 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ConeL3"
+          "ConeL3",
+          "straighten"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -53,12 +54,7 @@
     {
       "position": 0.01,
       "names": [
-        "IntakeCubePose"
-      ]
-    },
-    {
-      "position": 0.6060606060605856,
-      "names": [
+        "IntakeCubePose",
         "IntakeCube"
       ]
     }
