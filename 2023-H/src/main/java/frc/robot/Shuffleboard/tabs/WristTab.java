@@ -1,8 +1,11 @@
 package frc.robot.Shuffleboard.tabs;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.SmartMotionWristSpeed;
@@ -45,21 +48,27 @@ public class WristTab extends ShuffleboardTabBase {
                     .getEntry();
             mArbitraryFF = tab.add("Arb FF", 0.0)
                     .getEntry();
-
             mkG = tab.add("kG", WristConstants.kGVolts)
                     .getEntry();
             mkV = tab.add("kV", WristConstants.kVVoltSecondPerRad)
                     .getEntry();
             mkA = tab.add("kA", WristConstants.kAVoltSecondSquaredPerRad)
                     .getEntry();
-            mkP = tab.add("kP", WristConstants.kP)
+            mkP = tab.add("kP", WristConstants.kPositionP)
                     .getEntry();
-            mkI = tab.add("kI", WristConstants.kI)
+            mkI = tab.add("kI", WristConstants.kPositionI)
                     .getEntry();
-            mkIz = tab.add("IZone", WristConstants.kIz)
+            mkIz = tab.add("IZone", WristConstants.kPositionIz)
                     .getEntry();
-            mkD = tab.add("kD", WristConstants.kD)
+            mkD = tab.add("kD", WristConstants.kPositionD)
                     .getEntry();
+                mkFF = tab.add("kFF", WristConstants.kPositionFF).getEntry();
+
+                mSmartMotionAngleTol = tab.add("mSmartMotionAngleTol", WristConstants.kSmartMotionRegularSetpointTol).getEntry();
+                mSmartMotionMinVel = tab.add("mSmartMotionMinVel", WristConstants.kSmartMotionRegularMinVel).getEntry();
+                mSmartMotionMaxVel = tab.add("mSmartMotionMaxVel", WristConstants.kSmartMotionRegularMaxVel).getEntry();
+                mSmartMotionMaxAccel = tab.add("mSmartMotionMaxAccel", WristConstants.kSmartMotionRegularMaxAccel).getEntry();
+
         } catch (IllegalArgumentException e) {
         }
 
@@ -79,18 +88,19 @@ public class WristTab extends ShuffleboardTabBase {
             if (mOpenLoopToggle.getBoolean(false)) {
                 wrist.setPercentOutput(DriverOI.getInstance().getArmSpeed());
             } else if (mPIDToggle.getBoolean(false)) {
-                wrist.updatePIDController(mkP.getDouble(WristConstants.kP),
-                        mkI.getDouble(WristConstants.kI),
-                        mkD.getDouble(WristConstants.kD),
-                        mkIz.getDouble(WristConstants.kIz),
-                        mkFF.getDouble(WristConstants.kFF), 0);
+                wrist.updatePIDController(
+                        mkP.getDouble(WristConstants.kPositionP),
+                        mkI.getDouble(WristConstants.kPositionI),
+                        mkD.getDouble(WristConstants.kPositionD),
+                        mkIz.getDouble(WristConstants.kPositionIz), 
+                        mkFF.getDouble(WristConstants.kPositionFF), 1);
                         wrist.updateWristFeedforward(
                                         mkG.getDouble(0.0),
                                         mkV.getDouble(0.0),
                                         mkA.getDouble(0.0));
-
-                        wrist.setVelocity(mPIDSetpoint.getDouble(0.0));
-                        //wrist.setPositionSmartMotion(mPIDSetpoint.getDouble(0.0), SmartMotionWristSpeed.REGULAR);
+                        wrist.setPosition(mPIDSetpoint.getDouble(0.0));
+                        // wrist.setVelocity(mPIDSetpoint.getDouble(0.0));
+                        // wrist.setPositionSmartMotion(mPIDSetpoint.getDouble(0.0), SmartMotionWristSpeed.REGULAR);
                         wrist.setRegularSmartMotionParameters(mSmartMotionAngleTol.getDouble(0.0),
                                         mSmartMotionMinVel.getDouble(0.0), mSmartMotionMaxVel.getDouble(0.0),
                                         mSmartMotionMaxAccel.getDouble(0.0));
@@ -98,6 +108,7 @@ public class WristTab extends ShuffleboardTabBase {
 
             }
         } catch (NullPointerException e) {
+                SmartDashboard.putString("Catch", "NULL POINTER");
         }
     }
 

@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -11,6 +13,7 @@ import frc.robot.utils.RobotMap;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Wrist {
     private static Wrist wrist;
@@ -63,6 +66,8 @@ public class Wrist {
     public enum SmartMotionWristSpeed {REGULAR, SLOW, FAST};
 
     private double currentPIDSetpointAngle;
+
+    private AbsoluteEncoder wristEncoder;
 
 
     public Wrist() {
@@ -135,6 +140,9 @@ public class Wrist {
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = WristConstants.kHomeAngle;
 
+        wristEncoder = wristMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        wristEncoder.setPositionConversionFactor(WristConstants.kAbsoluteEncoderConversionFactor);
+
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -170,11 +178,8 @@ public class Wrist {
         pidController.setSmartMotionMaxAccel(kSmartMotionFastMaxAccel, 3);
     }
 
-    public double getAngle() {
-        return wristMotor.getEncoder().getPosition();
-    }
-
     public void setPosition(double setpointDeg) {
+        SmartDashboard.putNumber("Wrist Set Position Setpoint", setpointDeg);
         currentPIDSetpointAngle = setpointDeg;
 
         arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
@@ -194,7 +199,7 @@ public class Wrist {
 
     // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
-        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getPosition()), 0);
 
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
@@ -202,7 +207,7 @@ public class Wrist {
     public void setPositionSmartMotion(double setpointDeg, SmartMotionWristSpeed mode){
         currentPIDSetpointAngle = setpointDeg;
 
-        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getPosition()), 0);
 
         switch(mode){
             case REGULAR:
@@ -319,7 +324,8 @@ public class Wrist {
     }
 
     public double getPosition() {
-        return wristMotor.getEncoder().getPosition();
+        // return wristMotor.getEncoder().getPosition();
+        return wristEncoder.getPosition() - WristConstants.kWristAbsoluteEncoderAngleOffset;
     }
 
     public double getVelocity() {
@@ -355,20 +361,21 @@ public class Wrist {
     }
 
     public void periodic() {
+        SmartDashboard.putNumber("Wrist Absolute Encoder Readings", wristEncoder.getPosition());
         //Limit sensor triggered and wrist is moving down
-        if(atLimitSensor() && getVelocity() < 0){   
-            reachedLimitSensorDownward = true;
-        } else if(getVelocity() > 0){
-            reachedLimitSensorDownward = false;
-        }
+        // if(atLimitSensor() && getVelocity() < 0){   
+        //     reachedLimitSensorDownward = true;
+        // } else if(getVelocity() > 0){
+        //     reachedLimitSensorDownward = false;
+        // }
 
         // If the wrist is moving down and leaves the limit sensor, reset the encoder
-        if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
-            wrist.setEncoder(75); 
-            reachedLimitSensorDownward = false;
-        }
+        // if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
+        //     wrist.setEncoder(75); 
+        //     reachedLimitSensorDownward = false;
+        // }
 
-        if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
+        // if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
     }
 
     public void setMode(IdleMode mode) {

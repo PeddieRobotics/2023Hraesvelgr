@@ -98,7 +98,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void holdWristPosition(){
-        setWristPosition(wrist.getAngle());
+        setWristPosition(wrist.getPosition());
     }
 
     public void setWristPosition(double setPoint){

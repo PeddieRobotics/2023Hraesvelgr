@@ -282,8 +282,8 @@ public final class Constants {
                 public static final double kPositionFF = 0.0;
 
                 // Soft limits
-                public static final float kAngleMin = -140;
-                public static final float kAngleMax = 104;
+                public static final float kAngleMin = -90;
+                public static final float kAngleMax = 103;
             
                 // Wrist feedforward
                 public static final double kGVolts = 0.0;
@@ -346,8 +346,12 @@ public final class Constants {
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kMotorReduction = 160; // 160:1
+                public static final double kMotorReduction = 113.77777777777777; // 113.777777777777:1
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
+                public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
+
+                public static final double kWristAbsoluteEncoderAngleOffset = 99.5;
+
 
         }
 
