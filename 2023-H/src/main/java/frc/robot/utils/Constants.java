@@ -236,13 +236,13 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -30.0;
-                public static final double kExtendedFloorCubeAngle = -37;
+                public static final double kExtendedFloorConeAngle = -29;
+                public static final double kExtendedFloorCubeAngle = -36.5;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
 
-                public static final double kL3CubeForwardAngle = 6.0;
+                public static final double kL3CubeForwardAngle = 8.5;
                 public static final double kL3CubeInvertedAngle = 155.0;
                 public static final double kL3ConeForwardAngle = 19.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
@@ -325,8 +325,8 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -75.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -27.0;
-                public static final double kExtendedFloorCubeAngle = -17;
+                public static final double kExtendedFloorConeAngle = -41.0;
+                public static final double kExtendedFloorCubeAngle = -30.0;
 
                 public static final double kL2ConeAngle = -78.0;
                 public static final double kL2CubeAngle = -85.0;
@@ -370,7 +370,7 @@ public final class Constants {
 
                 public static final double kCubeL1OuttakeSpeed = 0.3;
                 public static final double kCubeL2OuttakeSpeed = 0.5;
-                public static final double kCubeL3ForwardOuttakeSpeed = 0.5;
+                public static final double kCubeL3ForwardOuttakeSpeed = 0.8;
                 public static final double kCubeL3InvertedOuttakeSpeed = 0.3;
 
                 public static final double kCubeHoldSpeed = -0.05;
