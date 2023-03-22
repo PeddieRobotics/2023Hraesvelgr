@@ -272,7 +272,7 @@ public final class Constants {
 
         public static final class WristConstants {
                 // Do not change the below numbers without consultation, extremely dangerous!
-                public static final int kMaxCurrent = 25;
+                public static final int kMaxCurrent = 20;
 
                 // Position PID constants
                 public static final double kPositionP = 0.015;
@@ -280,10 +280,6 @@ public final class Constants {
                 public static final double kPositionD = 0.0001;
                 public static final double kPositionIz = 4.0;
                 public static final double kPositionFF = 0.0;
-
-                // Soft limits
-                public static final float kAngleMin = -90;
-                public static final float kAngleMax = 103;
             
                 // Wrist feedforward
                 public static final double kGVolts = 0.0;
@@ -350,8 +346,11 @@ public final class Constants {
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
                 public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
 
-                public static final double kWristAbsoluteEncoderAngleOffset = 99.5;
+                public static final double kAbsoluteEncoderAngleOffset = 56.63;
 
+                // Soft limits
+                public static final float kAngleMin = (float)(-90 + kAbsoluteEncoderAngleOffset);
+                public static final float kAngleMax = (float)(103 + kAbsoluteEncoderAngleOffset);
 
         }
 

@@ -22,18 +22,16 @@ public class OperatorEjectGamepiece extends CommandBase{
     @Override
     public void initialize() {
         operatorOI = OperatorOI.getInstance();
-        claw.setSpeed(ClawConstants.kOperatorEjectSpeed);
-
         blinkin.specialOperatorFunctionality();
     }
 
     @Override
     public void execute() {
         if(operatorOI.dPadDownHeld()){
-            claw.setSpeed(ClawConstants.kOperatorFastEjectSpeed);
+            claw.setSpeed(ClawConstants.kOperatorEjectSpeed);  
         }
         else{
-            claw.setSpeed(ClawConstants.kOperatorEjectSpeed);
+            claw.setSpeed(ClawConstants.kOperatorFastEjectSpeed);
         }
     }
 

@@ -151,7 +151,6 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9", 2.0, 3)));
         autoRoutines.put("2 Piece Col 9 Pivot", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9Pivot", 2.5, 3)));
         
-
         // 2 piece routines with charge station - dead reckoning / no gyro
         // autoRoutines.put("2 Piece Balance Front Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceFrontCol9", 2.5, 3)));
         // autoRoutines.put("2 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceBackCol9", 2.5, 4)));
@@ -159,16 +158,6 @@ public class Autonomous extends SubsystemBase{
         // 2 piece routines with charge station - GYRO
         // autoRoutines.put("GYRO 2 Piece Balance Front Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro2PieceBalanceFrontCol9", 2.5, 3)));
         // autoRoutines.put("GYRO 2 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro2PieceBalanceBackCol9", 2.5, 4)));
-
-        // 2.5 piece routines without charge station
-        autoRoutines.put("2 Piece Collect Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCollectCol9", 1.5, 1.5)));
-
-        // 2.5 piece routines with charge station - dead reckoning / no gyro
-        // autoRoutines.put("2 Piece Collect Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCollectBalanceBackCol9", 2.5, 4.5)));
-
-        // 2.5 piece routines with charge station - GYRO
-        // autoRoutines.put("GYRO 2 Piece Collect Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro2PieceCollectBalanceBackCol9", 2.5, 4.5)));
-
 
         /*
          * Non-competition paths start here
