@@ -110,13 +110,10 @@ public class OperatorOI {
                  * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
                  */
                 // If we have a game piece, pre-pose the arm for L2 cube or L2 cone based on intake state.
-                new ConditionalCommand(new SequentialCommandGroup(
+                new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
                         new InstantCommand(arm::setGoalPoseToLevelTwoCone),
                         claw::hasCube), new SetPreScorePose()),
-                    // If we do not have a game piece, indicate failure.
-                    new InstantCommand(() -> {blinkin.failure();}),
-                    claw::hasGamepiece),
                 arm::isArmScoringPose));
 
             // Request L3 score / transition to pre-score pose
@@ -139,13 +136,10 @@ public class OperatorOI {
                  * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
                  */
                 // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
-                new ConditionalCommand(new SequentialCommandGroup(
+                new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
                         new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), 
                         claw::hasCube), new SetPreScorePose()),
-                    // If we do not have a game piece, indicate failure.
-                    new InstantCommand(() -> {blinkin.failure();}),
-                    claw::hasGamepiece),
                 arm::isArmScoringPose));
 
             // Force score pose from pre-score pose
@@ -157,7 +151,7 @@ public class OperatorOI {
          * Refuse to do anything if we don't have a game piece yet.
          */ 
         else{
-            // L2 scoring pose (provided we have a gamepiece)
+            // L2 scoring pose
             Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
             circleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelTwoCube),
                 new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelTwoCubePose()),
@@ -167,7 +161,7 @@ public class OperatorOI {
                         claw::hasCone),
                     claw::hasCube));
 
-            // L3 scoring pose (provided we have a gamepiece)
+            // L3 scoring pose
             Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
             triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
                 new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),

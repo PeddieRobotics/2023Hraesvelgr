@@ -72,7 +72,7 @@ public final class Constants {
 
                 // Translation and Rotation Slew Rates
                 public static final boolean kUseRateLimit = true;
-                public static final double kDirectionSlewRate = 4; // 3; // radians per second
+                public static final double kDirectionSlewRate = 3; // 3; // radians per second
                 public static final double kMagnitudeSlewRate = 3; // 3; // percent per second (1 = 100%)
                 public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
@@ -223,9 +223,9 @@ public final class Constants {
                 public static final double kAngleMax = 155;
 
                 // Angles (poses) start here
-                public static final double kHomeAngle = -75.0;
+                public static final double kHomeAngle = -72.5;
                 public static final double kTransitoryAngle = -40.0;
-                public static final double kStowedAngle = -75.0;
+                public static final double kStowedAngle = -72.5;
                 public static final double kPreScoreAngle = 0.0;
 
                 public static final double kL1Angle = -75.0;
@@ -247,7 +247,7 @@ public final class Constants {
                 public static final double kL3ConeForwardAngle = 19.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kDoubleSSConeAngle = 25.0;
+                public static final double kDoubleSSConeAngle = 25.0; // definitely not right /needs tuning
                 public static final double kSingleSSConeAngle = -75.0;
                 public static final double kSingleSSCubeAngle = -75.0;
 
@@ -309,36 +309,36 @@ public final class Constants {
                 public static final double kSmartMotionFastMaxAccel = 3000.0; // rpm / sec
         
                 // Angles (poses) start here
-                public static final double kHomeAngle = 103.0;
-                public static final double kStowedAngle = 80.0;
-                public static final double kPreScoreAngle = 80.0;
+                public static final double kHomeAngle = 5.0;
+                public static final double kStowedAngle = 28.0;
+                public static final double kPreScoreAngle = 28.0;
 
-                public static final double kL1Angle = -25.0;
+                public static final double kL1Angle = 133.0;
 
                 // Shoulder is not fully extended out
                 // Currently unused
-                public static final double kCompactFloorConeAngle = -66.0;
-                public static final double kCompactFloorCubeAngle = -75.0;
+                public static final double kCompactFloorConeAngle = 174.0;
+                public static final double kCompactFloorCubeAngle = 183.0;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -41.0;
-                public static final double kExtendedFloorCubeAngle = -30.0;
+                public static final double kExtendedFloorConeAngle = 149.0;
+                public static final double kExtendedFloorCubeAngle = 138.0;
 
-                public static final double kL2ConeAngle = -78.0;
-                public static final double kL2CubeAngle = -85.0;
+                public static final double kL2ConeAngle = 186.0;
+                public static final double kL2CubeAngle = 186.0;
 
-                public static final double kL3CubeForwardAngle = -5.0;
-                public static final double kL3CubeInvertedAngle = -10;
-                public static final double kL3ConeForwardAngle = -16.0;
-                public static final double kL3ConeInvertedAngle = 0.0;
+                public static final double kL3CubeForwardAngle = 113.0;
+                public static final double kL3CubeInvertedAngle = 118.0;
+                public static final double kL3ConeForwardAngle = 124.0;
+                public static final double kL3ConeInvertedAngle = 108.0;
 
-                public static final double kDoubleSSConeAngle = -89.0;
-                public static final double kSingleSSConeAngle = 30.0;
-                public static final double kSingleSSCubeAngle = 68.0;
+                public static final double kDoubleSSConeAngle = 177.0; // definitely not right /needs tuning
+                public static final double kSingleSSConeAngle = 78.0;
+                public static final double kSingleSSCubeAngle = 40.0;
 
-                public static final double kTransitoryAngle = 70.0;
-                public static final double kMonitorConeAlignmentAngle = 45;
-                public static final double kMonitorCubeAlignmentAngle = 60;
+                public static final double kTransitoryAngle = 38.0;
+                public static final double kMonitorConeAlignmentAngle = 63.0;
+                public static final double kMonitorCubeAlignmentAngle = 48.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
@@ -346,16 +346,16 @@ public final class Constants {
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
                 public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
 
-                public static final double kAbsoluteEncoderAngleOffset = 56.63;
+                public static final double kAbsoluteEncoderZeroOffset = 39.428;
 
                 // Soft limits
-                public static final float kAngleMin = (float)(-90 + kAbsoluteEncoderAngleOffset);
-                public static final float kAngleMax = (float)(103 + kAbsoluteEncoderAngleOffset);
+                public static final float kAngleMin = 5;
+                public static final float kAngleMax = 190;
 
         }
 
         public static final class ClawConstants {
-                public static final int kClawMotorCurrentLimit = 25;
+                public static final int kClawMotorCurrentLimit = 35;
 
                 public static final double kConeIntakeSpeed = -1;
                 public static final double kCubeIntakeSpeed = -1;

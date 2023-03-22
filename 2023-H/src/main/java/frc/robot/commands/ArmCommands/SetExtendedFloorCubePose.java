@@ -28,12 +28,12 @@ public class SetExtendedFloorCubePose extends CommandBase{
         if(arm.isShoulderAboveAngle(shoulder.getkExtendedFloorCubeAngle())){
             approachFromAbove = true;
             arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
-            wrist.setPosition(20);
+            arm.setWristPosition(88);
         }
         else{
             approachFromAbove = false;
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-            arm.setWristPosition(20);
+            arm.setWristPosition(88);
         }
 
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);

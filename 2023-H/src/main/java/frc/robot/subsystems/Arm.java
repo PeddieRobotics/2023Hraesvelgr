@@ -141,12 +141,12 @@ public class Arm extends SubsystemBase {
         return getShoulderPosition() < angle;
     }
 
-    public boolean isWristAboveAngle(double angle){
-        return getWristPosition() > angle;
+    public boolean isWristLessThanAngle(double angle){
+        return getWristPosition() < angle;
     }
 
-    public boolean isWristBelowAngle(double angle){
-        return getWristPosition() < angle;
+    public boolean isWristGreaterThanAngle(double angle){
+        return getWristPosition() > angle;
     }
 
     public boolean isShoulderFullyStowed(){

@@ -45,7 +45,7 @@ public class SetCompactFloorConePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(30) && !shoulderStowing){
+        if(arm.isWristLessThanAngle(78) && !shoulderStowing){
             
             if(!transitory){
                 arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);

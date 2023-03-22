@@ -22,7 +22,7 @@ public class SetLevelThreeConeForwardPose extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(30);
+        arm.setWristPosition(78);
         arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeForwardAngle(), SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L3_CONE_FORWARD);
         arm.setGoalPose(ArmState.NONE);

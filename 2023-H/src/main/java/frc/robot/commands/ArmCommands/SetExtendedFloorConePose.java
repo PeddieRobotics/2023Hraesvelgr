@@ -23,7 +23,7 @@ public class SetExtendedFloorConePose extends CommandBase{
     @Override
     public void initialize() {
         arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorConeAngle(), SmartMotionArmSpeed.REGULAR);
-        if(arm.isWristAboveAngle(0) || arm.isShoulderAboveAngle(shoulder.getkExtendedFloorConeAngle())){
+        if(arm.isWristLessThanAngle(78) || arm.isShoulderAboveAngle(shoulder.getkExtendedFloorConeAngle())){
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
 

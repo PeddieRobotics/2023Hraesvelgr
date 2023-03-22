@@ -161,6 +161,8 @@ public class Shoulder {
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = ShoulderConstants.kHomeAngle;
 
+        shoulderMotorMaster.burnFlash();
+        shoulderMotorFollower.burnFlash();
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){

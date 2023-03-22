@@ -32,11 +32,11 @@ public class ManualWristControl extends CommandBase{
     public void execute() {
         wristOffset = oi.getWristPIDOffset();
         currentWrist += wristOffset;
-        if(currentWrist > WristConstants.kAngleMax){
-            currentWrist = WristConstants.kAngleMax;
+        if(currentWrist > WristConstants.kL2CubeAngle){
+            currentWrist = WristConstants.kL2CubeAngle;
         }
-        if(currentWrist < WristConstants.kAngleMin){
-            currentWrist = WristConstants.kAngleMin;
+        if(currentWrist < WristConstants.kHomeAngle){
+            currentWrist = WristConstants.kHomeAngle;
         }
         arm.setWristPosition(currentWrist);
     }

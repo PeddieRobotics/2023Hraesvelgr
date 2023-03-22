@@ -32,7 +32,7 @@ public class SetLevelOnePose extends CommandBase{
             transitory = true;
         }
         else{
-            arm.setWristPosition(60);
+            arm.setWristPosition(48);
         }
         arm.setState(ArmState.L1);
         arm.setGoalPose(ArmState.NONE);
@@ -41,7 +41,7 @@ public class SetLevelOnePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isWristAboveAngle(30) && !transitory){
+        if(arm.isWristLessThanAngle(78) && !transitory){
             arm.setShoulderPositionSmartMotion(shoulder.getkTransitoryAngle(), SmartMotionArmSpeed.REGULAR);
             transitory = true;
         }

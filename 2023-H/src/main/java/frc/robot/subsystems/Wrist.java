@@ -69,7 +69,6 @@ public class Wrist {
 
     private AbsoluteEncoder wristEncoder;
 
-
     public Wrist() {
 
         wristMotor = new CANSparkMax(RobotMap.kWristMotor, MotorType.kBrushless);
@@ -78,10 +77,13 @@ public class Wrist {
 
         limitSensor = new DigitalInput(RobotMap.kWristLimitSensor);
 
-        wristMotor.setSoftLimit(SoftLimitDirection.kForward, WristConstants.kAngleMax);
-        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, WristConstants.kAngleMin);
+        wristMotor.setInverted(true);
+
         wristMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         wristMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        wristMotor.setSoftLimit(SoftLimitDirection.kForward, WristConstants.kAngleMax);
+        wristMotor.setSoftLimit(SoftLimitDirection.kReverse, WristConstants.kAngleMin);
         
         wristMotor.setClosedLoopRampRate(0.05); // use a 50 ms ramp rate on closed loop control
 
@@ -90,10 +92,9 @@ public class Wrist {
 
         wristEncoder = wristMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
         wristEncoder.setPositionConversionFactor(WristConstants.kAbsoluteEncoderConversionFactor);
-        wristEncoder.setInverted(false);
-        wristEncoder.setZeroOffset(0);
-        wristEncoder.setAverageDepth(1);
-        SmartDashboard.putNumber("average sampling depth", wristEncoder.getAverageDepth());
+        wristEncoder.setInverted(true);
+        wristEncoder.setZeroOffset(WristConstants.kAbsoluteEncoderZeroOffset);
+        wristEncoder.setAverageDepth(32);
 
         pidController = wristMotor.getPIDController();
         pidController.setFeedbackDevice(wristEncoder);
@@ -146,6 +147,8 @@ public class Wrist {
         wristMotor.getEncoder().setPositionConversionFactor(WristConstants.kEncoderConversionFactor);
         wristMotor.getEncoder().setVelocityConversionFactor(1.0);
         setEncoder(WristConstants.kHomeAngle);
+
+        wristMotor.burnFlash();
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -182,23 +185,14 @@ public class Wrist {
     }
 
     public void setPosition(double setpointDeg) {
-        setpointDeg += WristConstants.kAbsoluteEncoderAngleOffset;
         currentPIDSetpointAngle = setpointDeg;
 
-        arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
+        // arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
+        if(setpointDeg >= 5.0 && setpointDeg <= 195.0){
+            pidController.setReference(setpointDeg, ControlType.kPosition, 1, 0);
+        }
     }
-
-    // Currently only used to hold the position of the arm after a smart motion call.
-    // See Arm class method holdPosition
-    // public void setPosition(double setpointDeg) {
-    //     currentPIDSetpointAngle = setpointDeg;
-
-    //     arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getAngle()), 0);
-
-    //     pidController.setReference(setpointDeg, ControlType.kPosition, 1, arbitraryFF);
-    // }
 
     // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
@@ -328,7 +322,7 @@ public class Wrist {
 
     public double getPosition() {
         // return wristMotor.getEncoder().getPosition();
-        return wristEncoder.getPosition() - WristConstants.kAbsoluteEncoderAngleOffset; // + 96.5; //- WristConstants.kWristAbsoluteEncoderAngleOffset;
+        return wristEncoder.getPosition(); // + 96.5; //- WristConstants.kWristAbsoluteEncoderAngleOffset;
     }
 
     public double getVelocity() {
