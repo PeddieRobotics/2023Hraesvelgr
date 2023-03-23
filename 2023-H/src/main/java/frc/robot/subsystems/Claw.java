@@ -306,13 +306,13 @@ public class Claw extends SubsystemBase {
     }
 
     public void monitorNewConeIntake() {
-        limelightFront.setPipeline(7);
+        limelightFront.setPipeline(7); // monitor alignment of cone in intake
         limelightFront.resetRollingAverages();
         monitorNewConeIntake = true;
     }
 
     public void monitorNewCubeIntake() {
-        limelightFront.setPipeline(4);
+        limelightFront.setPipeline(4); // monitor alignment of cube in intake
         limelightFront.resetRollingAverages();
         monitorNewCubeIntake = true;
     }
@@ -374,8 +374,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void returnLimelightToDefaultState(){
-        LimelightHelper.setPipelineIndex("limelight-front", 7); // Retroreflective tape pipeline
-        LimelightHelper.setPipelineIndex("limelight-back", 0); // Retroreflective tape pipeline
+        LimelightHelper.setPipelineIndex("limelight-front", 7); // Read alignment of cones in intake for auto-align
+        LimelightHelper.setPipelineIndex("limelight-back", 0); // April tag pipeline
 
     }
 

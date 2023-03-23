@@ -13,9 +13,7 @@ public abstract class Limelight extends SubsystemBase {
     public abstract int getPipeline();
 
     public abstract String getJSONDump();
-
-    public abstract int setPipelineType(int col);
-
+    
     public abstract double getTxAverage();
 
     public abstract double getTaAverage();
