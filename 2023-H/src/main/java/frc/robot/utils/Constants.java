@@ -42,7 +42,7 @@ public final class Constants {
                 public static final double kRealMaxSpeedMetersPerSecond = 4.459224;
                 public static final double kMaxFloorSpeed = 1.0 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
-                public static final double kMaxAngularSpeed = 2 * Math.PI;
+                public static final double kMaxAngularSpeed = 4 * Math.PI / 3;
                 public static final double kMaxAngularAcceleration = 2 * Math.PI / 3;
 
                 public static final double kNormalModeTranslationSpeedScale = 1.0;
@@ -223,9 +223,9 @@ public final class Constants {
                 public static final double kAngleMax = 155;
 
                 // Angles (poses) start here
-                public static final double kHomeAngle = -72.5;
+                public static final double kHomeAngle = -75.0;
                 public static final double kTransitoryAngle = -40.0;
-                public static final double kStowedAngle = -72.5;
+                public static final double kStowedAngle = -75.0;
                 public static final double kPreScoreAngle = 0.0;
 
                 public static final double kL1Angle = -75.0;
@@ -362,7 +362,7 @@ public final class Constants {
                 public static final double kCubeSingleSSIntakeSpeed = -0.3;
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
-                public static final double kConeL1OuttakeSpeed = 0.5;
+                public static final double kConeL1OuttakeSpeed = 0.75;
                 public static final double kConeL2OuttakeSpeed = 1;
                 public static final double kConeL3ForwardOuttakeSpeed = 1;
                 public static final double kConeL3InvertedOuttakeSpeed = 1;
