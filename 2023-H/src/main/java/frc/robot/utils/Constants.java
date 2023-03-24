@@ -152,6 +152,9 @@ public final class Constants {
                 public static final double kCSDebounceTime = 0.1;
                 public static final double kOnCSDegree = 13.0;
                 public static final double kCSLevelDegree = 10.0;
+                public static final double kCSClimbDistance = 1.0;
+                public static final double kCSOverrunMaxApproachDist = 1.5;
+                public static final double kCSOverrunRemainingClimbDist = 0.5;
                 
         }
 
