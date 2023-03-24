@@ -26,7 +26,7 @@ public class OperatorTab extends ShuffleboardTabBase {
     private OperatorOI operatorOI = OperatorOI.getInstance();
 
     private FieldView fieldView;
-    private GenericEntry mArmState, mUsePreScorePose, mClawState, mGamepieceState;
+    private GenericEntry mArmState, mClawState, mGamepieceState;
     private ComplexWidget mAutoChooser;
 
     // Sendable Chooser
@@ -47,10 +47,10 @@ public class OperatorTab extends ShuffleboardTabBase {
             mClawState = tab
             .add("Game piece?", "Empty").withSize(2,2).withPosition(22,1)
             .getEntry();
-            // mGamepieceState = tab.add("Has gamepiece", false).withSize(6,6).withPosition(0,0).getEntry();
-            // tab.addCamera("Stream", "LL Front", "mjpg:http://10.58.95.11:5800")
-            //     .withSize(9, 6)
-            //     .withPosition(6, 0);
+            mGamepieceState = tab.add("Has gamepiece", false).withSize(6,6).withPosition(0,0).getEntry();
+            tab.addCamera("Stream", "LL Front", "mjpg:http://10.58.95.11:5800")
+                .withSize(9, 6)
+                .withPosition(6, 0);
         } catch(IllegalArgumentException e){
         }
 
@@ -61,7 +61,7 @@ public class OperatorTab extends ShuffleboardTabBase {
         // fieldView.update();
         mArmState.setString(arm.getState().toString());
         mClawState.setString(claw.getState().toString());
-        // mGamepieceState.setBoolean(claw.hasGamepiece());
+        mGamepieceState.setBoolean(claw.hasGamepiece());
     }
 
     public void setupAutoSelector(){
@@ -72,7 +72,7 @@ public class OperatorTab extends ShuffleboardTabBase {
             String autoRoutineName = e.nextElement();
             autoRoutineSelector.addOption(autoRoutineName, autoRoutines.get(autoRoutineName));
         }
-        mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(1,1); // comp settings: withPosition(16,1);
+        mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(16,1); // comp settings: withPosition(16,1);
 
     }
 

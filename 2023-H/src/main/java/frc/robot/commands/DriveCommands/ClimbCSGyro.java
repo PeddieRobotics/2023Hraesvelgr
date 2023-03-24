@@ -126,12 +126,9 @@ public class ClimbCSGyro extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        // if(DriverStation.getMatchTime() > 14.5){
-        //     return true;
-        // }
-        // if(state == 2){
-        //     return true;
-        // }
+        if(state == 2){
+            return true;
+        }
         return false;
 
     }
