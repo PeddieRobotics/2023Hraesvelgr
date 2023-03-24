@@ -166,10 +166,10 @@ public class Autonomous extends SubsystemBase{
          * Non-competition paths start here
          */
         // //test paths
-        int i=10;
-        while(i-->1){
-            autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
-        }
+        // int i=10;
+        // while(i-->1){
+        //     autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
+        // }
     }   
 
     // Used only at the start of autonomous
