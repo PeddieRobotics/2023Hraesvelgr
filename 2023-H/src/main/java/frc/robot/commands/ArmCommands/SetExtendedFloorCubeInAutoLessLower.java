@@ -7,12 +7,12 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 
-public class SetExtendedFloorCubeInAutoLower extends CommandBase{
+public class SetExtendedFloorCubeInAutoLessLower extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
 
-    public SetExtendedFloorCubeInAutoLower() {
+    public SetExtendedFloorCubeInAutoLessLower() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
@@ -24,8 +24,8 @@ public class SetExtendedFloorCubeInAutoLower extends CommandBase{
     public void initialize() {
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
-        arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-7);
-        arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle()-7, SmartMotionArmSpeed.REGULAR);
+        arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-6);
+        arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle()-4, SmartMotionArmSpeed.REGULAR);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SetExtendedFloorCubeInAutoLower extends CommandBase{
 
     @Override
     public boolean isFinished() {
-            return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()-7) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle() -7);
+            return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()-4) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle()-6);
     }
 
 

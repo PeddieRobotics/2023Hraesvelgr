@@ -90,12 +90,12 @@
       "nextControl": null,
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 1.5,
+      "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ClimbCSBackMedium"
+          "ClimbCSBackSlow"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -106,5 +106,25 @@
   "maxVelocity": 1.5,
   "maxAcceleration": null,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "OverBridgePose"
+      ]
+    },
+    {
+      "position": 1.55,
+      "names": [
+        "IntakeCube",
+        "IntakeCubePose"
+      ]
+    },
+    {
+      "position": 2.050909090909066,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

@@ -78,15 +78,15 @@
     {
       "anchorPoint": {
         "x": 5.49,
-        "y": 3.3049476625269048
+        "y": 2.8
       },
       "prevControl": {
         "x": 6.2990798101121905,
-        "y": 3.3049476625269048
+        "y": 2.8
       },
       "nextControl": {
         "x": 4.68092018988781,
-        "y": 3.3049476625269048
+        "y": 2.8
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -105,12 +105,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.6388960652386357,
-        "y": 3.3277182674194163
+        "x": 3.44,
+        "y": 2.8
       },
       "prevControl": {
-        "x": 3.853630012307416,
-        "y": 3.3277182674194163
+        "x": 3.65473394706878,
+        "y": 2.8
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -135,7 +135,7 @@
     {
       "position": 0.15272727272725783,
       "names": [
-        "IntakeCubePose",
+        "IntakeCubePoseLower",
         "IntakeCube"
       ]
     },

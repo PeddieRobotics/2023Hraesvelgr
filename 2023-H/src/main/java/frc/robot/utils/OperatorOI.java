@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import javax.print.attribute.standard.DialogOwner;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -26,6 +28,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.OIConstants;
 
 public class OperatorOI {
@@ -210,6 +213,11 @@ public class OperatorOI {
         L1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
                 blinkin.returnToRobotState();
+                claw.setGamepieceOperatorOverride(false);
+            }
+            else if(dPadDownHeld()){
+                claw.setGamepieceOperatorOverride(true);
+                claw.setState(ClawState.CONE);
             }
             else{
                 blinkin.intakingCone();
@@ -220,6 +228,11 @@ public class OperatorOI {
         R1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
                 blinkin.returnToRobotState();
+                claw.setGamepieceOperatorOverride(false);
+            }
+            else if(dPadDownHeld()){
+                claw.setGamepieceOperatorOverride(true);
+                claw.setState(ClawState.CUBE);
             }
             else{
                 blinkin.intakingCube();

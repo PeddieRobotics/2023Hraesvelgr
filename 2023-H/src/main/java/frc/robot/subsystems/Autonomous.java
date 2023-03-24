@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAuto;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLessLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
@@ -19,6 +20,7 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
+import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetTravelOverBridgePoseInAuto;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
@@ -58,6 +60,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("stow", new SetStowedPose());
         eventMap.put("eject", new EjectGamepiece());
         eventMap.put("lock", new LockDrivetrain());
+        eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
 
         eventMap.put("IntakeCone", new IntakeFloorCone());
@@ -79,17 +82,18 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubeInAuto());
+        eventMap.put("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
         eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
         eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
 
         eventMap.put("ClimbCSFrontSlow", new ClimbCSGyro(0, 1.0, 0.5));
         eventMap.put("ClimbCSBackSlow", new ClimbCSGyro(180, 1.0, 0.5));
         
-        eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));
+        eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
         eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
 
-        eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 0.5));
-        eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 0.5));
+        eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
+        eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
 
 
         autoBuilder = new CustomAutoBuilder(
@@ -148,8 +152,7 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("GYRO 1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol9", 1.5, 2.0)));
 
         // 2 piece routines without charge station
-        autoRoutines.put("2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9", 2.0, 3)));
-        autoRoutines.put("2 Piece Col 9 Pivot", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9Pivot", 2.5, 3)));
+        autoRoutines.put("2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9", 2, 2)));
         
         // 2 piece routines with charge station - dead reckoning / no gyro
         // autoRoutines.put("2 Piece Balance Front Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceFrontCol9", 2.5, 3)));
@@ -163,16 +166,10 @@ public class Autonomous extends SubsystemBase{
          * Non-competition paths start here
          */
         // //test paths
-        // int i=10;
-        // while(i-->1){
-        //     autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 2.5, 2.5)));
-        // }
-        // autoRoutines.put("TestPath", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", 0.5, 0.5)));
-        // autoRoutines.put("testPath1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath1", 0.5, 0.5)));
-        // autoRoutines.put("testPath2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath2", 0.5, 0.5)));
-        // autoRoutines.put("testPath3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath3", 0.5, 0.5)));
-        // autoRoutines.put("testPath4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath4", 0.5, 0.5)));
-
+        int i=10;
+        while(i-->1){
+            autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
+        }
     }   
 
     // Used only at the start of autonomous

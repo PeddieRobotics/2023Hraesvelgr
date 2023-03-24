@@ -144,8 +144,8 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kPTranslationController = 4.0; // 4.0;
-                public static final double kPThetaController = 0.8; // 0.4;
+                public static final double kPTranslationController = 3.5; // 4.0;
+                public static final double kPThetaController = 1.0; // 0.4;
 
                 // Charge station balance algorithm parameters
                 // Tune based on field.
@@ -198,7 +198,7 @@ public final class Constants {
                 public static final double kP = 0.0000005;
                 public static final double kI = 0.0000005;
                 public static final double kD = 0;
-                public static final double kIz = 1200;
+                public static final double kIz = 1500;
                 public static final double kFF = 0.000162;
 
                 public static final double kSmartMotionSlowSetpointTol = 1.0;
@@ -349,7 +349,7 @@ public final class Constants {
                 public static final double kAbsoluteEncoderZeroOffset = 39.428;
 
                 // Soft limits
-                public static final float kAngleMin = 5;
+                public static final float kAngleMin = 4;
                 public static final float kAngleMax = 190;
 
         }

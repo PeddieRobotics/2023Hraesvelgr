@@ -206,7 +206,7 @@ public class DriverOI {
         // Back button (Option button on front)
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
         // optionsButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5)); // USE FOR TESTING GYRO CLIMBS
-        optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
+        //optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Share button unused
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);

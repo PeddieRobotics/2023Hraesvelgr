@@ -33,6 +33,8 @@ public class Claw extends SubsystemBase {
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
 
+    private boolean gamepieceOperatorOverride;
+
     private final LimelightFront limelightFront; // Used to help with cone alignment monitoring /calculating offset
 
     private double gamepieceAlignmentError;
@@ -60,6 +62,7 @@ public class Claw extends SubsystemBase {
         state = ClawState.EMPTY;
         ejectionTime = -1;
         justEjectedGamepiece = false;
+        gamepieceOperatorOverride = false;
 
         limelightFront = LimelightFront.getInstance();
         gamepieceAlignmentError = 0.0;
@@ -88,14 +91,13 @@ public class Claw extends SubsystemBase {
         
     }
 
-
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("monitor cones", monitorNewConeIntake);
         SmartDashboard.putBoolean("monitor cubes", monitorNewCubeIntake);
         SmartDashboard.putNumber("newGamepieceCounter", newGamepieceCounter);
 
-        if (useSensors) {
+        if (useSensors && !gamepieceOperatorOverride) {
             if (isFrontSensor() && isBackSensor()) {
                 state = ClawState.CONE;
             } else if (isFrontSensor() && !isBackSensor()) {
@@ -411,4 +413,14 @@ public class Claw extends SubsystemBase {
     public void setNormalizingCone(boolean normalizingCone) {
         this.normalizingCone = normalizingCone;
     }
+
+    public boolean isGamepieceOperatorOverride() {
+        return gamepieceOperatorOverride;
+    }
+
+
+    public void setGamepieceOperatorOverride(boolean gamepieceOperatorOverride) {
+        this.gamepieceOperatorOverride = gamepieceOperatorOverride;
+    }
+
 }

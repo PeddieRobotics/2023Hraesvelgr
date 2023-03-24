@@ -48,6 +48,7 @@ public class EjectGamepiece extends CommandBase{
     public void end(boolean interrupted) {
         claw.stopClaw();
         claw.resetGamepieceAlignmentError();
+        claw.setGamepieceOperatorOverride(false);
         if(Arm.getInstance().isArmScoringPose()){
             blinkin.success();
         }
