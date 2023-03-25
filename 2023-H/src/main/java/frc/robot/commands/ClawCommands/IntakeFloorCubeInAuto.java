@@ -66,7 +66,7 @@ public class IntakeFloorCubeInAuto extends CommandBase{
         }
         else{
             claw.setState(ClawState.EMPTY);     
-            blinkin.returnToRobotState();
+            blinkin.failure();
             claw.stopClaw();
         }
     }

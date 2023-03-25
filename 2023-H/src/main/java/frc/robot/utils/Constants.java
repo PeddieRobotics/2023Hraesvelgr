@@ -72,8 +72,8 @@ public final class Constants {
 
                 // Translation and Rotation Slew Rates
                 public static final boolean kUseRateLimit = true;
-                public static final double kDirectionSlewRate = 3; // 3; // radians per second
-                public static final double kMagnitudeSlewRate = 3; // 3; // percent per second (1 = 100%)
+                public static final double kDirectionSlewRate = 4.5; // 3; // radians per second
+                public static final double kMagnitudeSlewRate = 4.5; // 3; // percent per second (1 = 100%)
                 public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
                 public final static int kFrontLeftTurningEncoderChannel = 3;
@@ -151,8 +151,8 @@ public final class Constants {
                 // Tune based on field.
                 public static final double kCSDebounceTime = 0.1;
                 public static final double kOnCSDegree = 13.0;
-                public static final double kCSLevelDegree = 10.0;
-                public static final double kCSClimbDistance = 1.0;
+                public static final double kCSLevelDegree = 6.0;
+                public static final double kCSClimbDistance = 0.7;
                 public static final double kCSOverrunMaxApproachDist = 1.5;
                 public static final double kCSOverrunRemainingClimbDist = 0.5;
                 
@@ -340,8 +340,8 @@ public final class Constants {
                 public static final double kSingleSSCubeAngle = 40.0;
 
                 public static final double kTransitoryAngle = 38.0;
-                public static final double kMonitorConeAlignmentAngle = 63.0;
-                public static final double kMonitorCubeAlignmentAngle = 48.0;
+                public static final double kMonitorConeAlignmentAngle = 65.0;
+                public static final double kMonitorCubeAlignmentAngle = 60.0;
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
@@ -349,7 +349,7 @@ public final class Constants {
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
                 public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
 
-                public static final double kAbsoluteEncoderZeroOffset = 39.428;
+                public static final double kAbsoluteEncoderZeroOffset = 63.569;                ; 
 
                 // Soft limits
                 public static final float kAngleMin = 4;

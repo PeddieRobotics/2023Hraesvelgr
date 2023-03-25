@@ -28,6 +28,7 @@ import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -159,10 +160,14 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
+        // triangleButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5));
+        // triangleButton.onTrue(new RotateToAngle(180));
 
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
+        // xButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));
+        // xButton.onTrue(new RotateToAngle(0));
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);

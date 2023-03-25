@@ -77,12 +77,12 @@
     },
     {
       "anchorPoint": {
-        "x": 5.491440255348414,
-        "y": 3.076138192219322
+        "x": 5.5,
+        "y": 3.0
       },
       "prevControl": {
-        "x": 6.300520065460605,
-        "y": 3.076138192219322
+        "x": 6.30907981011219,
+        "y": 3.0
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -92,7 +92,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ClimbCSBackMedium"
+          "ClimbCSBackSlow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

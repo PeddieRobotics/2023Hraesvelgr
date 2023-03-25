@@ -16,7 +16,8 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE};
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
+        GYRO_SUCCESS, GYRO_OVERRUN};
 
     private BlinkinState state;
 
@@ -194,6 +195,32 @@ public class Blinkin extends SubsystemBase{
         state = BlinkinState.AQUA_SOLID;
     }
 
+    public void rainbowTwinkle(){
+        if(currentTime - initialTime < 2.0){
+            set(-0.55);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+    
+    public void whiteOverride(){
+        if(currentTime - initialTime < 2.0){
+            set(0.93);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+
+    public void gyroClimbSuccess(){
+        state = BlinkinState.GYRO_SUCCESS;
+    }
+
+    public void gyroClimbOverrun(){
+        state = BlinkinState.GYRO_OVERRUN;
+    }
+
     public void returnToRobotState(){
         if(claw.getState() == ClawState.INTAKING_CONE){
             state = BlinkinState.FLASH_GOLD;
@@ -265,6 +292,12 @@ public class Blinkin extends SubsystemBase{
                 case STROBE_PURPLE:
                     strobePurple();
                     break;
+                case GYRO_SUCCESS:
+                    gyroClimbSuccess();
+                    break;
+                case GYRO_OVERRUN:
+                    gyroClimbOverrun();
+                    break;
                 default:
                     black();
             }
@@ -297,23 +330,15 @@ public class Blinkin extends SubsystemBase{
     }
 
     private void blinkGreen() {
-        if(currentTime - initialTime < 0.15){
+        if(currentTime - initialTime < 0.5){
             green();
-        } else if(currentTime - initialTime < 0.3){
+        } else if(currentTime - initialTime < 0.7){
             black();
-        } else if(currentTime - initialTime < 0.45){
-            green();
-        } else if(currentTime - initialTime < 0.6){
-            black();
-        } else if(currentTime - initialTime < 0.75){
-            green();
-        } else if(currentTime - initialTime < 0.9){
-            black();
-        } else if(currentTime - initialTime < 1.05){
-            red();
         } else if(currentTime - initialTime < 1.2){
+            green();
+        } else if(currentTime - initialTime < 1.4){
             black();
-        } else if(currentTime - initialTime < 2.2){
+        } else if(currentTime - initialTime < 2.5){
             green();
         } else{
             returnToRobotState();  

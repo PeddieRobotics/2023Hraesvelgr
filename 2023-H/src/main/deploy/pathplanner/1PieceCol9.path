@@ -54,7 +54,7 @@
     {
       "position": 0.01,
       "names": [
-        "IntakeCubePose",
+        "IntakeCubePoseLower",
         "IntakeCube"
       ]
     }

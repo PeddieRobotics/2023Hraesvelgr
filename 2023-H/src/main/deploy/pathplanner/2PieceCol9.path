@@ -102,18 +102,18 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8549646229107004,
-        "y": 4.34547402618343
+        "x": 1.8,
+        "y": 4.3
       },
       "prevControl": {
-        "x": 1.8549646229107004,
-        "y": 4.359391137350985
+        "x": 1.8,
+        "y": 4.313917111167555
       },
       "nextControl": {
-        "x": 1.8549646229107004,
-        "y": 4.331556915015875
+        "x": 1.8,
+        "y": 4.2860828888324445
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -175.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -130,14 +130,14 @@
     {
       "anchorPoint": {
         "x": 3.7532506448750413,
-        "y": 4.231119446547024
+        "y": 4.35
       },
       "prevControl": {
         "x": 3.42940044740241,
-        "y": 4.231119446547024
+        "y": 4.35
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -155,25 +155,20 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.25454545454545446,
-      "names": [
-        "IntakeCubePose"
-      ]
-    },
-    {
       "position": 0.29090909090909095,
       "names": [
-        "IntakeCube"
+        "IntakeCube",
+        "IntakeCubePoseLower"
       ]
     },
     {
-      "position": 2.1,
+      "position": 2.090909090909091,
       "names": [
         "PreScorePose"
       ]
     },
     {
-      "position": 3.4618181818181277,
+      "position": 4.545454545454539,
       "names": [
         "stow"
       ]

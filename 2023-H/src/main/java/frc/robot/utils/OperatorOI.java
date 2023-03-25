@@ -218,6 +218,7 @@ public class OperatorOI {
             else if(dPadDownHeld()){
                 claw.setGamepieceOperatorOverride(true);
                 claw.setState(ClawState.CONE);
+                blinkin.returnToRobotState();
             }
             else{
                 blinkin.intakingCone();
@@ -233,6 +234,7 @@ public class OperatorOI {
             else if(dPadDownHeld()){
                 claw.setGamepieceOperatorOverride(true);
                 claw.setState(ClawState.CUBE);
+                blinkin.returnToRobotState();
             }
             else{
                 blinkin.intakingCube();

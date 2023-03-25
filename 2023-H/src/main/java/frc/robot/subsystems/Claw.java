@@ -39,7 +39,7 @@ public class Claw extends SubsystemBase {
 
     private double gamepieceAlignmentError;
     private boolean monitorNewConeIntake, monitorNewCubeIntake;
-    private InterpolatingTreeMap<Double,Double> coneL2AlignmentTable, coneL3AlignmentTable;
+    private InterpolatingTreeMap<Double,Double> cubeAlignmentTable, coneL2AlignmentTable, coneL3AlignmentTable;
 
     private double ejectionTime;
     private boolean justEjectedGamepiece;
@@ -77,26 +77,33 @@ public class Claw extends SubsystemBase {
 
         normalizingCone = false;
 
+         // Linear interpolation calibrated points for cube alignment
+        cubeAlignmentTable = new InterpolatingTreeMap<>();
+        cubeAlignmentTable.put(-13.26, -9.93); // Left calibration point
+        cubeAlignmentTable.put(8.46, 1.67); // Right calibration point
+
         // Linear interpolation calibrated points for L2 cone alignment
         coneL2AlignmentTable = new InterpolatingTreeMap<>();
-        coneL2AlignmentTable.put(-17.228, -7.79); // Left calibration point
-        coneL2AlignmentTable.put(-4.946, -3.53); // Center calibration point
-        coneL2AlignmentTable.put(11.399, 2.04); // Right calibration point
+        coneL2AlignmentTable.put(-17.03, -7.52); // Left calibration point
+        coneL2AlignmentTable.put(9.93, 2.54); // Right calibration point
 
         // Linear interpolation calibrated points for L3 cone alignment
         coneL3AlignmentTable = new InterpolatingTreeMap<>();
-        coneL3AlignmentTable.put(-17.583, 9.03); // Left calibration point
-        coneL3AlignmentTable.put(-5.442, 3.57); // Center calibration point
-        coneL3AlignmentTable.put(8.162, -2.7); // Right calibration point
+        coneL3AlignmentTable.put(-17.23, 5.59); // Left calibration point
+        coneL3AlignmentTable.put(9.93, -2.54); // Right calibration point
         
+        // Old pre-competition values
+        // coneL2AlignmentTable.put(-17.228, -7.79); // Left calibration point
+        // coneL2AlignmentTable.put(-4.946, -3.53); // Center calibration point
+        // coneL2AlignmentTable.put(11.399, 2.04); // Right calibration point
+
+        // coneL3AlignmentTable.put(-17.583, 9.03); // Left calibration point
+        // coneL3AlignmentTable.put(-5.442, 3.57); // Center calibration point
+        // coneL3AlignmentTable.put(8.162, -2.7); // Right calibration point
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("monitor cones", monitorNewConeIntake);
-        SmartDashboard.putBoolean("monitor cubes", monitorNewCubeIntake);
-        SmartDashboard.putNumber("newGamepieceCounter", newGamepieceCounter);
-
         if (useSensors && !gamepieceOperatorOverride) {
             if (isFrontSensor() && isBackSensor()) {
                 state = ClawState.CONE;
@@ -296,7 +303,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double convertL2CubeTXToAlignmentError(double tx) {
-        return coneL2AlignmentTable.get(tx);
+        return cubeAlignmentTable.get(tx);
     }
 
     public double convertL3ConeTXToAlignmentError(double tx) {
@@ -304,7 +311,7 @@ public class Claw extends SubsystemBase {
     }
 
     public double convertL3CubeTXToAlignmentError(double tx) {
-        return coneL2AlignmentTable.get(tx);
+        return cubeAlignmentTable.get(tx);
     }
 
     public void monitorNewConeIntake() {

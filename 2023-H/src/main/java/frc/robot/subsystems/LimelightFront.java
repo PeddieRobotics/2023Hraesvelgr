@@ -173,22 +173,6 @@ public class LimelightFront extends Limelight {
         return (int)LimelightHelper.getCurrentPipelineIndex(limelightName);
     }
 
-    public int setPipelineType(int col){
-        level2 = true;
-          if (col==2||col==5||col==8) {
-            setPipeline(0);
-            cube=true;
-            return 0;
-          }
-          cube=false;
-          if(level2){
-            setPipeline(4);
-            return 4;
-          }
-          setPipeline(5);
-          return 5;
-    }
-
     public String getJSONDump() {
         return LimelightHelper.getJSONDump(limelightName);
     }

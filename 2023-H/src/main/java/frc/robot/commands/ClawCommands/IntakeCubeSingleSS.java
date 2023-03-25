@@ -48,7 +48,7 @@ public class IntakeCubeSingleSS extends CommandBase{
                 claw.monitorNewConeIntake();
             }
             else{
-                blinkin.failure();
+                blinkin.failure();;
                 claw.stopClaw();
             }
         }

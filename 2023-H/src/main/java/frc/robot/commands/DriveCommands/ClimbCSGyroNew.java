@@ -24,6 +24,8 @@ public class ClimbCSGyroNew extends CommandBase{
 
     private double overrunMaxApproachDist, overrunRemainingClimbDist;
 
+    private Blinkin blinkin;
+
     // Full constructor with all 6 parameters for the climb charge station algorithm.
     public ClimbCSGyroNew(double fieldHeading, double approachSpeed, double climbSpeed, double debounceTime, double onChargeStationDegree, double climbDistance, double overrunMaxApproachDist, double overrunRemainingClimbDist){
         drivetrain = Drivetrain.getInstance();
@@ -38,6 +40,8 @@ public class ClimbCSGyroNew extends CommandBase{
         this.climbDistance = climbDistance;
         this.overrunMaxApproachDist = overrunMaxApproachDist;
         this.overrunRemainingClimbDist = overrunRemainingClimbDist;
+
+        blinkin = Blinkin.getInstance();
 
         /**********
          * CONFIG *
@@ -176,6 +180,11 @@ public class ClimbCSGyroNew extends CommandBase{
                     // Set climb distance to a shorter, more appropriate distance.
                     if(currentDistance > overrunMaxApproachDist){
                         climbDistance = overrunRemainingClimbDist;
+                        blinkin.gyroClimbOverrun();
+                    }
+                    // Successful gyro detection of charge station
+                    else if(debounceCount > secondsToTicks(debounceTime)){
+                        blinkin.gyroClimbSuccess();
                     }
 
                     return climbSpeed;

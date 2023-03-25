@@ -69,7 +69,7 @@ public class IntakeFloorCube extends CommandBase{
         }
         else{
             claw.setState(ClawState.EMPTY);     
-            blinkin.returnToRobotState();
+            blinkin.failure();
             claw.stopClaw();
         }
     }
