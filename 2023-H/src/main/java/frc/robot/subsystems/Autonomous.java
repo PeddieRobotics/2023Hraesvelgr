@@ -5,8 +5,12 @@ import java.util.Hashtable;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAuto;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLessLower;
@@ -30,6 +34,7 @@ import frc.robot.commands.ClawCommands.IntakeFloorCubeInAuto;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyroNew;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
+import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
 import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
@@ -58,7 +63,7 @@ public class Autonomous extends SubsystemBase{
 
         HashMap<String, Command> eventMap = new HashMap<>();
 
-        eventMap.put("stow", new SetStowedPose());
+        eventMap.put("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         eventMap.put("eject", new EjectGamepiece());
         eventMap.put("lock", new LockDrivetrain());
         eventMap.put("homeShoulder", new SetShoulderHomePose());
@@ -88,7 +93,8 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
 
         eventMap.put("ClimbCSFrontSlow", new ClimbCSGyroNew(0, 1.0, 0.5));
-        eventMap.put("ClimbCSBackSlow", new ClimbCSGyroNew(180, 1.0, 0.5));
+        eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new LockDrivetrain()));
+        // eventMap.put("ClimbCSBackslow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
         
         eventMap.put("ClimbCSFrontMedium", new ClimbCSGyroNew(0, 1.5, 0.5));//speed should be 1.0
         eventMap.put("ClimbCSBackMedium", new ClimbCSGyroNew(180, 1.5, 0.5));
@@ -148,9 +154,9 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("GYRO 1 Piece Balance Front Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol4", 1.0, 1.0)));
         autoRoutines.put("GYRO 1 Piece Balance Front Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol6", 1.0, 1.0)));
        
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol4", 1.5, 3.0)));
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol6", 1.5, 3.0)));
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol9", 1.5, 2.0)));
+        autoRoutines.put("GYRO 1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol4", 1, 3.0)));
+        autoRoutines.put("GYRO 1 Piece Balance Back Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol6", 1, 3.0)));
+        autoRoutines.put("GYRO 1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol9", 1, 2.0)));
 
         // 2 piece routines without charge station
         autoRoutines.put("2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9", 2, 2)));

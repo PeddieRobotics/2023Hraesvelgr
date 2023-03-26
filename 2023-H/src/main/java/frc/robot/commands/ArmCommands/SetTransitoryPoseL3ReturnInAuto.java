@@ -24,7 +24,7 @@ public class SetTransitoryPoseL3ReturnInAuto extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(wrist.getkStowedAngle());
+        arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.TRANSITORY);
         arm.setGoalPose(ArmState.NONE);
 

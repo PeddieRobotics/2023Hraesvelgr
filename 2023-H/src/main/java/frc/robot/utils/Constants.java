@@ -150,10 +150,10 @@ public final class Constants {
                 // Charge station balance algorithm parameters
                 // Tune based on field.
                 public static final double kCSDebounceTime = 0.1;
-                public static final double kOnCSDegree = 13.0;
-                public static final double kCSLevelDegree = 6.0;
-                public static final double kCSClimbDistance = 0.7;
-                public static final double kCSOverrunMaxApproachDist = 1.5;
+                public static final double kOnCSDegree = 9.0;
+                public static final double kCSLevelDegree = 11.5;
+                public static final double kCSClimbDistance = 0.75;
+                public static final double kCSOverrunMaxApproachDist = 2.25;
                 public static final double kCSOverrunRemainingClimbDist = 0.5;
                 
         }
@@ -327,7 +327,7 @@ public final class Constants {
                 public static final double kExtendedFloorConeAngle = 149.0;
                 public static final double kExtendedFloorCubeAngle = 138.0;
 
-                public static final double kL2ConeAngle = 186.0;
+                public static final double kL2ConeAngle = 191.0;
                 public static final double kL2CubeAngle = 186.0;
 
                 public static final double kL3CubeForwardAngle = 113.0;
@@ -353,7 +353,7 @@ public final class Constants {
 
                 // Soft limits
                 public static final float kAngleMin = 4;
-                public static final float kAngleMax = 190;
+                public static final float kAngleMax = 195;
 
         }
 
@@ -365,7 +365,7 @@ public final class Constants {
                 public static final double kCubeSingleSSIntakeSpeed = -0.3;
                 public static final double kConeSingleSSIntakeSpeed = -1;
 
-                public static final double kConeL1OuttakeSpeed = 0.75;
+                public static final double kConeL1OuttakeSpeed = 0.5;
                 public static final double kConeL2OuttakeSpeed = 1;
                 public static final double kConeL3ForwardOuttakeSpeed = 1;
                 public static final double kConeL3InvertedOuttakeSpeed = 1;

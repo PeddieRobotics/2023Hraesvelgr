@@ -49,15 +49,16 @@ public class EjectGamepiece extends CommandBase{
         claw.stopClaw();
         claw.resetGamepieceAlignmentError();
         claw.setGamepieceOperatorOverride(false);
-        if(Arm.getInstance().isArmScoringPose()){
-            blinkin.success();
-        }
-
     }
 
     @Override
     public boolean isFinished() {
-        return currentTime - initialTime > 0.5;
+        if(Arm.getInstance().isInvertedL3()){
+            return currentTime - initialTime > 0.5;
+        }
+        else{
+            return currentTime - initialTime > 1.0;
+        }
     }
         
 }

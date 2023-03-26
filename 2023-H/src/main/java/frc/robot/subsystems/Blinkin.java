@@ -205,12 +205,7 @@ public class Blinkin extends SubsystemBase{
     }
     
     public void whiteOverride(){
-        if(currentTime - initialTime < 2.0){
-            set(0.93);
-        }
-        else{
-            returnToRobotState();
-        }
+        set(0.93);
     }
 
     public void gyroClimbSuccess(){
@@ -274,7 +269,7 @@ public class Blinkin extends SubsystemBase{
                 case FLASH_PINK:
                     flashPink();
                     break;
-                case FLASH_GOLD:
+                case FLASH_GOLD:    
                     flashGold();
                     break;
                 case FLASH_PURPLE:
@@ -293,10 +288,10 @@ public class Blinkin extends SubsystemBase{
                     strobePurple();
                     break;
                 case GYRO_SUCCESS:
-                    gyroClimbSuccess();
+                    rainbowTwinkle();
                     break;
                 case GYRO_OVERRUN:
-                    gyroClimbOverrun();
+                    whiteOverride();
                     break;
                 default:
                     black();

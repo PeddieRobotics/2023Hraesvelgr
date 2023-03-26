@@ -28,7 +28,7 @@ public class SetLevelThreeCubeInvertedPose extends CommandBase{
             arm.setShoulderPositionSmartMotion(shoulder.getkL3CubeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }
         
-        arm.setWristPosition(13);
+        arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.L3_CUBE_INVERTED);
         arm.setGoalPose(ArmState.NONE);
 

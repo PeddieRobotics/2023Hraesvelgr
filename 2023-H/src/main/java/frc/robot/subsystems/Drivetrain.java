@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.ADIS16470_IMU;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
@@ -60,6 +61,9 @@ public class Drivetrain extends SubsystemBase {
 
     // Global drivetrain teleop toggle
     private boolean allowDriving;
+
+    // Gyro Tilt Rolling Average
+    private RollingAverage gyroTiltAverage;
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
@@ -126,14 +130,15 @@ public class Drivetrain extends SubsystemBase {
         latestChassisSpeed = 0.0;
         correctHeadingTargetHeading = getHeadingAsRotation2d();
 
-        SmartDashboard.putBoolean("isFlipped", isFlipped);
+        gyroTiltAverage = new RollingAverage();
 
-        mRioAccel = new BuiltInAccelerometer();
+        SmartDashboard.putBoolean("isFlipped", isFlipped);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("IMU Pitch", getPitch());
+        SmartDashboard.putNumber("IMU Pitch Average", gyroTiltAverage.getAverage());
 
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
@@ -141,6 +146,8 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("swerve module position" + i,  swerveModulePositions[i].angle.getDegrees());
         }
         updateOdometry();
+
+        gyroTiltAverage.add(getPitch());
 
     }
 
@@ -369,6 +376,10 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getRate(IMUAxis.kRoll);
     }
 
+    public double getPitchAverage(){
+        return gyroTiltAverage.getAverage();
+    }
+
     // Snap to angle algorithm
     private double snapToAngle() {
         // If a button is pressed, use the snapToAngle pid controller to calculate a
@@ -387,6 +398,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void setSnapped(boolean snapped) {
         this.snapped = snapped;
+    }
+
+    public boolean isBalanced(){
+        return Math.abs(getPitch()) < 3;
     }
 
     public void lock() {
