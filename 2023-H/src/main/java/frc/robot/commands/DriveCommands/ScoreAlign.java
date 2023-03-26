@@ -28,7 +28,10 @@ public class ScoreAlign extends CommandBase {
     private Claw claw;
     private String limelightName;
     private int scoreSetpoint;
+    private int stage;
     private boolean initialHeadingCorrectionComplete, initialTargetNotFound;
+
+    private boolean horizAlignComplete, depthAlignComplete;
 
     private double convertedGamepieceAlignError;
 
@@ -40,7 +43,13 @@ public class ScoreAlign extends CommandBase {
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
 
+        initialHeadingCorrectionComplete = false;
+        initialTargetNotFound = false;
         convertedGamepieceAlignError = 0;
+        stage = 0;
+
+        horizAlignComplete = false;
+        depthAlignComplete = false;
 
         thetaController = new PIDController(0.07, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
@@ -53,6 +62,11 @@ public class ScoreAlign extends CommandBase {
     public void initialize() {
         initialHeadingCorrectionComplete = false;
         initialTargetNotFound = false;
+        convertedGamepieceAlignError = 0;
+        stage = 0;
+
+        horizAlignComplete = false;
+        depthAlignComplete = false;
 
         if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getState() == ArmState.L3_CUBE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CUBE_INVERTED){
             scoreSetpoint = 0;
@@ -63,8 +77,6 @@ public class ScoreAlign extends CommandBase {
             scoreSetpoint = 180;
             limelightName = "limelight-front";
         }
-
-        blinkin.acquiringTarget();
 
         oi = DriverOI.getInstance();
 
@@ -109,12 +121,14 @@ public class ScoreAlign extends CommandBase {
 
         SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
 
-        if (!initialHeadingCorrectionComplete && Math
-                .abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
+        if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
+            stage = 0;
             turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
 
             drivetrain.drive(swerveTranslation, turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
         } else if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
+            stage = 1;
+
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
             if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV(limelightName)) {
@@ -125,10 +139,47 @@ public class ScoreAlign extends CommandBase {
             initialHeadingCorrectionComplete = true;
 
             yMove = yController.calculate(txAvg, convertedGamepieceAlignError);
+
             drivetrain.drive(new Translation2d(swerveTranslation.getX(), yMove + yFF * Math.signum(yMove)), oi.getRotation(), true, new Translation2d(0, 0));
 
         } else {
+            stage = 2;
+            horizAlignComplete = true;
             drivetrain.drive(new Translation2d(swerveTranslation.getX(), 0), oi.getRotation(), true, new Translation2d(0, 0));
+        }
+
+        // Check for how close we are to the goal according to our pose state
+        ClawState state = claw.getState();
+        if(state == ClawState.CUBE) {
+            if(arm.getState() == ArmState.L2_CUBE || arm.getGoalPose() == ArmState.L2_CUBE){
+                if(limelightFront.getTyAverage() < -13){
+                    depthAlignComplete = true;
+                }
+            }
+            else if(arm.getState() == ArmState.L3_CUBE_FORWARD || arm.getGoalPose() == ArmState.L3_CUBE_FORWARD){
+                if(limelightFront.getTyAverage() < -13){
+                    depthAlignComplete = true;
+                }
+            }
+        } else if(state == ClawState.CONE){
+            if(arm.getState() == ArmState.L2_CONE || arm.getGoalPose() == ArmState.L2_CONE){
+                if(limelightFront.getTyAverage() < -5.5){
+                    depthAlignComplete = true;
+                }
+            }
+            else if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED){
+                if(limelightBack.getTyAverage() > 17.5){
+                    depthAlignComplete = true;
+                }
+            }
+        }
+
+        // Update LED's according to how many stages of the alignment have been completed
+        if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
+            blinkin.autoAlignClose();
+        }
+        else if(horizAlignComplete && depthAlignComplete){
+            blinkin.autoAlignSuccess();
         }
     }
 
@@ -138,9 +189,8 @@ public class ScoreAlign extends CommandBase {
         if(!claw.hasGamepiece()){
             claw.returnLimelightToDefaultState();
         }
-        if(!initialTargetNotFound){
-            blinkin.returnToRobotState();
-        }
+        blinkin.returnToRobotState();
+
     }
 
     @Override

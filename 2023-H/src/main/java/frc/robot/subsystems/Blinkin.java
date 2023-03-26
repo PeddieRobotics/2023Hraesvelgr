@@ -16,7 +16,7 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
         GYRO_SUCCESS, GYRO_OVERRUN};
 
     private BlinkinState state;
@@ -165,6 +165,16 @@ public class Blinkin extends SubsystemBase{
         }
     }
 
+    // Turns the LEDS to flashing green when either stage of auto-alignment is complete
+    public void autoAlignClose(){
+        state = BlinkinState.FLASH_GREEN;
+    }
+
+    // Turns the LEDS to solid green when both auto-align stages are complete
+    public void autoAlignSuccess(){
+        state = BlinkinState.GREEN_SOLID;
+    }
+
     // Turns the LEDS to flashing purple when intaking a cube
     public void intakingCube() {
         initialTime = Timer.getFPGATimestamp();
@@ -196,12 +206,7 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void rainbowTwinkle(){
-        if(currentTime - initialTime < 2.0){
-            set(-0.55);
-        }
-        else{
-            returnToRobotState();
-        }
+        set(-0.55);
     }
     
     public void whiteOverride(){
@@ -358,6 +363,26 @@ public class Blinkin extends SubsystemBase{
             }
         }
     }
+
+        // TODO: Reconsider with 5v Blinkin options
+        private void flashGreen() {
+            if(flashOn){
+                green();
+                if(currentTime - flashTime > 0.3){
+                    flashOn = false;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+    
+            }
+            else{
+                black();
+                if(currentTime - flashTime > 0.3){
+                    flashOn = true;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+            }
+        }
+    
 
     // TODO: Reconsider with 5v Blinkin options
     private void flashGold() {
