@@ -151,10 +151,10 @@ public class Autonomous extends SubsystemBase{
 
         // 1 piece routines with charge station - GYRO
         // These are just versions of the above that use a gyro-based balancing method rather than dead reckoning.
-        autoRoutines.put("GYRO 1 Piece Balance Front Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol4", 1.0, 1.0)));
+        autoRoutines.put("GYRO 1 Piece Balance Front Col 4 Seneca", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol4SENECA", 1.0, 1.0)));
         autoRoutines.put("GYRO 1 Piece Balance Front Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol6", 1.0, 1.0)));
        
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol4", 1.25, 3.0)));
+        autoRoutines.put("GYRO 1 Piece Balance Back Col 4 Seneca", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol4SENECA", 1.25, 3.0)));
         autoRoutines.put("GYRO 1 Piece Balance Back Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol6", 1.25, 3.0)));
         autoRoutines.put("GYRO 1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol9", 1, 2.0)));
 
