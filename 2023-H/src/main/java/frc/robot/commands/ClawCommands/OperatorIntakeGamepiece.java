@@ -30,10 +30,10 @@ public class OperatorIntakeGamepiece extends CommandBase{
     @Override
     public void execute() {
         if(operatorOI.dPadDownHeld()){
-            claw.setSpeed(ClawConstants.kOperatorFastIntakeSpeed);
+            claw.setSpeed(ClawConstants.kOperatorIntakeSpeed);
         }
         else{
-            claw.setSpeed(ClawConstants.kOperatorIntakeSpeed);
+            claw.setSpeed(ClawConstants.kOperatorFastIntakeSpeed);
         }
     }
 

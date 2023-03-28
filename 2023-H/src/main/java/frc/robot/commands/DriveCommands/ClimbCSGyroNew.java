@@ -197,12 +197,13 @@ public class ClimbCSGyroNew extends CommandBase{
 
             // reacted to angle drop but it's slightly too slow; so reverse a small fixed amount amd stp[]
             case 2:
-                currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialClimbXPos);
-                if(currentDrivebackDistance > 0.08){
+                currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
+                blinkin.lockedWheels();
+                if(currentDrivebackDistance > 0.1){
                     state = 3;
                     return 0;
                 }
-                return 0.5;
+                return 0.75;
 
             case 3:
                 return 0;

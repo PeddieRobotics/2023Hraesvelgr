@@ -167,6 +167,7 @@ public class Blinkin extends SubsystemBase{
 
     // Turns the LEDS to flashing green when either stage of auto-alignment is complete
     public void autoAlignClose(){
+        initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.FLASH_GREEN;
     }
 
@@ -279,6 +280,9 @@ public class Blinkin extends SubsystemBase{
                     break;
                 case FLASH_PURPLE:
                     flashPurple();
+                    break;
+                case FLASH_GREEN:
+                    flashGreen();
                     break;
                 case PULSE_GOLD:
                     pulseGold();

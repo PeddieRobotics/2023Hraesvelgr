@@ -23,7 +23,7 @@ public class SetPreScorePoseL3Return extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setWristPosition(13);
+        arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.PRE_SCORE);
         arm.setGoalPose(ArmState.NONE);
 
