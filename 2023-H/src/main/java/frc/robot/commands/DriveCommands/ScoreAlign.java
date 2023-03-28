@@ -168,12 +168,20 @@ public class ScoreAlign extends CommandBase {
         }
 
         // Update LED's according to how many stages of the alignment have been completed
-        // if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
-        //     blinkin.autoAlignClose();
-        // }
-        // else if(horizAlignComplete && depthAlignComplete){
-        //     blinkin.autoAlignSuccess();
-        // }
+
+        //if one of the flags are up, then flash green(not really sure if this works, I need to test it)
+        if(!horizAlignComplete && !depthAlignComplete){
+            blinkin.autoAlignStart();
+        }
+
+        if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
+            blinkin.autoAlignClose();
+        }
+
+        //if both flags are up, change to solid green 
+        else if(horizAlignComplete && depthAlignComplete){
+            blinkin.autoAlignSuccess();
+        }
         if(horizAlignComplete && depthAlignComplete){
             blinkin.lockedWheels();
         }

@@ -73,15 +73,15 @@ public class Blinkin extends SubsystemBase{
         set(0.57);
     }
 
-    // Solid green color
+    // Solid green color(MAKE MORE DARK)
     public void green(){
-        set(0.71);
+        set(0.75);
     }
 
     // Solid red color
     public void red() {
         set(0.61);
-    }
+    }   
 
     // Solid red color
     public void aqua() {
@@ -116,7 +116,7 @@ public class Blinkin extends SubsystemBase{
     // Blinks green then briefly goes solid green (for various success modes)
     public void success(){
         initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN;
+        state = BlinkinState.GREEN_SOLID;
     }
 
      // Blinks red then briefly goes solid red (for various failure modes)
@@ -143,14 +143,14 @@ public class Blinkin extends SubsystemBase{
         initialTime = Timer.getFPGATimestamp();
 
         // Robot has a gamepiece and is trying to score at the goal
-        if(claw.hasCone()){
-            state = BlinkinState.PULSE_GOLD;
-        }
-        else if(claw.hasCube()){
-            state = BlinkinState.PULSE_PURPLE;
-        }
+        // if(claw.hasCone()){
+        //     state = BlinkinState.PULSE_GOLD;
+        // }
+        // else if(claw.hasCube()){
+        //     state = BlinkinState.PULSE_PURPLE;
+        // }
         // Robot has no gamepiece and is trying to auto-target at a human player station
-        else{
+        if(!claw.hasCone() && !claw.hasCube()){
             // If the robot is currently seeking a cone or cube, slow down to a pulse while targeting at the HP stations
             if(state == BlinkinState.FLASH_GOLD){
                 state = BlinkinState.PULSE_GOLD;
@@ -162,6 +162,17 @@ public class Blinkin extends SubsystemBase{
             else{
                 state = BlinkinState.BLINK_RED;
             }
+        }
+    }
+
+    //flashes piece within claw when auto align begins and no state of autoalignment is completed 
+    public void autoAlignStart(){
+        initialTime = Timer.getFPGATimestamp();
+        if(claw.hasCone()){
+            state = BlinkinState.FLASH_GOLD;
+        }
+        else if(claw.hasCube()){
+            state = BlinkinState.FLASH_PURPLE;
         }
     }
 
