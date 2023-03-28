@@ -141,7 +141,7 @@ public class Autonomous extends SubsystemBase{
 
         // 1 piece routines with charge station - dead reckoning / no gyro
         // First two are basic ones from Hatboro. Don't leave community, just balance immediately.
-        autoRoutines.put("1 Piece Balance Front Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceFrontCol4", 1.0, 1.0)));
+        autoRoutines.put("1 Piece Balance Front Col 4 Hatboro", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceFrontCol4HATBORO", 1.0, 1.0)));
         autoRoutines.put("1 Piece Balance Front Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceFrontCol6", 1.0, 1.0)));
        
         // These three are upgrades which leave community, collect a piece, and loop from the back onto the charge station.
