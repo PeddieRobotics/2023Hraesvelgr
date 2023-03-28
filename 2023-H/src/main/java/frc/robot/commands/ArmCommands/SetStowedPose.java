@@ -22,7 +22,7 @@ public class SetStowedPose extends CommandBase {
 
     private ArmState prevArmState;
 
-    private boolean arrivedAtMonitorAngle, reachedLimitSensor;
+    private boolean arrivedAtMonitorAngle; //reachedLimitSensor
     private double monitorGamepieceInitialTime, currentTime;
 
     public SetStowedPose() {
@@ -39,7 +39,7 @@ public class SetStowedPose extends CommandBase {
     public void initialize() {
         prevArmState = arm.getState();
 
-        reachedLimitSensor = false;
+        //reachedLimitSensor = false;
 
         // Determine the speed of the final stow based on where we are coming from
         if(arm.getState() == ArmState.FLOOR_INTAKE_CONE_EXTENDED){
@@ -93,9 +93,9 @@ public class SetStowedPose extends CommandBase {
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(shoulder.atLimitSensor()){
-            reachedLimitSensor = true;
-        }
+        // if(shoulder.atLimitSensor()){
+        //     reachedLimitSensor = true;
+        // }
 
         // Switch profiles into something slower so we don't smash the arm into the fulcrum.
         if (arm.isShoulderBelowAngle(-20)) {
@@ -128,9 +128,9 @@ public class SetStowedPose extends CommandBase {
             arm.setWristPosition(wrist.getkStowedAngle());
         }
 
-        if(!reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle())){
-            arm.setShoulderPercentOutput(-0.2);
-        }
+        // if(!reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle())){
+        //     arm.setShoulderPercentOutput(-0.2);
+        // }
 
     }
 
@@ -151,12 +151,13 @@ public class SetStowedPose extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if(prevArmState != ArmState.HOME && prevArmState != ArmState.STOWED && prevArmState != ArmState.L1 && prevArmState != ArmState.SINGLE_SS_CONE && prevArmState != ArmState.SINGLE_SS_CUBE){
-            return reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
-        }
-        else{
-            return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
-        }
+        // if(prevArmState != ArmState.HOME && prevArmState != ArmState.STOWED && prevArmState != ArmState.L1 && prevArmState != ArmState.SINGLE_SS_CONE && prevArmState != ArmState.SINGLE_SS_CUBE){
+        //     return reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
+        // }
+        // else{
+        //     return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
+        // }
+        return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
     }
 
 }

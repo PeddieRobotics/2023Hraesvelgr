@@ -23,8 +23,8 @@ public class Shoulder {
     private SparkMaxPIDController pidController;
     private ArmFeedforward shoulderFeedforward;
 
-    private DigitalInput limitSensor;
-    private boolean reachedLimitSensorUpward;
+    //private DigitalInput limitSensor;
+    //private boolean reachedLimitSensorUpward;
 
     private double kP, kI, kD, kIz, kFF, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -155,8 +155,8 @@ public class Shoulder {
                   ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         // Hall effect sensor for homing the shoulder
-        limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensorUpward = false;
+        //limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
+        //reachedLimitSensorUpward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = ShoulderConstants.kHomeAngle;
@@ -251,9 +251,9 @@ public class Shoulder {
         return arbitraryFF;
     }
 
-    public boolean atLimitSensor(){
-    return !limitSensor.get();
-    }
+    // public boolean atLimitSensor(){
+    // return !limitSensor.get();
+    // }
 
     public void setEncoder(double newEncoderValue) {
         shoulderMotorMaster.getEncoder().setPosition(newEncoderValue);
@@ -377,18 +377,18 @@ public class Shoulder {
 
     public void periodic() {
         // Limit sensor triggered and shoulder is moving up
-        if(atLimitSensor() && getVelocity() > 0){   
-            reachedLimitSensorUpward = true;
-        } else if(getVelocity() < 0){
-            reachedLimitSensorUpward = false;
-        }
+        // if(atLimitSensor() && getVelocity() > 0){   
+        //     reachedLimitSensorUpward = true;
+        // } else if(getVelocity() < 0){
+        //     reachedLimitSensorUpward = false;
+        // }
 
         // If the shoulder is moving up and leaves the limit sensor, reset the encoder
-        if(reachedLimitSensorUpward && !atLimitSensor()){
-            shoulder.setEncoder(-70); 
+        // if(reachedLimitSensorUpward && !atLimitSensor()){
+        //     shoulder.setEncoder(-70); 
 
-            reachedLimitSensorUpward = false;
-        }
+        //     reachedLimitSensorUpward = false;
+        // }
 
     }
 

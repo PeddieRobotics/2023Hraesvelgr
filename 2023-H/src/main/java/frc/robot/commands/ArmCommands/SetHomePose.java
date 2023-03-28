@@ -49,26 +49,26 @@ public class SetHomePose extends CommandBase{
 
     @Override
     public void execute() {
-        currentShoulderMoveTime = Timer.getFPGATimestamp();
+        // currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        if(wrist.atLimitSensor()){
-            arm.holdWristPosition();
-            wristHomed = true;
-        }
+        // if(wrist.atLimitSensor()){
+        //     arm.holdWristPosition();
+        //     wristHomed = true;
+        // }
 
-        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
-            arm.holdShoulderPosition();
-            shoulderHeld = true;
-        }
+        // if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
+        //     arm.holdShoulderPosition();
+        //     shoulderHeld = true;
+        // }
 
-        if(wristHomed && !shoulderHomed && shoulderHeld){
-            arm.setShoulderPercentOutput(-0.3);
-        }
+        // if(wristHomed && !shoulderHomed && shoulderHeld){
+        //     arm.setShoulderPercentOutput(-0.3);
+        // }
 
-        if(shoulder.atLimitSensor()){
-            arm.holdShoulderPosition();
-            shoulderHomed = true;
-        }
+        // if(shoulder.atLimitSensor()){
+        //     arm.holdShoulderPosition();
+        //     shoulderHomed = true;
+        // }
         
     }
 
