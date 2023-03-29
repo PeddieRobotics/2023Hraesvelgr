@@ -129,7 +129,6 @@ public class Claw extends SubsystemBase {
                 monitorNewConeIntake = false; // Stop looking at cone alignment
                 newGamepieceCounter = 0;
                 returnLimelightToDefaultState();
-                Blinkin.getInstance().gamepieceAnalyzedSuccess();
             }
         }
 
@@ -145,7 +144,6 @@ public class Claw extends SubsystemBase {
                 monitorNewCubeIntake = false; // Stop looking at cube alignment
                 newGamepieceCounter = 0;
                 returnLimelightToDefaultState();
-                Blinkin.getInstance().gamepieceAnalyzedSuccess();
             }
         }
 

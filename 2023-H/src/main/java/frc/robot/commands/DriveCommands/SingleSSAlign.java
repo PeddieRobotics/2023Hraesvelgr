@@ -62,9 +62,7 @@ public class SingleSSAlign extends CommandBase {
 
         if (!limelightFront.hasTarget()) {
             blinkin.failure();
-        } else{
-            blinkin.acquiringTarget();
-        }
+        } 
     }
 
     @Override
@@ -87,10 +85,15 @@ public class SingleSSAlign extends CommandBase {
         } else if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationSingleSSAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
-            if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV("limelight-front")) {
-                blinkin.failure();
-                initialTargetNotFound = true;
-                return;
+            if (!initialHeadingCorrectionComplete){
+                if(!LimelightHelper.getTV("limelight-front")) {
+                    blinkin.failure();
+                    initialTargetNotFound = true;
+                    return;
+                }
+                else{
+                    blinkin.autoAlignStart();
+                }
             }
             initialHeadingCorrectionComplete = true;
 

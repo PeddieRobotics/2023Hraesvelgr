@@ -17,7 +17,7 @@ public class Blinkin extends SubsystemBase{
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
         BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
-        GYRO_SUCCESS, GYRO_OVERRUN};
+        GYRO_SUCCESS, GYRO_OVERRUN, GREEN_SOLID_BRIEF};
 
     private BlinkinState state;
 
@@ -116,7 +116,7 @@ public class Blinkin extends SubsystemBase{
     // Blinks green then briefly goes solid green (for various success modes)
     public void success(){
         initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.GREEN_SOLID;
+        state = BlinkinState.GREEN_SOLID_BRIEF; 
     }
 
      // Blinks red then briefly goes solid red (for various failure modes)
@@ -124,46 +124,9 @@ public class Blinkin extends SubsystemBase{
         initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.BLINK_RED;
     }   
+   
 
-    // Blinks red then briefly goes solid red (for various failure modes)
-    public void gamepieceAnalyzedSuccess() {
-        initialTime = Timer.getFPGATimestamp();
-
-        ClawState clawState = claw.getState();
-        if(clawState == ClawState.CONE){
-            state = BlinkinState.STROBE_GOLD;
-        }
-        else if(clawState == ClawState.CUBE){
-            state = BlinkinState.STROBE_PURPLE;
-        }
-    }   
-
-    // Blinks the appropriate color when trying to auto-target
-    public void acquiringTarget() {
-        initialTime = Timer.getFPGATimestamp();
-
-        // Robot has a gamepiece and is trying to score at the goal
-        // if(claw.hasCone()){
-        //     state = BlinkinState.PULSE_GOLD;
-        // }
-        // else if(claw.hasCube()){
-        //     state = BlinkinState.PULSE_PURPLE;
-        // }
-        // Robot has no gamepiece and is trying to auto-target at a human player station
-        if(!claw.hasCone() && !claw.hasCube()){
-            // If the robot is currently seeking a cone or cube, slow down to a pulse while targeting at the HP stations
-            if(state == BlinkinState.FLASH_GOLD){
-                state = BlinkinState.PULSE_GOLD;
-            }
-            else if(state == BlinkinState.FLASH_PURPLE){
-                state = BlinkinState.PULSE_PURPLE;
-            }
-            // If we've reached this case, then auto-target has failed / does not apply
-            else{
-                state = BlinkinState.BLINK_RED;
-            }
-        }
-    }
+    
 
     //flashes piece within claw when auto align begins and no state of autoalignment is completed 
     public void autoAlignStart(){
@@ -178,7 +141,9 @@ public class Blinkin extends SubsystemBase{
 
     // Turns the LEDS to flashing green when either stage of auto-alignment is complete
     public void autoAlignClose(){
-        initialTime = Timer.getFPGATimestamp();
+        if(state != BlinkinState.FLASH_GREEN){
+            initialTime = Timer.getFPGATimestamp();
+        }
         state = BlinkinState.FLASH_GREEN;
     }
 
@@ -226,6 +191,7 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void gyroClimbSuccess(){
+        
         state = BlinkinState.GYRO_SUCCESS;
     }
 
@@ -313,6 +279,9 @@ public class Blinkin extends SubsystemBase{
                 case GYRO_OVERRUN:
                     whiteOverride();
                     break;
+                case GREEN_SOLID_BRIEF:
+                    solidGreenBrief();
+                    break;
                 default:
                     black();
             }
@@ -359,7 +328,13 @@ public class Blinkin extends SubsystemBase{
             returnToRobotState();  
         }
     }
-
+    private void solidGreenBrief() {
+        if(currentTime - initialTime < 2){
+            green();
+        } else{
+            returnToRobotState();  
+        }
+    }
     // TODO: Reconsider with 5v Blinkin options
     private void flashPink() {
         if(flashOn){
