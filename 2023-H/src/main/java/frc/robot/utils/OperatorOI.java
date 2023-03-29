@@ -122,28 +122,6 @@ public class OperatorOI {
             // If we're already in a scoring pose, just go there directly.
             // Refuse to do anything if we don't have a game piece yet.
             Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-            // triangleButton.onTrue(new ConditionalCommand(
-            //     /*
-            //      * This code runs if we are in an arm scoring pose.
-            //      */
-            //     // Go directly to the appropriate L3 scoring pose dependent on the game piece.
-            //     new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-            //     new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
-            //         new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
-            //         new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
-            //             new InstantCommand(() -> {blinkin.failure();}),
-            //             claw::hasCone),
-            //         claw::hasCube),
-            //     /**
-            //      * This code runs if we are NOT in an arm scoring pose already. Typical case: stowed.
-            //      */
-            //     // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
-            //     new SequentialCommandGroup(
-            //         new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-            //             new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), 
-            //             claw::hasCube), new SetPreScorePose()),
-            //     arm::isArmScoringPose));
-
             triangleButton.onTrue(new ConditionalCommand(
                 /*
                  * This code runs if we are in an arm scoring pose.
@@ -151,8 +129,8 @@ public class OperatorOI {
                 // Go directly to the appropriate L3 scoring pose dependent on the game piece.
                 new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
                 new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
-                    new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeForward),
-                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeForwardPose()),
+                    new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube),
@@ -162,7 +140,7 @@ public class OperatorOI {
                 // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
                 new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-                        new InstantCommand(arm::setGoalPoseToLevelThreeConeForward), 
+                        new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), 
                         claw::hasCube), new SetPreScorePose()),
                 arm::isArmScoringPose));
 
@@ -187,21 +165,21 @@ public class OperatorOI {
 
             // L3 scoring pose
             Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-            // triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-            //     new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
-            //     new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
-            //         new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
-            //             new InstantCommand(() -> {blinkin.failure();}),
-            //             claw::hasCone),
-            //         claw::hasCube));
-            
             triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
                 new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
-                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeForward),
-                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeForwardPose()),
+                new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
+                    new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeInvertedPose()),
                         new InstantCommand(() -> {blinkin.failure();}),
                         claw::hasCone),
                     claw::hasCube));
+            
+            // triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
+            //     new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
+            //     new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeConeForward),
+            //         new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeConeForwardPose()),
+            //             new InstantCommand(() -> {blinkin.failure();}),
+            //             claw::hasCone),
+            //         claw::hasCube));
 
 
             // Square button forces the robot to look at odometry updates.
