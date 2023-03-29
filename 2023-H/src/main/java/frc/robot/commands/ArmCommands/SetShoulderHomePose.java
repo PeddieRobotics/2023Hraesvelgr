@@ -45,18 +45,18 @@ public class SetShoulderHomePose extends CommandBase{
 
     @Override
     public void execute() {
-        currentShoulderMoveTime = Timer.getFPGATimestamp();
+        // currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderMovedUp){
-            arm.setShoulderPercentOutput(-0.3);
-            shoulderMovedUp = true;
+        // if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderMovedUp){
+        //     arm.setShoulderPercentOutput(-0.3);
+        //     shoulderMovedUp = true;
 
-        }
+        // }
 
-        if(shoulder.atLimitSensor()){
-            arm.setShoulderPercentOutput(0);
-            shoulderHomed = true;
-        }
+        // if(shoulder.atLimitSensor()){
+        //     arm.setShoulderPercentOutput(0);
+        //     shoulderHomed = true;
+        // }
         
     }
 

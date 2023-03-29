@@ -14,7 +14,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
 
         private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
                         mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mkFF, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
-                        mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
+                        mSmartMotionMaxVel, mSmartMotionMaxAccel;
 
         public ShoulderTab() {
         }
@@ -74,8 +74,8 @@ public class ShoulderTab extends ShuffleboardTabBase {
                                         .getEntry();
                         mSmartMotionMaxAccel = tab.add("S.M. Max Accel", ShoulderConstants.kSmartMotionRegularMaxAccel)
                                         .getEntry();
-                        mLimitSensor = tab.add("Limit sensor", false)
-                                        .getEntry();
+                        // mLimitSensor = tab.add("Limit sensor", false)
+                        //                 .getEntry();
                 } catch (IllegalArgumentException e) {
                 }
 
@@ -90,7 +90,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mTemp.setDouble(shoulder.getMotorTemperature());
                         mVoltage.setDouble(shoulder.getVoltage());
                         mArbitraryFF.setDouble(shoulder.getArbitraryFF());
-                        mLimitSensor.setBoolean(shoulder.atLimitSensor());
+                        //mLimitSensor.setBoolean(shoulder.atLimitSensor());
 
                         if (mOpenLoopToggle.getBoolean(false)) {
                                 shoulder.setPercentOutput(DriverOI.getInstance().getArmSpeed());
