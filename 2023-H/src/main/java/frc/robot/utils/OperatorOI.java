@@ -194,7 +194,7 @@ public class OperatorOI {
         // Mute ONLY homes the wrist without moving the shoulder
         // Mute + d-pad (down) homes the entire arm subsystem (full system reset, a bit slower)
         Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new ConditionalCommand(new SetHomePose(), new SetWristHomePose(), this::dPadDownHeld));
+        //muteButton.onTrue(new ConditionalCommand(new SetHomePose(), new SetWristHomePose(), this::dPadDownHeld));
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
