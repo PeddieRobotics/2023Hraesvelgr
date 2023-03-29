@@ -21,6 +21,7 @@ import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPoseInAuto;
+import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
@@ -79,6 +80,8 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
+
+        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new ParallelRaceGroup(new IntakeFloorCube(), new WaitCommand(.3)) ));
 
         eventMap.put("PreScorePose", new SetPreScorePose());
         eventMap.put("PreScorePoseWristDown", new SetPreScorePoseWristDown());
