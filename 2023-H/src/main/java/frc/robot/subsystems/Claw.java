@@ -47,7 +47,7 @@ public class Claw extends SubsystemBase {
     private double ejectionTime;
     private boolean justEjectedGamepiece;
 
-    private int newGamepieceCounter;
+    private boolean sawGamepieceDuringAlignmentAnalysis;
 
     private String currentLLForAutoAlign;
 
@@ -75,7 +75,6 @@ public class Claw extends SubsystemBase {
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
 
-        newGamepieceCounter = 0;
         currentLLForAutoAlign = "limelight-front";
 
         currentAverage = new RollingAverage(4);
@@ -102,32 +101,20 @@ public class Claw extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // If we've recently intaked a cone, and the arm is oriented such that we could
-        // see the cone, start looking at it.
-        if (monitorNewConeIntake && !isNormalizingCone() && limelightFront.hasTarget()
+        // If we've recently intaked a cone or cube and we're in an analysis pose, start looking at it.
+        if((monitorNewConeIntake && !isNormalizingCone() && limelightFront.hasTarget()
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)
-        && Arm.getInstance().getState() == ArmState.STOWED) {
-            
-            updateGamepieceAlignmentError();
-
-            // If we have looked the cone for at least 200 ms, we've gotten enough of a
-            // glimpse.
-            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.2) {
-                finishedAnalyzingAlignment();
-            }
-        }
-
-        // If we've recently intaked a cube, and the arm is oriented such that we could
-        // see the cube, start looking at it.
-        if (monitorNewCubeIntake && limelightFront.hasTarget()
+        && Arm.getInstance().getState() == ArmState.STOWED) ||
+        (monitorNewCubeIntake && limelightFront.hasTarget()
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)
-        && Arm.getInstance().getState() == ArmState.STOWED) {
+        && Arm.getInstance().getState() == ArmState.STOWED)){
 
             updateGamepieceAlignmentError();
 
             // If we have looked the cone for at least 200 ms, we've gotten enough of a
             // glimpse.
             if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.2) {
+                checkGamepieceTypeWithVision();
                 finishedAnalyzingAlignment();
             }
         }
@@ -288,7 +275,10 @@ public class Claw extends SubsystemBase {
     }
 
     public void updateGamepieceAlignmentError() {
-        gamepieceAlignmentError = alignmentFilter.calculate(limelightFront.getTxAverage());
+        if(limelightFront.getTv()){
+            sawGamepieceDuringAlignmentAnalysis = true;
+            gamepieceAlignmentError = alignmentFilter.calculate(limelightFront.getTxAverage());
+        }
     }
 
     public double convertL2ConeTXToAlignmentError(double tx) {
@@ -324,6 +314,7 @@ public class Claw extends SubsystemBase {
     public void finishedAnalyzingAlignment(){
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
+        sawGamepieceDuringAlignmentAnalysis = false;
         returnLimelightToDefaultState();
         alignmentFilter.reset();
     }
@@ -433,6 +424,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void classifyGamepiece(boolean recheck){
+        setGamepieceOperatorOverride(false);
+        
         if(isFrontSensor() && !isBackSensor()){
             if(!recheck){
                 Blinkin.getInstance().success();
@@ -461,7 +454,7 @@ public class Claw extends SubsystemBase {
     public void checkGamepieceTypeWithVision(){
         // Looking for a cone, so check that we saw one in the intake.
         if(limelightFront.getPipeline() == 1){
-            if(newGamepieceCounter == 0){
+            if(!sawGamepieceDuringAlignmentAnalysis){
                 classifyGamepiece(true);
             }
             else{
@@ -470,13 +463,21 @@ public class Claw extends SubsystemBase {
         }
         // Looking for a cube, so check that we saw one in the intake.
         else if(limelightFront.getPipeline() == 2){
-            if(newGamepieceCounter == 0){
+            if(!sawGamepieceDuringAlignmentAnalysis){
                 classifyGamepiece(true);
             }
             else{
                 setState(ClawState.CUBE);
             }
         }
+    }
+
+    public boolean isSawGamepieceDuringAlignmentAnalysis() {
+        return sawGamepieceDuringAlignmentAnalysis;
+    }
+
+    public void setSawGamepieceDuringAlignmentAnalysis(boolean sawGamepieceDuringAlignmentAnalysis) {
+        this.sawGamepieceDuringAlignmentAnalysis = sawGamepieceDuringAlignmentAnalysis;
     }
 
 }
