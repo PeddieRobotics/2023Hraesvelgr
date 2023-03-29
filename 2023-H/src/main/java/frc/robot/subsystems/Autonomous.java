@@ -135,40 +135,17 @@ public class Autonomous extends SubsystemBase{
          * Competition paths start here
          */
 
-        // 1 piece routines without charge station (leave community and collect a piece as minimum)
-        autoRoutines.put("1 Piece Col 1", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceCol1", 1.5, 1.5)));
-        autoRoutines.put("1 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceCol9", 1.5, 1.5)));
-
         // 1 piece routines with charge station - dead reckoning / no gyro
         // First two are basic ones from Hatboro. Don't leave community, just balance immediately.
-        autoRoutines.put("1 Piece Balance Front Col 4 Hatboro", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceFrontCol4HATBORO", 1.0, 1.0)));
-        autoRoutines.put("1 Piece Balance Front Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceFrontCol6", 1.0, 1.0)));
-       
-        // These three are upgrades which leave community, collect a piece, and loop from the back onto the charge station.
-        autoRoutines.put("1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol4", 1.0, 3.0)));
-        autoRoutines.put("1 Piece Balance Back Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol6", 1.0, 3.0)));
-        autoRoutines.put("1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("1PieceBalanceBackCol9", 2.0, 2.5)));
+        autoRoutines.put("Hatboro 1 Piece Balance Front Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
 
         // 1 piece routines with charge station - GYRO
         // These are just versions of the above that use a gyro-based balancing method rather than dead reckoning.
-        autoRoutines.put("GYRO 1 Piece Balance Front Col 4 Seneca", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol4SENECA", 1.0, 1.0)));
-        autoRoutines.put("GYRO 1 Piece Balance Front Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceFrontCol6", 1.0, 1.0)));
-       
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 4 Seneca", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol4SENECA", 1.25, 3.0)));
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 6", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol6", 1.25, 3.0)));
-        autoRoutines.put("GYRO 1 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro1PieceBalanceBackCol9", 1, 2.0)));
+        autoRoutines.put("Seneca GYRO 1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
 
         // 2 piece routines without charge station
-        autoRoutines.put("2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceCol9", 2, 2)));
+        autoRoutines.put("Seneca 2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
         
-        // 2 piece routines with charge station - dead reckoning / no gyro
-        // autoRoutines.put("2 Piece Balance Front Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceFrontCol9", 2.5, 3)));
-        // autoRoutines.put("2 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("2PieceBalanceBackCol9", 2.5, 4)));
-
-        // 2 piece routines with charge station - GYRO
-        // autoRoutines.put("GYRO 2 Piece Balance Front Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro2PieceBalanceFrontCol9", 2.5, 3)));
-        // autoRoutines.put("GYRO 2 Piece Balance Back Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Gyro2PieceBalanceBackCol9", 2.5, 4)));
-
         /*
          * Non-competition paths start here
          */
