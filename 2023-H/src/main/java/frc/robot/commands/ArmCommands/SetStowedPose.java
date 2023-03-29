@@ -93,10 +93,6 @@ public class SetStowedPose extends CommandBase {
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(shoulder.atLimitSensor()){
-            reachedLimitSensor = true;
-        }
-
         // Switch profiles into something slower so we don't smash the arm into the fulcrum.
         if (arm.isShoulderBelowAngle(-20)) {
             arm.setShoulderPositionSmartMotion(shoulder.getkStowedAngle(), SmartMotionArmSpeed.SLOW);
@@ -128,9 +124,6 @@ public class SetStowedPose extends CommandBase {
             arm.setWristPosition(wrist.getkStowedAngle());
         }
 
-        if(!reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle())){
-            arm.setShoulderPercentOutput(-0.2);
-        }
 
     }
 
@@ -151,12 +144,7 @@ public class SetStowedPose extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if(prevArmState != ArmState.HOME && prevArmState != ArmState.STOWED && prevArmState != ArmState.L1 && prevArmState != ArmState.SINGLE_SS_CONE && prevArmState != ArmState.SINGLE_SS_CUBE){
-            return reachedLimitSensor && arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
-        }
-        else{
-            return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
-        }
+        return arm.isWristAtAngle(wrist.getkStowedAngle()) && arm.isShoulderAtAngle(shoulder.getkStowedAngle());
     }
 
 }

@@ -12,19 +12,19 @@ import frc.robot.utils.Constants.WristConstants;
 public class SetLevelTwoConeStowedPose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
-    //private Wrist wrist;
+    private Wrist wrist;
 
     public SetLevelTwoConeStowedPose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
         shoulder = Shoulder.getInstance();
-        //wrist = Wrist.getInstance();
+        wrist = Wrist.getInstance();
     }
 
     @Override
     public void initialize() {
-        //arm.setWristPosition(68);
+        arm.setWristPosition(WristConstants.kHomeAngle);
         arm.setShoulderPositionSmartMotion(12.5, SmartMotionArmSpeed.REGULAR);
         arm.setState(ArmState.L2_CONE);
         arm.setGoalPose(ArmState.NONE);
