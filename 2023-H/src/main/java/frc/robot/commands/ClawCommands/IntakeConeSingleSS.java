@@ -55,31 +55,12 @@ public class IntakeConeSingleSS extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        if(!interrupted){
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                blinkin.failure();
-                claw.stopClaw();
-            }
-        }
-        else{
-            claw.setState(ClawState.EMPTY);     
-            claw.stopClaw();
-            blinkin.returnToRobotState();
-        }
+        claw.classifyGamepiece(false);
     }
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && fixedCone && (currentTime - initialReverseTime) > 0.35;
+        return claw.isEitherSensor() && fixedCone && (currentTime - initialReverseTime) > 0.35;
     }
 
     

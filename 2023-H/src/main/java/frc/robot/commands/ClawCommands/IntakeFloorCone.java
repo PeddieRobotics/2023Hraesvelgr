@@ -29,7 +29,6 @@ public class IntakeFloorCone extends CommandBase{
         claw.setState(ClawState.INTAKING_CONE);     
         hasCone = false;
         claw.intakeCone();
-        claw.startMonitoringCurrent();
         blinkin.intakingCone();
     }
 
@@ -37,33 +36,18 @@ public class IntakeFloorCone extends CommandBase{
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(claw.hasCone() && !hasCone){
+        if(claw.isBothSensors() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else if(!claw.hasCone()){
+        else if(!claw.isBothSensors()){
             hasCone = false;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-
-        if(claw.hasCube()){
-            blinkin.success();
-            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            claw.monitorNewCubeIntake();
-        }
-        else if(claw.hasCone()){
-            blinkin.success();
-            claw.stopClaw();
-            claw.monitorNewConeIntake();
-        }
-        else{
-            claw.setState(ClawState.EMPTY);     
-            blinkin.failure();
-            claw.stopClaw();
-        }
+        claw.classifyGamepiece();
     }
 
     @Override

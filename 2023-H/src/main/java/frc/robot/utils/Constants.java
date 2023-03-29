@@ -21,7 +21,7 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final boolean kUsePreScorePose = true;
-                public static final boolean kReturnL3ConeInvertedToPreScore = true;
+                public static final boolean kReturnL3ConeInvertedToPreScore = false;
                 public static final boolean kReturnForwardL2L3ScoringPosesToPreScore = true;
 
                 public static final double kDrivingDeadband = 0.1;

@@ -30,7 +30,6 @@ import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
-import frc.robot.commands.ClawCommands.IntakeFloorCubeInAuto;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyroNew;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
@@ -70,7 +69,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("straighten", new StraightenDrivetrain());
 
         eventMap.put("IntakeCone", new IntakeFloorCone());
-        eventMap.put("IntakeCube", new IntakeFloorCubeInAuto());
+        eventMap.put("IntakeCube", new IntakeFloorCube());
 
         eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
 
