@@ -12,16 +12,23 @@ public class ClimbCSGyro extends CommandBase{
     private Drivetrain drivetrain;
     
     private int state;
-    private int debounceCount;
 
     private double onChargeStationDegree;
-    private double levelDegree;
-    private double debounceTime;
 
-    private double fieldHeading, gyroHeading, initialPitch, currentPitch, approachSpeed, climbSpeed;
+    private double fieldHeading, gyroHeading, currentPitch, approachSpeed, climbSpeed;
+
+    private double initialXPos, initialClimbXPos, currentDistance, currentClimbDistance;
+
+    private double overrunMaxApproachDist, overrunRemainingClimbDist;
+
+    private double initialDrivebackXPos, currentDrivebackDistance;
+
+    private double robotSpeed;
+
+    private Blinkin blinkin;
 
     // Full constructor with all 6 parameters for the climb charge station algorithm.
-    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed, double debounceTime, double onChargeStationDegree, double levelDegree){
+    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed, double onChargeStationDegree, double overrunMaxApproachDist){
         drivetrain = Drivetrain.getInstance();
 
         addRequirements(drivetrain);
@@ -29,9 +36,10 @@ public class ClimbCSGyro extends CommandBase{
         this.fieldHeading = fieldHeading;
         this.approachSpeed = approachSpeed;
         this.climbSpeed = climbSpeed;
-        this.debounceTime = debounceTime;
         this.onChargeStationDegree = onChargeStationDegree;
-        this.levelDegree = levelDegree;
+        this.overrunMaxApproachDist = overrunMaxApproachDist;
+
+        blinkin = Blinkin.getInstance();
 
         /**********
          * CONFIG *
@@ -43,36 +51,46 @@ public class ClimbCSGyro extends CommandBase{
         // Should be roughly half the fast speed, to make the robot more accurate,
         SmartDashboard.putNumber("CLIMB: Climb speed", climbSpeed);
 
-        // Amount of time a sensor condition needs to be met before changing states in
-        // seconds
-        // Reduces the impact of sensor noise, but too high can make the auto run
-        // slower
-        SmartDashboard.putNumber("CLIMB: Debounce time", debounceTime);
-
         // Angle where the robot knows it is on the charge station
         SmartDashboard.putNumber("CLIMB: On station angle", onChargeStationDegree);
 
-        // Angle where the robot can assume it is level on the charging station
-        // Used for exiting the drive forward sequence.
-        SmartDashboard.putNumber("CLIMB: Stop angle", levelDegree);
+        SmartDashboard.putNumber("CLIMB: Overrun max approach dist", overrunMaxApproachDist);
+
+        SmartDashboard.putNumber("DATA: Current pitch angle", currentPitch);
+        SmartDashboard.putNumber("DATA: Current speed", robotSpeed);
+        SmartDashboard.putNumber("DATA: Current state", state);
+        SmartDashboard.putNumber("DATA: Initial x pos", initialXPos);
+        SmartDashboard.putNumber("DATA: Initial climb x pos", initialClimbXPos);
+        SmartDashboard.putNumber("DATA: Initial driveback x pos", initialDrivebackXPos);
+        SmartDashboard.putNumber("DATA: Current total distance", currentDistance);
+        SmartDashboard.putNumber("DATA: Current climb distance", currentClimbDistance);
+        SmartDashboard.putNumber("DATA: Current driveback x pos", currentDrivebackDistance);
+
     }
 
     // Typical constructor. Used if the default parameters are fine and don't need to be overwritten.
     public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed){
-        this(fieldHeading, approachSpeed, climbSpeed, AutoConstants.kCSDebounceTime, AutoConstants.kOnCSDegree, AutoConstants.kCSLevelDegree);
+        this(fieldHeading, approachSpeed, climbSpeed, AutoConstants.kOnCSDegree, AutoConstants.kCSOverrunMaxApproachDist);
     }
 
     @Override
     public void initialize() {
         state = 0;
-        debounceCount = 0;
+
+        initialXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
+        initialClimbXPos = 0.0;
+        currentDistance = 0.0;
+        currentClimbDistance = 0.0;
+        robotSpeed = 0;
+        initialDrivebackXPos = 0.0;
+        currentDrivebackDistance = 0.0;
 
         // Check if gyro's zero is the same as field zero.
         if(drivetrain.getFlipped()){
             gyroHeading = 180-fieldHeading;
         }
 
-        initialPitch = drivetrain.getPitch();
+        // initialPitch = drivetrain.getPitch();
 
         /*
          * More config. In initialize method to allow for live dashboard tuning.
@@ -85,48 +103,49 @@ public class ClimbCSGyro extends CommandBase{
         // Should be roughly half the fast speed, to make the robot more accurate,
         climbSpeed = SmartDashboard.getNumber("CLIMB: Climb speed", climbSpeed);
         
-        // Amount of time a sensor condition needs to be met before changing states in
-        // seconds
-        // Reduces the impact of sensor noise, but too high can make the auto run
-        // slower
-        debounceTime = SmartDashboard.getNumber("CLIMB: Debounce time", 0.05);
-
         // Angle where the robot knows it is on the charge station
-        onChargeStationDegree = SmartDashboard.getNumber("CLIMB: On station angle", 13.0);
+        onChargeStationDegree = SmartDashboard.getNumber("CLIMB: On station angle", AutoConstants.kOnCSDegree);
 
-        // Angle where the robot can assume it is level on the charging station
-        // Used for exiting the drive forward sequence.
-        levelDegree = SmartDashboard.getNumber("CLIMB: Stop angle", 10.0);
+        overrunMaxApproachDist = SmartDashboard.getNumber("CLIMB: Overrun max approach dist", AutoConstants.kCSOverrunMaxApproachDist);
+        
+        overrunRemainingClimbDist = SmartDashboard.getNumber("CLIMB: Overrun remaining climb dist", AutoConstants.kCSOverrunRemainingClimbDist);        
 
     }
 
     @Override
     public void execute() {
-        double robotSpeed = calculateRobotSpeed();
-        currentPitch = Math.abs(drivetrain.getPitch()-initialPitch);
-        SmartDashboard.putNumber("CLIMB: Current pitch angle", currentPitch);
-        SmartDashboard.putNumber("CLIMB: Current speed", robotSpeed);
-        SmartDashboard.putNumber("CLIMB: Current state", state);
+        robotSpeed = calculateRobotSpeed();
+        currentPitch = Math.abs(drivetrain.getPitchAverage());
 
-        Translation2d chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(gyroHeading)));
-        if(state != 2){
+        currentDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialXPos);
+
+        SmartDashboard.putNumber("DATA: Current pitch angle", currentPitch);
+        SmartDashboard.putNumber("DATA: Current speed", robotSpeed);
+        SmartDashboard.putNumber("DATA: Current state", state);
+        SmartDashboard.putNumber("DATA: Initial x pos", initialXPos);
+        SmartDashboard.putNumber("DATA: Initial climb x pos", initialClimbXPos);
+        SmartDashboard.putNumber("DATA: Current total distance", currentDistance);
+        SmartDashboard.putNumber("DATA: Current climb distance", currentClimbDistance);
+
+        Translation2d chargeStationVector;
+        if(state == 0 || state == 1){
+            chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(gyroHeading)));
             drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
         }
-        else{
-            drivetrain.lock();
-            Blinkin.getInstance().lockedWheels();
+        else if(state == 2 || state == 3){
+            chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(180-gyroHeading)));
+            drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
         }
+
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.lock();
-        Blinkin.getInstance().lockedWheels();
     }
 
     @Override
     public boolean isFinished() {
-        if(state == 2){
+        if(state == 3){
             return true;
         }
         return false;
@@ -139,44 +158,57 @@ public class ClimbCSGyro extends CommandBase{
         switch (state) {
             // drive forwards to approach station, exit when tilt is detected
             case 0:
-                if(Math.abs(currentPitch) > onChargeStationDegree) {
-                    debounceCount++;
-                }
-                if(debounceCount > secondsToTicks(debounceTime)) {
-                    state = 1;
-                    debounceCount = 0;
-                    return climbSpeed;
-                }
-                return approachSpeed;
-            // driving up charge station, drive slower, stopping when level
-            case 1:
-                if(currentPitch > 0){
-                    if (currentPitch < levelDegree) {
-                        debounceCount++;
-                    }
-                }
-                else{
-                    if (currentPitch > -levelDegree) {
-                        debounceCount++;
-                    }
-                }
-
-                if(debounceCount > secondsToTicks(debounceTime)) {
+                // Overran detection window
+                // Set climb distance to a shorter, more appropriate distance.
+                if(currentDistance > overrunMaxApproachDist){
+                    blinkin.gyroClimbOverrun();
                     state = 2;
-                    debounceCount = 0;
                     return 0;
                 }
-                return climbSpeed;
-            // on charge station, stop motors and wait for end of auto
+                // Successful gyro detection of charge station
+                else if(currentPitch > onChargeStationDegree){
+                    blinkin.specialOperatorFunctionality();
+                    initialClimbXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
+                    state = 1;
+                }
+
+                return approachSpeed;
+
+            // driving up charge station, drive slower, stopping when level
+            case 1:
+                currentClimbDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialClimbXPos);
+                
+                // Overran detection window
+                if(currentDistance > overrunMaxApproachDist){
+                    blinkin.gyroClimbOverrun();
+                    state = 2;
+                    initialDrivebackXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
+                    return 0;
+                }
+
+                if(currentPitch < 11 && currentClimbDistance > 0.5) {
+                    blinkin.gyroClimbSuccess();
+                    state = 2;
+                    initialDrivebackXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
+                    return 0;
+                }
+
+                return 0.75;
+
+            // reacted to angle drop but it's slightly too slow; so reverse a small fixed amount amd stp[]
             case 2:
+                currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
+                blinkin.lockedWheels();
+                if(currentDrivebackDistance > 0.1){
+                    state = 3;
+                    return 0;
+                }
+                return 0.75;
+
+            case 3:
                 return 0;
         }
         return 0;
     }
-
-    public int secondsToTicks(double time) {
-        return (int) (time * 50);
-    }
-
     
 }

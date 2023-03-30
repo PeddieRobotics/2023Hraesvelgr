@@ -42,7 +42,7 @@ public class IntakeConeSingleSS extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-        if(!hasCone && claw.hasCone()){
+        if(!hasCone && claw.isBothSensors()){
             initialConeTime = Timer.getFPGATimestamp();
             hasCone = true;
         }
@@ -55,7 +55,7 @@ public class IntakeConeSingleSS extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.classifyGamepiece(false);
+        claw.classifyGamepiece();
     }
 
     @Override

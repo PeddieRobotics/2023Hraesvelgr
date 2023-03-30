@@ -15,7 +15,7 @@ public class LimelightFront extends Limelight {
     private static LimelightFront limelightFront;
 
     private RollingAverage txAverage, tyAverage, taAverage, xAverage;
-    private boolean cube,level2;
+    private boolean cube;
 
     private String limelightName = "limelight-front";
 
@@ -24,7 +24,7 @@ public class LimelightFront extends Limelight {
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
-        setPipeline(7);
+        setPipeline(3);
     }
 
     public static LimelightFront getInstance() {

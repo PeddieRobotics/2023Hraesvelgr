@@ -49,11 +49,13 @@ public class EjectGamepiece extends CommandBase{
         claw.stopClaw();
         claw.resetGamepieceAlignmentError();
         claw.setGamepieceOperatorOverride(false);
+        claw.classifyGamepiece();
+        claw.setCurrentAlignmentDistance(0.0);
     }
 
     @Override
     public boolean isFinished() {
-        if(Arm.getInstance().isInvertedL3()){
+        if(Arm.getInstance().isInvertedL3() || Arm.getInstance().isL1Pose()){
             return currentTime - initialTime > 0.5;
         }
         else{

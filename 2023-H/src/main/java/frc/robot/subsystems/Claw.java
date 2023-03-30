@@ -29,7 +29,7 @@ public class Claw extends SubsystemBase {
     // Keep in mind when using ClawState that the floor cube intake picks up tipped over cones,
     // so "INTAKING_CUBE" state may encompass this possibility.
     public enum ClawState {
-        EMPTY, INTAKING_CUBE, INTAKING_CONE, CUBE, CONE
+        EMPTY, INTAKING_CUBE, INTAKING_CONE, CUBE, CONE, UNKNOWN
     };
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
@@ -42,6 +42,7 @@ public class Claw extends SubsystemBase {
     private double initialAlignmentAnalysisTime;
     private MedianFilter alignmentFilter;
     private boolean monitorNewConeIntake, monitorNewCubeIntake, analyzingAlignment;
+    private double currentAlignmentDistance;
 
     private InterpolatingTreeMap<Double,Double> cubeAlignmentTable, coneL2AlignmentTable, coneL3AlignmentTable;
 
@@ -76,6 +77,7 @@ public class Claw extends SubsystemBase {
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
         analyzingAlignment = false;
+        currentAlignmentDistance = 0.0;
 
         currentLLForAutoAlign = "limelight-front";
 
@@ -103,11 +105,13 @@ public class Claw extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Current alignment dist", currentAlignmentDistance);
+
         // If we've recently intaked a cone or cube and we're in an analysis pose, start looking at it.
-        if((monitorNewConeIntake && limelightFront.hasTarget()
+        if((monitorNewConeIntake
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)
         && Arm.getInstance().getState() == ArmState.STOWED) ||
-        (monitorNewCubeIntake && limelightFront.hasTarget()
+        (monitorNewCubeIntake
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)
         && Arm.getInstance().getState() == ArmState.STOWED)){
 
@@ -119,10 +123,10 @@ public class Claw extends SubsystemBase {
             updateGamepieceAlignmentError();
             SmartDashboard.putNumber("Gamepiece alignment error", gamepieceAlignmentError);
 
-            // If we have looked the cone for at least 200 ms, we've gotten enough of a
+            // If we have looked the cone for at least 500 ms, we've gotten enough of a
             // glimpse.
-            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.2) {
-                checkGamepieceTypeWithVision();
+            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.5) {
+                // checkGamepieceTypeWithVision();
                 finishedAnalyzingAlignment();
             }
         }
@@ -185,7 +189,7 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasGamepiece() {
-        return hasCone() || hasCube();
+        return hasCone() || hasCube() || state == ClawState.UNKNOWN;
     }
 
     public double getClawSpeed() {
@@ -306,7 +310,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void monitorNewConeIntake() {
-        limelightFront.setPipeline(1); // monitor alignment of cone in intake
+        limelightFront.setPipeline(7); // monitor alignment of cone in intake
         limelightFront.resetRollingAverages();
         monitorNewConeIntake = true;
     }
@@ -383,7 +387,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void returnLimelightToDefaultState(){
-        LimelightHelper.setPipelineIndex("limelight-front", 7); // Read alignment of cones in intake for auto-align
+        LimelightHelper.setPipelineIndex("limelight-front", 7); // General gamepiece vision (color camera)
         LimelightHelper.setPipelineIndex("limelight-back", 0); // April tag pipeline
 
     }
@@ -407,7 +411,7 @@ public class Claw extends SubsystemBase {
 
     // Used for detecting a positive cube intake
     public boolean analyzeCurrentForCube() {
-        if(currentAverage.getAverage() > 20 && isFrontSensor() && !isBackSensor()){
+        if(currentAverage.getAverage() > 30 && isFrontSensor() && !isBackSensor()){
             return true;
         }
         return false;
@@ -430,29 +434,23 @@ public class Claw extends SubsystemBase {
         this.gamepieceOperatorOverride = gamepieceOperatorOverride;
     }
 
-    public void classifyGamepiece(boolean recheck){
+    public void classifyGamepiece(){
         setGamepieceOperatorOverride(false);
         
         if(isFrontSensor() && !isBackSensor()){
-            if(!recheck){
-                Blinkin.getInstance().success();
-                monitorNewCubeIntake();
-            }
+            Blinkin.getInstance().success();
+            monitorNewCubeIntake();
             setSpeed(ClawConstants.kCubeHoldSpeed);
             setState(ClawState.CUBE);
         }
         else if(isFrontSensor() && isBackSensor()){
-            if(!recheck){
-                Blinkin.getInstance().success();
-                monitorNewConeIntake();
-            }
+            Blinkin.getInstance().success();
+            monitorNewConeIntake();
             stopClaw();
             setState(ClawState.CONE);
         }
         else{
-            if(!recheck){
-                Blinkin.getInstance().failure();
-            }
+            Blinkin.getInstance().returnToRobotState();
             stopClaw();
             setState(ClawState.EMPTY); 
         }
@@ -460,9 +458,10 @@ public class Claw extends SubsystemBase {
 
     public void checkGamepieceTypeWithVision(){
         // Looking for a cone, so check that we saw one in the intake.
-        if(limelightFront.getPipeline() == 1){
+        if(limelightFront.getPipeline() == 7){
             if(!sawGamepieceDuringAlignmentAnalysis){
-                classifyGamepiece(true);
+                setState(ClawState.UNKNOWN);
+                Blinkin.getInstance().returnToRobotState();
             }
             else{
                 setState(ClawState.CONE);
@@ -471,7 +470,8 @@ public class Claw extends SubsystemBase {
         // Looking for a cube, so check that we saw one in the intake.
         else if(limelightFront.getPipeline() == 2){
             if(!sawGamepieceDuringAlignmentAnalysis){
-                classifyGamepiece(true);
+                setState(ClawState.UNKNOWN);
+                Blinkin.getInstance().returnToRobotState();
             }
             else{
                 setState(ClawState.CUBE);
@@ -493,6 +493,14 @@ public class Claw extends SubsystemBase {
 
     public void setAnalyzingAlignment(boolean analyzingAlignment) {
         this.analyzingAlignment = analyzingAlignment;
+    }
+
+    public double getCurrentAlignmentDistance() {
+        return currentAlignmentDistance;
+    }
+
+    public void setCurrentAlignmentDistance(double currentAlignmentDistance) {
+        this.currentAlignmentDistance = currentAlignmentDistance;
     }
 
 }

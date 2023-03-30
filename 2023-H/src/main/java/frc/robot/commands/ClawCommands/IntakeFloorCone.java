@@ -47,7 +47,7 @@ public class IntakeFloorCone extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.classifyGamepiece(false);
+        claw.classifyGamepiece();
     }
 
     @Override

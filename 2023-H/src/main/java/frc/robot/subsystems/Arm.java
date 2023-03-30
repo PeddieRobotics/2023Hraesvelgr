@@ -167,7 +167,9 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isArmScoringPose(){
-        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED;
+        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE ||
+        state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED ||
+        state == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_FORWARD;
     }
 
     public static Arm getInstance() {
@@ -256,16 +258,15 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CUBE_FORWARD){
             CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
         }
-        // These forbidden states do exist, but don't allow them.
         // else if(goalPose == ArmState.L3_CUBE_INVERTED){
         //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
         // }
         else if(goalPose == ArmState.L3_CONE_FORWARD){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
         }
-        else if(goalPose == ArmState.L3_CONE_INVERTED){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
-        }
+        // else if(goalPose == ArmState.L3_CONE_INVERTED){
+        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+        // }
 
     }
 

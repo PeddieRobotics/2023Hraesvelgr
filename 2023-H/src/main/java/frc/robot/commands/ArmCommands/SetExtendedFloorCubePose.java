@@ -1,11 +1,13 @@
 package frc.robot.commands.ArmCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.Constants.ShoulderConstants;
 
 public class SetExtendedFloorCubePose extends CommandBase{
     private Arm arm;
@@ -19,6 +21,8 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+
+        SmartDashboard.putNumber("intake accel", 6000);
     }
 
     @Override
@@ -32,8 +36,10 @@ public class SetExtendedFloorCubePose extends CommandBase{
         }
         else{
             approachFromAbove = false;
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-            arm.setWristPosition(88);
+            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
+            shoulder.setRegularSmartMotionParameters(ShoulderConstants.kSmartMotionRegularSetpointTol,
+            ShoulderConstants.kSmartMotionRegularMinVel, ShoulderConstants.kSmartMotionRegularMaxVel, SmartDashboard.getNumber("intake accel", 6000));
+            // arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
         }
 
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
@@ -42,7 +48,11 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(shoulder.getkTransitoryAngle()) || overshotTargetAngle){
+        if(arm.isWristGreaterThanAngle(wrist.getkL1Angle())){
+            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+        }
+
+        if(overshotTargetAngle){
             arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.SLOW);
         }
@@ -55,6 +65,9 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
+        shoulder.setRegularSmartMotionParameters(ShoulderConstants.kSmartMotionRegularSetpointTol,
+        ShoulderConstants.kSmartMotionRegularMinVel, ShoulderConstants.kSmartMotionRegularMaxVel, ShoulderConstants.kSmartMotionRegularMaxAccel);
+
         if(!interrupted){
             arm.holdShoulderPosition();
         }

@@ -16,7 +16,7 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, FLASH_GREEN_DIST, 
         GYRO_SUCCESS, GYRO_OVERRUN, GREEN_SOLID_BRIEF};
 
     private BlinkinState state;
@@ -124,27 +124,13 @@ public class Blinkin extends SubsystemBase{
         initialTime = Timer.getFPGATimestamp();
         state = BlinkinState.BLINK_RED;
     }   
-   
-
-    
-
-    //flashes piece within claw when auto align begins and no state of autoalignment is completed 
-    public void autoAlignStart(){
-        initialTime = Timer.getFPGATimestamp();
-        if(claw.hasCone()){
-            state = BlinkinState.FLASH_GOLD;
-        }
-        else if(claw.hasCube()){
-            state = BlinkinState.FLASH_PURPLE;
-        }
-    }
 
     // Turns the LEDS to flashing green when either stage of auto-alignment is complete
     public void autoAlignClose(){
-        if(state != BlinkinState.FLASH_GREEN){
+        if(state != BlinkinState.FLASH_GREEN_DIST){
             initialTime = Timer.getFPGATimestamp();
+            state = BlinkinState.FLASH_GREEN_DIST;
         }
-        state = BlinkinState.FLASH_GREEN;
     }
 
     // Turns the LEDS to solid green when both auto-align stages are complete
@@ -211,7 +197,10 @@ public class Blinkin extends SubsystemBase{
         }
         else if(claw.getState() == ClawState.CUBE){
             state = BlinkinState.PURPLE_SOLID;
-        }     
+        } 
+        else if(claw.getState() == ClawState.UNKNOWN){
+            state = BlinkinState.RED_SOLID;
+        }    
         else{
             state = BlinkinState.NONE;
         }
@@ -261,17 +250,8 @@ public class Blinkin extends SubsystemBase{
                 case FLASH_GREEN:
                     flashGreen();
                     break;
-                case PULSE_GOLD:
-                    pulseGold();
-                    break;
-                case PULSE_PURPLE:
-                    pulsePurple();
-                    break;
-                case STROBE_GOLD:
-                    strobeGold();
-                    break;
-                case STROBE_PURPLE:
-                    strobePurple();
+                case FLASH_GREEN_DIST:
+                    flashGreenOnDist();
                     break;
                 case GYRO_SUCCESS:
                     rainbowTwinkle();
@@ -367,6 +347,44 @@ public class Blinkin extends SubsystemBase{
             else{
                 black();
                 if(currentTime - flashTime > 0.3){
+                    flashOn = true;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+            }
+        }
+
+        // TODO: Reconsider with 5v Blinkin options
+        private void flashGreenOnDist() {
+            double dist = claw.getCurrentAlignmentDistance();
+
+            double flashPeriod = 1;
+            if(dist > 10){
+                flashPeriod = 0.6;
+            }
+            else if(dist <= 10 && dist > 5){
+                flashPeriod = 0.5;
+            }
+            else if(dist <= 5 && dist > 3){
+                flashPeriod = 0.4;
+            }
+            else if(dist <= 3 && dist > 1){
+                flashPeriod = 0.3;
+            }
+            else{
+                flashPeriod = 0.2;
+            }
+
+            if(flashOn){
+                green();
+                if(currentTime - flashTime > flashPeriod/2){
+                    flashOn = false;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+    
+            }
+            else{
+                black();
+                if(currentTime - flashTime > flashPeriod/2){
                     flashOn = true;
                     flashTime = Timer.getFPGATimestamp();
                 }

@@ -91,9 +91,6 @@ public class SingleSSAlign extends CommandBase {
                     initialTargetNotFound = true;
                     return;
                 }
-                else{
-                    blinkin.autoAlignStart();
-                }
             }
             initialHeadingCorrectionComplete = true;
 

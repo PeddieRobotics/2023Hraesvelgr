@@ -31,7 +31,7 @@ import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
-import frc.robot.commands.DriveCommands.ClimbCSGyroNew;
+import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -91,15 +91,15 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
         eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
 
-        eventMap.put("ClimbCSFrontSlow", new ClimbCSGyroNew(0, 1.0, 0.5));
-        eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new LockDrivetrain()));
+        eventMap.put("ClimbCSFrontSlow", new ClimbCSGyro(0, 1.0, 0.5));
+        eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyro(180, 1.0, 0.5), new LockDrivetrain()));
         // eventMap.put("ClimbCSBackslow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
         
-        eventMap.put("ClimbCSFrontMedium", new ClimbCSGyroNew(0, 1.5, 0.5));//speed should be 1.0
-        eventMap.put("ClimbCSBackMedium", new ClimbCSGyroNew(180, 1.5, 0.5));
+        eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
+        eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
 
-        eventMap.put("ClimbCSFrontFast", new ClimbCSGyroNew(0, 2.0, 1.0));
-        eventMap.put("ClimbCSBackFast", new ClimbCSGyroNew(180, 2.0, 1.0));
+        eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
+        eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
 
 
         autoBuilder = new CustomAutoBuilder(
