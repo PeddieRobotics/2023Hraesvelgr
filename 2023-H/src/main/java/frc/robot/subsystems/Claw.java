@@ -41,7 +41,8 @@ public class Claw extends SubsystemBase {
     private double gamepieceAlignmentError;
     private double initialAlignmentAnalysisTime;
     private MedianFilter alignmentFilter;
-    private boolean monitorNewConeIntake, monitorNewCubeIntake;
+    private boolean monitorNewConeIntake, monitorNewCubeIntake, analyzingAlignment;
+
     private InterpolatingTreeMap<Double,Double> cubeAlignmentTable, coneL2AlignmentTable, coneL3AlignmentTable;
 
     private double ejectionTime;
@@ -74,6 +75,7 @@ public class Claw extends SubsystemBase {
         initialAlignmentAnalysisTime = 0.0;
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
+        analyzingAlignment = false;
 
         currentLLForAutoAlign = "limelight-front";
 
@@ -102,14 +104,20 @@ public class Claw extends SubsystemBase {
     @Override
     public void periodic() {
         // If we've recently intaked a cone or cube and we're in an analysis pose, start looking at it.
-        if((monitorNewConeIntake && !isNormalizingCone() && limelightFront.hasTarget()
+        if((monitorNewConeIntake && limelightFront.hasTarget()
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)
         && Arm.getInstance().getState() == ArmState.STOWED) ||
         (monitorNewCubeIntake && limelightFront.hasTarget()
         && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)
         && Arm.getInstance().getState() == ArmState.STOWED)){
 
+            if(!analyzingAlignment){
+                analyzingAlignment = true;
+                initialAlignmentAnalysisTime = Timer.getFPGATimestamp();
+            }
+
             updateGamepieceAlignmentError();
+            SmartDashboard.putNumber("Gamepiece alignment error", gamepieceAlignmentError);
 
             // If we have looked the cone for at least 200 ms, we've gotten enough of a
             // glimpse.
@@ -298,14 +306,12 @@ public class Claw extends SubsystemBase {
     }
 
     public void monitorNewConeIntake() {
-        initialAlignmentAnalysisTime = Timer.getFPGATimestamp();
         limelightFront.setPipeline(1); // monitor alignment of cone in intake
         limelightFront.resetRollingAverages();
         monitorNewConeIntake = true;
     }
 
     public void monitorNewCubeIntake() {
-        initialAlignmentAnalysisTime = Timer.getFPGATimestamp();
         limelightFront.setPipeline(2); // monitor alignment of cube in intake
         limelightFront.resetRollingAverages();
         monitorNewCubeIntake = true;
@@ -314,6 +320,7 @@ public class Claw extends SubsystemBase {
     public void finishedAnalyzingAlignment(){
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
+        analyzingAlignment = false;
         sawGamepieceDuringAlignmentAnalysis = false;
         returnLimelightToDefaultState();
         alignmentFilter.reset();
@@ -400,7 +407,7 @@ public class Claw extends SubsystemBase {
 
     // Used for detecting a positive cube intake
     public boolean analyzeCurrentForCube() {
-        if(currentAverage.getAverage() > 20 && hasCube() && !hasCone()){
+        if(currentAverage.getAverage() > 20 && isFrontSensor() && !isBackSensor()){
             return true;
         }
         return false;
@@ -478,6 +485,14 @@ public class Claw extends SubsystemBase {
 
     public void setSawGamepieceDuringAlignmentAnalysis(boolean sawGamepieceDuringAlignmentAnalysis) {
         this.sawGamepieceDuringAlignmentAnalysis = sawGamepieceDuringAlignmentAnalysis;
+    }
+
+    public boolean isAnalyzingAlignment() {
+        return analyzingAlignment;
+    }
+
+    public void setAnalyzingAlignment(boolean analyzingAlignment) {
+        this.analyzingAlignment = analyzingAlignment;
     }
 
 }

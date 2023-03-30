@@ -37,12 +37,12 @@ public class IntakeCubeSingleSS extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.classifyGamepiece();
+        claw.classifyGamepiece(false);
     }
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && (currentTime - initialTime) > 0.5;
+        return claw.isEitherSensor() && (currentTime - initialTime) > 0.5;
     }
 
     

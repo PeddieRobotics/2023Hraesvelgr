@@ -56,7 +56,7 @@ public class IntakeFloorCube extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopMonitoringCurrent();
-        claw.classifyGamepiece();
+        claw.classifyGamepiece(false);
     }
 
     @Override
