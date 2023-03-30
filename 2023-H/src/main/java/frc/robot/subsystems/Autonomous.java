@@ -29,6 +29,7 @@ import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
 import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetTravelOverBridgePoseInAuto;
 import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.commands.ClawCommands.BackwardsConeShot;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
@@ -71,7 +72,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
 
-        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3)), new ParallelRaceGroup(new IntakeFloorCube(), new WaitCommand(.2)) ));
+        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.2)));
         eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
         
