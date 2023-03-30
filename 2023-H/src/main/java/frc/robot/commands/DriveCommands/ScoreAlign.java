@@ -125,10 +125,15 @@ public class ScoreAlign extends CommandBase {
         } else if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
-            if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV(limelightName)) {
-                blinkin.failure();
-                initialTargetNotFound = true;
-                return;
+            if (!initialHeadingCorrectionComplete){
+                if(!LimelightHelper.getTV("limelight-front")) {
+                    blinkin.failure();
+                    initialTargetNotFound = true;
+                    return;
+                }
+                else{
+                    blinkin.autoAlignStart();
+                }
             }
             initialHeadingCorrectionComplete = true;
 
@@ -168,14 +173,13 @@ public class ScoreAlign extends CommandBase {
         }
 
         // Update LED's according to how many stages of the alignment have been completed
-        // if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
-        //     blinkin.autoAlignClose();
-        // }
-        // else if(horizAlignComplete && depthAlignComplete){
-        //     blinkin.autoAlignSuccess();
-        // }
-        if(horizAlignComplete && depthAlignComplete){
-            blinkin.lockedWheels();
+
+        if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
+            blinkin.autoAlignClose();
+        }
+        //if both flags are up, change to solid green 
+        else if(horizAlignComplete && depthAlignComplete){
+            blinkin.autoAlignSuccess();
         }
     }
 
