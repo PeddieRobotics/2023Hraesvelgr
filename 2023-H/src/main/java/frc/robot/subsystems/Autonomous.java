@@ -23,6 +23,7 @@ import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPoseInAuto;
 import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoCubeShot;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
 import frc.robot.commands.ArmCommands.SetShoulderHomePose;
@@ -65,10 +66,15 @@ public class Autonomous extends SubsystemBase{
         HashMap<String, Command> eventMap = new HashMap<>();
 
         eventMap.put("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
-        eventMap.put("eject", new EjectGamepiece());
+        eventMap.put("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
         eventMap.put("lock", new LockDrivetrain());
         eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
+
+        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3)), new ParallelRaceGroup(new IntakeFloorCube(), new WaitCommand(.2)) ));
+        eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
+
+        
 
         eventMap.put("IntakeCone", new IntakeFloorCone());
         eventMap.put("IntakeCube", new IntakeFloorCubeInAuto());
@@ -81,8 +87,6 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
         eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
 
-        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3)), new ParallelRaceGroup(new IntakeFloorCube(), new WaitCommand(.3)) ));
-
         eventMap.put("PreScorePose", new SetPreScorePose());
         eventMap.put("PreScorePoseWristDown", new SetPreScorePoseWristDown());
 
@@ -90,7 +94,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
 
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
-        eventMap.put("IntakeCubePose", new SetExtendedFloorCubeInAuto());
+        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
         eventMap.put("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
         eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
         eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
@@ -104,6 +108,8 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("ClimbCSFrontFast", new ClimbCSGyroNew(0, 2.0, 1.0));
         eventMap.put("ClimbCSBackFast", new ClimbCSGyroNew(180, 2.0, 1.0));
+
+        
 
 
         autoBuilder = new CustomAutoBuilder(
@@ -148,7 +154,10 @@ public class Autonomous extends SubsystemBase{
 
         // 2 piece routines without charge station
         autoRoutines.put("Seneca 2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
+
+        autoRoutines.put("Open 2 Piece Mid Pickup Balance Sweep", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
         
+        //Open2PieceMidPickupBalanceSweep
         /*
          * Non-competition paths start here
          */
