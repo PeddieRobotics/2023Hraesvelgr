@@ -72,7 +72,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
 
-        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.2)));
+        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(1.0)));
         eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
         
