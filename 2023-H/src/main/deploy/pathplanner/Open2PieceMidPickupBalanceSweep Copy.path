@@ -81,12 +81,12 @@
         "y": 4.740382173067017
       },
       "prevControl": {
-        "x": 3.5989258869466245,
-        "y": 4.740382173067017
+        "x": 3.596625957582783,
+        "y": 4.9085214148611485
       },
       "nextControl": {
-        "x": 3.5989258869466245,
-        "y": 4.740382173067017
+        "x": 3.596625957582783,
+        "y": 4.9085214148611485
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -103,15 +103,15 @@
     {
       "anchorPoint": {
         "x": 5.061827142885057,
-        "y": 5.347382329380043
+        "y": 5.4
       },
       "prevControl": {
         "x": 4.29103329360505,
-        "y": 5.289572790684042
+        "y": 5.342190461304
       },
       "nextControl": {
         "x": 5.635252878382957,
-        "y": 5.390389259542386
+        "y": 5.443006930162343
       },
       "holonomicAngle": -117.82409638425332,
       "isReversal": false,
@@ -198,41 +198,5 @@
       }
     }
   ],
-  "maxVelocity": 2.5,
-  "maxAcceleration": 3.0,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.21818181818182597,
-      "names": [
-        "IntakeCubePose",
-        "IntakeCube"
-      ]
-    },
-    {
-      "position": 1.5636363636363577,
-      "names": [
-        "CubeL2ShotPose"
-      ]
-    },
-    {
-      "position": 3.47,
-      "names": [
-        "IntakeCubePose",
-        "IntakeCube"
-      ]
-    },
-    {
-      "position": 5.803636363636283,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 2.98,
-      "names": [
-        "eject"
-      ]
-    }
-  ]
+  "markers": []
 }

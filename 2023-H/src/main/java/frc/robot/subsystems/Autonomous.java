@@ -72,7 +72,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
 
-        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(1.0)));
+        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
         eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
         
@@ -157,6 +157,8 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("Seneca 2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
 
         autoRoutines.put("Open 2 Piece Mid Pickup Balance Sweep", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
+
+        autoRoutines.put("Bump Path", autoBuilder.fullAuto(PathPlanner.loadPathGroup("BumpPath", .5, 1)));
         
         //Open2PieceMidPickupBalanceSweep
         /*

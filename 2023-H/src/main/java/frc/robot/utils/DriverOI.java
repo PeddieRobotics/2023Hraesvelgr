@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseL3Return;
 import frc.robot.commands.ArmCommands.SetSingleSSConePose;
@@ -21,6 +23,7 @@ import frc.robot.commands.ArmCommands.SetSingleSSCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ClawCommands.NormalizeConeAfterIntake;
+import frc.robot.commands.ClawCommands.BackwardsConeShot;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
@@ -159,7 +162,10 @@ public class DriverOI {
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
+        //triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
+        triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
+
+
         // triangleButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5));
         // triangleButton.onTrue(new RotateToAngle(180));
 

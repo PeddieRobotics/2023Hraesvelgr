@@ -238,8 +238,8 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -29;
-                public static final double kExtendedFloorCubeAngle = -36.5;
+                public static final double kExtendedFloorConeAngle = -26;
+                public static final double kExtendedFloorCubeAngle = -35;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
@@ -348,7 +348,7 @@ public final class Constants {
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
                 public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
 
-                public static final double kAbsoluteEncoderZeroOffset = 63.569;                ; 
+                public static final double kAbsoluteEncoderZeroOffset = 50.723;
 
                 // Soft limits
                 public static final float kAngleMin = 4;
