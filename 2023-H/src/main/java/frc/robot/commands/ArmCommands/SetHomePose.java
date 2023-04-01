@@ -12,8 +12,9 @@ public class SetHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
-    private boolean wristHomed, shoulderHomed, shoulderHeld;
-    private double initialShoulderMoveTime, currentShoulderMoveTime;
+
+    private boolean wristHomed, shoulderHomed;
+    private double initialTime, currentTime;
 
     private Blinkin blinkin;
 
@@ -37,35 +38,31 @@ public class SetHomePose extends CommandBase{
 
         wristHomed = false;
         shoulderHomed = false;
-        shoulderHeld = false;
 
-        initialShoulderMoveTime = Timer.getFPGATimestamp();
-        currentShoulderMoveTime = Timer.getFPGATimestamp();
+        initialTime = Timer.getFPGATimestamp();
+        currentTime = Timer.getFPGATimestamp();
 
-        arm.setWristPercentOutput(0.3);
-        arm.setShoulderPercentOutput(0.3);
+        wrist.startMonitoringCurrent();
+        shoulder.startMonitoringCurrent();
+
+        arm.setWristPercentOutput(-0.3);
+        arm.setShoulderPercentOutput(-0.3);
 
     }
 
     @Override
     public void execute() {
-        currentShoulderMoveTime = Timer.getFPGATimestamp();
+        currentTime = Timer.getFPGATimestamp();
 
-        if(wrist.atLimitSensor()){
+        if(wrist.getCurrentAverage() > 23.0){
+            arm.stopWrist();
             arm.holdWristPosition();
             wristHomed = true;
         }
 
-        if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
-            arm.holdShoulderPosition();
-            shoulderHeld = true;
-        }
-
-        if(wristHomed && !shoulderHomed && shoulderHeld){
-            arm.setShoulderPercentOutput(-0.3);
-        }
-
-        if(shoulder.atLimitSensor()){
+        if(shoulder.getCurrentAverage() > 58.0){
+            arm.stopShoulder();
+            shoulder.setEncoder(shoulder.getkHomeAngle());
             arm.holdShoulderPosition();
             shoulderHomed = true;
         }
@@ -75,14 +72,14 @@ public class SetHomePose extends CommandBase{
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
-            wrist.setEncoder(wrist.getkStowedAngle());
-            shoulder.setEncoder(shoulder.getkStowedAngle());
             blinkin.success();
         } else{
             blinkin.failure();
         }
 
         arm.turnOnSmartLimits();
+        wrist.stopMonitoringCurrent();
+        shoulder.stopMonitoringCurrent();
 
     }
 

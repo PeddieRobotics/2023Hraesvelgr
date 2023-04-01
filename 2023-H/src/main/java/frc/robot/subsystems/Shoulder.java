@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 
 public class Shoulder {
 
@@ -24,7 +25,9 @@ public class Shoulder {
     private ArmFeedforward shoulderFeedforward;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorUpward;
+
+    private RollingAverage currentAverage;
+    private boolean monitorCurrent;
 
     private double kP, kI, kD, kIz, kFF, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -156,13 +159,15 @@ public class Shoulder {
 
         // Hall effect sensor for homing the shoulder
         limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
-        reachedLimitSensorUpward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = ShoulderConstants.kHomeAngle;
 
         shoulderMotorMaster.burnFlash();
         shoulderMotorFollower.burnFlash();
+
+        currentAverage = new RollingAverage(10);
+        monitorCurrent = false;
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -376,7 +381,22 @@ public class Shoulder {
     }
 
     public void periodic() {
+        if(monitorCurrent){
+            currentAverage.add(shoulderMotorMaster.getOutputCurrent());
+        }
+    }
 
+    public void startMonitoringCurrent() {
+        monitorCurrent = true;
+    }
+
+    public void stopMonitoringCurrent() {
+        monitorCurrent = false;
+        currentAverage.clear();
+    }
+
+    public double getCurrentAverage(){
+        return currentAverage.getAverage();
     }
 
     public void setMode(IdleMode mode) {

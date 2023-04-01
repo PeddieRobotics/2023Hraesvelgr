@@ -22,7 +22,6 @@ public class Wrist {
     private CANSparkMax wristMotor;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorDownward;
 
     private RollingAverage currentAverage;
     private boolean monitorCurrent;
@@ -154,7 +153,7 @@ public class Wrist {
 
         wristMotor.burnFlash();
 
-        currentAverage = new RollingAverage(4);
+        currentAverage = new RollingAverage(10);
         monitorCurrent = false;
 
     }
@@ -366,6 +365,9 @@ public class Wrist {
     }
 
     public void periodic() {
+        if(monitorCurrent){
+            currentAverage.add(wristMotor.getOutputCurrent());
+        }
     }
 
     public void startMonitoringCurrent() {
@@ -380,7 +382,6 @@ public class Wrist {
     public double getCurrentAverage(){
         return currentAverage.getAverage();
     }
-
 
     public void setMode(IdleMode mode) {
         wristMotor.setIdleMode(mode);
