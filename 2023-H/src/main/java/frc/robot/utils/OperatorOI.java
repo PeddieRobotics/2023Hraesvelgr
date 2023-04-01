@@ -177,17 +177,16 @@ public class OperatorOI {
 
             // Square button forces the robot to look at odometry updates.
             Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-            squareButton.whileTrue(new LocalizeWithLL());
+            //squareButton.whileTrue(new LocalizeWithLL());
         }
 
         // Stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
-        // Mute ONLY homes the wrist without moving the shoulder
-        // Mute + d-pad (down) homes the entire arm subsystem (full system reset, a bit slower)
+        // Mute homes the entire arm subsystem, both wrist and shoulder.
         Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new ConditionalCommand(new SetHomePose(), new SetWristHomePose(), this::dPadDownHeld));
+        muteButton.onTrue(new SetHomePose());
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);

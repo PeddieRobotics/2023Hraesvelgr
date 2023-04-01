@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetLevelTwoConeShootL1Pose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseL3Return;
@@ -163,8 +164,9 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         //triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
-
+        // triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
+        // triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeShootL1Pose(), new WaitCommand(0.3), new EjectGamepiece()));
+        triangleButton.onTrue(new RotateToAngle(0));
 
         // triangleButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5));
         // triangleButton.onTrue(new RotateToAngle(180));

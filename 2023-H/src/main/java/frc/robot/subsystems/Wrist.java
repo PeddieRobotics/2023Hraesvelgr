@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,6 +23,9 @@ public class Wrist {
 
     private DigitalInput limitSensor;
     private boolean reachedLimitSensorDownward;
+
+    private RollingAverage currentAverage;
+    private boolean monitorCurrent;
 
     private SparkMaxPIDController pidController;
 
@@ -149,6 +153,10 @@ public class Wrist {
         setEncoder(WristConstants.kHomeAngle);
 
         wristMotor.burnFlash();
+
+        currentAverage = new RollingAverage(4);
+        monitorCurrent = false;
+
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -358,21 +366,21 @@ public class Wrist {
     }
 
     public void periodic() {
-        //Limit sensor triggered and wrist is moving down
-        // if(atLimitSensor() && getVelocity() < 0){   
-        //     reachedLimitSensorDownward = true;
-        // } else if(getVelocity() > 0){
-        //     reachedLimitSensorDownward = false;
-        // }
-
-        // If the wrist is moving down and leaves the limit sensor, reset the encoder
-        // if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
-        //     wrist.setEncoder(75); 
-        //     reachedLimitSensorDownward = false;
-        // }
-
-        // if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
     }
+
+    public void startMonitoringCurrent() {
+        monitorCurrent = true;
+    }
+
+    public void stopMonitoringCurrent() {
+        monitorCurrent = false;
+        currentAverage.clear();
+    }
+
+    public double getCurrentAverage(){
+        return currentAverage.getAverage();
+    }
+
 
     public void setMode(IdleMode mode) {
         wristMotor.setIdleMode(mode);

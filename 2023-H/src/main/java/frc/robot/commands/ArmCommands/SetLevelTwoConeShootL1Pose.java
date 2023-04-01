@@ -2,19 +2,24 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.Constants.ShoulderConstants;
+import frc.robot.utils.Constants.WristConstants;
 
-public class SetExtendedFloorCubeInAutoLower extends CommandBase{
+public class SetLevelTwoConeShootL1Pose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
+    private Claw claw;
 
-    public SetExtendedFloorCubeInAutoLower() {
+    public SetLevelTwoConeShootL1Pose() {
         arm = Arm.getInstance();
-        addRequirements(arm);
+        claw = Claw.getInstance();
+        addRequirements(arm, claw);
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
@@ -22,14 +27,17 @@ public class SetExtendedFloorCubeInAutoLower extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
+        claw.setSpeed(-1);
+        arm.setWristPosition(130);
+        arm.setShoulderPositionSmartMotion(20, SmartMotionArmSpeed.REGULAR);
+        arm.setState(ArmState.L2_CONE);
         arm.setGoalPose(ArmState.NONE);
-        arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-7);
-        arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle()-7, SmartMotionArmSpeed.REGULAR);
+
     }
 
     @Override
     public void execute() {
+
     }
 
     @Override
@@ -37,11 +45,12 @@ public class SetExtendedFloorCubeInAutoLower extends CommandBase{
         if(!interrupted){
             arm.holdShoulderPosition();
         }
+
     }
 
     @Override
     public boolean isFinished() {
-            return arm.isShoulderAtAngle(shoulder.getkExtendedFloorCubeAngle()-7) && arm.isWristAtAngle(wrist.getkExtendedFloorCubeAngle() -7);
+        return arm.isShoulderAtAngle(20) && arm.isWristAtAngle(130);
     }
 
 

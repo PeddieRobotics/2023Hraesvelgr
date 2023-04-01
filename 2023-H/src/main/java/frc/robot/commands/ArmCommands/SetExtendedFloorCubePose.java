@@ -32,23 +32,30 @@ public class SetExtendedFloorCubePose extends CommandBase{
         }
         else{
             approachFromAbove = false;
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-            arm.setWristPosition(88);
+            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()+30);
         }
 
-        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAtAngle(shoulder.getkTransitoryAngle()) || overshotTargetAngle){
+        if(overshotTargetAngle){
             arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
             arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.SLOW);
         }
 
-        if(approachFromAbove && arm.isShoulderAtAngle(shoulder.getkTransitoryAngle())){
+        if(approachFromAbove && arm.isShoulderBelowAngle(shoulder.getkTransitoryAngle())){
             overshotTargetAngle = true;
+        }
+
+        if(!approachFromAbove && arm.isWristGreaterThanAngle(wrist.getkExtendedFloorCubeAngle()+5)){
+            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+        }
+
+        if(!approachFromAbove && arm.isShoulderAboveAngle(-50)){
+            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
         }
 
     }
