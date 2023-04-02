@@ -21,7 +21,7 @@ public final class Constants {
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final boolean kUsePreScorePose = true;
-                public static final boolean kReturnL3ConeInvertedToPreScore = true;
+                public static final boolean kReturnL3ConeInvertedToPreScore = false;
                 public static final boolean kReturnForwardL2L3ScoringPosesToPreScore = true;
 
                 public static final double kDrivingDeadband = 0.1;
@@ -246,7 +246,7 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 8.5;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeForwardAngle = 19.0;
+                public static final double kL3ConeForwardAngle = 13.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
                 public static final double kDoubleSSConeAngle = 25.0; // definitely not right /needs tuning
@@ -331,7 +331,7 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 113.0;
                 public static final double kL3CubeInvertedAngle = 118.0;
-                public static final double kL3ConeForwardAngle = 124.0;
+                public static final double kL3ConeForwardAngle = 114.0;
                 public static final double kL3ConeInvertedAngle = 108.0;
 
                 public static final double kDoubleSSConeAngle = 177.0; // definitely not right /needs tuning

@@ -16,8 +16,8 @@ public class Blinkin extends SubsystemBase{
     private boolean flashOn;
     
     public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
-        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
-        GYRO_SUCCESS, GYRO_OVERRUN};
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, FLASH_GREEN_DIST, 
+        GYRO_SUCCESS, GYRO_OVERRUN, GREEN_SOLID_BRIEF};
 
     private BlinkinState state;
 
@@ -73,15 +73,15 @@ public class Blinkin extends SubsystemBase{
         set(0.57);
     }
 
-    // Solid green color
+    // Solid green color(MAKE MORE DARK)
     public void green(){
-        set(0.71);
+        set(0.75);
     }
 
     // Solid red color
     public void red() {
         set(0.61);
-    }
+    }   
 
     // Solid red color
     public void aqua() {
@@ -116,7 +116,7 @@ public class Blinkin extends SubsystemBase{
     // Blinks green then briefly goes solid green (for various success modes)
     public void success(){
         initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.BLINK_GREEN;
+        state = BlinkinState.GREEN_SOLID_BRIEF; 
     }
 
      // Blinks red then briefly goes solid red (for various failure modes)
@@ -125,50 +125,12 @@ public class Blinkin extends SubsystemBase{
         state = BlinkinState.BLINK_RED;
     }   
 
-    // Blinks red then briefly goes solid red (for various failure modes)
-    public void gamepieceAnalyzedSuccess() {
-        initialTime = Timer.getFPGATimestamp();
-
-        ClawState clawState = claw.getState();
-        if(clawState == ClawState.CONE){
-            state = BlinkinState.STROBE_GOLD;
-        }
-        else if(clawState == ClawState.CUBE){
-            state = BlinkinState.STROBE_PURPLE;
-        }
-    }   
-
-    // Blinks the appropriate color when trying to auto-target
-    public void acquiringTarget() {
-        initialTime = Timer.getFPGATimestamp();
-
-        // Robot has a gamepiece and is trying to score at the goal
-        if(claw.hasCone()){
-            state = BlinkinState.PULSE_GOLD;
-        }
-        else if(claw.hasCube()){
-            state = BlinkinState.PULSE_PURPLE;
-        }
-        // Robot has no gamepiece and is trying to auto-target at a human player station
-        else{
-            // If the robot is currently seeking a cone or cube, slow down to a pulse while targeting at the HP stations
-            if(state == BlinkinState.FLASH_GOLD){
-                state = BlinkinState.PULSE_GOLD;
-            }
-            else if(state == BlinkinState.FLASH_PURPLE){
-                state = BlinkinState.PULSE_PURPLE;
-            }
-            // If we've reached this case, then auto-target has failed / does not apply
-            else{
-                state = BlinkinState.BLINK_RED;
-            }
-        }
-    }
-
     // Turns the LEDS to flashing green when either stage of auto-alignment is complete
     public void autoAlignClose(){
-        initialTime = Timer.getFPGATimestamp();
-        state = BlinkinState.FLASH_GREEN;
+        if(state != BlinkinState.FLASH_GREEN_DIST){
+            initialTime = Timer.getFPGATimestamp();
+            state = BlinkinState.FLASH_GREEN_DIST;
+        }
     }
 
     // Turns the LEDS to solid green when both auto-align stages are complete
@@ -215,6 +177,7 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void gyroClimbSuccess(){
+        
         state = BlinkinState.GYRO_SUCCESS;
     }
 
@@ -234,7 +197,10 @@ public class Blinkin extends SubsystemBase{
         }
         else if(claw.getState() == ClawState.CUBE){
             state = BlinkinState.PURPLE_SOLID;
-        }     
+        } 
+        else if(claw.getState() == ClawState.UNKNOWN){
+            state = BlinkinState.RED_SOLID;
+        }    
         else{
             state = BlinkinState.NONE;
         }
@@ -284,23 +250,17 @@ public class Blinkin extends SubsystemBase{
                 case FLASH_GREEN:
                     flashGreen();
                     break;
-                case PULSE_GOLD:
-                    pulseGold();
-                    break;
-                case PULSE_PURPLE:
-                    pulsePurple();
-                    break;
-                case STROBE_GOLD:
-                    strobeGold();
-                    break;
-                case STROBE_PURPLE:
-                    strobePurple();
+                case FLASH_GREEN_DIST:
+                    flashGreenOnDist();
                     break;
                 case GYRO_SUCCESS:
                     rainbowTwinkle();
                     break;
                 case GYRO_OVERRUN:
                     whiteOverride();
+                    break;
+                case GREEN_SOLID_BRIEF:
+                    solidGreenBrief();
                     break;
                 default:
                     black();
@@ -348,7 +308,13 @@ public class Blinkin extends SubsystemBase{
             returnToRobotState();  
         }
     }
-
+    private void solidGreenBrief() {
+        if(currentTime - initialTime < 2){
+            green();
+        } else{
+            returnToRobotState();  
+        }
+    }
     // TODO: Reconsider with 5v Blinkin options
     private void flashPink() {
         if(flashOn){
@@ -381,6 +347,44 @@ public class Blinkin extends SubsystemBase{
             else{
                 black();
                 if(currentTime - flashTime > 0.3){
+                    flashOn = true;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+            }
+        }
+
+        // TODO: Reconsider with 5v Blinkin options
+        private void flashGreenOnDist() {
+            double dist = claw.getCurrentAlignmentDistance();
+
+            double flashPeriod = 1;
+            if(dist > 10){
+                flashPeriod = 0.6;
+            }
+            else if(dist <= 10 && dist > 5){
+                flashPeriod = 0.5;
+            }
+            else if(dist <= 5 && dist > 3){
+                flashPeriod = 0.4;
+            }
+            else if(dist <= 3 && dist > 1){
+                flashPeriod = 0.3;
+            }
+            else{
+                flashPeriod = 0.2;
+            }
+
+            if(flashOn){
+                green();
+                if(currentTime - flashTime > flashPeriod/2){
+                    flashOn = false;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+    
+            }
+            else{
+                black();
+                if(currentTime - flashTime > flashPeriod/2){
                     flashOn = true;
                     flashTime = Timer.getFPGATimestamp();
                 }

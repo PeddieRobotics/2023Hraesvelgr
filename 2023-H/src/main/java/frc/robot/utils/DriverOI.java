@@ -158,7 +158,7 @@ public class DriverOI {
              * a gamepiece.
              */
             new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()),
-                new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
+                new SetStowedPose()),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading

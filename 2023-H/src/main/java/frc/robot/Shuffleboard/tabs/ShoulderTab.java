@@ -14,7 +14,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
 
         private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
                         mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mkFF, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
-                        mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
+                        mSmartMotionMaxVel, mSmartMotionMaxAccel;
 
         public ShoulderTab() {
         }

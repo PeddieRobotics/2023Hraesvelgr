@@ -24,7 +24,7 @@ public class Shoulder {
     private SparkMaxPIDController pidController;
     private ArmFeedforward shoulderFeedforward;
 
-    private DigitalInput limitSensor;
+    // private DigitalInput limitSensor;
 
     private RollingAverage currentAverage;
     private boolean monitorCurrent;
@@ -158,7 +158,8 @@ public class Shoulder {
                   ShoulderConstants.kVVoltSecondPerRad, ShoulderConstants.kAVoltSecondSquaredPerRad);
 
         // Hall effect sensor for homing the shoulder
-        limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
+        //limitSensor = new DigitalInput(RobotMap.kShoulderLimitSensor);
+        //reachedLimitSensorUpward = false;
 
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = ShoulderConstants.kHomeAngle;
@@ -256,9 +257,9 @@ public class Shoulder {
         return arbitraryFF;
     }
 
-    public boolean atLimitSensor(){
-    return !limitSensor.get();
-    }
+    // public boolean atLimitSensor(){
+    // return !limitSensor.get();
+    // }
 
     public void setEncoder(double newEncoderValue) {
         shoulderMotorMaster.getEncoder().setPosition(newEncoderValue);

@@ -95,7 +95,7 @@ public class Robot extends LoggedRobot  {
 
         ranAutonomousRoutine = false;
 
-        LimelightFront.getInstance().setPipeline(7);
+        LimelightFront.getInstance().setPipeline(3);
         LimelightBack.getInstance().setPipeline(0);
     }
 
@@ -167,8 +167,8 @@ public class Robot extends LoggedRobot  {
             autonomousCommand.cancel();
         }
 
-        // Default pose for the robot to begin teleop is stowed.
-        LimelightFront.getInstance().setPipeline(7);
+        // Make sure pipelines are set correctly to the defaults
+        LimelightFront.getInstance().setPipeline(3);
         LimelightBack.getInstance().setPipeline(0);
 
     }

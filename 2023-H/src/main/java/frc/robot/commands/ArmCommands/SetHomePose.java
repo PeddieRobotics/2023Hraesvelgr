@@ -54,14 +54,12 @@ public class SetHomePose extends CommandBase{
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(wrist.getCurrentAverage() > 18.0){
-            arm.stopWrist();
+        if(wrist.getCurrentAverage() > 18.0 && !wristHomed){
             arm.holdWristPosition();
             wristHomed = true;
         }
 
-        if(shoulder.getCurrentAverage() > 58.0){
-            arm.stopShoulder();
+        if(shoulder.getCurrentAverage() > 58.0 && !shoulderHomed){
             shoulder.setEncoder(shoulder.getkHomeAngle());
             arm.holdShoulderPosition();
             shoulderHomed = true;

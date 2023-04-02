@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
@@ -166,7 +167,9 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isArmScoringPose(){
-        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED;
+        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE ||
+        state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED ||
+        state == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_FORWARD;
     }
 
     public static Arm getInstance() {
@@ -192,7 +195,7 @@ public class Arm extends SubsystemBase {
         else{
             headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
         }
-        return isScoringAutoAlignPose() && headingIsCorrect; // LimelightHelper.getTV(Claw.getInstance().getCurrentLLForAutoAlign());
+        return isScoringAutoAlignPose() && headingIsCorrect;
     }
 
     public boolean isSingleSSPose(){
@@ -255,16 +258,15 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CUBE_FORWARD){
             CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
         }
-        // These forbidden states do exist, but don't allow them.
         // else if(goalPose == ArmState.L3_CUBE_INVERTED){
         //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
         // }
-        // else if(goalPose == ArmState.L3_CONE_FORWARD){
-        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
-        // }
-        else if(goalPose == ArmState.L3_CONE_INVERTED){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+        else if(goalPose == ArmState.L3_CONE_FORWARD){
+            CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
         }
+        // else if(goalPose == ArmState.L3_CONE_INVERTED){
+        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+        // }
 
     }
 
@@ -285,9 +287,6 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         // Make sure the shoulder doesn't slip off the fulcrum when it starts in the home position
-        // if(shoulder.atLimitSensor() && state == ArmState.HOME){
-        //     holdShoulderPosition();
-        // }
 
         // Keep track if shoulder current is continuously above 30 amps
         if(shoulder.getOutputCurrent() > 30.0){

@@ -32,6 +32,8 @@ public class ScoreAlign extends CommandBase {
 
     private boolean horizAlignComplete, depthAlignComplete;
 
+    private double successDepth;
+
     private double convertedGamepieceAlignError;
 
     public ScoreAlign() {
@@ -48,6 +50,8 @@ public class ScoreAlign extends CommandBase {
 
         horizAlignComplete = false;
         depthAlignComplete = false;
+        
+        successDepth = 0.0;
 
         thetaController = new PIDController(0.07, 0.0003, 0);
         thetaController.enableContinuousInput(-180, 180);
@@ -64,6 +68,8 @@ public class ScoreAlign extends CommandBase {
 
         horizAlignComplete = false;
         depthAlignComplete = false;
+
+        successDepth = 0.0;
 
         if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getState() == ArmState.L3_CUBE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CUBE_INVERTED){
             scoreSetpoint = 0;
@@ -125,10 +131,12 @@ public class ScoreAlign extends CommandBase {
         } else if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
-            if (!initialHeadingCorrectionComplete && !LimelightHelper.getTV(limelightName)) {
-                blinkin.failure();
-                initialTargetNotFound = true;
-                return;
+            if (!initialHeadingCorrectionComplete){
+                if(!LimelightHelper.getTV("limelight-front")) {
+                    blinkin.failure();
+                    initialTargetNotFound = true;
+                    return;
+                }
             }
             initialHeadingCorrectionComplete = true;
 
@@ -143,39 +151,50 @@ public class ScoreAlign extends CommandBase {
 
         // Check for how close we are to the goal according to our pose state
         ClawState state = claw.getState();
+        double tyAvg = 0;
+
         if(state == ClawState.CUBE) {
             if(arm.getState() == ArmState.L2_CUBE || arm.getGoalPose() == ArmState.L2_CUBE){
-                if(limelightFront.getTyAverage() < -13){
+                tyAvg = limelightFront.getTyAverage();
+                if(tyAvg < -12){
                     depthAlignComplete = true;
+                    successDepth = -13;
                 }
             }
             else if(arm.getState() == ArmState.L3_CUBE_FORWARD || arm.getGoalPose() == ArmState.L3_CUBE_FORWARD){
-                if(limelightFront.getTyAverage() < -13){
+                tyAvg = limelightFront.getTyAverage();
+                if(tyAvg < -13){
                     depthAlignComplete = true;
+                    successDepth = -14;
                 }
             }
         } else if(state == ClawState.CONE){
             if(arm.getState() == ArmState.L2_CONE || arm.getGoalPose() == ArmState.L2_CONE){
-                if(limelightFront.getTyAverage() < -5.5){
+                tyAvg = limelightFront.getTyAverage();
+                if(tyAvg < -5.5){
                     depthAlignComplete = true;
+                    successDepth = -6.5;
                 }
             }
             else if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED){
-                if(limelightBack.getTyAverage() > 17.5){
+                tyAvg = limelightBack.getTyAverage();
+                if(tyAvg > 17.5){
                     depthAlignComplete = true;
+                    successDepth = 18.0;
                 }
             }
         }
 
+        double alignmentDist = Math.sqrt(Math.pow(Math.abs(txAvg-convertedGamepieceAlignError), 2) + Math.pow(Math.abs(tyAvg-successDepth), 2));
+        claw.setCurrentAlignmentDistance(alignmentDist);
+
         // Update LED's according to how many stages of the alignment have been completed
-        // if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
-        //     blinkin.autoAlignClose();
-        // }
-        // else if(horizAlignComplete && depthAlignComplete){
-        //     blinkin.autoAlignSuccess();
-        // }
-        if(horizAlignComplete && depthAlignComplete){
-            blinkin.lockedWheels();
+        if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
+            blinkin.autoAlignClose();
+        }
+        //if both flags are up, change to solid green 
+        else if(horizAlignComplete && depthAlignComplete && alignmentDist < 1.0){
+            blinkin.autoAlignSuccess();
         }
     }
 
