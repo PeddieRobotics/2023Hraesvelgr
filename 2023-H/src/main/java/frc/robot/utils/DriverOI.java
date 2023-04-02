@@ -31,6 +31,7 @@ import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
+import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.ScoreAlign;
@@ -142,7 +143,7 @@ public class DriverOI {
                 new ConditionalCommand(
                     // Either return to pre-score or stow from L3 cone inverted
                     new ConditionalCommand(new SetPreScorePoseL3Return(),
-                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
+                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)), new SetStowedPose()),
                         this::isReturnL3ConeInvertedToPreScore),
                         // If we're in L1, just stow.
                     new ConditionalCommand(new SetStowedPose(),
@@ -163,18 +164,11 @@ public class DriverOI {
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        // triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
-        // triangleButton.onTrue(new SequentialCommandGroup(new SetLevelTwoConeShootL1Pose(), new WaitCommand(0.3), new EjectGamepiece()));
-        // triangleButton.onTrue(new RotateToAngle(0));
-        // triangleButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5));
-        // triangleButton.onTrue(new RotateToAngle(180));
+        //triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
 
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
-        // xButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));
-        // xButton.onTrue(new RotateToAngle(0));
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
@@ -200,7 +194,7 @@ public class DriverOI {
                  * If we do not have a gamepiece, perform auto-align to the single substation,
                  * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
                  */
-                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
+                new ConditionalCommand(new SingleSSAlign(), new IntakeAlign(), arm::isSingleSSPose),
             claw::hasGamepiece));
 
         // Lock drivetrain (toggle)
@@ -212,13 +206,11 @@ public class DriverOI {
 
         // Back button (Touchpad button on front), unused
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        // touchpadButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));  // USE FOR TESTING GYRO CLIMBS
 
         // Slow Mode
         // Back button (Option button on front)
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        // optionsButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5)); // USE FOR TESTING GYRO CLIMBS
-        //optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
+        optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Share button unused
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);

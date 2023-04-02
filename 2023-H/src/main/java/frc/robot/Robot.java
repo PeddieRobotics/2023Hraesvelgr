@@ -4,36 +4,23 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
 import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 
-// import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
 // import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
 // import org.littletonrobotics.junction.io.ByteLogReceiver;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Shuffleboard.ShuffleboardMain;
-import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.OIConstants;
@@ -47,7 +34,7 @@ import frc.robot.utils.Constants.OIConstants;
  * build.gradle file in the
  * project.
  */
-public class Robot extends LoggedRobot  {
+public class Robot extends LoggedRobot {
     private Command autonomousCommand;
     private static RobotContainer robotContainer;
     private ShuffleboardMain shuffleboard;
@@ -90,7 +77,7 @@ public class Robot extends LoggedRobot  {
             shuffleboard.setupAutoSelector();
         }
 
-        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
+        // PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
@@ -128,6 +115,8 @@ public class Robot extends LoggedRobot  {
     public void disabledInit() {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
+
+        Blinkin.getInstance().pink();
     }
 
     @Override
@@ -156,7 +145,8 @@ public class Robot extends LoggedRobot  {
     @Override
     public void teleopInit() {
         robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
-        Blinkin.getInstance().returnToRobotState();
+        // Blinkin.getInstance().returnToRobotState();
+        Blinkin.getInstance().gold();
 
         if (!ranAutonomousRoutine) {
             robotContainer.setFlipped(true);
@@ -168,8 +158,8 @@ public class Robot extends LoggedRobot  {
         }
 
         // Make sure pipelines are set correctly to the defaults
-        LimelightFront.getInstance().setPipeline(3);
-        LimelightBack.getInstance().setPipeline(0);
+        // LimelightFront.getInstance().setPipeline(3);
+        // LimelightBack.getInstance().setPipeline(0);
 
     }
 
@@ -181,13 +171,8 @@ public class Robot extends LoggedRobot  {
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
 
-        shuffleboard = ShuffleboardMain.getInstance();
-        if(OIConstants.kUseDebugModeLayout){
-            shuffleboard.setupDebugMode();
-        }
-        else{
-            shuffleboard.setupCompetitionMode();
-        }
+        Blinkin.getInstance().green();
+
     }
 
     @Override
