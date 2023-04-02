@@ -113,9 +113,6 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("ClimbCSFrontFast", new ClimbCSGyroNew(0, 2.0, 1.0));
         eventMap.put("ClimbCSBackFast", new ClimbCSGyroNew(180, 2.0, 1.0));
 
-        
-
-
         autoBuilder = new CustomAutoBuilder(
         drivetrain ::getPose, // Pose2d supplier
         drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
@@ -165,7 +162,7 @@ public class Autonomous extends SubsystemBase{
         
         // 3 piece routines here
 
-        
+
         /*
          * Non-competition paths start here
          */

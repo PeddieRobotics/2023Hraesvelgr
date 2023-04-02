@@ -238,7 +238,7 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -26;
+                public static final double kExtendedFloorConeAngle = -27;
                 public static final double kExtendedFloorCubeAngle = -35;
 
                 public static final double kL2ConeAngle = 16.0;
@@ -289,11 +289,11 @@ public final class Constants {
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
 
                 // Smart Motion controller parameters (velocity PID constants)
-                public static final double kP = 0.0;
-                public static final double kI = 0.0;
+                public static final double kP = 0.00007;
+                public static final double kI = 0.000000005;
                 public static final double kD = 0;
                 public static final double kIz = 0;
-                public static final double kFF = 0;
+                public static final double kFF = 0.0001;
 
                 public static final double kSmartMotionSlowSetpointTol = 1.0;
                 public static final double kSmartMotionSlowMinVel = 0.0; // rpm
@@ -344,11 +344,11 @@ public final class Constants {
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kMotorReduction = 113.77777777777777; // 113.777777777777:1
+                public static final double kMotorReduction = 100.571429; // old was 113.777777777777:1
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
-                public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
+                public static final double kAbsoluteEncoderConversionFactor = 360.0/1.571429; /// old was 360.0/1.77777777777777;
 
-                public static final double kAbsoluteEncoderZeroOffset = 50.723;
+                public static final double kAbsoluteEncoderZeroOffset = 172.24;
 
                 // Soft limits
                 public static final float kAngleMin = 4;

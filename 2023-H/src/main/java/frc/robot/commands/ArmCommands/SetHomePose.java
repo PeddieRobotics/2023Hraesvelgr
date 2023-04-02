@@ -54,7 +54,7 @@ public class SetHomePose extends CommandBase{
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(wrist.getCurrentAverage() > 23.0){
+        if(wrist.getCurrentAverage() > 18.0){
             arm.stopWrist();
             arm.holdWristPosition();
             wristHomed = true;

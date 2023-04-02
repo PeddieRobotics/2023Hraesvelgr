@@ -203,7 +203,7 @@ public class Wrist {
 
     // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
-        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getPosition()), 0);
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(108-wrist.getPosition()), 0);
 
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }

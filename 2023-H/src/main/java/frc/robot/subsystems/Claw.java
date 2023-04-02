@@ -407,7 +407,7 @@ public class Claw extends SubsystemBase {
 
     // Used for detecting a positive cube intake
     public boolean analyzeCurrentForCube() {
-        if(currentAverage.getAverage() > 20 && hasCube() && !hasCone()){
+        if(currentAverage.getAverage() > 10 && hasCube() && !hasCone()){
             return true;
         }
         return false;
