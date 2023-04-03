@@ -163,7 +163,7 @@ public class DriverOI {
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        //triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
+        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
 
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
