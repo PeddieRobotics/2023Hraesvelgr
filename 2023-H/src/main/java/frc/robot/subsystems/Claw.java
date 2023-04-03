@@ -129,7 +129,7 @@ public class Claw extends SubsystemBase {
         // glimpse. This logic is separated from the above so that "finishedAnalyzingAlignment"
         // is guaranteed to run, even if the pose is ordered to change (interrupted).
         if(monitorNewConeIntake || monitorNewCubeIntake){
-            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.5) {
+            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > ClawConstants.kMaximumGamepieceMonitorTime) {
                 finishedAnalyzingAlignment();
             }
         }

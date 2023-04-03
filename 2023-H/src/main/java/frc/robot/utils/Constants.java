@@ -14,7 +14,6 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
         public static class GlobalConstants {
-                public static final double kVoltCompensation = 12.6;
                 public static final boolean kUseLEDLights = true;
         }
 
@@ -329,7 +328,7 @@ public final class Constants {
                 public static final double kL2ConeAngle = 191.0;
                 public static final double kL2CubeAngle = 186.0;
 
-                public static final double kL3CubeForwardAngle = 113.0;
+                public static final double kL3CubeForwardAngle = 112.0;
                 public static final double kL3CubeInvertedAngle = 118.0;
                 public static final double kL3ConeForwardAngle = 114.0;
                 public static final double kL3ConeInvertedAngle = 108.0;
@@ -376,7 +375,7 @@ public final class Constants {
 
                 public static final double kCubeHoldSpeed = -0.05;
 
-                public static final double kMaximumGamepieceMonitorTime = 3.0;
+                public static final double kMaximumGamepieceMonitorTime = 0.5;
 
                 public static final double kOperatorEjectSpeed = 0.1;
                 public static final double kOperatorFastEjectSpeed = 1.0;
