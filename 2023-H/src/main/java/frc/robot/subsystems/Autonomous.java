@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -161,9 +162,9 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("Bump Path 2 piece", autoBuilder.fullAuto(PathPlanner.loadPathGroup("BumpPath", 2.5, 2.5)));
         
         autoRoutines.put("new Bump", new SequentialCommandGroup(
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2, 2)),
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2", 1, 1)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2, 2))));
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2.5, 2.5))));
 
         // 3 piece routines here
 
