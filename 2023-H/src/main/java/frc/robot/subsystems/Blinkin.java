@@ -71,7 +71,8 @@ public class Blinkin extends SubsystemBase{
     // Color to use when doing nothing
     public void neutral(){
         // set(0.57);
-        blinkinController.disable();
+        // blinkinController.disable();
+        set(0.93);
     }
 
     // Solid purple color (not necessarily identical to color 2 preset)

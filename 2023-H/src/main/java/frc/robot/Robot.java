@@ -8,6 +8,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
@@ -68,7 +69,7 @@ public class Robot extends LoggedRobot {
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
             // Set up a REV PDH in order to get key status information
-            // pdh = new PowerDistribution(1, ModuleType.kRev);
+            pdh = new PowerDistribution(1, ModuleType.kRev);
 
             shuffleboard.setupDebugMode();
             shuffleboard.setupAutoSelector();
@@ -103,13 +104,13 @@ public class Robot extends LoggedRobot {
         // from Shuffleboard.
         shuffleboard.update();
 
-        // if(OIConstants.kUseDebugModeLayout){
-        //     double current8 = pdh.getCurrent(8);
-        //     double current9 = pdh.getCurrent(9);
-        //     SmartDashboard.putNumber("Current Channel 8", current8);
-        //     SmartDashboard.putNumber("Current Channel 9", current9);
+        if(OIConstants.kUseDebugModeLayout){
+            double current8 = pdh.getCurrent(8);
+            double current9 = pdh.getCurrent(9);
+            double current14 = pdh.getCurrent(14);
+            SmartDashboard.putNumber("Current Channel 14", current14);
+        }
 
-        // }
     }
 
     @Override
@@ -159,7 +160,7 @@ public class Robot extends LoggedRobot {
         }
 
         // Make sure pipelines are set correctly to the defaults
-        // LimelightFront.getInstance().setPipeline(3);
+        // LimelightFront.getInstance().setPipeline(7);
         // LimelightBack.getInstance().setPipeline(0);
 
     }

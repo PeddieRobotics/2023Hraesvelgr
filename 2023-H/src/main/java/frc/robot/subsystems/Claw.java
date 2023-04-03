@@ -123,11 +123,13 @@ public class Claw extends SubsystemBase {
 
             updateGamepieceAlignmentError();
             SmartDashboard.putNumber("Gamepiece alignment error", gamepieceAlignmentError);
+        }
 
-            // If we have looked the cone for at least 500 ms, we've gotten enough of a
-            // glimpse.
+        // If we have looked the cone for at least 500 ms, we've gotten enough of a
+        // glimpse. This logic is separated from the above so that "finishedAnalyzingAlignment"
+        // is guaranteed to run, even if the pose is ordered to change (interrupted).
+        if(monitorNewConeIntake || monitorNewCubeIntake){
             if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > 0.5) {
-                // checkGamepieceTypeWithVision();
                 finishedAnalyzingAlignment();
             }
         }
@@ -327,7 +329,6 @@ public class Claw extends SubsystemBase {
         monitorNewCubeIntake = false;
         analyzingAlignment = false;
         sawGamepieceDuringAlignmentAnalysis = false;
-        returnLimelightToDefaultState();
         alignmentFilter.reset();
     }
 
@@ -457,28 +458,28 @@ public class Claw extends SubsystemBase {
         }
     }
 
-    public void checkGamepieceTypeWithVision(){
-        // Looking for a cone, so check that we saw one in the intake.
-        if(limelightFront.getPipeline() == 7){
-            if(!sawGamepieceDuringAlignmentAnalysis){
-                setState(ClawState.UNKNOWN);
-                Blinkin.getInstance().returnToRobotState();
-            }
-            else{
-                setState(ClawState.CONE);
-            }
-        }
-        // Looking for a cube, so check that we saw one in the intake.
-        else if(limelightFront.getPipeline() == 2){
-            if(!sawGamepieceDuringAlignmentAnalysis){
-                setState(ClawState.UNKNOWN);
-                Blinkin.getInstance().returnToRobotState();
-            }
-            else{
-                setState(ClawState.CUBE);
-            }
-        }
-    }
+    // public void checkGamepieceTypeWithVision(){
+    //     // Looking for a cone, so check that we saw one in the intake.
+    //     if(limelightFront.getPipeline() == 7){
+    //         if(!sawGamepieceDuringAlignmentAnalysis){
+    //             setState(ClawState.UNKNOWN);
+    //             Blinkin.getInstance().returnToRobotState();
+    //         }
+    //         else{
+    //             setState(ClawState.CONE);
+    //         }
+    //     }
+    //     // Looking for a cube, so check that we saw one in the intake.
+    //     else if(limelightFront.getPipeline() == 2){
+    //         if(!sawGamepieceDuringAlignmentAnalysis){
+    //             setState(ClawState.UNKNOWN);
+    //             Blinkin.getInstance().returnToRobotState();
+    //         }
+    //         else{
+    //             setState(ClawState.CUBE);
+    //         }
+    //     }
+    // }
 
     public boolean isSawGamepieceDuringAlignmentAnalysis() {
         return sawGamepieceDuringAlignmentAnalysis;

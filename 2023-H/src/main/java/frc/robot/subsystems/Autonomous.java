@@ -16,6 +16,7 @@ import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAuto;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLessLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
@@ -77,8 +78,6 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
         eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
-        
-
         eventMap.put("IntakeCone", new IntakeFloorCone());
         eventMap.put("IntakeCube", new IntakeFloorCube());
 
@@ -97,20 +96,20 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
 
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
-        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePose());
+        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePoseOld());
         eventMap.put("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
         eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
-        eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePose());
+        eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
 
-        eventMap.put("ClimbCSFrontSlow", new ClimbCSGyro(0, 1.0, 0.5));
+        eventMap.put("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.5), new LockDrivetrain()));
         eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyro(180, 1.0, 0.5), new LockDrivetrain()));
-        // eventMap.put("ClimbCSBackslow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
+        // eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
         
-        eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
-        eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
+        // eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
+        // eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
 
-        eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
-        eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
+        // eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
+        // eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
 
         autoBuilder = new CustomAutoBuilder(
         drivetrain ::getPose, // Pose2d supplier
