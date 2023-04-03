@@ -14,6 +14,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
     private Claw claw;
     private Shoulder shoulder;
     private Wrist wrist;
+    private boolean finished;
 
     public SetLevelThreeConePoseInAuto() {
         arm = Arm.getInstance();
@@ -34,6 +35,7 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
         arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.L3_CONE_INVERTED);
         arm.setGoalPose(ArmState.NONE);
+        finished=false;
 
     }
 
@@ -51,23 +53,19 @@ public class SetLevelThreeConePoseInAuto extends CommandBase{
 
         if(arm.isShoulderAboveAngle(153)){
             claw.outtakeCone();
+            finished=true;
         }
   
     }
 
     @Override
     public void end(boolean interrupted){
-        claw.stopClaw();
         
-        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
-        ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
-
-        arm.setWristPosition(wrist.getkHomeAngle()); // prepare the wrist to return
     }
 
     @Override
     public boolean isFinished() {
-        return !claw.hasGamepiece(); // Once we've released the game piece, we can stop immediately so that we can rotate the arm back
+        return finished;
     }
 
 

@@ -458,6 +458,7 @@ public class Claw extends SubsystemBase {
         }
     }
 
+
     // public void checkGamepieceTypeWithVision(){
     //     // Looking for a cone, so check that we saw one in the intake.
     //     if(limelightFront.getPipeline() == 7){

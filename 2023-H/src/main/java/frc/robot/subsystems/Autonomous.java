@@ -47,6 +47,7 @@ public class Autonomous extends SubsystemBase{
     // Subsystems
     private static Autonomous autonomous;
     private final Drivetrain drivetrain;
+    private final Claw claw;
     private final Arm arm;
     //private final Claw claw;
 
@@ -60,6 +61,7 @@ public class Autonomous extends SubsystemBase{
     public Autonomous(){
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
+        claw = Claw.getInstance();
         
         // Setup sendable chooser
         autoRoutines = new Hashtable<String, Command>();
@@ -81,7 +83,7 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("IntakeCone", new IntakeFloorCone());
         eventMap.put("IntakeCube", new IntakeFloorCube());
 
-        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new SetTransitoryPoseL3ReturnInAuto()));
+        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
 
         eventMap.put("CubeL2Pose", new SetLevelTwoCubePose());
         eventMap.put("OverBridgePose", new SetTravelOverBridgePoseInAuto());
@@ -158,6 +160,11 @@ public class Autonomous extends SubsystemBase{
 
         autoRoutines.put("Bump Path 2 piece", autoBuilder.fullAuto(PathPlanner.loadPathGroup("BumpPath", 2.5, 2.5)));
         
+        autoRoutines.put("new Bump", new SequentialCommandGroup(
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2, 2)),
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2", 1, 1)),
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2, 2))));
+
         // 3 piece routines here
 
 
