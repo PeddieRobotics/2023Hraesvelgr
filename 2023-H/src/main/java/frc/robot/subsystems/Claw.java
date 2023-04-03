@@ -388,7 +388,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void returnLimelightToDefaultState(){
-        LimelightHelper.setPipelineIndex("limelight-front", 3); // General gamepiece vision (color camera)
+        LimelightHelper.setPipelineIndex("limelight-front", 7); // Cone alignment pipeline (color camera)
         LimelightHelper.setPipelineIndex("limelight-back", 0); // April tag pipeline
 
     }

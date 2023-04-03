@@ -193,7 +193,7 @@ public class DriverOI {
                  * If we do not have a gamepiece, perform auto-align to the single substation,
                  * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
                  */
-                new ConditionalCommand(new SingleSSAlign(), new IntakeAlign(), arm::isSingleSSPose),
+                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
             claw::hasGamepiece));
 
         // Lock drivetrain (toggle)
