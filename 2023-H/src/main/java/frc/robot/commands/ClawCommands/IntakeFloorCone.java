@@ -29,7 +29,6 @@ public class IntakeFloorCone extends CommandBase{
         claw.setState(ClawState.INTAKING_CONE);     
         hasCone = false;
         claw.intakeCone();
-        blinkin.intakingCone();
     }
 
     @Override

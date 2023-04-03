@@ -59,6 +59,7 @@ public class Claw extends SubsystemBase {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
+        clawMotor.setOpenLoopRampRate(0.1);
 
         backSensor = new DigitalInput(RobotMap.kClawBackSensor);
         frontSensor = new DigitalInput(RobotMap.kClawFrontSensor);
@@ -387,7 +388,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void returnLimelightToDefaultState(){
-        LimelightHelper.setPipelineIndex("limelight-front", 7); // General gamepiece vision (color camera)
+        LimelightHelper.setPipelineIndex("limelight-front", 3); // General gamepiece vision (color camera)
         LimelightHelper.setPipelineIndex("limelight-back", 0); // April tag pipeline
 
     }
@@ -438,21 +439,21 @@ public class Claw extends SubsystemBase {
         setGamepieceOperatorOverride(false);
         
         if(isFrontSensor() && !isBackSensor()){
+            setState(ClawState.CUBE);
             Blinkin.getInstance().success();
             monitorNewCubeIntake();
             setSpeed(ClawConstants.kCubeHoldSpeed);
-            setState(ClawState.CUBE);
         }
-        else if(isFrontSensor() && isBackSensor()){
+        else if(isBackSensor()){
+            setState(ClawState.CONE);
             Blinkin.getInstance().success();
             monitorNewConeIntake();
             stopClaw();
-            setState(ClawState.CONE);
         }
         else{
+            setState(ClawState.EMPTY); 
             Blinkin.getInstance().returnToRobotState();
             stopClaw();
-            setState(ClawState.EMPTY); 
         }
     }
 

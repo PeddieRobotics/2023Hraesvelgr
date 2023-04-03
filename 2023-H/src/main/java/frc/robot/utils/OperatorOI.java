@@ -240,6 +240,10 @@ public class OperatorOI {
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
+                if(dPadDownHeld()){
+                    claw.setState(ClawState.EMPTY);
+                }
+
                 blinkin.returnToRobotState();
                 claw.setGamepieceOperatorOverride(false);
             }
@@ -256,6 +260,10 @@ public class OperatorOI {
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
+                if(dPadDownHeld()){
+                    claw.setState(ClawState.EMPTY);
+                }
+
                 blinkin.returnToRobotState();
                 claw.setGamepieceOperatorOverride(false);
             }

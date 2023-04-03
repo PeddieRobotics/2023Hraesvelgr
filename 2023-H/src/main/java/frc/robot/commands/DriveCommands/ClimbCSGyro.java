@@ -167,7 +167,7 @@ public class ClimbCSGyro extends CommandBase{
                 }
                 // Successful gyro detection of charge station
                 else if(currentPitch > onChargeStationDegree){
-                    blinkin.specialOperatorFunctionality();
+                    blinkin.detectChargeStation();
                     initialClimbXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
                     state = 1;
                 }
@@ -195,10 +195,10 @@ public class ClimbCSGyro extends CommandBase{
 
                 return 0.75;
 
-            // reacted to angle drop but it's slightly too slow; so reverse a small fixed amount amd stp[]
+            // reacted to angle drop but it's slightly too slow; so reverse a small fixed amount and stop
             case 2:
                 currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
-                blinkin.lockedWheels();
+                blinkin.specialOperatorFunctionality();
                 if(currentDrivebackDistance > 0.1){
                     state = 3;
                     return 0;

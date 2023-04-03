@@ -36,8 +36,7 @@ public class IntakeFloorCube extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-        if(!hasCube){
-        // if(claw.analyzeCurrentForCube() && !hasCube){
+        if(claw.analyzeCurrentForCube() && !hasCube){
             hasCube = true;
             initialTime = Timer.getFPGATimestamp();
         }
@@ -62,7 +61,7 @@ public class IntakeFloorCube extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return (hasCube && (currentTime - initialTime) > 0.05) || (hasCone && (currentTime - initialTime) > 0.05);
+        return (hasCube && (currentTime - initialTime) > 0.1) || (hasCone && (currentTime - initialTime) > 0.1);
     }
 
     

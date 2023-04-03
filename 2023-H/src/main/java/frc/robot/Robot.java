@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.subsystems.Blinkin;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.OIConstants;
@@ -115,8 +116,6 @@ public class Robot extends LoggedRobot {
     public void disabledInit() {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
-
-        Blinkin.getInstance().pink();
     }
 
     @Override
@@ -126,6 +125,8 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
         robotContainer.resetGyro();
+
+        Claw.getInstance().classifyGamepiece();
 
         ranAutonomousRoutine = true;
 
@@ -145,8 +146,8 @@ public class Robot extends LoggedRobot {
     @Override
     public void teleopInit() {
         robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
-        // Blinkin.getInstance().returnToRobotState();
-        Blinkin.getInstance().gold();
+        Blinkin.getInstance().returnToRobotState();
+        Claw.getInstance().classifyGamepiece();
 
         if (!ranAutonomousRoutine) {
             robotContainer.setFlipped(true);
@@ -170,9 +171,6 @@ public class Robot extends LoggedRobot {
         robotContainer.resetGyro();
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
-
-        Blinkin.getInstance().green();
-
     }
 
     @Override

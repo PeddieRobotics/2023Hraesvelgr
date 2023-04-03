@@ -11,7 +11,7 @@ import frc.robot.utils.Constants.LimelightConstants;
 public class IntakeAlign extends CommandBase {
     private final LimelightFront limelightFront;
     private final Drivetrain drivetrain;
-    private PIDController thetaController, yController;
+    private PIDController yController;
     private DriverOI oi;
     private boolean horizAlignComplete;
 
@@ -32,9 +32,7 @@ public class IntakeAlign extends CommandBase {
 
         oi = DriverOI.getInstance();
 
-        thetaController.reset();
         yController.reset();
-
     }
 
     @Override

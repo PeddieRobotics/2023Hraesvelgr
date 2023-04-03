@@ -28,18 +28,12 @@ public class Arm extends SubsystemBase {
     
     private ArmState state, goalPose;
 
-    private double shoulderCurrentSpikeTime;
-    private boolean shoulderCurrentSpiked;
-
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
 
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
-
-        shoulderCurrentSpikeTime = 0;
-        shoulderCurrentSpiked = false;
     }
 
     public ArmState getState() {
@@ -286,26 +280,10 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Make sure the shoulder doesn't slip off the fulcrum when it starts in the home position
-
-        // Keep track if shoulder current is continuously above 30 amps
-        if(shoulder.getOutputCurrent() > 30.0){
-            if(!shoulderCurrentSpiked){
-                shoulderCurrentSpikeTime = Timer.getFPGATimestamp();
-                shoulderCurrentSpiked = true;
-            }
-        }
-        else{
-            shoulderCurrentSpiked = false;
-        }
-
         // Do not let the shoulder pull 30+ amps for more than 20 seconds.
         // Shut off the motor if so.
-        if(shoulderCurrentSpiked || shoulder.getMotorTemperature() > 50.0){
-            if(shoulderCurrentSpikeTime - Timer.getFPGATimestamp() > 20.0){
-                shoulder.setPercentOutput(0);
-                Blinkin.getInstance().specialOperatorFunctionality();
-            }
+        if(shoulder.getMotorTemperature() > 50.0){
+            shoulder.setPercentOutput(0);
         }
 
         shoulder.periodic();

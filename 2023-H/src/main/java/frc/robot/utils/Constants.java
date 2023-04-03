@@ -238,8 +238,8 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -27;
-                public static final double kExtendedFloorCubeAngle = -35;
+                public static final double kExtendedFloorConeAngle = -26.5;
+                public static final double kExtendedFloorCubeAngle = -36;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;

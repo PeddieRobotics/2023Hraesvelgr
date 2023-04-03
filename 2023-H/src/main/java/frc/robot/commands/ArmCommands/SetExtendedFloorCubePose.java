@@ -21,8 +21,6 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
-
-        SmartDashboard.putNumber("intake accel", 6000);
     }
 
     @Override
@@ -58,16 +56,6 @@ public class SetExtendedFloorCubePose extends CommandBase{
             overshotTargetAngle = true;
         }
 
-        // if(!approachFromAbove && arm.isWristGreaterThanAngle(wrist.getkExtendedFloorCubeAngle()-100)){
-        //     arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-        // }
-
-        // if(!approachFromAbove && arm.isShoulderAboveAngle(-65)){
-        //     arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()+20);
-        //     arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-        // }
-
-
         if(!approachFromAbove && arm.isShoulderAboveAngle(-65)){
             arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()+15);
         }
@@ -82,18 +70,10 @@ public class SetExtendedFloorCubePose extends CommandBase{
             arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
         }
 
-        // if(!approachFromAbove && arm.isShoulderAboveAngle(-40)){
-        //     arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
-        //     arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-        // }
-
     }
 
     @Override
     public void end(boolean interrupted){
-        shoulder.setRegularSmartMotionParameters(ShoulderConstants.kSmartMotionRegularSetpointTol,
-        ShoulderConstants.kSmartMotionRegularMinVel, ShoulderConstants.kSmartMotionRegularMaxVel, ShoulderConstants.kSmartMotionRegularMaxAccel);
-
         if(!interrupted){
             arm.holdShoulderPosition();
         }

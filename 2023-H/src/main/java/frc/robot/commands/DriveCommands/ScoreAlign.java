@@ -188,13 +188,13 @@ public class ScoreAlign extends CommandBase {
         double alignmentDist = Math.sqrt(Math.pow(Math.abs(txAvg-convertedGamepieceAlignError), 2) + Math.pow(Math.abs(tyAvg-successDepth), 2));
         claw.setCurrentAlignmentDistance(alignmentDist);
 
-        // Update LED's according to how many stages of the alignment have been completed
-        if((!horizAlignComplete && depthAlignComplete) || (horizAlignComplete && !depthAlignComplete)){
-            blinkin.autoAlignClose();
-        }
-        //if both flags are up, change to solid green 
-        else if(horizAlignComplete && depthAlignComplete && alignmentDist < 1.0){
+        // If both flags are up and distance is sufficiently close, change to solid green 
+        if(horizAlignComplete && depthAlignComplete && alignmentDist < 1.0){
             blinkin.autoAlignSuccess();
+        }
+        // Update LED's according to how many stages of the alignment have been completed
+        else if(horizAlignComplete || depthAlignComplete){
+            blinkin.autoAlignClose();
         }
     }
 

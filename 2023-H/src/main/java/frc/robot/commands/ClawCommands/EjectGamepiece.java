@@ -11,11 +11,8 @@ public class EjectGamepiece extends CommandBase{
     private Claw claw;
     private double initialTime, currentTime;
 
-    private Blinkin blinkin;
-
     public EjectGamepiece(){
         claw = Claw.getInstance();
-        blinkin = Blinkin.getInstance();
 
         addRequirements(claw);
 
