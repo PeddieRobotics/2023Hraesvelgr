@@ -64,15 +64,10 @@ public class Blinkin extends SubsystemBase{
         useReturnToRobotStateTimer = false;
     }
 
-    public void specialSet(double value){
-        blinkinController.set(value);
-    }
-
     // Color to use when doing nothing
     public void neutral(){
-        // set(0.57);
-        // blinkinController.disable();
-        set(0.93);
+        blinkinController.disable();
+        // set(0.99);
     }
 
     // Solid purple color (not necessarily identical to color 2 preset)
