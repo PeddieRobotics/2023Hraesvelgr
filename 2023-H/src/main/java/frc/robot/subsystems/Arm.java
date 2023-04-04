@@ -144,10 +144,6 @@ public class Arm extends SubsystemBase {
         return getWristPosition() > angle;
     }
 
-    public boolean isShoulderFullyStowed(){
-        return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
-    }
-
     public boolean isInvertedL3Cone(){
         return state == ArmState.L3_CONE_INVERTED;
     }
@@ -278,6 +274,10 @@ public class Arm extends SubsystemBase {
         return (state != ArmState.STOWED && state != ArmState.HOME) && Claw.getInstance().hasGamepiece();
     }
 
+    public boolean canNewIntake(){
+        return isShoulderBelowAngle(-60) && isWristLessThanAngle(80);
+    }
+    
     @Override
     public void periodic() {
         // Do not let the shoulder pull 30+ amps for more than 20 seconds.
