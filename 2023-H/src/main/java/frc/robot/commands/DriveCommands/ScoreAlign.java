@@ -132,7 +132,7 @@ public class ScoreAlign extends CommandBase {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
             if (!initialHeadingCorrectionComplete){
-                if(!LimelightHelper.getTV("limelight-front")) {
+                if(!LimelightHelper.getTV(limelightName)) {
                     blinkin.failure();
                     initialTargetNotFound = true;
                     return;

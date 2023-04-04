@@ -44,11 +44,11 @@ public class IntakeFloorCube extends CommandBase{
             hasCube = false;
         }
 
-        if(claw.isBothSensors() && !hasCone){
+        if(claw.isBackSensor() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else if(!claw.isBothSensors()){
+        else if(!claw.isBackSensor()){
             hasCone = false;
         }
     }

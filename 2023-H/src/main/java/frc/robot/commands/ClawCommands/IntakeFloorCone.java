@@ -35,11 +35,11 @@ public class IntakeFloorCone extends CommandBase{
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(claw.isBothSensors() && !hasCone){
+        if(claw.isBackSensor() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else if(!claw.isBothSensors()){
+        else if(!claw.isBackSensor()){
             hasCone = false;
         }
     }
