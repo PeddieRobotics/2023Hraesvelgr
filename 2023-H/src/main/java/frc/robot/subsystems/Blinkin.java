@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.CANifier.PWMChannel;
+
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -222,7 +224,6 @@ public class Blinkin extends SubsystemBase{
         if(GlobalConstants.kUseLEDLights){
             SmartDashboard.putNumber("current LED color set", currentColor);
             SmartDashboard.putNumber("current LED color blinkin", blinkinController.get());
-            SmartDashboard.putBoolean("LED is alive", blinkinController.isAlive());
 
             if(useReturnToRobotStateTimer){
                 currentTime = Timer.getFPGATimestamp();

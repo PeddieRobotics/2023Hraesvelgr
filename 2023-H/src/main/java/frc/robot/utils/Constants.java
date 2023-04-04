@@ -266,8 +266,8 @@ public final class Constants {
                 public static final double kFloorIntakeCubeMaxVelToStow = 1500;
                 public static final double kFloorIntakeCubeMaxAccelToStow = 5000;
 
-                public static final double kScoringPoseMaxVelToStow = 1500;
-                public static final double kScoringPoseMaxAccelToStow = 6000;
+                public static final double kScoringPoseMaxVelToStow = 1750;
+                public static final double kScoringPoseMaxAccelToStow = 7000;
 
         }
 
@@ -333,7 +333,7 @@ public final class Constants {
                 public static final double kL3ConeForwardAngle = 114.0;
                 public static final double kL3ConeInvertedAngle = 108.0;
 
-                public static final double kDoubleSSConeAngle = 177.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 192.0; // definitely not right /needs tuning
                 public static final double kSingleSSConeAngle = 78.0;
                 public static final double kSingleSSCubeAngle = 40.0;
 
@@ -351,7 +351,7 @@ public final class Constants {
 
                 // Soft limits
                 public static final float kAngleMin = 4;
-                public static final float kAngleMax = 195;
+                public static final float kAngleMax = 196;
 
         }
 

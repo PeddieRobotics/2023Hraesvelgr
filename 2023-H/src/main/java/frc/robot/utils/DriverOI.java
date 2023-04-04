@@ -37,7 +37,6 @@ import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
-import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
@@ -447,5 +446,9 @@ public class DriverOI {
 
     public boolean isReturnForwardL2L3ScoringPosesToPreScore() {
         return returnForwardL2L3ScoringPosesToPreScore;
+    }
+
+    public boolean touchpadHeld(){
+        return controller.getTouchpad();
     }
 }

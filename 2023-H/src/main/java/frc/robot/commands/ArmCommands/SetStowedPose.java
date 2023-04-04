@@ -37,7 +37,7 @@ public class SetStowedPose extends CommandBase {
             shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
             ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kFloorIntakeCubeMaxVelToStow, ShoulderConstants.kFloorIntakeCubeMaxAccelToStow);          
         }
-        else if(arm.isArmScoringPose() || arm.isPreScorePose()){
+        else if(arm.isArmScoringPose() || arm.isPreScorePose() || arm.isDoubleSSPose()){
             shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
             ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kScoringPoseMaxVelToStow, ShoulderConstants.kScoringPoseMaxAccelToStow);
         }
