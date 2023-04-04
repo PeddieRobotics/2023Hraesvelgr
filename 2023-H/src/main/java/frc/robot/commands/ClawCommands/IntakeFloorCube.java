@@ -57,6 +57,9 @@ public class IntakeFloorCube extends CommandBase{
     public void end(boolean interrupted) {
         claw.stopMonitoringCurrent();
         claw.classifyGamepiece();
+        if(claw.hasGamepiece()){
+            Blinkin.getInstance().success();
+        }
     }
 
     @Override

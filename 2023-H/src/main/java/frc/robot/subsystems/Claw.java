@@ -441,13 +441,11 @@ public class Claw extends SubsystemBase {
         
         if(isFrontSensor() && !isBackSensor()){
             setState(ClawState.CUBE);
-            Blinkin.getInstance().success();
             monitorNewCubeIntake();
             setSpeed(ClawConstants.kCubeHoldSpeed);
         }
         else if(isBackSensor()){
             setState(ClawState.CONE);
-            Blinkin.getInstance().success();
             monitorNewConeIntake();
             stopClaw();
         }
