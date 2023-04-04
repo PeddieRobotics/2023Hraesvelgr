@@ -28,14 +28,12 @@ import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubeShot;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
-import frc.robot.commands.ArmCommands.SetShoulderHomePose;
 import frc.robot.commands.ArmCommands.SetTravelOverBridgePoseInAuto;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ClawCommands.BackwardsConeShot;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
-import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -72,7 +70,6 @@ public class Autonomous extends SubsystemBase{
         eventMap.put("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         eventMap.put("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
         eventMap.put("lock", new LockDrivetrain());
-        eventMap.put("homeShoulder", new SetShoulderHomePose());
         eventMap.put("straighten", new StraightenDrivetrain());
 
         eventMap.put("pidturnto0", new RotateToAngle(0));
@@ -147,28 +144,26 @@ public class Autonomous extends SubsystemBase{
          */
 
         // 1 piece routines with charge station - dead reckoning / no gyro
-        // First two are basic ones from Hatboro. Don't leave community, just balance immediately.
-        autoRoutines.put("Hatboro 1 Piece Balance Front Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
+        autoRoutines.put("Hatboro 1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
 
         // 1 piece routines with charge station - GYRO
-        // These are just versions of the above that use a gyro-based balancing method rather than dead reckoning.
-        autoRoutines.put("Seneca GYRO 1 Piece Balance Back Col 4", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
+        autoRoutines.put("Seneca GYRO 1 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
 
         // 2 piece routines without charge station
-        autoRoutines.put("Seneca 2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
-        autoRoutines.put("Modified 2 Piece Col 9", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
+        autoRoutines.put("Seneca Free 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
+        autoRoutines.put("Modified Free 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
+        autoRoutines.put("Open 2 Piece L2 Pickup", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
 
-        autoRoutines.put("Open 2 Piece Mid Pickup Balance Sweep", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
-
-        autoRoutines.put("Bump Path 2 piece", autoBuilder.fullAuto(PathPlanner.loadPathGroup("BumpPath", 2.5, 2.5)));
+        // autoRoutines.put("Bump 2.5 piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("BumpPath", 2.5, 2.5)));
         
-        autoRoutines.put("new Bump", new SequentialCommandGroup(
+        autoRoutines.put("Bump 2 piece L3", new SequentialCommandGroup(
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2", 1, 1)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2.5, 2.5))));
 
         // 3 piece routines here
+        autoRoutines.put("Open 3 Piece Cheat", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open3PieceCheat", 2, 2.5)));
 
 
         /*
