@@ -38,6 +38,9 @@ public class IntakeCubeSingleSS extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.classifyGamepiece();
+        if(claw.hasGamepiece()){
+            Blinkin.getInstance().success();
+        }
     }
 
     @Override
