@@ -34,6 +34,7 @@ import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
+import frc.robot.commands.DriveCommands.RotateToAngleWhileDriving;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -202,8 +203,12 @@ public class DriverOI {
         // Left stick button, unused
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
 
-        // Back button (Touchpad button on front), unused
+        // Back button (Touchpad button on front), snaps robot to goal heading
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
+        touchpadButton.onTrue(new ConditionalCommand(new InstantCommand(),
+            new ConditionalCommand(new RotateToAngleWhileDriving(0), new RotateToAngleWhileDriving(180),
+                drivetrain::getFlipped),
+            arm::isDoubleSSPose));
 
         // Slow Mode
         // Back button (Option button on front)

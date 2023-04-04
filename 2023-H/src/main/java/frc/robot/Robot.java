@@ -104,12 +104,12 @@ public class Robot extends LoggedRobot {
         // from Shuffleboard.
         shuffleboard.update();
 
-        if(OIConstants.kUseDebugModeLayout){
-            double current8 = pdh.getCurrent(8);
-            double current9 = pdh.getCurrent(9);
-            double current14 = pdh.getCurrent(14);
-            SmartDashboard.putNumber("Current Channel 14", current14);
-        }
+        // if(OIConstants.kUseDebugModeLayout){
+        //     double current8 = pdh.getCurrent(8);
+        //     double current9 = pdh.getCurrent(9);
+        //     double current14 = pdh.getCurrent(14);
+        //     SmartDashboard.putNumber("Current Channel 14", current14);
+        // }
 
     }
 
