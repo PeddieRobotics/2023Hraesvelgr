@@ -172,7 +172,7 @@ public class Autonomous extends SubsystemBase{
         // while(i-->1){
         //     autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
         // }
-        autoRoutines.put("Test Path", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", .5, 1)));
+        // autoRoutines.put("Test Path", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", .5, 1)));
     }   
 
     // Used only at the start of autonomous
