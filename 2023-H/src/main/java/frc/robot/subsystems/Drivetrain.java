@@ -364,6 +364,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.resetAllAngles();
+        isFlipped=true;
         correctHeadingTimer.reset();
         correctHeadingTimer.start();
     }

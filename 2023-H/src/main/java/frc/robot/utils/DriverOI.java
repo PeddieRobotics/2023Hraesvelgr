@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
 import frc.robot.commands.ArmCommands.SetLevelTwoConeShootL1Pose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
@@ -158,7 +159,7 @@ public class DriverOI {
              * If we are not in a valid ejection pose, then we should do floor cube intake, and stow when we have
              * a gamepiece.
              */
-            new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new SetStowedPose()),
+            new SequentialCommandGroup(new ConditionalCommand(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new ParallelCommandGroup(new SetExtendedFloorCubePoseOld(), new IntakeFloorCube()), arm::canNewIntake), new SetStowedPose()),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading

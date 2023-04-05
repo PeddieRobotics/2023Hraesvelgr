@@ -248,7 +248,7 @@ public final class Constants {
                 public static final double kL3ConeForwardAngle = 13.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kDoubleSSConeAngle = 25.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 26.0; // definitely not right /needs tuning
                 public static final double kSingleSSConeAngle = -75.0;
                 public static final double kSingleSSCubeAngle = -75.0;
 
