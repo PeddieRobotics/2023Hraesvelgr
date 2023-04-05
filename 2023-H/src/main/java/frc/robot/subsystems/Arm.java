@@ -144,6 +144,12 @@ public class Arm extends SubsystemBase {
         return getWristPosition() > angle;
     }
 
+    public boolean isUnsafeSnapPose(){
+        return state == ArmState.DOUBLE_SS_CONE || state == ArmState.DOUBLE_SS_CUBE || state == ArmState.FLOOR_INTAKE_CONE_EXTENDED ||
+        state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED;
+    }
+
+
     public boolean isInvertedL3Cone(){
         return state == ArmState.L3_CONE_INVERTED;
     }
@@ -179,11 +185,21 @@ public class Arm extends SubsystemBase {
 
     public boolean isAutoAlignValid(){
         boolean headingIsCorrect = false;
-        if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
-            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
+        if(Drivetrain.getInstance().getFlipped()){
+            if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
+                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
+            }
+            else{
+                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
+            }
         }
         else{
-            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
+            if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
+                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 155.0;
+            }
+            else{
+                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 80.0;
+            }            
         }
         return isScoringAutoAlignPose() && headingIsCorrect;
     }
@@ -251,9 +267,9 @@ public class Arm extends SubsystemBase {
         // else if(goalPose == ArmState.L3_CUBE_INVERTED){
         //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
         // }
-        // else if(goalPose == ArmState.L3_CONE_FORWARD){
-        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
-        // }
+        else if(goalPose == ArmState.L3_CONE_FORWARD){
+            CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
+        }
         else if(goalPose == ArmState.L3_CONE_INVERTED){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
         }

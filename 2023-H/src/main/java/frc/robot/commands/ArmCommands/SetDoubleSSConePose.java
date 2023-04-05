@@ -42,11 +42,9 @@ public class SetDoubleSSConePose extends CommandBase{
             arm.setWristPosition(wrist.getkDoubleSSConeAngle());
 
             if(oi.touchpadHeld()){
-                arm.setShoulderPositionSmartMotion(shoulder.getkDoubleSSConeAngle()-4, SmartMotionArmSpeed.REGULAR);
-                arm.setWristPosition(wrist.getkDoubleSSConeAngle()+3);
+                arm.setWristPosition(wrist.getkDoubleSSConeAngle()+20);
             }
             else{
-                arm.setShoulderPositionSmartMotion(shoulder.getkDoubleSSConeAngle(), SmartMotionArmSpeed.REGULAR);
                 arm.setWristPosition(wrist.getkDoubleSSConeAngle());
             }
         }

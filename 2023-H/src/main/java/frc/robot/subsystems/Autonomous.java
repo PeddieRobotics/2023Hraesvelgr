@@ -150,7 +150,7 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("Seneca GYRO 1 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
 
         // 2 piece routines without charge station
-        autoRoutines.put("Seneca Free 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
+        autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
         autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
         autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));

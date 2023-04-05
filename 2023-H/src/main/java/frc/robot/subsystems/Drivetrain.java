@@ -202,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
         // limelightBack.checkForAprilTagUpdates(odometry);
     }
 
-    public void setFlipped(){ //used only in auto NOTE: only affects gyro(fieldoriented drive) you should NOT have to use this w/ pose.
+    public void setFlipped(){
         isFlipped = Math.abs(getPose().getRotation().getDegrees()) < 90;
     }
 
@@ -228,10 +228,6 @@ public class Drivetrain extends SubsystemBase {
 
         if (useHeadingCorrection) {
             fieldRelativeSpeeds = correctHeading(fieldRelativeSpeeds);
-        }
-
-        if (snapped) {
-            fieldRelativeSpeeds.omegaRadiansPerSecond = snapToAngle();
         }
 
         if (fieldOriented) {
@@ -313,7 +309,7 @@ public class Drivetrain extends SubsystemBase {
                 correctedVr);
     }
 
-        // Return a vector representing the displacement between the current (x,y) pose and some other point.
+    // Return a vector representing the displacement between the current (x,y) pose and some other point.
     public Translation2d getNormalizedTranslationToPoint(Translation2d otherCoord) {
         Translation2d currentXY = getPoseAsTranslation2d();
         Translation2d moveXY = new Translation2d(-(otherCoord.getX() - currentXY.getX()),
@@ -364,7 +360,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         gyro.resetAllAngles();
-        isFlipped=true;
+        isFlipped = true;
         correctHeadingTimer.reset();
         correctHeadingTimer.start();
     }
@@ -381,28 +377,12 @@ public class Drivetrain extends SubsystemBase {
         return gyroTiltAverage.getAverage();
     }
 
-    // Snap to angle algorithm
-    private double snapToAngle() {
-        // If a button is pressed, use the snapToAngle pid controller to calculate a
-        // rotational output so that the robot stays at snapAngle heading
-        // If the button is not pressed, use the normal rotation controller
-        double output = 0;
-        if (Math.abs(getHeadingAsRotation2d().getDegrees() - snapToAngleHeading) > 1) {
-            output = snapToAnglePID.calculate(getHeading(), snapToAngleHeading);
-        }
-        return output;
-    }
-
     public boolean getSnapped() {
         return snapped;
     }
 
     public void setSnapped(boolean snapped) {
         this.snapped = snapped;
-    }
-
-    public boolean isBalanced(){
-        return Math.abs(getPitch()) < 3;
     }
 
     public void lock() {

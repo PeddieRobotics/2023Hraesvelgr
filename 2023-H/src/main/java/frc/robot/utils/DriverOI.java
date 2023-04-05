@@ -207,9 +207,9 @@ public class DriverOI {
         // Back button (Touchpad button on front), snaps robot to goal heading
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new ConditionalCommand(new InstantCommand(),
-            new ConditionalCommand(new RotateToAngleWhileDriving(0), new RotateToAngleWhileDriving(180),
+            new ConditionalCommand(new RotateToAngleWhileDriving(180), new RotateToAngleWhileDriving(0),
                 drivetrain::getFlipped),
-            arm::isDoubleSSPose));
+            arm::isUnsafeSnapPose));
 
         // Slow Mode
         // Back button (Option button on front)

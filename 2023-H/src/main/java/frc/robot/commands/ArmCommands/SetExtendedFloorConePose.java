@@ -6,11 +6,14 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.DriverOI;
 
 public class SetExtendedFloorConePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
+
+    private DriverOI oi;
 
     public SetExtendedFloorConePose() {
         arm = Arm.getInstance();
@@ -29,6 +32,8 @@ public class SetExtendedFloorConePose extends CommandBase{
 
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
+
+        oi = DriverOI.getInstance();
     }
 
     @Override
@@ -37,6 +42,12 @@ public class SetExtendedFloorConePose extends CommandBase{
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
 
+        if(oi.touchpadHeld()){
+            arm.setWristPosition(wrist.getkExtendedFloorConeAngle()+10);
+        }
+        else{
+            arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
+        }
     }
 
     @Override

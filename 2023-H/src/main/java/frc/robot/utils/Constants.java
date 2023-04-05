@@ -248,7 +248,7 @@ public final class Constants {
                 public static final double kL3ConeForwardAngle = 13.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kDoubleSSConeAngle = 26.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 26.0;
                 public static final double kSingleSSConeAngle = -75.0;
                 public static final double kSingleSSCubeAngle = -75.0;
 
@@ -333,7 +333,7 @@ public final class Constants {
                 public static final double kL3ConeForwardAngle = 114.0;
                 public static final double kL3ConeInvertedAngle = 108.0;
 
-                public static final double kDoubleSSConeAngle = 192.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 192.0;
                 public static final double kSingleSSConeAngle = 78.0;
                 public static final double kSingleSSCubeAngle = 40.0;
 
@@ -351,7 +351,7 @@ public final class Constants {
 
                 // Soft limits
                 public static final float kAngleMin = 4;
-                public static final float kAngleMax = 196;
+                public static final float kAngleMax = 215;
 
         }
 

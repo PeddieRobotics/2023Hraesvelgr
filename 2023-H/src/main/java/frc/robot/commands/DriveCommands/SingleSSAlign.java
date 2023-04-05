@@ -49,10 +49,20 @@ public class SingleSSAlign extends CommandBase {
 
         switch (DriverStation.getAlliance()) {
             case Red:
-                scoreSetpoint = -90;
+                if(drivetrain.getFlipped()){
+                    scoreSetpoint = -90;
+                }
+                else{
+                    scoreSetpoint = 90;
+                }
                 break;
             case Blue:
-                scoreSetpoint = 90;
+                if(drivetrain.getFlipped()){
+                    scoreSetpoint = 90;
+                }
+                else{
+                    scoreSetpoint = -90;
+                }
                 break;
             default:
                 scoreSetpoint = -90;

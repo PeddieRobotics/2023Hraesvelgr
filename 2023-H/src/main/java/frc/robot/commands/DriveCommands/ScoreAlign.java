@@ -72,12 +72,22 @@ public class ScoreAlign extends CommandBase {
         successDepth = 0.0;
 
         if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getState() == ArmState.L3_CUBE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CUBE_INVERTED){
-            scoreSetpoint = 0;
+            if(drivetrain.getFlipped()){
+                scoreSetpoint = 0;
+            }
+            else{
+                scoreSetpoint = 180;
+            }
             limelightName = "limelight-back";
 
         }
         else{
-            scoreSetpoint = 180;
+            if(drivetrain.getFlipped()){
+                scoreSetpoint = 180;
+            }
+            else{
+                scoreSetpoint = 0;
+            }
             limelightName = "limelight-front";
         }
 
