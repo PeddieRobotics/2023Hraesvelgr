@@ -139,6 +139,7 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("IMU Pitch", getPitch());
         SmartDashboard.putNumber("IMU Pitch Average", gyroTiltAverage.getAverage());
+        SmartDashboard.putBoolean("isFlipped", isFlipped);
 
         // Updating the odometry
         for (int i = 0; i < 4; i++) {

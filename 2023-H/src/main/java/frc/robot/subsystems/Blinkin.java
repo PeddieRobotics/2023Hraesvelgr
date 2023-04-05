@@ -126,13 +126,13 @@ public class Blinkin extends SubsystemBase{
     // Solid green (for various success modes)
     public void success(){
         green();
-        returnToRobotState(2); 
+        returnToRobotState(1.5); 
     }
 
      // Solid red (for various failure modes)
      public void failure() {
         red();
-        returnToRobotState(2); 
+        returnToRobotState(1); 
     }   
 
     // Turns the LEDS to flashing green while auto-aligning
@@ -196,9 +196,9 @@ public class Blinkin extends SubsystemBase{
         else if(claw.getState() == ClawState.CUBE){
             purple();
         } 
-        else if(claw.getState() == ClawState.UNKNOWN){
-            red();
-        }    
+        // else if(claw.getState() == ClawState.UNKNOWN){
+        //     red();
+        // }    
         else{
             neutral();
         }

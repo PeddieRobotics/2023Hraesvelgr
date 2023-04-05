@@ -17,8 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "straighten",
-          "ConeL2Stowed"
+          "straighten"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",

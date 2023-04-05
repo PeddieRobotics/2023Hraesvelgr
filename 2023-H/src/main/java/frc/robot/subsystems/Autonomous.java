@@ -151,7 +151,7 @@ public class Autonomous extends SubsystemBase{
 
         // 2 piece routines without charge station
         autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
-        autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
+        // autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
         autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
         
@@ -161,7 +161,7 @@ public class Autonomous extends SubsystemBase{
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2.5, 2.5))));
 
         // 3 piece routines here
-        autoRoutines.put("Open 3 Piece L1/L3/L2 Cheat", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open3PieceCheat", 2, 2.5)));
+        // autoRoutines.put("Open 3 Piece L1/L3/L2 Cheat", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open3PieceCheat", 2, 2.5)));
 
 
         /*

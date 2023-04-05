@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -125,7 +126,7 @@ public class DriverOI {
              * If we are not in a valid ejection pose, then we should do floor cone intake, and stow when we have
              * a gamepiece.
              */
-            new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeFloorCone()),
+            new SequentialCommandGroup(new ParallelRaceGroup(new SetExtendedFloorConePose(), new IntakeFloorCone()),
                 new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 

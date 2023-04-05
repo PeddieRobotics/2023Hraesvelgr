@@ -381,7 +381,7 @@ public class Claw extends SubsystemBase {
         }
 
         if (hasCone()) {
-            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 6); // Retroreflective tape pipeline
+            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 6); // Retroreflective tape pipeline (lower)
         } else {
             LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 0); // April tag pipeline
         }

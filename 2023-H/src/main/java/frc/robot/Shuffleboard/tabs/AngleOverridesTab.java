@@ -91,20 +91,12 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
                     .getEntry();
                     mL3ConeInvertedShoulder = tab.add("L3 Cone Inverted Shoulder", ShoulderConstants.kL3ConeInvertedAngle)
                     .withSize(2, 1)
-                    .withPosition(4, 2)
+                    .withPosition(6, 4)
                             .getEntry();
                     mL3ConeInvertedWrist = tab.add("L3 Cone Inverted Wrist", WristConstants.kL3ConeInvertedAngle)
                     .withSize(2, 1)
-                    .withPosition(4, 3)
+                    .withPosition(6, 5)
                             .getEntry();
-                mSingleSSCubeShoulder = tab.add("Single Substation Cube Shoulder", ShoulderConstants.kSingleSSCubeAngle)
-                .withSize(2, 1)
-                .withPosition(0, 2)
-                        .getEntry();
-                mSingleSSCubeWrist = tab.add("Single Substation Cube Wrist", WristConstants.kSingleSSCubeAngle)
-                .withSize(2, 1)
-                .withPosition(0, 3)
-                        .getEntry();
             mExtendedFloorConeShoulder = tab.add("Extended Floor Cone Shoulder", ShoulderConstants.kExtendedFloorConeAngle)
             .withSize(2, 1)
             .withPosition(6, 0)
@@ -121,14 +113,14 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
             .withSize(2, 1)
             .withPosition(6, 3)
                     .getEntry();
-                mPreScoreShoulder = tab.add("Pre-score Shoulder", ShoulderConstants.kPreScoreAngle)
-                .withSize(2, 1)
-                .withPosition(6, 4)
-                .getEntry();
-                mPreScoreWrist = tab.add("Pre-score Wrist", WristConstants.kPreScoreAngle)
-                .withSize(2, 1)
-                .withPosition(6, 5)
-                .getEntry();
+                // mPreScoreShoulder = tab.add("Pre-score Shoulder", ShoulderConstants.kPreScoreAngle)
+                // .withSize(2, 1)
+                // .withPosition(6, 4)
+                // .getEntry();
+                // mPreScoreWrist = tab.add("Pre-score Wrist", WristConstants.kPreScoreAngle)
+                // .withSize(2, 1)
+                // .withPosition(6, 5)
+                // .getEntry();
 
         } catch(IllegalArgumentException e){
         }
@@ -139,8 +131,8 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkStowedAngle(mStowedShoulder.getDouble(ShoulderConstants.kStowedAngle));
         wrist.setkStowedAngle(mStowedWrist.getDouble(WristConstants.kStowedAngle));
 
-        shoulder.setkPreScoreAngle(mPreScoreShoulder.getDouble(ShoulderConstants.kPreScoreAngle));
-        wrist.setkPreScoreAngle(mPreScoreWrist.getDouble(WristConstants.kPreScoreAngle));
+        // shoulder.setkPreScoreAngle(mPreScoreShoulder.getDouble(ShoulderConstants.kPreScoreAngle));
+        // wrist.setkPreScoreAngle(mPreScoreWrist.getDouble(WristConstants.kPreScoreAngle));
 
         shoulder.setkL1Angle(mL1Shoulder.getDouble(ShoulderConstants.kL1Angle));
         wrist.setkL1Angle(mL1Wrist.getDouble(WristConstants.kL1Angle));
@@ -172,8 +164,8 @@ public class AngleOverridesTab extends ShuffleboardTabBase {
         shoulder.setkSingleSSConeAngle(mSingleSSConeShoulder.getDouble(ShoulderConstants.kSingleSSConeAngle));
         wrist.setkSingleSSConeAngle(mSingleSSConeWrist.getDouble(WristConstants.kSingleSSConeAngle));
 
-        shoulder.setkSingleSSCubeAngle(mSingleSSCubeShoulder.getDouble(ShoulderConstants.kSingleSSCubeAngle));
-        wrist.setkSingleSSCubeAngle(mSingleSSCubeWrist.getDouble(WristConstants.kSingleSSCubeAngle));
+        // shoulder.setkSingleSSCubeAngle(mSingleSSCubeShoulder.getDouble(ShoulderConstants.kSingleSSCubeAngle));
+        // wrist.setkSingleSSCubeAngle(mSingleSSCubeWrist.getDouble(WristConstants.kSingleSSCubeAngle));
         
     }
 

@@ -38,14 +38,10 @@ public class SetExtendedFloorConePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(-45)){
-            arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
-        }
-
         if(oi.touchpadHeld()){
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle()+10);
         }
-        else{
+        else if(arm.isShoulderAboveAngle(-45)){
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
     }
@@ -59,7 +55,8 @@ public class SetExtendedFloorConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle());
+        return false;
+        // return arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle());
     }
 
 

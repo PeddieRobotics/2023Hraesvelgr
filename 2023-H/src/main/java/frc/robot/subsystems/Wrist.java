@@ -196,7 +196,7 @@ public class Wrist {
 
         // arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        if(setpointDeg >= 5.0 && setpointDeg <= 195.0){
+        if(setpointDeg >= WristConstants.kAngleMin && setpointDeg <= WristConstants.kAngleMax){
             pidController.setReference(setpointDeg, ControlType.kPosition, 1, 0);
         }
     }

@@ -22,8 +22,6 @@ public class RotateToAngleWhileDriving extends CommandBase{
         drivetrain = Drivetrain.getInstance();
         addRequirements(drivetrain);
 
-        oi = DriverOI.getInstance();
-
         this.targetAngle = targetAngle;
 
         thetaController = new PIDController(0.05, 0.0001, 0);
@@ -41,6 +39,7 @@ public class RotateToAngleWhileDriving extends CommandBase{
 
         thetaController.reset();
 
+        oi = DriverOI.getInstance();
         // thetaController.setP(SmartDashboard.getNumber("RotateToAngle P", 0.05));
         // thetaController.setI(SmartDashboard.getNumber("RotateToAngle I", 0.0001));
         // thetaController.setD(SmartDashboard.getNumber("RotateToAngle D", 0.0));

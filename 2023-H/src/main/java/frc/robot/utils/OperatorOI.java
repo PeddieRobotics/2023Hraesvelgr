@@ -137,8 +137,8 @@ public class OperatorOI {
                 // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
                 new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-                        new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted),
-                            new InstantCommand(arm::setGoalPoseToLevelThreeConeForward), this::dPadDownHeld), 
+                        new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeConeForward),
+                            new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), this::dPadDownHeld), 
                         claw::hasCube), new SetPreScorePose()),
                 arm::isArmScoringPose));
 ;

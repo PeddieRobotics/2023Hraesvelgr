@@ -245,10 +245,10 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 8.5;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeForwardAngle = 13.0;
+                public static final double kL3ConeForwardAngle = 11.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kDoubleSSConeAngle = 26.0;
+                public static final double kDoubleSSConeAngle = 27.5;
                 public static final double kSingleSSConeAngle = -75.0;
                 public static final double kSingleSSCubeAngle = -75.0;
 
@@ -266,7 +266,7 @@ public final class Constants {
                 public static final double kFloorIntakeCubeMaxVelToStow = 1500;
                 public static final double kFloorIntakeCubeMaxAccelToStow = 5000;
 
-                public static final double kScoringPoseMaxVelToStow = 1750;
+                public static final double kScoringPoseMaxVelToStow = 1650;
                 public static final double kScoringPoseMaxAccelToStow = 7000;
 
         }
@@ -330,7 +330,7 @@ public final class Constants {
 
                 public static final double kL3CubeForwardAngle = 112.0;
                 public static final double kL3CubeInvertedAngle = 118.0;
-                public static final double kL3ConeForwardAngle = 114.0;
+                public static final double kL3ConeForwardAngle = 109;
                 public static final double kL3ConeInvertedAngle = 108.0;
 
                 public static final double kDoubleSSConeAngle = 192.0;

@@ -111,6 +111,9 @@ public class ScoreAlign extends CommandBase {
             else if(arm.getState() == ArmState.L3_CONE_INVERTED || arm.getGoalPose() == ArmState.L3_CONE_INVERTED){
                 convertedGamepieceAlignError = claw.convertL3ConeTXToAlignmentError(claw.getGamepieceAlignmentError());
             }
+            else if(arm.getState() == ArmState.L3_CONE_FORWARD|| arm.getGoalPose() == ArmState.L3_CONE_FORWARD){
+                convertedGamepieceAlignError = claw.convertL2ConeTXToAlignmentError(claw.getGamepieceAlignmentError());
+            }
         }
 
     }
@@ -179,7 +182,7 @@ public class ScoreAlign extends CommandBase {
                 }
             }
         } else if(state == ClawState.CONE){
-            if(arm.getState() == ArmState.L2_CONE || arm.getGoalPose() == ArmState.L2_CONE){
+            if(arm.getState() == ArmState.L2_CONE || arm.getGoalPose() == ArmState.L2_CONE || arm.getState() == ArmState.L3_CONE_FORWARD || arm.getGoalPose() == ArmState.L3_CONE_FORWARD){
                 tyAvg = limelightFront.getTyAverage();
                 if(tyAvg < -5.5){
                     depthAlignComplete = true;
@@ -195,11 +198,11 @@ public class ScoreAlign extends CommandBase {
             }
         }
 
-        double alignmentDist = Math.sqrt(Math.pow(Math.abs(txAvg-convertedGamepieceAlignError), 2) + Math.pow(Math.abs(tyAvg-successDepth), 2));
-        claw.setCurrentAlignmentDistance(alignmentDist);
+        // double alignmentDist = Math.sqrt(Math.pow(Math.abs(txAvg-convertedGamepieceAlignError), 2) + Math.pow(Math.abs(tyAvg-successDepth), 2));
+        // claw.setCurrentAlignmentDistance(alignmentDist);
 
         // If both flags are up and distance is sufficiently close, change to solid green 
-        if(horizAlignComplete && depthAlignComplete && alignmentDist < 1.0){
+        if(horizAlignComplete && depthAlignComplete){
             blinkin.autoAlignSuccess();
         }
         // Update LED's according to how many stages of the alignment have been completed
