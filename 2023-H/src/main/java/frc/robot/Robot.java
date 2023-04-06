@@ -69,7 +69,7 @@ public class Robot extends LoggedRobot {
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
             // Set up a REV PDH in order to get key status information
-            pdh = new PowerDistribution(1, ModuleType.kRev);
+            // pdh = new PowerDistribution(1, ModuleType.kRev);
 
             shuffleboard.setupDebugMode();
             shuffleboard.setupAutoSelector();
@@ -79,7 +79,7 @@ public class Robot extends LoggedRobot {
             shuffleboard.setupAutoSelector();
         }
 
-        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
+        // PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;

@@ -26,8 +26,6 @@ public class SetLevelThreeConeInvertedPose extends CommandBase{
 
     @Override
     public void initialize() {
-        DriverOI.getInstance().setDriveSpeedMode(DriveSpeedMode.SLOW);
-
         if(arm.isShoulderBelowAngle(65)){
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }

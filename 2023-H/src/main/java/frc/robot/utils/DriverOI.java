@@ -145,7 +145,7 @@ public class DriverOI {
                 new ConditionalCommand(
                     // Either return to pre-score or stow from L3 cone inverted
                     new ConditionalCommand(new SetPreScorePoseL3Return(),
-                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)), new SetStowedPose()),
+                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
                         this::isReturnL3ConeInvertedToPreScore),
                         // If we're in L1, just stow.
                     new ConditionalCommand(new SetStowedPose(),

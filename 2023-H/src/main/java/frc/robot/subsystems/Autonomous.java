@@ -144,13 +144,14 @@ public class Autonomous extends SubsystemBase{
          */
 
         // 1 piece routines with charge station - dead reckoning / no gyro
-        autoRoutines.put("Hatboro 1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
+        autoRoutines.put("1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
 
         // 1 piece routines with charge station - GYRO
-        autoRoutines.put("Seneca GYRO 1 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
+        autoRoutines.put("GYRO 1.5 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
 
         // 2 piece routines without charge station
         autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
+        autoRoutines.put("Modified Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2, 2)));
         // autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
         autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
