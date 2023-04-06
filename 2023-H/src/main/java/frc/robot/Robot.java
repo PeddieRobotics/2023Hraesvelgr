@@ -8,9 +8,10 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
-import org.littletonrobotics.junction.LoggedRobot;
+//import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
 // import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
 // import org.littletonrobotics.junction.io.ByteLogReceiver;
@@ -36,7 +37,7 @@ import frc.robot.utils.Constants.OIConstants;
  * build.gradle file in the
  * project.
  */
-public class Robot extends LoggedRobot {
+public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private static RobotContainer robotContainer;
     private ShuffleboardMain shuffleboard;
