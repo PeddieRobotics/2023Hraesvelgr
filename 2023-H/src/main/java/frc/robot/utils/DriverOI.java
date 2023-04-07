@@ -160,7 +160,7 @@ public class DriverOI {
              * If we are not in a valid ejection pose, then we should do floor cube intake, and stow when we have
              * a gamepiece.
              */
-            new SequentialCommandGroup(new ConditionalCommand(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new ParallelCommandGroup(new SetExtendedFloorCubePoseOld(), new IntakeFloorCube()), arm::canNewIntake), new SetStowedPose()),
+            new SequentialCommandGroup(new ConditionalCommand(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new ParallelCommandGroup(new SetExtendedFloorCubePoseOld(), new IntakeFloorCube()), arm::canNewIntake), new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading

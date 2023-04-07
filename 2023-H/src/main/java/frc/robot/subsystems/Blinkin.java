@@ -168,11 +168,11 @@ public class Blinkin extends SubsystemBase{
     }
 
     public void gyroClimbSuccess(){
-        rainbowTwinkle();
+        green();
     }
 
     public void gyroClimbOverrun(){
-        whiteOverride();
+        pink();
     }
 
     public void detectChargeStation(){

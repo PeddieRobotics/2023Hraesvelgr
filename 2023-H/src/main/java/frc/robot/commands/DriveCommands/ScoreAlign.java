@@ -202,13 +202,13 @@ public class ScoreAlign extends CommandBase {
         // claw.setCurrentAlignmentDistance(alignmentDist);
 
         // If both flags are up and distance is sufficiently close, change to solid green 
-        if(horizAlignComplete && depthAlignComplete){
-            blinkin.autoAlignSuccess();
-        }
+        // if(horizAlignComplete && depthAlignComplete){
+        //     blinkin.autoAlignSuccess();
+        // }
         // Update LED's according to how many stages of the alignment have been completed
-        else if(horizAlignComplete || depthAlignComplete){
-            blinkin.autoAlignClose();
-        }
+        // else if(horizAlignComplete || depthAlignComplete){
+        //     blinkin.autoAlignClose();
+        // }
     }
 
     @Override

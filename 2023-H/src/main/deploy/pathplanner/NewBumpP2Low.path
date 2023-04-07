@@ -25,11 +25,11 @@
     {
       "anchorPoint": {
         "x": 4.9,
-        "y": 0.65
+        "y": 0.8
       },
       "prevControl": {
-        "x": 5.612495589293728,
-        "y": 0.6499999999999999
+        "x": 5.183466166308725,
+        "y": 0.8
       },
       "nextControl": null,
       "holonomicAngle": 170.0,
@@ -45,14 +45,11 @@
       }
     }
   ],
-  "maxVelocity": 1.0,
-  "maxAcceleration": 1.0,
-  "isReversed": null,
   "markers": [
     {
       "position": 0.01,
       "names": [
-        "PreScorePose"
+        "stow"
       ]
     }
   ]

@@ -151,7 +151,7 @@ public final class Constants {
                 public static final double kOnCSDegree = 9.0;
                 public static final double kCSLevelDegree = 11.5;
                 public static final double kCSClimbDistance = 0.75;
-                public static final double kCSOverrunMaxApproachDist = 2.25;
+                public static final double kCSOverrunMaxApproachDist = 2.0;
                 public static final double kCSOverrunRemainingClimbDist = 0.5;
                 
         }

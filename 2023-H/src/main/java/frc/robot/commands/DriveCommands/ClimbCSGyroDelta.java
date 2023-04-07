@@ -8,7 +8,7 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.AutoConstants;
 
-public class ClimbCSGyro extends CommandBase{
+public class ClimbCSGyroDelta extends CommandBase{
     private Drivetrain drivetrain;
     
     private int state;
@@ -17,7 +17,7 @@ public class ClimbCSGyro extends CommandBase{
 
     private double fieldHeading, gyroHeading, currentPitch, approachSpeed, climbSpeed;
 
-    private double initialXPos, initialClimbXPos, currentDistance, currentClimbDistance;
+    private double initialPitch, initialXPos, initialClimbXPos, currentDistance, currentClimbDistance;
 
     private double overrunMaxApproachDist, overrunRemainingClimbDist;
 
@@ -28,7 +28,7 @@ public class ClimbCSGyro extends CommandBase{
     private Blinkin blinkin;
 
     // Full constructor with all 6 parameters for the climb charge station algorithm.
-    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed, double onChargeStationDegree, double overrunMaxApproachDist){
+    public ClimbCSGyroDelta(double fieldHeading, double approachSpeed, double climbSpeed, double onChargeStationDegree, double overrunMaxApproachDist){
         drivetrain = Drivetrain.getInstance();
 
         addRequirements(drivetrain);
@@ -69,7 +69,7 @@ public class ClimbCSGyro extends CommandBase{
     }
 
     // Typical constructor. Used if the default parameters are fine and don't need to be overwritten.
-    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed){
+    public ClimbCSGyroDelta(double fieldHeading, double approachSpeed, double climbSpeed){
         this(fieldHeading, approachSpeed, climbSpeed, AutoConstants.kOnCSDegree, AutoConstants.kCSOverrunMaxApproachDist);
     }
 
@@ -84,6 +84,7 @@ public class ClimbCSGyro extends CommandBase{
         robotSpeed = 0;
         initialDrivebackXPos = 0.0;
         currentDrivebackDistance = 0.0;
+        initialPitch=drivetrain.getPitchAverage();
 
         // Check if gyro's zero is the same as field zero.
         if(drivetrain.getFlipped()){
@@ -115,7 +116,7 @@ public class ClimbCSGyro extends CommandBase{
     @Override
     public void execute() {
         robotSpeed = calculateRobotSpeed();
-        currentPitch = Math.abs(drivetrain.getPitchAverage());
+        currentPitch = Math.abs(initialPitch-drivetrain.getPitchAverage());
 
         currentDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialXPos);
 

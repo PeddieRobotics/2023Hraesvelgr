@@ -8,10 +8,12 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.AutoConstants;
 
-public class ClimbCSGyro extends CommandBase{
+public class ClimbCSGyroWithAnglePid extends CommandBase{
     private Drivetrain drivetrain;
     
     private int state;
+
+    private int climbSign;
 
     private double onChargeStationDegree;
 
@@ -28,7 +30,7 @@ public class ClimbCSGyro extends CommandBase{
     private Blinkin blinkin;
 
     // Full constructor with all 6 parameters for the climb charge station algorithm.
-    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed, double onChargeStationDegree, double overrunMaxApproachDist){
+    public ClimbCSGyroWithAnglePid(double fieldHeading, double approachSpeed, double climbSpeed, double onChargeStationDegree, double overrunMaxApproachDist){
         drivetrain = Drivetrain.getInstance();
 
         addRequirements(drivetrain);
@@ -69,7 +71,7 @@ public class ClimbCSGyro extends CommandBase{
     }
 
     // Typical constructor. Used if the default parameters are fine and don't need to be overwritten.
-    public ClimbCSGyro(double fieldHeading, double approachSpeed, double climbSpeed){
+    public ClimbCSGyroWithAnglePid(double fieldHeading, double approachSpeed, double climbSpeed){
         this(fieldHeading, approachSpeed, climbSpeed, AutoConstants.kOnCSDegree, AutoConstants.kCSOverrunMaxApproachDist);
     }
 
@@ -84,6 +86,7 @@ public class ClimbCSGyro extends CommandBase{
         robotSpeed = 0;
         initialDrivebackXPos = 0.0;
         currentDrivebackDistance = 0.0;
+        climbSign=0;
 
         // Check if gyro's zero is the same as field zero.
         if(drivetrain.getFlipped()){
@@ -128,14 +131,8 @@ public class ClimbCSGyro extends CommandBase{
         SmartDashboard.putNumber("DATA: Current climb distance", currentClimbDistance);
 
         Translation2d chargeStationVector;
-        if(state == 0 || state == 1){
-            chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(gyroHeading)));
-            drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
-        }
-        else if(state == 2 || state == 3){
-            chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(180-gyroHeading)));
-            drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
-        }
+        chargeStationVector = new Translation2d(robotSpeed, new Rotation2d(Math.toRadians(gyroHeading)));
+        drivetrain.drive(chargeStationVector, 0, true, new Translation2d());
 
     }
 
@@ -145,7 +142,7 @@ public class ClimbCSGyro extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        if(state == 3){
+        if(state == 4){
             return true;
         }
         return false;
@@ -177,13 +174,14 @@ public class ClimbCSGyro extends CommandBase{
             // driving up charge station, drive slower, stopping when level
             case 1:
                 currentClimbDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialClimbXPos);
+                if (climbSign == 0) climbSign=(int)Math.signum(drivetrain.getPitchAverage());
                 
                 // Overran detection window
                 if(currentDistance > overrunMaxApproachDist){
                     blinkin.gyroClimbOverrun();
-                    state = 2;
+                    state = 4;
                     initialDrivebackXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
-                    return climbSpeed;
+                    return 0;
                 }
 
                 if(currentPitch < 11 && currentClimbDistance > 0.5) {
@@ -193,19 +191,25 @@ public class ClimbCSGyro extends CommandBase{
                     return 0;
                 }
 
-                return 0.75;
+                return climbSpeed;
 
             // reacted to angle drop but it's slightly too slow; so reverse a small fixed amount and stop
             case 2:
                 currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
                 blinkin.specialOperatorFunctionality();
-                if(currentDrivebackDistance > 0.13){
+                if(currentDrivebackDistance > 0.1){
                     state = 3;
                     return 0;
                 }
-                return 0.75;
+                return -0.75;
 
             case 3:
+                if (currentPitch < 8){
+                    state=4;
+                    return 0;
+                } 
+                return (.02*(currentPitch-4)*Math.signum(climbSign*drivetrain.getPitchAverage()));
+            case 4:
                 return 0;
         }
         return 0;

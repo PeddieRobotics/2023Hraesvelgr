@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.7,
-        "y": 1.0
+        "x": 1.8,
+        "y": 0.8
       },
       "prevControl": {
-        "x": 1.9599457556421227,
-        "y": 0.7602038578350339
+        "x": 2.1536580066583464,
+        "y": 0.8
       },
       "nextControl": {
-        "x": 1.9599457556421227,
-        "y": 0.7602038578350339
+        "x": 2.1536580066583464,
+        "y": 0.8
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -97,24 +97,15 @@
       }
     }
   ],
-  "maxVelocity": 2.5,
-  "maxAcceleration": 2.5,
-  "isReversed": null,
   "markers": [
     {
-      "position": 2.15,
+      "position": 0.9272727272727275,
       "names": [
-        "stow"
+        "L1Pose"
       ]
     },
     {
-      "position": 1.01,
-      "names": [
-        "CubeL3Pose"
-      ]
-    },
-    {
-      "position": 1.95,
+      "position": 1.8545454545454527,
       "names": [
         "eject"
       ]
