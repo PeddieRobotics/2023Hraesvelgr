@@ -148,6 +148,9 @@ public class Autonomous extends SubsystemBase{
          * Competition paths start here
          */
 
+        //DEV COMMENT
+        ///*
+
         // 1 piece routines with charge station - dead reckoning / no gyro
         autoRoutines.put("1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
 
@@ -157,27 +160,52 @@ public class Autonomous extends SubsystemBase{
         // 2 piece routines without charge station
         autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
         autoRoutines.put("Open 2 Piece L3 shift", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9Shift", 2, 2)));
-        autoRoutines.put("Open 2 Piece L3 turn", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9Turn", 2, 2)));
-        autoRoutines.put("Open 2 Piece L3 stretch", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9Stretch", 2, 2)));
         // autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
         autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
-        
-        autoRoutines.put("Bump 2 piece L3", new SequentialCommandGroup(
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2", 1, 1)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3", 2.5, 2.5))));
+        autoRoutines.put("Open 2.5 Piece L2 No Arm", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweepNoArm", 2.5, 3)));
 
-        autoRoutines.put("Bump 2 piece L3+L1", new SequentialCommandGroup(
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Low", 1, 1)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Low", 2.5, 2.5))));
+        // autoRoutines.put("Bump 2 piece L3+L1", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Low", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Low", 2.5, 2.5))));
+        //*/ //DEV COMMENT
 
         autoRoutines.put("Bump 2 piece L3 Straight", new SequentialCommandGroup(
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
-                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2", 1, 1)),
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+                        autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4Straight", 2, 1))));
+
+        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4Straight", 2, 1))));
+
+        // autoRoutines.put("Bump 2 piece L3 Straight Short", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShort", 2, 1))));
+
+        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped Short", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShort", 2, 1))));
+
+        // autoRoutines.put("Bump 2 piece L3 Straight Short Twist", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShortTwist", 2, 1))));
+
+        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped Short Twist", new SequentialCommandGroup(
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
+        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShortTwist", 2, 1))));
 
         // 3 piece routines here
         // autoRoutines.put("Open 3 Piece L1/L3/L2 Cheat", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open3PieceCheat", 2, 2.5)));
