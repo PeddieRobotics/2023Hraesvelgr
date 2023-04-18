@@ -38,7 +38,9 @@ fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
 fiducial_idfilters:
 fiducial_locfilters:
+fiducial_method:sqpnp
 fiducial_qualitythreshold:2.0
+fiducial_refine:1
 fiducial_resdiv:2
 fiducial_size:152.4
 fiducial_skip3d:1

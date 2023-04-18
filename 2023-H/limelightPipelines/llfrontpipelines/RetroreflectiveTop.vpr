@@ -11,12 +11,12 @@ botwidth:0.7112
 calibration_type:0
 classifier_conf:0.100000
 contour_grouping:0
-contour_sort_final:2
+contour_sort_final:0
 convexity_max:100
 convexity_min:10
 corner_approx:5.000000
-crop_x_max:0.35
-crop_x_min:-0.35
+crop_x_max:0.39
+crop_x_min:-0.37
 crop_y_max:1
 crop_y_min:0
 cross_a_a:1
@@ -25,7 +25,7 @@ cross_a_y:0
 cross_b_a:1
 cross_b_x:0
 cross_b_y:0
-desc:Retroreflective
+desc:RetroreflectiveTop
 desired_contour_region:0
 detector_conf:0.800000
 detector_idfilters:
@@ -38,7 +38,9 @@ fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
 fiducial_idfilters:
 fiducial_locfilters:
+fiducial_method:sqpnp
 fiducial_qualitythreshold:2.0
+fiducial_refine:1
 fiducial_resdiv:2
 fiducial_size:152.4
 fiducial_skip3d:1
@@ -53,7 +55,7 @@ image_source:0
 img_to_show:0
 intersection_filter:0
 invert_hue:0
-lcgain:6.000000
+lcgain:6
 multigroup_max:7
 multigroup_min:1
 multigroup_rejector:0
