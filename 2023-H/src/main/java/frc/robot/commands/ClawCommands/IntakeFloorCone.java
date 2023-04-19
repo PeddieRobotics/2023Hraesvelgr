@@ -13,6 +13,8 @@ public class IntakeFloorCone extends CommandBase{
     private double initialTime, currentTime;
     private boolean hasCone;
 
+    private boolean blinkinSuccess;
+
     public IntakeFloorCone(){
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
@@ -21,6 +23,7 @@ public class IntakeFloorCone extends CommandBase{
         initialTime = 0.0;
         currentTime = 0.0;
 
+        blinkinSuccess = false;
     }
 
     @Override
@@ -29,6 +32,7 @@ public class IntakeFloorCone extends CommandBase{
         claw.setState(ClawState.INTAKING_CONE);     
         hasCone = false;
         claw.intakeCone();
+        blinkinSuccess = false;
     }
 
     @Override
@@ -38,6 +42,10 @@ public class IntakeFloorCone extends CommandBase{
         if(claw.isBackSensor() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
+            if(!blinkinSuccess){
+                Blinkin.getInstance().success();
+                blinkinSuccess = true;
+            }
         }
         else if(!claw.isBackSensor()){
             hasCone = false;
@@ -47,9 +55,6 @@ public class IntakeFloorCone extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.classifyGamepiece();
-        if(claw.hasGamepiece()){
-            Blinkin.getInstance().success();
-        }
     }
 
     @Override

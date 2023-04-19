@@ -15,12 +15,16 @@ public class SetExtendedFloorCubePose extends CommandBase{
     private Wrist wrist;
     private boolean approachFromAbove, overshotTargetAngle;
 
+    private double wristTargetAngle;
+
     public SetExtendedFloorCubePose() {
         arm = Arm.getInstance();
         addRequirements(arm);
 
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
+
+        wristTargetAngle = 0;
     }
 
     @Override
@@ -33,12 +37,12 @@ public class SetExtendedFloorCubePose extends CommandBase{
             arm.setWristPosition(88);
         }
         else{
-            if(arm.getState() == ArmState.HOME || arm.getState() == ArmState.
-            STOWED){
+            if(arm.getState() == ArmState.HOME || arm.getState() == ArmState.STOWED){
                 shoulder.setPercentOutput(0);
             }
             approachFromAbove = false;
-            arm.setWristPosition(185);
+            wristTargetAngle = 185;
+            arm.setWristPosition(wristTargetAngle);
         }
 
         arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
@@ -47,27 +51,43 @@ public class SetExtendedFloorCubePose extends CommandBase{
 
     @Override
     public void execute() {
-        if(overshotTargetAngle){
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.SLOW);
+        if(approachFromAbove){
+            if(overshotTargetAngle){
+                wristTargetAngle = wrist.getkExtendedFloorCubeAngle();
+                arm.setWristPosition(wristTargetAngle);
+                arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.SLOW);
+            }
+
+            if(arm.isShoulderBelowAngle(shoulder.getkTransitoryAngle())){
+                overshotTargetAngle = true;
+            }
         }
 
-        if(approachFromAbove && arm.isShoulderBelowAngle(shoulder.getkTransitoryAngle())){
-            overshotTargetAngle = true;
-        }
+        if(!approachFromAbove){
+            if(arm.isShoulderAboveAngle(-65)){
+                wristTargetAngle = wrist.getkExtendedFloorCubeAngle()+15;
+                arm.setWristPosition(wristTargetAngle);
+            }
 
-        if(!approachFromAbove && arm.isShoulderAboveAngle(-65)){
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()+15);
-        }
+            if(arm.isShoulderAboveAngle(-55)){
+                wristTargetAngle = wrist.getkExtendedFloorCubeAngle()+5;
+                arm.setWristPosition(wristTargetAngle);
+                arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+            }
 
-        if(!approachFromAbove && arm.isShoulderAboveAngle(-55)){
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()+5);
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-        }
+            if(arm.isShoulderAboveAngle(-45)){
+                wristTargetAngle = wrist.getkExtendedFloorCubeAngle();
+                arm.setWristPosition(wristTargetAngle);
+                arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+            }
 
-        if(!approachFromAbove && arm.isShoulderAboveAngle(-45)){
-            arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
-            arm.setWristPosition(wrist.getkExtendedFloorCubeAngle());
+            // If the wrist has met or exceeded its goal threshold, ensure the shoulder moves to its goal position.
+            // This way, the pose will always finish.
+            if(arm.isWristAtAngle(wristTargetAngle) || arm.isWristGreaterThanAngle(wristTargetAngle)){
+                wristTargetAngle = wrist.getkExtendedFloorCubeAngle();
+                arm.setWristPosition(wristTargetAngle);
+                arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle(), SmartMotionArmSpeed.REGULAR);
+            }
         }
 
     }

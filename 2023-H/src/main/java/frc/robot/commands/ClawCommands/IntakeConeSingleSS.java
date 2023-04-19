@@ -42,9 +42,10 @@ public class IntakeConeSingleSS extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-        if(!hasCone && claw.isBothSensors()){
+        if(!hasCone && claw.isBackSensor()){
             initialConeTime = Timer.getFPGATimestamp();
             hasCone = true;
+            Blinkin.getInstance().success();
         }
         if(!fixedCone && hasCone && currentTime - initialConeTime > 0.1){
             initialReverseTime = Timer.getFPGATimestamp();
@@ -56,9 +57,6 @@ public class IntakeConeSingleSS extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.classifyGamepiece();
-        if(claw.hasGamepiece()){
-            Blinkin.getInstance().success();
-        }
     }
 
     @Override

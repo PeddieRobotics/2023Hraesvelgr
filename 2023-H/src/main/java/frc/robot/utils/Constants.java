@@ -142,8 +142,13 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kPTranslationController = 3.5; // 4.0;
-                public static final double kPThetaController = 1.0; // 0.4;
+                public static final double kPTranslationController = 3.5;
+                public static final double kITranslationController = 0.0;
+                public static final double kDTranslationController = 0.0;
+
+                public static final double kPThetaController = 1.0;
+                public static final double kIThetaController = 0.0;
+                public static final double kDThetaController = 0.0;
 
                 // Charge station balance algorithm parameters
                 // Tune based on field.

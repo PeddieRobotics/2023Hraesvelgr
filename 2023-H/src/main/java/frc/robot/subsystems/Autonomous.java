@@ -2,8 +2,12 @@ package frc.robot.subsystems;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -55,6 +59,8 @@ public class Autonomous extends SubsystemBase{
 
     private Hashtable<String, Command> autoRoutines;
 
+    private HashMap<String, Command> eventMap;
+
     // Auto Builder
     private CustomAutoBuilder autoBuilder;
 
@@ -68,7 +74,7 @@ public class Autonomous extends SubsystemBase{
         // Setup sendable chooser
         autoRoutines = new Hashtable<String, Command>();
 
-        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap = new HashMap<>();
 
         eventMap.put("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         eventMap.put("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
@@ -121,8 +127,8 @@ public class Autonomous extends SubsystemBase{
         drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
         () -> this.setFlipped(),
         DriveConstants.kinematics, // SwerveDriveKinematics
-        new PIDConstants(AutoConstants.kPTranslationController, 0, 0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        new PIDConstants(AutoConstants.kPThetaController, 0, 0), // PID constants to correct for rotation error (used to create the rotation controller)
+        new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kPTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController), // PID constants to correct for rotation error (used to create the rotation controller)
             drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
             true,
@@ -130,10 +136,37 @@ public class Autonomous extends SubsystemBase{
         );
 
         setupAutoRoutines();
+
+        SmartDashboard.putBoolean("RunAutonWithoutEvents", false);
+
+        SmartDashboard.putNumber("auto trans p", AutoConstants.kPTranslationController);
+        SmartDashboard.putNumber("auto trans i", AutoConstants.kITranslationController);
+        SmartDashboard.putNumber("auto trans d", AutoConstants.kDTranslationController);
+
+        SmartDashboard.putNumber("auto theta p", AutoConstants.kPThetaController);
+        SmartDashboard.putNumber("auto theta i", AutoConstants.kIThetaController);
+        SmartDashboard.putNumber("auto theta d", AutoConstants.kDThetaController);
     }
 
     @Override
     public void periodic(){
+    }
+
+    public void resetAutoBuilderAndPaths(){
+        autoBuilder = new CustomAutoBuilder(
+            drivetrain ::getPose, // Pose2d supplier
+            drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
+            () -> this.setFlipped(),
+            DriveConstants.kinematics, // SwerveDriveKinematics
+            new PIDConstants(SmartDashboard.getNumber("auto trans p", 0.0), SmartDashboard.getNumber("auto trans i", 0.0), SmartDashboard.getNumber("auto trans d", 0.0)), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+            new PIDConstants(SmartDashboard.getNumber("auto theta p", 0.0), SmartDashboard.getNumber("auto theta i", 0.0), SmartDashboard.getNumber("auto theta d", 0.0)), // PID constants to correct for rotation error (used to create the rotation controller)
+                drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
+                eventMap,
+                true,
+                drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
+            );
+    
+            setupAutoRoutines();
     }
 
     public static Autonomous getInstance(){
@@ -176,6 +209,101 @@ public class Autonomous extends SubsystemBase{
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
                         autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4Straight", 2, 1))));
+
+        autoRoutines.put("180 degree pivot test 1 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest1",
+        new PathConstraints(1, 1),
+        new PathConstraints(1, 1),
+        new PathConstraints(1, 1)
+        ))));
+            
+        autoRoutines.put("180 degree pivot test 1.5 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest2",
+        new PathConstraints(1.5, 1.5),
+        new PathConstraints(1.5, 1.5),
+        new PathConstraints(1.5, 1.5)
+        ))));
+            
+        autoRoutines.put("180 degree pivot test 0.5 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest3",
+        new PathConstraints(0.5, 1),
+        new PathConstraints(0.5, 1),
+        new PathConstraints(0.5, 1)
+        ))));
+            
+        autoRoutines.put("WCMP 3 piece free (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat",
+            new PathConstraints(3.5, 3.5),
+            new PathConstraints(1.5, 2),
+            new PathConstraints(3.5, 3.5),
+            new PathConstraints(1.5,2),
+            new PathConstraints(2.5, 3),
+            new PathConstraints(1.5, 2),
+            new PathConstraints(3.5, 3.5)
+            ))));
+            
+        autoRoutines.put("WCMP 3 piece free (v2 cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat2",
+        new PathConstraints(3.5, 3.5),
+        new PathConstraints(1.5, 2),
+        new PathConstraints(3.5, 3.5),
+        new PathConstraints(1.5,2),
+        new PathConstraints(2.5, 3),
+        new PathConstraints(1.5, 2),
+        new PathConstraints(3.5, 3.5)
+        ))));
+            
+        // autoRoutines.put("WCMP 3 piece free (backward cone)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeBackward",
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(2.5, 3),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5)
+        // ))));
+
+        // autoRoutines.put("WCMP 2.5 piece free (backward cone)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeBackwardCollect1",
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(2.5, 3),
+        // new PathConstraints(1.5, 1.5),
+        // new PathConstraints(3.5, 3.5)
+        // ))));
+            
+        autoRoutines.put("WCMP 2 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
+        new PathConstraints(2.5, 2.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(2.5, 2.5)
+        ))));
+
+        autoRoutines.put("WCMP 2.5 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeCollect1",
+        new PathConstraints(3, 3.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(3, 3.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(2, 2)
+        ))));
+            
+        autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2BumpSlanted",
+        new PathConstraints(2.5, 2.5),
+        new PathConstraints(1.5, 2),
+        new PathConstraints(2.5, 2.5),
+        new PathConstraints(1.5, 2),
+        new PathConstraints(2.5, 2.5),
+        new PathConstraints(2.5, 2.5)
+        ))));
+
+        autoRoutines.put("WCMP 2 piece center balance (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2CenterCheat",
+        new PathConstraints(2, 3),
+        new PathConstraints(0.75, 0.75),
+        new PathConstraints(2, 2),
+        new PathConstraints(1, 1),
+        new PathConstraints(1.5, 1.5),
+        new PathConstraints(1.5, 1.5),
+        new PathConstraints(3, 3)
+        ))));
 
         // autoRoutines.put("Bump 2 piece L3 Straight Uncomped", new SequentialCommandGroup(
         //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
