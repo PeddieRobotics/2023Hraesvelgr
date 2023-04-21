@@ -167,13 +167,9 @@ public class DriverOI {
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading
-        /*
-         * TEMPORARILY REPLACED WITH CODE FOR LIVE TESTING AUTON PATH FOLLOWING PID CONSTANTS!
-         */
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        // triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        triangleButton.onTrue(new InstantCommand(() -> {autonomous.resetAutoBuilderAndPaths();}));
-
+        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
+   
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));

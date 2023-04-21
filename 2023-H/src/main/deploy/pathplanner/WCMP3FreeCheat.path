@@ -91,7 +91,7 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -130,12 +130,12 @@
         "y": 4.63
       },
       "prevControl": {
-        "x": 5.860003341000156,
-        "y": 4.626513203337324
+        "x": 5.860022949444433,
+        "y": 4.63
       },
       "nextControl": {
-        "x": 4.533298850620525,
-        "y": 4.641435457963641
+        "x": 4.53323454186898,
+        "y": 4.63
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -152,15 +152,15 @@
     {
       "anchorPoint": {
         "x": 1.8435291649470598,
-        "y": 4.436957689892555
+        "y": 4.1
       },
       "prevControl": {
         "x": 2.748108619701139,
-        "y": 4.436957689892555
+        "y": 4.1
       },
       "nextControl": {
         "x": 2.748108619701139,
-        "y": 4.436957689892555
+        "y": 4.1
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -308,6 +308,31 @@
         "x": 2.9387560860148705,
         "y": 4.3912158580379925
       },
+      "nextControl": {
+        "x": 2.9387560860148705,
+        "y": 4.3912158580379925
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.24061799823063,
+        "y": 4.631933271022177
+      },
+      "prevControl": {
+        "x": 3.1465140846320505,
+        "y": 4.631933271022177
+      },
       "nextControl": null,
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -322,8 +347,65 @@
       }
     }
   ],
-  "maxVelocity": 3.0,
-  "maxAcceleration": 3.0,
+  "maxVelocity": 3.5,
+  "maxAcceleration": 2.5,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "IntakeCubePose",
+        "IntakeCube"
+      ]
+    },
+    {
+      "position": 3.163636363636363,
+      "names": [
+        "OverBridgePose"
+      ]
+    },
+    {
+      "position": 5.5,
+      "names": [
+        "CubeL3Pose"
+      ]
+    },
+    {
+      "position": 5.98,
+      "names": [
+        "eject"
+      ]
+    },
+    {
+      "position": 6.9,
+      "names": [
+        "IntakeCubePose",
+        "IntakeCube"
+      ]
+    },
+    {
+      "position": 9.1,
+      "names": [
+        "OverBridgePose"
+      ]
+    },
+    {
+      "position": 11.3,
+      "names": [
+        "CubeL2Pose"
+      ]
+    },
+    {
+      "position": 11.95,
+      "names": [
+        "eject"
+      ]
+    },
+    {
+      "position": 12.15,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

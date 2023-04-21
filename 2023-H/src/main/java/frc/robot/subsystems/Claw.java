@@ -94,14 +94,34 @@ public class Claw extends SubsystemBase {
 
         // Linear interpolation calibrated points for L2 cone alignment
         coneL2AlignmentTable = new InterpolatingTreeMap<>();
-        coneL2AlignmentTable.put(-17.03, -7.52); // Left calibration point
-        coneL2AlignmentTable.put(9.93, 2.54); // Right calibration point
+        coneL2AlignmentTable.put(-14.76, -7.65); // Left calibration point
+        coneL2AlignmentTable.put(9.65, 0.55); // Right calibration point
+        coneL2AlignmentTable.put(-3.57,-3.07); // Center calibration point
 
         // Linear interpolation calibrated points for L3 cone alignment
         coneL3AlignmentTable = new InterpolatingTreeMap<>();
-        coneL3AlignmentTable.put(-17.23, 5.59); // Left calibration point
-        coneL3AlignmentTable.put(9.93, -2.54); // Right calibration point
+        coneL3AlignmentTable.put(-16.44, 3.92); // Left calibration point ******
+        coneL3AlignmentTable.put(9.83, -1.76); // Right calibration point
+        coneL3AlignmentTable.put(-2.75,-1.04); // Center calibration point
     
+        /*
+         * Seneca/DCMP values for calibration below
+         */
+        //  // Linear interpolation calibrated points for cube alignment
+        //  cubeAlignmentTable = new InterpolatingTreeMap<>();
+        //  cubeAlignmentTable.put(-13.26, -9.93); // Left calibration point
+        //  cubeAlignmentTable.put(8.46, 1.67); // Right calibration point
+ 
+        //  // Linear interpolation calibrated points for L2 cone alignment
+        //  coneL2AlignmentTable = new InterpolatingTreeMap<>();
+        //  coneL2AlignmentTable.put(-17.03, -7.52); // Left calibration point
+        //  coneL2AlignmentTable.put(9.93, 2.54); // Right calibration point
+ 
+        //  // Linear interpolation calibrated points for L3 cone alignment
+        //  coneL3AlignmentTable = new InterpolatingTreeMap<>();
+        //  coneL3AlignmentTable.put(-17.23, 5.59); // Left calibration point
+        //  coneL3AlignmentTable.put(9.93, -2.54); // Right calibration point
+
     }
 
     @Override

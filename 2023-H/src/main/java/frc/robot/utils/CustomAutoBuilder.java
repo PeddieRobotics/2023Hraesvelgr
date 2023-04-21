@@ -267,16 +267,13 @@ public class CustomAutoBuilder extends BaseAutoBuilder {
         commands.add(stopEventGroup(pathGroup.get(pathGroup.size() - 1).getEndStopEvent()));
 
         return new ConditionalCommand(new SequentialCommandGroup(
-            resetPose(pathGroup.get(0)),
-            new StraightenDrivetrain(),
-            followPathGroup(pathGroup)),
-          Commands.sequence(commands.toArray(CommandBase[]::new)), 
-          CustomAutoBuilder :: runAutonWithoutEvents);
+                                        resetPose(pathGroup.get(0)),
+                                        new StraightenDrivetrain(),
+                                        followPathGroup(pathGroup)),
+                                      Commands.sequence(commands.toArray(CommandBase[]::new)), 
+                                      () -> SmartDashboard.getBoolean("RunAutonWithoutEvents", false));
   }
 
-  private static boolean runAutonWithoutEvents(){
-    return SmartDashboard.getBoolean("RunAutonWithoutEvents", false);
-  }
 
   @Override
   public CommandBase resetPose(PathPlannerTrajectory trajectory) {

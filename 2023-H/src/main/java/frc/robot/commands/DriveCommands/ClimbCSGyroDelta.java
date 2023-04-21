@@ -187,7 +187,7 @@ public class ClimbCSGyroDelta extends CommandBase{
                     return climbSpeed;
                 }
 
-                if(currentPitch < 11 && currentClimbDistance > 0.5) {
+                if(currentPitch < 11 && currentClimbDistance > 1.25) {
                     blinkin.gyroClimbSuccess();
                     state = 2;
                     initialDrivebackXPos = drivetrain.getOdometry().getEstimatedPosition().getX();
@@ -200,7 +200,7 @@ public class ClimbCSGyroDelta extends CommandBase{
             case 2:
                 currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
                 blinkin.specialOperatorFunctionality();
-                if(currentDrivebackDistance > 0.13){
+                if(currentDrivebackDistance > 0.105){
                     state = 3;
                     return 0;
                 }

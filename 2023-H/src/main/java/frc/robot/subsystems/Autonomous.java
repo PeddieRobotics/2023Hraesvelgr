@@ -22,6 +22,7 @@ import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLessLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLower;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
+import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOldAutonL3;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
@@ -108,6 +109,7 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
         eventMap.put("IntakeCubePose", new SetExtendedFloorCubePoseOld());
+        eventMap.put("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
         eventMap.put("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
         eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
         eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
@@ -117,6 +119,7 @@ public class Autonomous extends SubsystemBase{
         // eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
         
         // eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
+       
         // eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
 
         // eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
@@ -127,7 +130,7 @@ public class Autonomous extends SubsystemBase{
         drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
         () -> this.setFlipped(),
         DriveConstants.kinematics, // SwerveDriveKinematics
-        new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kPTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kDTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
         new PIDConstants(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController), // PID constants to correct for rotation error (used to create the rotation controller)
             drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
             eventMap,
@@ -195,8 +198,8 @@ public class Autonomous extends SubsystemBase{
         autoRoutines.put("Open 2 Piece L3 shift", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9Shift", 2, 2)));
         // autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
 
-        autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
-        autoRoutines.put("Open 2.5 Piece L2 No Arm", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweepNoArm", 2.5, 3)));
+        //autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
+        //autoRoutines.put("Open 2.5 Piece L2 No Arm", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweepNoArm", 2.5, 3)));
 
         // autoRoutines.put("Bump 2 piece L3+L1", new SequentialCommandGroup(
         //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
@@ -230,23 +233,53 @@ public class Autonomous extends SubsystemBase{
             
         autoRoutines.put("WCMP 3 piece free (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat",
             new PathConstraints(3.5, 3.5),
-            new PathConstraints(1.5, 2),
-            new PathConstraints(3.5, 3.5),
-            new PathConstraints(1.5,2),
+            new PathConstraints(1, 2.5),
+            new PathConstraints(1, 1),
+            new PathConstraints(3.5, 2.5),
+            new PathConstraints(1, 1),
             new PathConstraints(2.5, 3),
-            new PathConstraints(1.5, 2),
-            new PathConstraints(3.5, 3.5)
+            new PathConstraints(1, 1),
+            new PathConstraints(3.5, 2.5)
             ))));
-            
-        autoRoutines.put("WCMP 3 piece free (v2 cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat2",
-        new PathConstraints(3.5, 3.5),
-        new PathConstraints(1.5, 2),
-        new PathConstraints(3.5, 3.5),
-        new PathConstraints(1.5,2),
-        new PathConstraints(2.5, 3),
-        new PathConstraints(1.5, 2),
-        new PathConstraints(3.5, 3.5)
+
+        autoRoutines.put("WCMP 2.5 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeCollect1",
+        new PathConstraints(3, 2.5),
+        new PathConstraints(1, 2.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(3,2.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(3, 2.5)
         ))));
+
+        autoRoutines.put("WCMP 2 piece free (L3)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
+        new PathConstraints(3, 2.5),
+        new PathConstraints(1, 2.5),
+        new PathConstraints(1, 1),
+        new PathConstraints(3,2.5)
+        ))));
+
+        autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
+        new PathConstraints(1.5, 2.75)
+        ))));
+
+        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
+        // new PathConstraints(1.5, 2.75),
+        // new PathConstraints(1.5, 2.75),
+        // new PathConstraints(1.5, 2.75),
+        // new PathConstraints(1, 1),
+        // new PathConstraints(1.5, 2.75),
+        // new PathConstraints(1.5, 2.75)
+        // ))));
+            
+        // autoRoutines.put("WCMP 3 piece free (v2 cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat2",
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5, 2),
+        // new PathConstraints(3.5, 3.5),
+        // new PathConstraints(1.5,2),
+        // new PathConstraints(2.5, 3),
+        // new PathConstraints(1.5, 2),
+        // new PathConstraints(3.5, 3.5)
+        // ))));
             
         // autoRoutines.put("WCMP 3 piece free (backward cone)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeBackward",
         // new PathConstraints(3.5, 3.5),
@@ -272,28 +305,14 @@ public class Autonomous extends SubsystemBase{
         // new PathConstraints(3.5, 3.5)
         // ))));
             
-        autoRoutines.put("WCMP 2 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
-        new PathConstraints(2.5, 2.5),
-        new PathConstraints(1, 1),
-        new PathConstraints(2.5, 2.5)
-        ))));
-
-        autoRoutines.put("WCMP 2.5 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeCollect1",
-        new PathConstraints(3, 3.5),
-        new PathConstraints(1, 1),
-        new PathConstraints(3, 3.5),
-        new PathConstraints(1, 1),
-        new PathConstraints(2, 2)
-        ))));
-            
-        autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2BumpSlanted",
-        new PathConstraints(2.5, 2.5),
-        new PathConstraints(1.5, 2),
-        new PathConstraints(2.5, 2.5),
-        new PathConstraints(1.5, 2),
-        new PathConstraints(2.5, 2.5),
-        new PathConstraints(2.5, 2.5)
-        ))));
+        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2BumpSlanted",
+        // new PathConstraints(1.5, 2.5),
+        // new PathConstraints(1.5, 2.5),
+        // new PathConstraints(1.5, 2.5),
+        // new PathConstraints(1, 1),
+        // new PathConstraints(1.5, 2.5),
+        // new PathConstraints(1.5, 2.5)
+        // ))));
 
         autoRoutines.put("WCMP 2 piece center balance (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2CenterCheat",
         new PathConstraints(2, 3),
@@ -343,10 +362,10 @@ public class Autonomous extends SubsystemBase{
          * Non-competition paths start heredriver
          */
         // //test paths
-        // int i=10;
-        // while(i-->1){
+        //  int i=10;
+        //  while(i-->1){
         //     autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
-        // }
+        //  }
         // autoRoutines.put("Test Path", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", .5, 1)));
     }   
 

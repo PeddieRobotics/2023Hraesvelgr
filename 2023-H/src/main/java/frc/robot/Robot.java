@@ -26,6 +26,8 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
+import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.OIConstants;
 
 /**
@@ -149,7 +151,10 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
         Blinkin.getInstance().returnToRobotState();
-        Claw.getInstance().classifyGamepiece();
+        if(Claw.getInstance().getState() == ClawState.CUBE){
+            Claw.getInstance().setSpeed(ClawConstants.kCubeHoldSpeed);
+        }
+        //Claw.getInstance().classifyGamepiece();
 
         if (!ranAutonomousRoutine) {
             robotContainer.setFlipped(true);

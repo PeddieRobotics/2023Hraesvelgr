@@ -199,7 +199,7 @@ public class ClimbCSGyro extends CommandBase{
             case 2:
                 currentDrivebackDistance = Math.abs(drivetrain.getOdometry().getEstimatedPosition().getX() - initialDrivebackXPos);
                 blinkin.specialOperatorFunctionality();
-                if(currentDrivebackDistance > 0.13){
+                if(currentDrivebackDistance > 0.105){
                     state = 3;
                     return 0;
                 }

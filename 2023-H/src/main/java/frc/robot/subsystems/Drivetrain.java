@@ -156,14 +156,14 @@ public class Drivetrain extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();
             swerveModules[i].putSmartDashboard();
-            swerveModules[i].setDrivePIDF(SmartDashboard.getNumber("drive p", 0.0),
-                SmartDashboard.getNumber("drive i", 0.0),
-                SmartDashboard.getNumber("drive d", 0.0),
-                SmartDashboard.getNumber("drive ff", 0.0));
-            swerveModules[i].setTurnPIDF(SmartDashboard.getNumber("turn p", 0.0),
-            SmartDashboard.getNumber("turn i", 0.0),
-            SmartDashboard.getNumber("turn d", 0.0),
-            SmartDashboard.getNumber("turn ff", 0.0));
+            // swerveModules[i].setDrivePIDF(SmartDashboard.getNumber("drive p", 0.0),
+            //     SmartDashboard.getNumber("drive i", 0.0),
+            //     SmartDashboard.getNumber("drive d", 0.0),
+            //     SmartDashboard.getNumber("drive ff", 0.0));
+            // swerveModules[i].setTurnPIDF(SmartDashboard.getNumber("turn p", 0.0),
+            // SmartDashboard.getNumber("turn i", 0.0),
+            // SmartDashboard.getNumber("turn d", 0.0),
+            // SmartDashboard.getNumber("turn ff", 0.0));
         }
 
         updateOdometry();

@@ -146,9 +146,9 @@ public final class Constants {
                 public static final double kITranslationController = 0.0;
                 public static final double kDTranslationController = 0.0;
 
-                public static final double kPThetaController = 1.0;
+                public static final double kPThetaController = 1.0; // 1.5 new
                 public static final double kIThetaController = 0.0;
-                public static final double kDThetaController = 0.0;
+                public static final double kDThetaController = 0.4; // 0.4 for new autos
 
                 // Charge station balance algorithm parameters
                 // Tune based on field.
