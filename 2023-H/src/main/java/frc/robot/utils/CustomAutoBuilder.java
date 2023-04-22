@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
+import frc.robot.utils.PathPlannerCopiedFiles.FollowPathWithEventsButDontEndThemAtStopPoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -261,7 +262,7 @@ public class CustomAutoBuilder extends BaseAutoBuilder {
     
         for (PathPlannerTrajectory traj : pathGroup) {
           commands.add(stopEventGroup(traj.getStartStopEvent()));
-          commands.add(followPathWithEvents(traj));
+          commands.add(new FollowPathWithEventsButDontEndThemAtStopPoints(followPath(traj), traj.getMarkers(), eventMap));
         }
     
         commands.add(stopEventGroup(pathGroup.get(pathGroup.size() - 1).getEndStopEvent()));
