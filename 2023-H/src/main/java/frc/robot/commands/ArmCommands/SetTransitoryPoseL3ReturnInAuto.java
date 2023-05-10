@@ -24,6 +24,9 @@ public class SetTransitoryPoseL3ReturnInAuto extends CommandBase{
 
     @Override
     public void initialize() {
+        shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+        ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
+
         arm.setWristPosition(wrist.getkHomeAngle());
         arm.setState(ArmState.TRANSITORY);
         arm.setGoalPose(ArmState.NONE);

@@ -12,17 +12,14 @@ import frc.robot.commands.ArmCommands.ManualShoulderControl;
 import frc.robot.commands.ArmCommands.ManualWristControl;
 import frc.robot.commands.ArmCommands.SetHomePose;
 import frc.robot.commands.ArmCommands.SetLevelOnePose;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
 import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ArmCommands.SetWristHomePose;
 import frc.robot.commands.ClawCommands.OperatorEjectGamepiece;
 import frc.robot.commands.ClawCommands.OperatorIntakeGamepiece;
-import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
@@ -140,10 +137,11 @@ public class OperatorOI {
                 // If we have a game piece, pre-pose the arm for L3 cube or L3 cone based on intake state.
                 new SequentialCommandGroup(
                     new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
-                        new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), 
+                        new ConditionalCommand(new InstantCommand(arm::setGoalPoseToLevelThreeConeForward),
+                            new InstantCommand(arm::setGoalPoseToLevelThreeConeInverted), this::dPadDownHeld), 
                         claw::hasCube), new SetPreScorePose()),
                 arm::isArmScoringPose));
-
+;
             // Force score pose from pre-score pose
             Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
             squareButton.onTrue(new InstantCommand(() -> arm.moveToScoringPose()));
@@ -163,7 +161,7 @@ public class OperatorOI {
                         claw::hasCone),
                     claw::hasCube));
 
-            // L3 scoring pose
+            // L3 scoring pose - does not include L3 cone forward right now.
             Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
             triangleButton.onTrue(new ConditionalCommand(new SequentialCommandGroup(new InstantCommand(arm::setGoalPoseToLevelThreeCubeForward),
                 new InstantCommand(() -> {claw.prepareLimelightForScoring();}), new SetLevelThreeCubeForwardPose()),
@@ -184,17 +182,16 @@ public class OperatorOI {
 
             // Square button forces the robot to look at odometry updates.
             Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-            squareButton.whileTrue(new LocalizeWithLL());
+            //squareButton.whileTrue(new LocalizeWithLL());
         }
 
         // Stowed pose
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
         touchpadButton.onTrue(new SetStowedPose());
 
-        // Mute ONLY homes the wrist without moving the shoulder
-        // Mute + d-pad (down) homes the entire arm subsystem (full system reset, a bit slower)
+        // Mute homes the entire arm subsystem, both wrist and shoulder.
         Trigger muteButton = new JoystickButton(controller, 15);
-        //muteButton.onTrue(new ConditionalCommand(new SetHomePose(), new SetWristHomePose(), this::dPadDownHeld));
+        muteButton.onTrue(new SetHomePose());
 
         // Manual Wrist and Shoulder Override Controls
         Trigger L2Trigger = new JoystickButton(controller, PS4Controller.Button.kL2.value);
@@ -219,6 +216,10 @@ public class OperatorOI {
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
+                if(dPadDownHeld()){
+                    claw.setState(ClawState.EMPTY);
+                }
+
                 blinkin.returnToRobotState();
                 claw.setGamepieceOperatorOverride(false);
             }
@@ -235,6 +236,10 @@ public class OperatorOI {
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.onTrue(new InstantCommand(() -> {
             if(bothBumpersHeld()){
+                if(dPadDownHeld()){
+                    claw.setState(ClawState.EMPTY);
+                }
+
                 blinkin.returnToRobotState();
                 claw.setGamepieceOperatorOverride(false);
             }

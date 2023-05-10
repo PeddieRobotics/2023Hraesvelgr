@@ -6,11 +6,14 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.DriverOI;
 
 public class SetExtendedFloorConePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
+
+    private DriverOI oi;
 
     public SetExtendedFloorConePose() {
         arm = Arm.getInstance();
@@ -29,14 +32,18 @@ public class SetExtendedFloorConePose extends CommandBase{
 
         arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
+
+        oi = DriverOI.getInstance();
     }
 
     @Override
     public void execute() {
-        if(arm.isShoulderAboveAngle(-45)){
+        if(oi.touchpadHeld()){
+            arm.setWristPosition(wrist.getkExtendedFloorConeAngle()+10);
+        }
+        else if(arm.isShoulderAboveAngle(-45)){
             arm.setWristPosition(wrist.getkExtendedFloorConeAngle());
         }
-
     }
 
     @Override
@@ -48,7 +55,8 @@ public class SetExtendedFloorConePose extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle());
+        return false;
+        // return arm.isShoulderAtAngle(shoulder.getkExtendedFloorConeAngle()) && arm.isWristAtAngle(wrist.getkExtendedFloorConeAngle());
     }
 
 

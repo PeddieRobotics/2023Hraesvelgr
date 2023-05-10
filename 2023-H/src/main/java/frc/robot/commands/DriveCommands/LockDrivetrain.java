@@ -17,7 +17,7 @@ public class LockDrivetrain extends CommandBase{
 
     @Override
     public void initialize(){
-        // blinkin.lockedWheels();
+        blinkin.lockedWheels();
         drivetrain.lock();
     }
 

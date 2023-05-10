@@ -15,7 +15,7 @@ import frc.robot.utils.Constants.WristConstants;
 public class WristTab extends ShuffleboardTabBase {
     private Wrist wrist = Wrist.getInstance();
 
-    private GenericEntry mSpeed, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
+    private GenericEntry mVelocity, mAngle, mCurrent, mTemp, mVoltage, mArbitraryFF, mOpenLoopToggle, mPIDToggle,
             mkG, mkV, mkA, mkP, mkI, mkD, mkIz, mkFF, mPIDSetpoint, mSmartMotionAngleTol, mSmartMotionMinVel,
             mSmartMotionMaxVel, mSmartMotionMaxAccel, mLimitSensor;
 
@@ -26,7 +26,7 @@ public class WristTab extends ShuffleboardTabBase {
         tab = Shuffleboard.getTab("Wrist");
 
         try {
-            mSpeed = tab.add("Speed", 0.0)
+            mVelocity = tab.add("Speed", 0.0)
                     .getEntry();
             mAngle = tab.add("Angle", 0.0)
                     .getEntry();
@@ -36,8 +36,8 @@ public class WristTab extends ShuffleboardTabBase {
                     .getEntry();
             mVoltage = tab.add("Voltage", 0.0)
                     .getEntry();
-        mLimitSensor = tab.add("Limit sensor", false)
-                .getEntry();
+        // mLimitSensor = tab.add("Limit sensor", false)
+        //         .getEntry();
             mOpenLoopToggle = tab.add("Open Loop Toggle", false)
                     .withWidget(BuiltInWidgets.kToggleButton)
                     .getEntry();
@@ -77,13 +77,13 @@ public class WristTab extends ShuffleboardTabBase {
     @Override
     public void update() {
         try {
-            mSpeed.setDouble(wrist.getSpeed());
+            mVelocity.setDouble(wrist.getVelocity());
             mAngle.setDouble(wrist.getPosition());
             mCurrent.setDouble(wrist.getOutputCurrent());
             mTemp.setDouble(wrist.getMotorTemperature());
             mVoltage.setDouble(wrist.getVoltage());
             mArbitraryFF.setDouble(wrist.getArbitraryFF());
-            mLimitSensor.setBoolean(wrist.atLimitSensor());
+        //     mLimitSensor.setBoolean(wrist.atLimitSensor());
 
             if (mOpenLoopToggle.getBoolean(false)) {
                 wrist.setPercentOutput(DriverOI.getInstance().getArmSpeed());
@@ -93,7 +93,7 @@ public class WristTab extends ShuffleboardTabBase {
                         mkI.getDouble(WristConstants.kPositionI),
                         mkD.getDouble(WristConstants.kPositionD),
                         mkIz.getDouble(WristConstants.kPositionIz), 
-                        mkFF.getDouble(WristConstants.kPositionFF), 1);
+                        mkFF.getDouble(WristConstants.kPositionFF), 0);
                         wrist.updateWristFeedforward(
                                         mkG.getDouble(0.0),
                                         mkV.getDouble(0.0),

@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.WristConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -21,7 +22,9 @@ public class Wrist {
     private CANSparkMax wristMotor;
 
     private DigitalInput limitSensor;
-    private boolean reachedLimitSensorDownward;
+
+    private RollingAverage currentAverage;
+    private boolean monitorCurrent;
 
     private SparkMaxPIDController pidController;
 
@@ -149,6 +152,10 @@ public class Wrist {
         setEncoder(WristConstants.kHomeAngle);
 
         wristMotor.burnFlash();
+
+        currentAverage = new RollingAverage(10);
+        monitorCurrent = false;
+
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -189,14 +196,14 @@ public class Wrist {
 
         // arbitraryFF = wristFeedforward.calculate(Math.toRadians(setpointDeg), 0);
 
-        if(setpointDeg >= 5.0 && setpointDeg <= 195.0){
+        if(setpointDeg >= WristConstants.kAngleMin && setpointDeg <= WristConstants.kAngleMax){
             pidController.setReference(setpointDeg, ControlType.kPosition, 1, 0);
         }
     }
 
     // Velocity PID is currently only used for testing Smart Motion velocity tuning
     public void setVelocity(double setpointVel){
-        arbitraryFF = wristFeedforward.calculate(Math.toRadians(wrist.getPosition()), 0);
+        arbitraryFF = wristFeedforward.calculate(Math.toRadians(108-wrist.getPosition()), 0);
 
         pidController.setReference(setpointVel, ControlType.kVelocity, 0, arbitraryFF);
     }
@@ -358,20 +365,22 @@ public class Wrist {
     }
 
     public void periodic() {
-        //Limit sensor triggered and wrist is moving down
-        // if(atLimitSensor() && getVelocity() < 0){   
-        //     reachedLimitSensorDownward = true;
-        // } else if(getVelocity() > 0){
-        //     reachedLimitSensorDownward = false;
-        // }
+        if(monitorCurrent){
+            currentAverage.add(wristMotor.getOutputCurrent());
+        }
+    }
 
-        // If the wrist is moving down and leaves the limit sensor, reset the encoder
-        // if(reachedLimitSensorDownward && !atLimitSensor() && getVelocity() < 0){
-        //     wrist.setEncoder(75); 
-        //     reachedLimitSensorDownward = false;
-        // }
+    public void startMonitoringCurrent() {
+        monitorCurrent = true;
+    }
 
-        // if(reachedLimitSensorDownward && !atLimitSensor()) reachedLimitSensorDownward = false;
+    public void stopMonitoringCurrent() {
+        monitorCurrent = false;
+        currentAverage.clear();
+    }
+
+    public double getCurrentAverage(){
+        return currentAverage.getAverage();
     }
 
     public void setMode(IdleMode mode) {
