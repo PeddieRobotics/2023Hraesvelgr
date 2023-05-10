@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
         
         
         DataLogManager.logNetworkTables(false);
-        DataLogManager.start(); 
+        DataLogManager.start("/media/sdb1");
         logger = Logger.getInstance();
         DriverStation.startDataLog(DataLogManager.getLog());
 
@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
