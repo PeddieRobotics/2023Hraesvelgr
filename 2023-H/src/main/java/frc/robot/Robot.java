@@ -7,15 +7,11 @@ package frc.robot;
 import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-
-//import org.littletonrobotics.junction.LoggedRobot;
-// import org.littletonrobotics.junction.Logger;
-// import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
-// import org.littletonrobotics.junction.io.ByteLogReceiver;
-// import org.littletonrobotics.junction.io.LogSocketServer;
 
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +23,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.subsystems.Claw.ClawState;
+import frc.robot.utils.Logger;
 import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.OIConstants;
 
@@ -45,29 +42,19 @@ public class Robot extends TimedRobot {
     private ShuffleboardMain shuffleboard;
     private boolean ranAutonomousRoutine;
     private PowerDistribution pdh;
+    private Logger logger;
 
     @Override
     public void robotInit() {
 
-        // Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-
-        // if (isReal()) {
-        //     Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-        //     Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        //     new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-        // } else {
-        //     setUseTiming(false); // Run as fast as possible
-        //     String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        //     Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        //     Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-        // }
-
-        // Logger.getInstance().disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-        // Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
-
         LiveWindow.setEnabled(false);
 
         robotContainer = new RobotContainer();
+        logger = Logger.getInstance();
+        
+        DataLogManager.logNetworkTables(false);
+        DataLogManager.start(); 
+        DriverStation.startDataLog(DataLogManager.getLog());
 
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
@@ -120,6 +107,8 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
+
+        DataLogManager.log("Robot Disabled");
     }
 
     @Override
@@ -141,6 +130,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
 
+        DataLogManager.log("Autonomous Enabled");
     }
 
     @Override
@@ -164,6 +154,8 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        DataLogManager.log("Tele-op Enabled");
 
         // Make sure pipelines are set correctly to the defaults
         // LimelightFront.getInstance().setPipeline(7);
