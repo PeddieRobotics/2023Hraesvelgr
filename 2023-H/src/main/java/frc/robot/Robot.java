@@ -50,10 +50,11 @@ public class Robot extends TimedRobot {
         LiveWindow.setEnabled(false);
 
         robotContainer = new RobotContainer();
-        logger = Logger.getInstance();
+        
         
         DataLogManager.logNetworkTables(false);
         DataLogManager.start(); 
+        logger = Logger.getInstance();
         DriverStation.startDataLog(DataLogManager.getLog());
 
         shuffleboard = ShuffleboardMain.getInstance();

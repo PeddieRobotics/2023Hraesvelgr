@@ -11,49 +11,84 @@ import edu.wpi.first.util.datalog.RawLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Wrist;
 
 public class Logger {
-    private static Logger logger;
-    private DataLog log = DataLogManager.getLog();
-    private Drivetrain drivetrain;
-    private DriverOI driverOI;
-    private OperatorOI operatorOI;
-    private Pose2d position;
+  private static Logger logger;
+  private DataLog log = DataLogManager.getLog();
+  private Drivetrain drivetrain;
+  private DriverOI driverOI;
+  private OperatorOI operatorOI;
+  private Pose2d fieldPosition;
+  private Shoulder shoulder;
+  private Wrist wrist;
+  private Claw claw;
 
-    private BooleanLogEntry booleanLog1;
-    private DoubleLogEntry doubleLog1, doubleLog2, doubleLog3, doubleLog4, doubleLog5;
-    private StringLogEntry stringLog1;
-    private DataLogEntry dataLog1;
-    private DoubleArrayLogEntry doubleArrayLog1;
+  private BooleanLogEntry booleanLog1, booleanLog2;
+  private DoubleLogEntry gyroAngleEntry, wheelSpeedEntry, shoulderAngleEntry, wristAngleEntry, clawSpeedEntry,
+   clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry;
+  private StringLogEntry stringLog1;
+  private DataLogEntry dataLog1;
+  private DoubleArrayLogEntry fieldPositionEntry;
 
-    public Logger(){
-        doubleLog1 = new DoubleLogEntry(log, "/Drivetrain/Gyro Angle");
-        doubleLog2 = new DoubleLogEntry(log, "/Drivetrain/Wheel Speed");
-        doubleArrayLog1 = new DoubleArrayLogEntry(log, "/Field/Position");
-        drivetrain = Drivetrain.getInstance();
-        driverOI = DriverOI.getInstance();
-        operatorOI = OperatorOI.getInstance();
+  public Logger(){
+    //Setup Subsystems
+    drivetrain = Drivetrain.getInstance();
+    driverOI = DriverOI.getInstance();
+    operatorOI = OperatorOI.getInstance();
+    shoulder = Shoulder.getInstance();
+    wrist = Wrist.getInstance();
+    claw = Claw.getInstance();
+
+    //Double Logs
+    gyroAngleEntry = new DoubleLogEntry(log, "/Drivetrain/Gyro Angle");
+    wheelSpeedEntry = new DoubleLogEntry(log, "/Drivetrain/Wheel Speed");
+    shoulderAngleEntry = new DoubleLogEntry(log, "/Shoulder/Shoulder Angle");
+    wristAngleEntry = new DoubleLogEntry(log, "/Wrist/Wrist Angle");
+    clawSpeedEntry = new DoubleLogEntry(log, "/Claw/Claw Speed");
+    clawCurrentEntry = new DoubleLogEntry(log, "/Claw/Claw Current");
+    shoulderCurrentEntry = new DoubleLogEntry(log, "/Shoulder/Shoulder Current");
+    wristCurrentEntry = new DoubleLogEntry(log, "/Wrist/Wrist Current");
+    fieldPosition = drivetrain.getPose();
+    fieldPositionEntry = new DoubleArrayLogEntry(log, "/Field/Position");
+
+    //Boolean Logs
+
+  }
+
+  public void updateLogs(){
+    //Field Pose
+    fieldPosition = drivetrain.getPose();
+    double[] pose = {fieldPosition.getX(),fieldPosition.getY(),drivetrain.getHeading()}; 
+    fieldPositionEntry.append(pose);
+
+    //Drivetrain
+    gyroAngleEntry.append(drivetrain.getHeading());
+    wheelSpeedEntry.append(drivetrain.getSpeed());
+
+    //OI
+
+    //Shoulder
+    shoulderAngleEntry.append(shoulder.getPosition());
+    shoulderCurrentEntry.append(shoulder.getOutputCurrent());
+
+    //Wrist
+    wristAngleEntry.append(wrist.getPosition());
+    wristCurrentEntry.append(wrist.getOutputCurrent());
+
+    //Claw
+    clawSpeedEntry.append(claw.getClawSpeed());
+    clawCurrentEntry.append(claw.getOutputCurrent());
+  }
+
+  public static Logger getInstance() {
+    if (logger == null) {
+      logger = new Logger();
     }
-
-    public void updateLogs(){
-        //Field Pose
-        double[] pose = {position.getX(),position.getY(),drivetrain.getHeading()}; 
-        doubleArrayLog1.append(pose);
-        position = drivetrain.getPose();
-
-        //Drivetrain
-        doubleLog1.append(drivetrain.getHeading());
-        doubleLog2.append(drivetrain.getSpeed());
-
-        //OI
-    }
-
-    public static Logger getInstance() {
-        if (logger == null) {
-          logger = new Logger();
-        }
-        return logger;
-      }
+    return logger;
+  }
 }
 
