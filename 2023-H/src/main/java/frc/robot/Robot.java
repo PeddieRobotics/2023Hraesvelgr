@@ -135,6 +135,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        logger.updateLogs();
     }
 
     @Override
@@ -174,6 +175,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        logger.updateLogs();
     }
 
     @Override
