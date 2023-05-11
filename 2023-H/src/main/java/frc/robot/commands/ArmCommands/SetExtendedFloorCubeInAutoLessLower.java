@@ -22,7 +22,7 @@ public class SetExtendedFloorCubeInAutoLessLower extends CommandBase{
 
     @Override
     public void initialize() {
-        arm.setState(ArmState.FLOOR_INTAKE_CONE_EXTENDED);
+        arm.setState(ArmState.FLOOR_INTAKE_CUBE_EXTENDED);
         arm.setGoalPose(ArmState.NONE);
         arm.setWristPosition(wrist.getkExtendedFloorCubeAngle()-6);
         arm.setShoulderPositionSmartMotion(shoulder.getkExtendedFloorCubeAngle()-4, SmartMotionArmSpeed.REGULAR);

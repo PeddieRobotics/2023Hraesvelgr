@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,7 +29,7 @@ public class Claw extends SubsystemBase {
     // Keep in mind when using ClawState that the floor cube intake picks up tipped over cones,
     // so "INTAKING_CUBE" state may encompass this possibility.
     public enum ClawState {
-        EMPTY, INTAKING_CUBE, INTAKING_CONE, CUBE, CONE
+        EMPTY, INTAKING_CUBE, INTAKING_CONE, CUBE, CONE, UNKNOWN
     };
 
     private ClawState state; // Our current best estimation of the intake's state with respect to game pieces
@@ -38,13 +39,17 @@ public class Claw extends SubsystemBase {
     private final LimelightFront limelightFront; // Used to help with cone alignment monitoring /calculating offset
 
     private double gamepieceAlignmentError;
-    private boolean monitorNewConeIntake, monitorNewCubeIntake;
+    private double initialAlignmentAnalysisTime;
+    private MedianFilter alignmentFilter;
+    private boolean monitorNewConeIntake, monitorNewCubeIntake, analyzingAlignment;
+    private double currentAlignmentDistance;
+
     private InterpolatingTreeMap<Double,Double> cubeAlignmentTable, coneL2AlignmentTable, coneL3AlignmentTable;
 
     private double ejectionTime;
     private boolean justEjectedGamepiece;
 
-    private int newGamepieceCounter;
+    private boolean sawGamepieceDuringAlignmentAnalysis;
 
     private String currentLLForAutoAlign;
 
@@ -54,6 +59,7 @@ public class Claw extends SubsystemBase {
         clawMotor = new CANSparkMax(RobotMap.kClawMotor, MotorType.kBrushless);
         clawMotor.setSmartCurrentLimit(ClawConstants.kClawMotorCurrentLimit);
         clawMotor.setIdleMode(IdleMode.kCoast);
+        clawMotor.setOpenLoopRampRate(0.1);
 
         backSensor = new DigitalInput(RobotMap.kClawBackSensor);
         frontSensor = new DigitalInput(RobotMap.kClawFrontSensor);
@@ -65,11 +71,15 @@ public class Claw extends SubsystemBase {
         gamepieceOperatorOverride = false;
 
         limelightFront = LimelightFront.getInstance();
+
+        alignmentFilter = new MedianFilter(10); // median filter over last 200 ms
         gamepieceAlignmentError = 0.0;
+        initialAlignmentAnalysisTime = 0.0;
         monitorNewConeIntake = false;
         monitorNewCubeIntake = false;
+        analyzingAlignment = false;
+        currentAlignmentDistance = 0.0;
 
-        newGamepieceCounter = 0;
         currentLLForAutoAlign = "limelight-front";
 
         currentAverage = new RollingAverage(4);
@@ -84,68 +94,63 @@ public class Claw extends SubsystemBase {
 
         // Linear interpolation calibrated points for L2 cone alignment
         coneL2AlignmentTable = new InterpolatingTreeMap<>();
-        coneL2AlignmentTable.put(-17.03, -7.52); // Left calibration point
-        coneL2AlignmentTable.put(9.93, 2.54); // Right calibration point
+        coneL2AlignmentTable.put(-14.76, -7.65); // Left calibration point
+        coneL2AlignmentTable.put(9.65, 0.55); // Right calibration point
+        coneL2AlignmentTable.put(-3.57,-3.07); // Center calibration point
 
         // Linear interpolation calibrated points for L3 cone alignment
         coneL3AlignmentTable = new InterpolatingTreeMap<>();
-        coneL3AlignmentTable.put(-17.23, 5.59); // Left calibration point
-        coneL3AlignmentTable.put(9.93, -2.54); // Right calibration point
-        
-        // Old pre-competition values
-        // coneL2AlignmentTable.put(-17.228, -7.79); // Left calibration point
-        // coneL2AlignmentTable.put(-4.946, -3.53); // Center calibration point
-        // coneL2AlignmentTable.put(11.399, 2.04); // Right calibration point
+        coneL3AlignmentTable.put(-16.44, 3.92); // Left calibration point ******
+        coneL3AlignmentTable.put(9.83, -1.76); // Right calibration point
+        coneL3AlignmentTable.put(-2.75,-1.04); // Center calibration point
+    
+        /*
+         * Seneca/DCMP values for calibration below
+         */
+        //  // Linear interpolation calibrated points for cube alignment
+        //  cubeAlignmentTable = new InterpolatingTreeMap<>();
+        //  cubeAlignmentTable.put(-13.26, -9.93); // Left calibration point
+        //  cubeAlignmentTable.put(8.46, 1.67); // Right calibration point
+ 
+        //  // Linear interpolation calibrated points for L2 cone alignment
+        //  coneL2AlignmentTable = new InterpolatingTreeMap<>();
+        //  coneL2AlignmentTable.put(-17.03, -7.52); // Left calibration point
+        //  coneL2AlignmentTable.put(9.93, 2.54); // Right calibration point
+ 
+        //  // Linear interpolation calibrated points for L3 cone alignment
+        //  coneL3AlignmentTable = new InterpolatingTreeMap<>();
+        //  coneL3AlignmentTable.put(-17.23, 5.59); // Left calibration point
+        //  coneL3AlignmentTable.put(9.93, -2.54); // Right calibration point
 
-        // coneL3AlignmentTable.put(-17.583, 9.03); // Left calibration point
-        // coneL3AlignmentTable.put(-5.442, 3.57); // Center calibration point
-        // coneL3AlignmentTable.put(8.162, -2.7); // Right calibration point
     }
 
     @Override
     public void periodic() {
-        if (useSensors && !gamepieceOperatorOverride) {
-            if (isFrontSensor() && isBackSensor()) {
-                state = ClawState.CONE;
-            } else if (isFrontSensor() && !isBackSensor()) {
-                state = ClawState.CUBE;
-            } else if (state != ClawState.INTAKING_CONE && state != ClawState.INTAKING_CUBE && (!isFrontSensor() && !isBackSensor())) {
-                state = ClawState.EMPTY;
-                if(!justEjectedGamepiece){
-                    Blinkin.getInstance().emptyCheckForFailure();
-                }
+        SmartDashboard.putNumber("Current alignment dist", currentAlignmentDistance);
+
+        // If we've recently intaked a cone or cube and we're in an analysis pose, start looking at it.
+        if((monitorNewConeIntake
+        && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)
+        && Arm.getInstance().getState() == ArmState.STOWED) ||
+        (monitorNewCubeIntake
+        && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)
+        && Arm.getInstance().getState() == ArmState.STOWED)){
+
+            if(!analyzingAlignment){
+                analyzingAlignment = true;
+                initialAlignmentAnalysisTime = Timer.getFPGATimestamp();
             }
+
+            updateGamepieceAlignmentError();
+            SmartDashboard.putNumber("Gamepiece alignment error", gamepieceAlignmentError);
         }
 
-        // If we've recently intaked a cone, and the arm is oriented such that we could
-        // see the cone, start looking at it.
-        if (monitorNewConeIntake && !isNormalizingCone() && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorConeAlignmentAngle)) {
-            newGamepieceCounter++;
-            updateGamepieceAlignmentError();
-
-            // If we have looked the cone for at least 100 ms, we've gotten enough of a
-            // glimpse.
-            if (newGamepieceCounter > 4) {
-                monitorNewConeIntake = false; // Stop looking at cone alignment
-                newGamepieceCounter = 0;
-                returnLimelightToDefaultState();
-                Blinkin.getInstance().gamepieceAnalyzedSuccess();
-            }
-        }
-
-        // If we've recently intaked a cube, and the arm is oriented such that we could
-        // see the cube, start looking at it.
-        if (monitorNewCubeIntake && limelightFront.hasTarget() && Arm.getInstance().isWristAtAngle(WristConstants.kMonitorCubeAlignmentAngle)) {
-            newGamepieceCounter++;
-            updateGamepieceAlignmentError();
-
-            // If we have looked the cube for at least 100 ms, we've gotten enough of a
-            // glimpse.
-            if (newGamepieceCounter > 4) {
-                monitorNewCubeIntake = false; // Stop looking at cube alignment
-                newGamepieceCounter = 0;
-                returnLimelightToDefaultState();
-                Blinkin.getInstance().gamepieceAnalyzedSuccess();
+        // If we have looked the cone for at least 500 ms, we've gotten enough of a
+        // glimpse. This logic is separated from the above so that "finishedAnalyzingAlignment"
+        // is guaranteed to run, even if the pose is ordered to change (interrupted).
+        if(analyzingAlignment && (monitorNewConeIntake || monitorNewCubeIntake)){
+            if (Timer.getFPGATimestamp() - initialAlignmentAnalysisTime > ClawConstants.kMaximumGamepieceMonitorTime) {
+                finishedAnalyzingAlignment();
             }
         }
 
@@ -186,6 +191,18 @@ public class Claw extends SubsystemBase {
         return !frontSensor.get();
     }
 
+    public boolean isEitherSensor(){
+        return isFrontSensor() || isBackSensor();
+    }
+
+    public boolean isBothSensors(){
+        return isFrontSensor() && isBackSensor();
+    }
+
+    public boolean isNeitherSensor(){
+        return !isEitherSensor();
+    }
+
     public boolean hasCone() {
         return state == ClawState.CONE;
     }
@@ -195,7 +212,7 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasGamepiece() {
-        return hasCone() || hasCube();
+        return hasCone() || hasCube() || state == ClawState.UNKNOWN;
     }
 
     public double getClawSpeed() {
@@ -293,9 +310,10 @@ public class Claw extends SubsystemBase {
     }
 
     public void updateGamepieceAlignmentError() {
-        double sum = gamepieceAlignmentError * (newGamepieceCounter - 1); // recover the previous sum
-        gamepieceAlignmentError = (sum + limelightFront.getTxAverage())/newGamepieceCounter; // average any observations so far
-        SmartDashboard.putNumber("raw gamepiece tx error", gamepieceAlignmentError);
+        if(limelightFront.getTv()){
+            sawGamepieceDuringAlignmentAnalysis = true;
+            gamepieceAlignmentError = alignmentFilter.calculate(limelightFront.getTxAverage());
+        }
     }
 
     public double convertL2ConeTXToAlignmentError(double tx) {
@@ -321,9 +339,17 @@ public class Claw extends SubsystemBase {
     }
 
     public void monitorNewCubeIntake() {
-        limelightFront.setPipeline(4); // monitor alignment of cube in intake
+        limelightFront.setPipeline(2); // monitor alignment of cube in intake
         limelightFront.resetRollingAverages();
         monitorNewCubeIntake = true;
+    }
+
+    public void finishedAnalyzingAlignment(){
+        monitorNewConeIntake = false;
+        monitorNewCubeIntake = false;
+        analyzingAlignment = false;
+        sawGamepieceDuringAlignmentAnalysis = false;
+        alignmentFilter.reset();
     }
 
     public boolean isMonitorNewConeIntake(){
@@ -375,7 +401,7 @@ public class Claw extends SubsystemBase {
         }
 
         if (hasCone()) {
-            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 6); // Retroreflective tape pipeline
+            LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 6); // Retroreflective tape pipeline (lower)
         } else {
             LimelightHelper.setPipelineIndex(currentLLForAutoAlign, 0); // April tag pipeline
         }
@@ -383,7 +409,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void returnLimelightToDefaultState(){
-        LimelightHelper.setPipelineIndex("limelight-front", 7); // Read alignment of cones in intake for auto-align
+        LimelightHelper.setPipelineIndex("limelight-front", 7); // Cone alignment pipeline (color camera)
         LimelightHelper.setPipelineIndex("limelight-back", 0); // April tag pipeline
 
     }
@@ -407,7 +433,7 @@ public class Claw extends SubsystemBase {
 
     // Used for detecting a positive cube intake
     public boolean analyzeCurrentForCube() {
-        if(currentAverage.getAverage() > 20 && hasCube() && !hasCone()){
+        if(currentAverage.getAverage() > 30 && isFrontSensor() && !isBackSensor()){
             return true;
         }
         return false;
@@ -428,6 +454,74 @@ public class Claw extends SubsystemBase {
 
     public void setGamepieceOperatorOverride(boolean gamepieceOperatorOverride) {
         this.gamepieceOperatorOverride = gamepieceOperatorOverride;
+    }
+
+    public void classifyGamepiece(){
+        setGamepieceOperatorOverride(false);
+        
+        if(isFrontSensor() && !isBackSensor()){
+            setState(ClawState.CUBE);
+            monitorNewCubeIntake();
+            setSpeed(ClawConstants.kCubeHoldSpeed);
+        }
+        else if(isBackSensor()){
+            setState(ClawState.CONE);
+            monitorNewConeIntake();
+            stopClaw();
+        }
+        else{
+            setState(ClawState.EMPTY); 
+            Blinkin.getInstance().returnToRobotState();
+            stopClaw();
+        }
+    }
+
+
+    // public void checkGamepieceTypeWithVision(){
+    //     // Looking for a cone, so check that we saw one in the intake.
+    //     if(limelightFront.getPipeline() == 7){
+    //         if(!sawGamepieceDuringAlignmentAnalysis){
+    //             setState(ClawState.UNKNOWN);
+    //             Blinkin.getInstance().returnToRobotState();
+    //         }
+    //         else{
+    //             setState(ClawState.CONE);
+    //         }
+    //     }
+    //     // Looking for a cube, so check that we saw one in the intake.
+    //     else if(limelightFront.getPipeline() == 2){
+    //         if(!sawGamepieceDuringAlignmentAnalysis){
+    //             setState(ClawState.UNKNOWN);
+    //             Blinkin.getInstance().returnToRobotState();
+    //         }
+    //         else{
+    //             setState(ClawState.CUBE);
+    //         }
+    //     }
+    // }
+
+    public boolean isSawGamepieceDuringAlignmentAnalysis() {
+        return sawGamepieceDuringAlignmentAnalysis;
+    }
+
+    public void setSawGamepieceDuringAlignmentAnalysis(boolean sawGamepieceDuringAlignmentAnalysis) {
+        this.sawGamepieceDuringAlignmentAnalysis = sawGamepieceDuringAlignmentAnalysis;
+    }
+
+    public boolean isAnalyzingAlignment() {
+        return analyzingAlignment;
+    }
+
+    public void setAnalyzingAlignment(boolean analyzingAlignment) {
+        this.analyzingAlignment = analyzingAlignment;
+    }
+
+    public double getCurrentAlignmentDistance() {
+        return currentAlignmentDistance;
+    }
+
+    public void setCurrentAlignmentDistance(double currentAlignmentDistance) {
+        this.currentAlignmentDistance = currentAlignmentDistance;
     }
 
 }

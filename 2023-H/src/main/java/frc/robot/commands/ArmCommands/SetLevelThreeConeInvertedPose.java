@@ -2,11 +2,14 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
+import frc.robot.utils.DriverOI;
 import frc.robot.utils.Constants.ShoulderConstants;
+import frc.robot.utils.DriverOI.DriveSpeedMode;
 
 public class SetLevelThreeConeInvertedPose extends CommandBase{
     private Arm arm;
@@ -23,7 +26,6 @@ public class SetLevelThreeConeInvertedPose extends CommandBase{
 
     @Override
     public void initialize() {
-
         if(arm.isShoulderBelowAngle(65)){
             arm.setShoulderPositionSmartMotion(shoulder.getkL3ConeInvertedAngle(), SmartMotionArmSpeed.FAST);
         }

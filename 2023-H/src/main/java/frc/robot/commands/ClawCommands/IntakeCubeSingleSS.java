@@ -11,6 +11,7 @@ public class IntakeCubeSingleSS extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
     private double initialTime, currentTime;
+    private boolean blinkinSuccess;
 
     public IntakeCubeSingleSS(){
         blinkin = Blinkin.getInstance();
@@ -19,6 +20,8 @@ public class IntakeCubeSingleSS extends CommandBase{
 
         initialTime = 0.0;
         currentTime = 0.0;
+
+        blinkinSuccess = false;
     }
 
     @Override
@@ -27,41 +30,27 @@ public class IntakeCubeSingleSS extends CommandBase{
         claw.setState(ClawState.INTAKING_CUBE);     
         claw.intakeCube();
  
+        blinkinSuccess = false;
     }
 
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
+        if(!blinkinSuccess && claw.isEitherSensor()){
+            Blinkin.getInstance().success();
+            blinkinSuccess = true;
+        }
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        if(!interrupted){
-            if(claw.hasCube()){
-                blinkin.success();
-                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
-            }
-            else if(claw.hasCone()){
-                blinkin.success();
-                claw.stopClaw();
-                claw.monitorNewConeIntake();
-            }
-            else{
-                blinkin.failure();;
-                claw.stopClaw();
-            }
-        }
-        else{
-            claw.setState(ClawState.EMPTY);     
-            claw.stopClaw();
-            blinkin.returnToRobotState();
-        }
+        claw.classifyGamepiece();
     }
 
     @Override
     public boolean isFinished() {
-        return claw.hasGamepiece() && (currentTime - initialTime) > 0.5;
+        return claw.isEitherSensor() && (currentTime - initialTime) > 0.5;
     }
 
     

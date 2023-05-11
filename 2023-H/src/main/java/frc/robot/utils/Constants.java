@@ -14,14 +14,13 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
         public static class GlobalConstants {
-                public static final double kVoltCompensation = 12.6;
                 public static final boolean kUseLEDLights = true;
         }
 
         public static class OIConstants {
                 public static final boolean kUseDebugModeLayout = true;
                 public static final boolean kUsePreScorePose = true;
-                public static final boolean kReturnL3ConeInvertedToPreScore = true;
+                public static final boolean kReturnL3ConeInvertedToPreScore = false;
                 public static final boolean kReturnForwardL2L3ScoringPosesToPreScore = true;
 
                 public static final double kDrivingDeadband = 0.1;
@@ -143,8 +142,13 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kPTranslationController = 3.5; // 4.0;
-                public static final double kPThetaController = 1.0; // 0.4;
+                public static final double kPTranslationController = 3.5;
+                public static final double kITranslationController = 0.0;
+                public static final double kDTranslationController = 0.0;
+
+                public static final double kPThetaController = 1.0; // 1.5 new
+                public static final double kIThetaController = 0.0;
+                public static final double kDThetaController = 0.4; // 0.4 for new autos
 
                 // Charge station balance algorithm parameters
                 // Tune based on field.
@@ -152,7 +156,7 @@ public final class Constants {
                 public static final double kOnCSDegree = 9.0;
                 public static final double kCSLevelDegree = 11.5;
                 public static final double kCSClimbDistance = 0.75;
-                public static final double kCSOverrunMaxApproachDist = 2.25;
+                public static final double kCSOverrunMaxApproachDist = 2.0;
                 public static final double kCSOverrunRemainingClimbDist = 0.5;
                 
         }
@@ -238,18 +242,18 @@ public final class Constants {
                 public static final double kCompactFloorCubeAngle = -60;
 
                 // Shoulder is fully extended out
-                public static final double kExtendedFloorConeAngle = -29;
-                public static final double kExtendedFloorCubeAngle = -36.5;
+                public static final double kExtendedFloorConeAngle = -26.5;
+                public static final double kExtendedFloorCubeAngle = -36;
 
                 public static final double kL2ConeAngle = 16.0;
                 public static final double kL2CubeAngle = 16.0;
 
                 public static final double kL3CubeForwardAngle = 8.5;
                 public static final double kL3CubeInvertedAngle = 155.0;
-                public static final double kL3ConeForwardAngle = 19.0;
+                public static final double kL3ConeForwardAngle = 11.0;
                 public static final double kL3ConeInvertedAngle = 155.0;
 
-                public static final double kDoubleSSConeAngle = 25.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 27.5;
                 public static final double kSingleSSConeAngle = -75.0;
                 public static final double kSingleSSCubeAngle = -75.0;
 
@@ -267,8 +271,8 @@ public final class Constants {
                 public static final double kFloorIntakeCubeMaxVelToStow = 1500;
                 public static final double kFloorIntakeCubeMaxAccelToStow = 5000;
 
-                public static final double kScoringPoseMaxVelToStow = 1500;
-                public static final double kScoringPoseMaxAccelToStow = 6000;
+                public static final double kScoringPoseMaxVelToStow = 1650;
+                public static final double kScoringPoseMaxAccelToStow = 7000;
 
         }
 
@@ -289,11 +293,11 @@ public final class Constants {
                 public static final double kAVoltSecondSquaredPerRad = 0.0;
 
                 // Smart Motion controller parameters (velocity PID constants)
-                public static final double kP = 0.0;
-                public static final double kI = 0.0;
+                public static final double kP = 0.00007;
+                public static final double kI = 0.000000005;
                 public static final double kD = 0;
                 public static final double kIz = 0;
-                public static final double kFF = 0;
+                public static final double kFF = 0.0001;
 
                 public static final double kSmartMotionSlowSetpointTol = 1.0;
                 public static final double kSmartMotionSlowMinVel = 0.0; // rpm
@@ -329,12 +333,12 @@ public final class Constants {
                 public static final double kL2ConeAngle = 191.0;
                 public static final double kL2CubeAngle = 186.0;
 
-                public static final double kL3CubeForwardAngle = 113.0;
+                public static final double kL3CubeForwardAngle = 112.0;
                 public static final double kL3CubeInvertedAngle = 118.0;
-                public static final double kL3ConeForwardAngle = 124.0;
+                public static final double kL3ConeForwardAngle = 109;
                 public static final double kL3ConeInvertedAngle = 108.0;
 
-                public static final double kDoubleSSConeAngle = 177.0; // definitely not right /needs tuning
+                public static final double kDoubleSSConeAngle = 192.0;
                 public static final double kSingleSSConeAngle = 78.0;
                 public static final double kSingleSSCubeAngle = 40.0;
 
@@ -344,15 +348,15 @@ public final class Constants {
 
                 public static final double kSetpointTolerance = 1.0; // degrees
 
-                public static final double kMotorReduction = 113.77777777777777; // 113.777777777777:1
+                public static final double kMotorReduction = 100.571429; // old was 113.777777777777:1
                 public static final double kEncoderConversionFactor = 360.0 / kMotorReduction;
-                public static final double kAbsoluteEncoderConversionFactor = 360.0/1.77777777777777;
+                public static final double kAbsoluteEncoderConversionFactor = 360.0/1.571429; /// old was 360.0/1.77777777777777;
 
-                public static final double kAbsoluteEncoderZeroOffset = 63.569;                ; 
+                public static final double kAbsoluteEncoderZeroOffset = 172.24;
 
                 // Soft limits
                 public static final float kAngleMin = 4;
-                public static final float kAngleMax = 195;
+                public static final float kAngleMax = 215;
 
         }
 
@@ -376,7 +380,7 @@ public final class Constants {
 
                 public static final double kCubeHoldSpeed = -0.05;
 
-                public static final double kMaximumGamepieceMonitorTime = 3.0;
+                public static final double kMaximumGamepieceMonitorTime = 0.5;
 
                 public static final double kOperatorEjectSpeed = 0.1;
                 public static final double kOperatorFastEjectSpeed = 1.0;
