@@ -13,8 +13,6 @@ public class IntakeFloorCone extends CommandBase{
     private double initialTime, currentTime;
     private boolean hasCone;
 
-    private boolean blinkinSuccess;
-
     public IntakeFloorCone(){
         blinkin = Blinkin.getInstance();
         claw = Claw.getInstance();
@@ -23,7 +21,6 @@ public class IntakeFloorCone extends CommandBase{
         initialTime = 0.0;
         currentTime = 0.0;
 
-        blinkinSuccess = false;
     }
 
     @Override
@@ -32,29 +29,41 @@ public class IntakeFloorCone extends CommandBase{
         claw.setState(ClawState.INTAKING_CONE);     
         hasCone = false;
         claw.intakeCone();
-        blinkinSuccess = false;
+        claw.startMonitoringCurrent();
+        blinkin.intakingCone();
     }
 
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
 
-        if(claw.isBackSensor() && !hasCone){
+        if(claw.hasCone() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
-            if(!blinkinSuccess){
-                Blinkin.getInstance().success();
-                blinkinSuccess = true;
-            }
         }
-        else if(!claw.isBackSensor()){
+        else if(!claw.hasCone()){
             hasCone = false;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        claw.classifyGamepiece();
+
+        if(claw.hasCube()){
+            blinkin.success();
+            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            claw.monitorNewCubeIntake();
+        }
+        else if(claw.hasCone()){
+            blinkin.success();
+            claw.stopClaw();
+            claw.monitorNewConeIntake();
+        }
+        else{
+            claw.setState(ClawState.EMPTY);     
+            blinkin.failure();
+            claw.stopClaw();
+        }
     }
 
     @Override

@@ -12,9 +12,8 @@ public class SetHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
-
-    private boolean wristHomed, shoulderHomed;
-    private double initialTime, currentTime;
+    private boolean wristHomed, shoulderHomed, shoulderHeld;
+    private double initialShoulderMoveTime, currentShoulderMoveTime;
 
     private Blinkin blinkin;
 
@@ -38,46 +37,52 @@ public class SetHomePose extends CommandBase{
 
         wristHomed = false;
         shoulderHomed = false;
+        shoulderHeld = false;
 
-        initialTime = Timer.getFPGATimestamp();
-        currentTime = Timer.getFPGATimestamp();
+        initialShoulderMoveTime = Timer.getFPGATimestamp();
+        currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        wrist.startMonitoringCurrent();
-        shoulder.startMonitoringCurrent();
-
-        arm.setWristPercentOutput(-0.3);
-        arm.setShoulderPercentOutput(-0.3);
+        arm.setWristPercentOutput(0.3);
+        arm.setShoulderPercentOutput(0.3);
 
     }
 
     @Override
     public void execute() {
-        currentTime = Timer.getFPGATimestamp();
+        // currentShoulderMoveTime = Timer.getFPGATimestamp();
 
-        if(wrist.getCurrentAverage() > 18.0 && !wristHomed){
-            arm.holdWristPosition();
-            wristHomed = true;
-        }
+        // if(wrist.atLimitSensor()){
+        //     arm.holdWristPosition();
+        //     wristHomed = true;
+        // }
 
-        if(shoulder.getCurrentAverage() > 58.0 && !shoulderHomed){
-            shoulder.setEncoder(shoulder.getkHomeAngle());
-            arm.holdShoulderPosition();
-            shoulderHomed = true;
-        }
+        // if(currentShoulderMoveTime - initialShoulderMoveTime > 0.5 && !shoulderHeld){
+        //     arm.holdShoulderPosition();
+        //     shoulderHeld = true;
+        // }
+
+        // if(wristHomed && !shoulderHomed && shoulderHeld){
+        //     arm.setShoulderPercentOutput(-0.3);
+        // }
+
+        // if(shoulder.atLimitSensor()){
+        //     arm.holdShoulderPosition();
+        //     shoulderHomed = true;
+        // }
         
     }
 
     @Override
     public void end(boolean interrupted){
         if(!interrupted){
+            wrist.setEncoder(wrist.getkStowedAngle());
+            shoulder.setEncoder(shoulder.getkStowedAngle());
             blinkin.success();
         } else{
             blinkin.failure();
         }
 
         arm.turnOnSmartLimits();
-        wrist.stopMonitoringCurrent();
-        shoulder.stopMonitoringCurrent();
 
     }
 

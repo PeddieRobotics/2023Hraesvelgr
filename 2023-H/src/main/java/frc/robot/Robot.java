@@ -4,30 +4,38 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import com.pathplanner.lib.server.PathPlannerServer;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
-//import org.littletonrobotics.junction.LoggedRobot;
+// import org.littletonrobotics.junction.LoggedRobot;
 // import org.littletonrobotics.junction.Logger;
 // import org.littletonrobotics.junction.inputs.LoggedNetworkTables;
 // import org.littletonrobotics.junction.io.ByteLogReceiver;
 // import org.littletonrobotics.junction.io.LogSocketServer;
 
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Shuffleboard.ShuffleboardMain;
+import frc.robot.commands.ArmCommands.SetStowedPose;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
-import frc.robot.subsystems.Claw.ClawState;
-import frc.robot.utils.Constants.ClawConstants;
 import frc.robot.utils.Constants.OIConstants;
 
 /**
@@ -39,7 +47,7 @@ import frc.robot.utils.Constants.OIConstants;
  * build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot  {
     private Command autonomousCommand;
     private static RobotContainer robotContainer;
     private ShuffleboardMain shuffleboard;
@@ -49,21 +57,25 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
 
-        // Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+        Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
-        // if (isReal()) {
-        //     Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-        //     Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        //     new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-        // } else {
-        //     setUseTiming(false); // Run as fast as possible
-        //     String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        //     Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        //     Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-        // }
+        if (isReal()) {
+            Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
+            Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+            new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+        } else {
+            setUseTiming(false); // Run as fast as possible
+            String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+            Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
+            Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+        }
 
-        // Logger.getInstance().disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
-        // Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+// Logger.getInstance().disableDeterministicTimestamps() // See "Deterministic Timestamps" in the "Understanding Data Flow" page
+Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+
+
+
+
 
         LiveWindow.setEnabled(false);
 
@@ -82,12 +94,12 @@ public class Robot extends TimedRobot {
             shuffleboard.setupAutoSelector();
         }
 
-        // PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
+        PathPlannerServer.startServer(5985); //SHOULD BE 5985!!!!! 5895 WILL NOT WORK!!!!!
         SmartDashboard.putData(CommandScheduler.getInstance());
 
         ranAutonomousRoutine = false;
 
-        LimelightFront.getInstance().setPipeline(3);
+        LimelightFront.getInstance().setPipeline(7);
         LimelightBack.getInstance().setPipeline(0);
     }
 
@@ -110,10 +122,10 @@ public class Robot extends TimedRobot {
         // if(OIConstants.kUseDebugModeLayout){
         //     double current8 = pdh.getCurrent(8);
         //     double current9 = pdh.getCurrent(9);
-        //     double current14 = pdh.getCurrent(14);
-        //     SmartDashboard.putNumber("Current Channel 14", current14);
-        // }
+        //     SmartDashboard.putNumber("Current Channel 8", current8);
+        //     SmartDashboard.putNumber("Current Channel 9", current9);
 
+        // }
     }
 
     @Override
@@ -129,8 +141,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         robotContainer.resetGyro();
-
-        Claw.getInstance().classifyGamepiece();
 
         ranAutonomousRoutine = true;
 
@@ -149,25 +159,22 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        robotContainer.setFlipped(true);
         robotContainer.setRanAutonomousRoutine(ranAutonomousRoutine);
         Blinkin.getInstance().returnToRobotState();
-        if(Claw.getInstance().getState() == ClawState.CUBE){
-            Claw.getInstance().setSpeed(ClawConstants.kCubeHoldSpeed);
-        }
-        //Claw.getInstance().classifyGamepiece();
 
         if (!ranAutonomousRoutine) {
-            robotContainer.setFlipped(true);
             robotContainer.resetPoseToFaceOtherAlliance();
         }
+
 
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
 
-        // Make sure pipelines are set correctly to the defaults
-        // LimelightFront.getInstance().setPipeline(7);
-        // LimelightBack.getInstance().setPipeline(0);
+        // Default pose for the robot to begin teleop is stowed.
+        LimelightFront.getInstance().setPipeline(7);
+        LimelightBack.getInstance().setPipeline(0);
 
     }
 
@@ -178,6 +185,14 @@ public class Robot extends TimedRobot {
         robotContainer.resetGyro();
         robotContainer.setArmMode(IdleMode.kBrake);
         robotContainer.setWristMode(IdleMode.kBrake);
+
+        shuffleboard = ShuffleboardMain.getInstance();
+        if(OIConstants.kUseDebugModeLayout){
+            shuffleboard.setupDebugMode();
+        }
+        else{
+            shuffleboard.setupCompetitionMode();
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
 import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
 import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
@@ -28,12 +27,18 @@ public class Arm extends SubsystemBase {
     
     private ArmState state, goalPose;
 
+    private double shoulderCurrentSpikeTime;
+    private boolean shoulderCurrentSpiked;
+
     public Arm() {
         shoulder = Shoulder.getInstance();
         wrist = Wrist.getInstance();
 
         state = ArmState.HOME;
         goalPose = ArmState.NONE;
+
+        shoulderCurrentSpikeTime = 0;
+        shoulderCurrentSpiked = false;
     }
 
     public ArmState getState() {
@@ -144,11 +149,9 @@ public class Arm extends SubsystemBase {
         return getWristPosition() > angle;
     }
 
-    public boolean isUnsafeSnapPose(){
-        return state == ArmState.DOUBLE_SS_CONE || state == ArmState.DOUBLE_SS_CUBE || state == ArmState.FLOOR_INTAKE_CONE_EXTENDED ||
-        state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED;
+    public boolean isShoulderFullyStowed(){
+        return (state == ArmState.HOME || state == ArmState.STOWED || state == ArmState.L1);
     }
-
 
     public boolean isInvertedL3Cone(){
         return state == ArmState.L3_CONE_INVERTED;
@@ -163,9 +166,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean isArmScoringPose(){
-        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE ||
-        state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED ||
-        state == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_FORWARD;
+        return state == ArmState.L1 || state == ArmState.L2_CONE || state == ArmState.L2_CUBE || state == ArmState.L3_CUBE_FORWARD || state == ArmState.L3_CONE_INVERTED;
     }
 
     public static Arm getInstance() {
@@ -185,23 +186,13 @@ public class Arm extends SubsystemBase {
 
     public boolean isAutoAlignValid(){
         boolean headingIsCorrect = false;
-        if(Drivetrain.getInstance().getFlipped()){
-            if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
-                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
-            }
-            else{
-                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
-            }
+        if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
+            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 25.0;
         }
         else{
-            if(goalPose == ArmState.L3_CONE_INVERTED || goalPose == ArmState.L3_CUBE_INVERTED || state == ArmState.L3_CONE_INVERTED || state == ArmState.L3_CUBE_INVERTED){
-                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 155.0;
-            }
-            else{
-                headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) < 80.0;
-            }            
+            headingIsCorrect = Math.abs(Drivetrain.getInstance().getHeading()) > 100.0;
         }
-        return isScoringAutoAlignPose() && headingIsCorrect;
+        return isScoringAutoAlignPose() && headingIsCorrect; // LimelightHelper.getTV(Claw.getInstance().getCurrentLLForAutoAlign());
     }
 
     public boolean isSingleSSPose(){
@@ -264,12 +255,13 @@ public class Arm extends SubsystemBase {
         else if(goalPose == ArmState.L3_CUBE_FORWARD){
             CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
         }
+        // These forbidden states do exist, but don't allow them.
         // else if(goalPose == ArmState.L3_CUBE_INVERTED){
         //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
         // }
-        else if(goalPose == ArmState.L3_CONE_FORWARD){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
-        }
+        // else if(goalPose == ArmState.L3_CONE_FORWARD){
+        //     CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
+        // }
         else if(goalPose == ArmState.L3_CONE_INVERTED){
             CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
         }
@@ -290,16 +282,31 @@ public class Arm extends SubsystemBase {
         return (state != ArmState.STOWED && state != ArmState.HOME) && Claw.getInstance().hasGamepiece();
     }
 
-    public boolean canNewIntake(){
-        return isShoulderBelowAngle(-60) && isWristLessThanAngle(80);
-    }
-    
     @Override
     public void periodic() {
+        // Make sure the shoulder doesn't slip off the fulcrum when it starts in the home position
+        // if(shoulder.atLimitSensor() && state == ArmState.HOME){
+        //     holdShoulderPosition();
+        // }
+
+        // Keep track if shoulder current is continuously above 30 amps
+        if(shoulder.getOutputCurrent() > 30.0){
+            if(!shoulderCurrentSpiked){
+                shoulderCurrentSpikeTime = Timer.getFPGATimestamp();
+                shoulderCurrentSpiked = true;
+            }
+        }
+        else{
+            shoulderCurrentSpiked = false;
+        }
+
         // Do not let the shoulder pull 30+ amps for more than 20 seconds.
         // Shut off the motor if so.
-        if(shoulder.getMotorTemperature() > 50.0){
-            shoulder.setPercentOutput(0);
+        if(shoulderCurrentSpiked || shoulder.getMotorTemperature() > 50.0){
+            if(shoulderCurrentSpikeTime - Timer.getFPGATimestamp() > 20.0){
+                shoulder.setPercentOutput(0);
+                Blinkin.getInstance().specialOperatorFunctionality();
+            }
         }
 
         shoulder.periodic();

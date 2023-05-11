@@ -90,7 +90,7 @@ public class ShoulderTab extends ShuffleboardTabBase {
                         mTemp.setDouble(shoulder.getMotorTemperature());
                         mVoltage.setDouble(shoulder.getVoltage());
                         mArbitraryFF.setDouble(shoulder.getArbitraryFF());
-                        // mLimitSensor.setBoolean(shoulder.atLimitSensor());
+                        //mLimitSensor.setBoolean(shoulder.atLimitSensor());
 
                         if (mOpenLoopToggle.getBoolean(false)) {
                                 shoulder.setPercentOutput(DriverOI.getInstance().getArmSpeed());

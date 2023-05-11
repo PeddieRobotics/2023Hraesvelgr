@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "XConeL3"
+          "ConeL3"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "after",
@@ -51,7 +51,7 @@
     {
       "position": 0.01,
       "names": [
-        "Xstow"
+        "stow"
       ]
     }
   ]

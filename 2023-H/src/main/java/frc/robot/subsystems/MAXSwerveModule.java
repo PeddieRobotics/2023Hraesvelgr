@@ -126,11 +126,13 @@ public class MAXSwerveModule {
     this.drivingCANId = drivingCANId;
     this.turningCANId = turningCANId;
 
+    // Initiate the Feed Forwards for the motors
   }
 
   public SwerveModuleState getState() {
     // Apply chassis angular offset to the encoder position to get the position relative to the chassis.
     return new SwerveModuleState(m_drivingEncoder.getVelocity(), new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+    // return new SwerveModuleState(m_driveEncoder.getVelocity(), new Rotation2d(getTurnEncoder()));
   }
 
   public SwerveModulePosition getPosition() {
@@ -142,6 +144,21 @@ public class MAXSwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState) {
+    /*
+    // Apply chassis angular offset to the desired state.
+    SwerveModuleState finalDesiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+
+    // Optimize the reference state to avoid spinning further than 90 degrees.
+    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(finalDesiredState, getState().angle);
+
+    // Command driving and turning SPARKS MAX towards their respective setpoints.
+    m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+    m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+
+    SmartDashboard.putNumber(turningCANId + " Angle Setpoint", optimizedDesiredState.angle.getRadians());
+    m_desiredState = desiredState;
+    */
+
     // The algorithm below should be the correct setDesiredState algorithm.
     // Apply chassis angular offset to the desired state.
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
@@ -155,8 +172,7 @@ public class MAXSwerveModule {
     m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
-    SmartDashboard.putNumber(drivingCANId + " Speed Setpoint", optimizedDesiredState.speedMetersPerSecond);
-    SmartDashboard.putNumber(turningCANId + " Angle Setpoint", optimizedDesiredState.angle.getDegrees());
+    SmartDashboard.putNumber(turningCANId + " Angle Setpoint", optimizedDesiredState.angle.getRadians());
     m_desiredState = desiredState;
   }
 
@@ -175,52 +191,11 @@ public class MAXSwerveModule {
   }
 
   public void putSmartDashboard(){
-    SmartDashboard.putNumber(drivingCANId + " Actual Speed", m_drivingEncoder.getVelocity());
-    SmartDashboard.putNumber(turningCANId + " Actual Angle", Math.toDegrees(m_turningEncoder.getPosition()));
+    SmartDashboard.putNumber(drivingCANId + " Wheel RPM", m_drivingEncoder.getVelocity());
+    SmartDashboard.putNumber(turningCANId + " Angle Motor Angle", m_turningEncoder.getPosition());
   }
 
   public double getRotations(){
     return m_drivingEncoder.getPosition()/ModuleConstants.kDrivingEncoderPositionFactor;
   }
-
-  public void setDrivePIDF(double p, double i, double d, double ff) {
-    if(p != m_drivingPIDController.getP()){
-      m_drivingPIDController.setP(p);
-    }
-
-    if(i != m_drivingPIDController.getI()){
-      m_drivingPIDController.setI(i);
-
-    }
-
-    if(d != m_drivingPIDController.getD()){
-      m_drivingPIDController.setD(d);
-
-    }
-
-    if(ff != m_drivingPIDController.getFF()){
-      m_drivingPIDController.setFF(ff);
-    }
-  }
-
-  public void setTurnPIDF(double p, double i, double d, double ff) {
-    if(p != m_turningPIDController.getP()){
-      m_turningPIDController.setP(p);
-    }
-
-    if(i != m_turningPIDController.getI()){
-      m_turningPIDController.setI(i);
-
-    }
-
-    if(d != m_turningPIDController.getD()){
-      m_turningPIDController.setD(d);
-
-    }
-
-    if(ff != m_turningPIDController.getFF()){
-      m_turningPIDController.setFF(ff);
-    }
-  }
-
 }

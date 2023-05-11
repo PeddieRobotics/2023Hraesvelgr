@@ -20,11 +20,11 @@ public class StraightenDrivetrain extends CommandBase{
         initialTime = Timer.getFPGATimestamp();
     }
 
-    // Called once the command ends or is interrupted
+    //Called once the command ends or is interrupted
     public void end(boolean interrupted) {
     }
 
-    // Returns true when the command should end
+    //Returns true when the command should end
     @Override
     public boolean isFinished(){
         return Timer.getFPGATimestamp() - initialTime > 0.25;

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.utils.RobotMap;
-import frc.robot.utils.RollingAverage;
 
 public class Shoulder {
 
@@ -24,10 +23,8 @@ public class Shoulder {
     private SparkMaxPIDController pidController;
     private ArmFeedforward shoulderFeedforward;
 
-    // private DigitalInput limitSensor;
-
-    private RollingAverage currentAverage;
-    private boolean monitorCurrent;
+    //private DigitalInput limitSensor;
+    //private boolean reachedLimitSensorUpward;
 
     private double kP, kI, kD, kIz, kFF, kPositionP, kPositionI, kPositionD,
     kPositionIz, kG, kV, kA, arbitraryFF, kSmartMotionRegularSetpointTol, kSmartMotionRegularMinVel,
@@ -166,9 +163,6 @@ public class Shoulder {
 
         shoulderMotorMaster.burnFlash();
         shoulderMotorFollower.burnFlash();
-
-        currentAverage = new RollingAverage(10);
-        monitorCurrent = false;
     }
 
     public void setRegularSmartMotionParameters(double setpointTol, double minVel, double maxVel, double maxAccel){
@@ -382,22 +376,20 @@ public class Shoulder {
     }
 
     public void periodic() {
-        if(monitorCurrent){
-            currentAverage.add(shoulderMotorMaster.getOutputCurrent());
-        }
-    }
+        // Limit sensor triggered and shoulder is moving up
+        // if(atLimitSensor() && getVelocity() > 0){   
+        //     reachedLimitSensorUpward = true;
+        // } else if(getVelocity() < 0){
+        //     reachedLimitSensorUpward = false;
+        // }
 
-    public void startMonitoringCurrent() {
-        monitorCurrent = true;
-    }
+        // If the shoulder is moving up and leaves the limit sensor, reset the encoder
+        // if(reachedLimitSensorUpward && !atLimitSensor()){
+        //     shoulder.setEncoder(-70); 
 
-    public void stopMonitoringCurrent() {
-        monitorCurrent = false;
-        currentAverage.clear();
-    }
+        //     reachedLimitSensorUpward = false;
+        // }
 
-    public double getCurrentAverage(){
-        return currentAverage.getAverage();
     }
 
     public void setMode(IdleMode mode) {

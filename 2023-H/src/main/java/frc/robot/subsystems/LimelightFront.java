@@ -15,7 +15,7 @@ public class LimelightFront extends Limelight {
     private static LimelightFront limelightFront;
 
     private RollingAverage txAverage, tyAverage, taAverage, xAverage;
-    private boolean cube;
+    private boolean cube,level2;
 
     private String limelightName = "limelight-front";
 

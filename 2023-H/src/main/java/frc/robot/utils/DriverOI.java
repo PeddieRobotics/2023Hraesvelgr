@@ -8,17 +8,12 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
 import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
-import frc.robot.commands.ArmCommands.SetLevelTwoConeShootL1Pose;
-import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
 import frc.robot.commands.ArmCommands.SetPreScorePose;
 import frc.robot.commands.ArmCommands.SetPreScorePoseL3Return;
 import frc.robot.commands.ArmCommands.SetSingleSSConePose;
@@ -26,22 +21,19 @@ import frc.robot.commands.ArmCommands.SetSingleSSCubePose;
 import frc.robot.commands.ArmCommands.SetStowedPose;
 import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
 import frc.robot.commands.ClawCommands.NormalizeConeAfterIntake;
-import frc.robot.commands.ClawCommands.BackwardsConeShot;
 import frc.robot.commands.ClawCommands.EjectGamepiece;
 import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
-import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
-import frc.robot.commands.DriveCommands.RotateToAngleWhileDriving;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
+import frc.robot.commands.LimelightCommands.LocalizeWithLL;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -55,7 +47,6 @@ public class DriverOI {
     private final Claw claw;
     private final Arm arm;
     private final Blinkin blinkin;
-    private final Autonomous autonomous;
 
     private final PS4Controller controller = new PS4Controller(0);
 
@@ -86,7 +77,6 @@ public class DriverOI {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
-        autonomous = Autonomous.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 
@@ -129,7 +119,7 @@ public class DriverOI {
              * If we are not in a valid ejection pose, then we should do floor cone intake, and stow when we have
              * a gamepiece.
              */
-            new SequentialCommandGroup(new ParallelRaceGroup(new SetExtendedFloorConePose(), new IntakeFloorCone()),
+            new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorConePose(), new IntakeFloorCone()),
                 new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
@@ -163,16 +153,21 @@ public class DriverOI {
              * If we are not in a valid ejection pose, then we should do floor cube intake, and stow when we have
              * a gamepiece.
              */
-            new SequentialCommandGroup(new ConditionalCommand(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new ParallelCommandGroup(new SetExtendedFloorCubePoseOld(), new IntakeFloorCube()), arm::canNewIntake), new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
+            new SequentialCommandGroup(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()),
+                new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
             arm::isValidEjectPose));
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-   
+        // triangleButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5));
+        // triangleButton.onTrue(new RotateToAngle(180));
+
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
         xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
+        // xButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));
+        // xButton.onTrue(new RotateToAngle(0));
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
@@ -208,17 +203,15 @@ public class DriverOI {
         // Left stick button, unused
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
 
-        // Back button (Touchpad button on front), snaps robot to goal heading
+        // Back button (Touchpad button on front), unused
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new ConditionalCommand(new InstantCommand(),
-            new ConditionalCommand(new RotateToAngleWhileDriving(180), new RotateToAngleWhileDriving(0),
-                drivetrain::getFlipped),
-            arm::isUnsafeSnapPose));
+        // touchpadButton.onTrue(new ClimbCSGyro(0, 1.0, 0.5));  // USE FOR TESTING GYRO CLIMBS
 
         // Slow Mode
         // Back button (Option button on front)
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
+        // optionsButton.onTrue(new ClimbCSGyro(180, 1.0, 0.5)); // USE FOR TESTING GYRO CLIMBS
+        //optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Share button unused
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
@@ -456,9 +449,5 @@ public class DriverOI {
 
     public boolean isReturnForwardL2L3ScoringPosesToPreScore() {
         return returnForwardL2L3ScoringPosesToPreScore;
-    }
-
-    public boolean touchpadHeld(){
-        return controller.getTouchpad();
     }
 }

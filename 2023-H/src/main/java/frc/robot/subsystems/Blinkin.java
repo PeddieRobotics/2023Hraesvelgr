@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.CANifier.PWMChannel;
-
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,16 +12,14 @@ public class Blinkin extends SubsystemBase{
     
     private static Blinkin blinkin;
     private Spark blinkinController;
+    private double initialTime, currentTime, flashTime;
+    private boolean flashOn;
+    
+    public enum BlinkinState {NONE, GREEN_SOLID, RED_SOLID, GOLD_SOLID, PURPLE_SOLID, PINK_SOLID, AQUA_SOLID,
+        BLINK_GREEN, BLINK_RED, FLASH_PINK, FLASH_GOLD, FLASH_PURPLE, FLASH_GREEN, PULSE_GOLD, PULSE_PURPLE, STROBE_GOLD, STROBE_PURPLE,
+        GYRO_SUCCESS, GYRO_OVERRUN};
 
-    private double initialTime, currentTime;
-
-    private boolean useReturnToRobotStateTimer;
-    private double returnToRobotStateTimeLimit;
-
-    private double lastFlashTime, flashColor, flashRate;
-    private boolean useFlashColor, flashOn;
-
-    private double currentColor;
+    private BlinkinState state;
 
     private Claw claw;
 
@@ -34,21 +29,18 @@ public class Blinkin extends SubsystemBase{
         }
         claw = Claw.getInstance();
 
-        initialTime = 0.0;
-        currentTime = 0.0;
+        black();
 
-        useReturnToRobotStateTimer = false;
-        returnToRobotStateTimeLimit = 0.0;
+        state = BlinkinState.NONE;
+        flashOn = true; // default to true so the flash happens immediately whenever we run a flashing command
 
-        lastFlashTime = 0.0;
-        useFlashColor = false;
-        flashColor = 0.0;
-        flashRate = 0.0;
-        flashOn = false;    
+        initialTime = Timer.getFPGATimestamp();
+        currentTime = Timer.getFPGATimestamp();
+        flashTime = Timer.getFPGATimestamp();
+    }
 
-        currentColor = 0.0;
-
-        neutral();
+    public BlinkinState getState() {
+        return state;
     }
 
     public static Blinkin getInstance(){
@@ -61,50 +53,157 @@ public class Blinkin extends SubsystemBase{
     public void set(double value) {
         if(GlobalConstants.kUseLEDLights){
             blinkinController.set(value);
-            currentColor = value;
         }
-        useReturnToRobotStateTimer = false;
     }
 
-    // Color to use when doing nothing
-    public void neutral(){
-        blinkinController.disable();
-        // set(0.99);
+    // Neutral color to use when doing nothing (LEDs off /black)
+    public void black() {
+        set(0.99);
     }
 
-    // Solid purple color (not necessarily identical to color 2 preset)
     public void purple(){
         set(0.89);
     }
 
-    // Solid gold color (not necessarily identical to color 1 preset)
     public void gold(){
         set(0.63);
     }
 
-    // Solid pink color
     public void pink(){
         set(0.57);
     }
 
     // Solid green color
     public void green(){
-        set(0.75);
+        set(0.71);
     }
 
     // Solid red color
-    public void red(){
+    public void red() {
         set(0.61);
-    }   
+    }
 
-    // Solid aqua color
-    public void aqua(){
+    // Solid red color
+    public void aqua() {
         set(0.81);
     }
 
-    // Solid orange color
-    public void orange(){
-        set(0.65);    
+    // Strobe gold (Color 1 pattern)
+    public void strobeGold() {
+        if(currentTime - initialTime < 1.0){
+            set(0.15);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+
+    // Strobe purple (Color 2 pattern)
+    public void strobePurple() {
+        if(currentTime - initialTime < 1.0){
+            set(0.35);
+        }
+        else{
+            returnToRobotState();
+        }
+    }
+
+    // Blinks red (for various failure modes)
+    public void none() {
+        state = BlinkinState.NONE;
+    }   
+
+    // Blinks green then briefly goes solid green (for various success modes)
+    public void success(){
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.BLINK_GREEN;
+    }
+
+     // Blinks red then briefly goes solid red (for various failure modes)
+     public void failure() {
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.BLINK_RED;
+    }   
+
+    // Blinks red then briefly goes solid red (for various failure modes)
+    public void gamepieceAnalyzedSuccess() {
+        initialTime = Timer.getFPGATimestamp();
+
+        ClawState clawState = claw.getState();
+        if(clawState == ClawState.CONE){
+            state = BlinkinState.STROBE_GOLD;
+        }
+        else if(clawState == ClawState.CUBE){
+            state = BlinkinState.STROBE_PURPLE;
+        }
+    }   
+
+    // Blinks the appropriate color when trying to auto-target
+    public void acquiringTarget() {
+        initialTime = Timer.getFPGATimestamp();
+
+        // Robot has a gamepiece and is trying to score at the goal
+        if(claw.hasCone()){
+            state = BlinkinState.PULSE_GOLD;
+        }
+        else if(claw.hasCube()){
+            state = BlinkinState.PULSE_PURPLE;
+        }
+        // Robot has no gamepiece and is trying to auto-target at a human player station
+        else{
+            // If the robot is currently seeking a cone or cube, slow down to a pulse while targeting at the HP stations
+            if(state == BlinkinState.FLASH_GOLD){
+                state = BlinkinState.PULSE_GOLD;
+            }
+            else if(state == BlinkinState.FLASH_PURPLE){
+                state = BlinkinState.PULSE_PURPLE;
+            }
+            // If we've reached this case, then auto-target has failed / does not apply
+            else{
+                state = BlinkinState.BLINK_RED;
+            }
+        }
+    }
+
+    // Turns the LEDS to flashing green when either stage of auto-alignment is complete
+    public void autoAlignClose(){
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.FLASH_GREEN;
+    }
+
+    // Turns the LEDS to solid green when both auto-align stages are complete
+    public void autoAlignSuccess(){
+        state = BlinkinState.GREEN_SOLID;
+    }
+
+    // Turns the LEDS to flashing purple when intaking a cube
+    public void intakingCube() {
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.FLASH_PURPLE;
+    }
+
+    // Turns the LEDS to flashing gold when intaking a cone
+    public void intakingCone() {
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.FLASH_GOLD;
+    }
+
+    // If the arm is being rehomed, flash pink during process (special status)
+    // Also used for some other special operator overrides.
+    public void specialOperatorFunctionality(){
+        initialTime = Timer.getFPGATimestamp();
+        state = BlinkinState.FLASH_PINK;
+    }
+
+    public void emptyCheckForFailure(){
+        if(state == BlinkinState.GOLD_SOLID || state == BlinkinState.PURPLE_SOLID){
+            failure();
+            claw.stopClaw();
+        }
+    }
+
+    public void lockedWheels(){
+        state = BlinkinState.AQUA_SOLID;
     }
 
     public void rainbowTwinkle(){
@@ -115,139 +214,226 @@ public class Blinkin extends SubsystemBase{
         set(0.93);
     }
 
-    public void goldHeartbeat(){
-        set(0.15);
-    }
-
-    public void purpleHeartbeat(){
-        set(0.35);
-    }
-
-    // Solid green (for various success modes)
-    public void success(){
-        green();
-        returnToRobotState(1.5); 
-    }
-
-     // Solid red (for various failure modes)
-     public void failure() {
-        red();
-        returnToRobotState(1); 
-    }   
-
-    // Turns the LEDS to flashing green while auto-aligning
-    public void autoAlignClose(){
-        green();
-        flashColorAtRate(0.1, 0.75);
-    }
-
-    // Turns the LEDS to solid green when both auto-align stages are complete
-    public void autoAlignSuccess(){
-        useFlashColor = false;
-        green();
-    }
-
-    // Turns the LEDS to flashing purple when intaking a cube
-    public void intakingCube() {
-        purpleHeartbeat();
-    }
-
-    // Turns the LEDS to flashing gold when intaking a cone
-    public void intakingCone() {
-        goldHeartbeat();
-    }
-
-    // If the arm is being rehomed, go solid pink during process (special status)
-    // Also used for some other special operator overrides.
-    public void specialOperatorFunctionality(){
-        whiteOverride();
-    }
-
-    public void lockedWheels(){
-        aqua();
-    }
-
     public void gyroClimbSuccess(){
-        green();
+        state = BlinkinState.GYRO_SUCCESS;
     }
 
     public void gyroClimbOverrun(){
-        pink();
+        state = BlinkinState.GYRO_OVERRUN;
     }
 
-    public void detectChargeStation(){
-        orange();
-    }
-
-    // Immediately reset LED's to current robot state
     public void returnToRobotState(){
-        useReturnToRobotStateTimer = false;
-        useFlashColor = false;
-        
         if(claw.getState() == ClawState.INTAKING_CONE){
-            goldHeartbeat();
+            state = BlinkinState.FLASH_GOLD;
         }
         else if(claw.getState() == ClawState.INTAKING_CUBE){
-            purpleHeartbeat();
+            state = BlinkinState.FLASH_PURPLE;
         }
         else if(claw.getState() == ClawState.CONE){
-            gold();
+            state = BlinkinState.GOLD_SOLID;
         }
         else if(claw.getState() == ClawState.CUBE){
-            purple();
-        } 
-        // else if(claw.getState() == ClawState.UNKNOWN){
-        //     red();
-        // }    
+            state = BlinkinState.PURPLE_SOLID;
+        }     
         else{
-            neutral();
+            state = BlinkinState.NONE;
         }
-    }
-
-    // Return to robot state after a certain number of seconds (color/pattern on timer)
-    public void returnToRobotState(double seconds){
-        initialTime = Timer.getFPGATimestamp();
-        useReturnToRobotStateTimer = true;
-        returnToRobotStateTimeLimit = seconds;
-    }
-
-    public void flashColorAtRate(double seconds, double colorCode){
-        lastFlashTime = Timer.getFPGATimestamp();
-        useFlashColor = true;
-        flashColor = colorCode;
-        flashRate = seconds;
-        flashOn = false;
     }
 
     @Override
-    public void periodic() {        
+    public void periodic() {
         if(GlobalConstants.kUseLEDLights){
-            SmartDashboard.putNumber("current LED color set", currentColor);
-            SmartDashboard.putNumber("current LED color blinkin", blinkinController.get());
+            currentTime = Timer.getFPGATimestamp();
+            switch(state){
+                case NONE:
+                    black();
+                    break;
+                case GREEN_SOLID:
+                    green();
+                    break;
+                case RED_SOLID:
+                    red();
+                    break;
+                case GOLD_SOLID:
+                    gold();
+                    break;
+                case PURPLE_SOLID:
+                    purple();
+                    break;
+                case PINK_SOLID:
+                    pink();
+                    break;
+                case AQUA_SOLID:
+                    aqua();
+                    break;
+                case BLINK_GREEN:
+                    blinkGreen();
+                    break;
+                case BLINK_RED:
+                    blinkRed();
+                    break;
+                case FLASH_PINK:
+                    flashPink();
+                    break;
+                case FLASH_GOLD:    
+                    flashGold();
+                    break;
+                case FLASH_PURPLE:
+                    flashPurple();
+                    break;
+                case FLASH_GREEN:
+                    flashGreen();
+                    break;
+                case PULSE_GOLD:
+                    pulseGold();
+                    break;
+                case PULSE_PURPLE:
+                    pulsePurple();
+                    break;
+                case STROBE_GOLD:
+                    strobeGold();
+                    break;
+                case STROBE_PURPLE:
+                    strobePurple();
+                    break;
+                case GYRO_SUCCESS:
+                    rainbowTwinkle();
+                    break;
+                case GYRO_OVERRUN:
+                    whiteOverride();
+                    break;
+                default:
+                    black();
+            }
+        }
+    }
 
-            if(useReturnToRobotStateTimer){
-                currentTime = Timer.getFPGATimestamp();
-                if(currentTime - initialTime > returnToRobotStateTimeLimit){
-                    returnToRobotState();
-                }
+    private void blinkRed() {
+        if(currentTime - initialTime < 0.15){
+            red();
+        } else if(currentTime - initialTime < 0.3){
+            black();
+        } else if(currentTime - initialTime < 0.45){
+            red();
+        } else if(currentTime - initialTime < 0.6){
+            black();
+        } else if(currentTime - initialTime < 0.75){
+            red();
+        } else if(currentTime - initialTime < 0.9){
+            black();
+        } else if(currentTime - initialTime < 1.05){
+            red();
+        } else if(currentTime - initialTime < 1.2){
+            black();
+        } else if(currentTime - initialTime < 2.2){
+            red();
+        } 
+        else{
+            returnToRobotState();  
+        }
+    }
+
+    private void blinkGreen() {
+        if(currentTime - initialTime < 0.5){
+            green();
+        } else if(currentTime - initialTime < 0.7){
+            black();
+        } else if(currentTime - initialTime < 1.2){
+            green();
+        } else if(currentTime - initialTime < 1.4){
+            black();
+        } else if(currentTime - initialTime < 2.5){
+            green();
+        } else{
+            returnToRobotState();  
+        }
+    }
+
+    // TODO: Reconsider with 5v Blinkin options
+    private void flashPink() {
+        if(flashOn){
+            pink();
+            if(currentTime - flashTime > 0.3){
+                flashOn = false;
+                flashTime = Timer.getFPGATimestamp();
             }
 
-            if(useFlashColor){
-                currentTime = Timer.getFPGATimestamp();
-                if(currentTime - lastFlashTime > flashRate){
-                    if(flashOn){
-                        blinkin.neutral();
-                        lastFlashTime = Timer.getFPGATimestamp();
-                        flashOn = false;
-                    }
-                    else{
-                        blinkin.set(flashColor);
-                        lastFlashTime = Timer.getFPGATimestamp();
-                        flashOn = true;
-                    }
+        }
+        else{
+            black();
+            if(currentTime - flashTime > 0.3){
+                flashOn = true;
+                flashTime = Timer.getFPGATimestamp();
+            }
+        }
+    }
+
+        // TODO: Reconsider with 5v Blinkin options
+        private void flashGreen() {
+            if(flashOn){
+                green();
+                if(currentTime - flashTime > 0.3){
+                    flashOn = false;
+                    flashTime = Timer.getFPGATimestamp();
+                }
+    
+            }
+            else{
+                black();
+                if(currentTime - flashTime > 0.3){
+                    flashOn = true;
+                    flashTime = Timer.getFPGATimestamp();
                 }
             }
         }
+    
+
+    // TODO: Reconsider with 5v Blinkin options
+    private void flashGold() {
+        if(flashOn){
+            gold();
+            if(currentTime - flashTime > 0.3){
+                flashOn = false;
+                flashTime = Timer.getFPGATimestamp();
+            }
+
+        }
+        else{
+            black();
+            if(currentTime - flashTime > 0.3){
+                flashOn = true;
+                flashTime = Timer.getFPGATimestamp();
+            }
+        }
+    }
+
+    // TODO: Reconsider with 5v Blinkin options
+    private void flashPurple() {
+        if(flashOn){
+            purple();
+            if(currentTime - flashTime > 0.3){
+                flashOn = false;
+                flashTime = Timer.getFPGATimestamp();
+            }
+
+        }
+        else{
+            black();
+            if(currentTime - flashTime > 0.3){
+                flashOn = true;
+                flashTime = Timer.getFPGATimestamp();
+            }
+        }
+    }
+
+    // TODO: Need 5v Blinkin to do pulse pattern
+    private void pulseGold() {
+        flashGold();
+    }
+
+    // TODO: Need 5v Blinkin to do pulse pattern
+    private void pulsePurple() {
+        flashPurple();
     }
 
 }

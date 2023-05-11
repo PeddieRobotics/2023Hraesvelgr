@@ -49,6 +49,7 @@ public class RotateToAngle extends CommandBase{
         currentHeading = drivetrain.getHeading();
 
         turn = thetaController.calculate(currentHeading, targetAngle);
+        SmartDashboard.putNumber("Snap to angle turn command", turn);
 
         drivetrain.drive(new Translation2d(), turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
 

@@ -40,15 +40,15 @@ public class IntakeFloorCube extends CommandBase{
             hasCube = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else if(!claw.isEitherSensor()){
+        else if(!claw.hasGamepiece()){
             hasCube = false;
         }
 
-        if(claw.isBackSensor() && !hasCone){
+        if(claw.hasCone() && !hasCone){
             hasCone = true;
             initialTime = Timer.getFPGATimestamp();
         }
-        else if(!claw.isBackSensor()){
+        else if(!claw.hasCone()){
             hasCone = false;
         }
     }
@@ -56,15 +56,27 @@ public class IntakeFloorCube extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         claw.stopMonitoringCurrent();
-        claw.classifyGamepiece();
-        if(claw.hasGamepiece()){
-            Blinkin.getInstance().success();
+
+        if(claw.hasCube()){
+            blinkin.success();
+            claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            claw.monitorNewCubeIntake();
+        }
+        else if(claw.hasCone()){
+            blinkin.success();
+            claw.stopClaw();
+            claw.monitorNewConeIntake();
+        }
+        else{
+            claw.setState(ClawState.EMPTY);     
+            blinkin.failure();
+            claw.stopClaw();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return (hasCube && (currentTime - initialTime) > 0.1) || (hasCone && (currentTime - initialTime) > 0.1);
+        return (hasCube && (currentTime - initialTime) > 0.2) || (hasCone && (currentTime - initialTime) > 0.2);
     }
 
     

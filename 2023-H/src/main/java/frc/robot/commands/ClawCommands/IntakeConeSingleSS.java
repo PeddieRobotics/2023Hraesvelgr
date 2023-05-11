@@ -42,10 +42,9 @@ public class IntakeConeSingleSS extends CommandBase{
     @Override
     public void execute() {
         currentTime = Timer.getFPGATimestamp();
-        if(!hasCone && claw.isBackSensor()){
+        if(!hasCone && claw.hasCone()){
             initialConeTime = Timer.getFPGATimestamp();
             hasCone = true;
-            Blinkin.getInstance().success();
         }
         if(!fixedCone && hasCone && currentTime - initialConeTime > 0.1){
             initialReverseTime = Timer.getFPGATimestamp();
@@ -56,12 +55,31 @@ public class IntakeConeSingleSS extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        claw.classifyGamepiece();
+        if(!interrupted){
+            if(claw.hasCube()){
+                blinkin.success();
+                claw.setSpeed(ClawConstants.kCubeHoldSpeed);
+            }
+            else if(claw.hasCone()){
+                blinkin.success();
+                claw.stopClaw();
+                claw.monitorNewConeIntake();
+            }
+            else{
+                blinkin.failure();
+                claw.stopClaw();
+            }
+        }
+        else{
+            claw.setState(ClawState.EMPTY);     
+            claw.stopClaw();
+            blinkin.returnToRobotState();
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return claw.isEitherSensor() && fixedCone && (currentTime - initialReverseTime) > 0.35;
+        return claw.hasGamepiece() && fixedCone && (currentTime - initialReverseTime) > 0.35;
     }
 
     

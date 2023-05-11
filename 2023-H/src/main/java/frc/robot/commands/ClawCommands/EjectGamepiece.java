@@ -11,8 +11,11 @@ public class EjectGamepiece extends CommandBase{
     private Claw claw;
     private double initialTime, currentTime;
 
+    private Blinkin blinkin;
+
     public EjectGamepiece(){
         claw = Claw.getInstance();
+        blinkin = Blinkin.getInstance();
 
         addRequirements(claw);
 
@@ -46,13 +49,11 @@ public class EjectGamepiece extends CommandBase{
         claw.stopClaw();
         claw.resetGamepieceAlignmentError();
         claw.setGamepieceOperatorOverride(false);
-        claw.classifyGamepiece();
-        claw.setCurrentAlignmentDistance(0.0);
     }
 
     @Override
     public boolean isFinished() {
-        if(Arm.getInstance().isInvertedL3() || Arm.getInstance().isL1Pose()){
+        if(Arm.getInstance().isInvertedL3()){
             return currentTime - initialTime > 0.5;
         }
         else{
