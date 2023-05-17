@@ -783,7 +783,7 @@ public class LimelightHelper {
     }
 
     public static Translation2d getAprilTagCoordinates(int tagNumber) { //coordinates of all april tags
-        final double add = 0.37 + .4; // this is an arbitrary number 
+        final double add = 0; // this is an arbitrary number 
         switch (tagNumber) {
           case 1:
             return new Translation2d(15.513558 - add, 1.071626);
@@ -852,10 +852,6 @@ public class LimelightHelper {
                 return new Translation2d(1.02743 + add, 4.983226);
         }
         return new Translation2d(0, 0);
-    }
-
-    public static Translation2d getCurrentAprilTagCoordinates(String limelightName) { // gets the april tag the limelight is currently seeing
-        return getAprilTagCoordinates((int)getFiducialID(limelightName)); // this isn't the closest, it's just the one we're seeing
     }
 
    

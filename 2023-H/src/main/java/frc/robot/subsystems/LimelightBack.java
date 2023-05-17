@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -121,18 +125,18 @@ public class LimelightBack extends Limelight {
         return LimelightHelper.getNeuralClassID(limelightName);
     }
 
-    public double getDistance() {
-        if (!hasTarget()) {
-            return 0;
-        } else {
-            // a1 = LL panning angle
-            // a2 = additional angle to target
-            // tan(a1 + a2) = h/d
-            // d = h/tan(a1+a2)
-            return (LimelightConstants.kLimelightHeight) /
-                    (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
-        }
-    }
+    // public double getDistance() {
+    //     if (!hasTarget()) {
+    //         return 0;
+    //     } else {
+    //         // a1 = LL panning angle
+    //         // a2 = additional angle to target
+    //         // tan(a1 + a2) = h/d
+    //         // d = h/tan(a1+a2)
+    //         return (LimelightConstants.kLimelightHeight) /
+    //                 (Math.tan(Math.toRadians(LimelightConstants.kLimelightPanningAngle + getTy())));
+    //     }
+    // }
 
     public int getTagsSeen() {
         return LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
@@ -174,8 +178,10 @@ public class LimelightBack extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        if (tagsSeen > 1 && this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm() < 0.5) {
-            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        double distance = getDistanceToTarget(odometry);
+        if(tagsSeen<2) return;
+        if ((tagsSeen > 2 ||distance<3.5)&& this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm() < .5) {
+            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp(),calculateStdDevs(distance,tagsSeen));
         }
     }
 
@@ -185,12 +191,30 @@ public class LimelightBack extends Limelight {
         }
     }
 
-    public Translation2d getCurrentAprilTag(int limelightName) { // gets the april tag the limelight is currently seeing
+    public Matrix<N3, N1> calculateStdDevs(double distance, int tagsSeen){
+        double standardDeviation = 0.9;
+        if(tagsSeen>=3){
+            standardDeviation=.4+ (distance/7);
+        } else {
+            standardDeviation=.7+(distance/7);
+        }
+        return VecBuilder.fill(standardDeviation, standardDeviation, standardDeviation);
+    }
+
+    public Translation2d getCurrentAprilTag() { // gets the april tag the limelight is currently seeing
         return LimelightHelper.getAprilTagCoordinates((int) getTargetID()); // this isn't the closest, it's just the one we're seeing
     }
 
     public Translation2d getAprilTagCoordinates(int tagNumber){
         return LimelightHelper.getAprilTagCoordinates(tagNumber);
+    }
+
+    public double getDistanceToTarget(SwerveDrivePoseEstimator odometry){
+        return getCurrentAprilTag().getDistance(odometry.getEstimatedPosition().getTranslation());
+    }
+
+    public double LLdistToTarget(){
+        return getCurrentAprilTag().getDistance(getBotpose().getTranslation());
     }
 
     public int getClosestColumn(Translation2d pose, boolean isCube){

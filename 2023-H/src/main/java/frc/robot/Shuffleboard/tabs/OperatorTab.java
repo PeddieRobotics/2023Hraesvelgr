@@ -35,10 +35,10 @@ public class OperatorTab extends ShuffleboardTabBase {
     public void createEntries() {
         tab = Shuffleboard.getTab("Operator");
 
-        // fieldView = new FieldView();
-        // tab.add(fieldView.getField()).
-        // withSize(8, 5).
-        // withPosition(0,0);
+        fieldView = new FieldView();
+        tab.add(fieldView.getField()).
+        withSize(8, 5).
+        withPosition(0,0);
 
         autoRoutineSelector = new SendableChooser<Command>();
 
@@ -58,7 +58,7 @@ public class OperatorTab extends ShuffleboardTabBase {
 
     @Override
     public void update() {
-        // fieldView.update();
+        fieldView.update();
         mArmState.setString(arm.getState().toString());
         mClawState.setString(claw.getState().toString());
         mGamepieceState.setBoolean(claw.hasGamepiece());

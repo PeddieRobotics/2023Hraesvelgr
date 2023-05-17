@@ -62,7 +62,7 @@ public LimelightBackTab(){
             mTy.setDouble(LLBack.getTy());
             mTa.setDouble(LLBack.getTa());
             mLimelightHasTarget.setBoolean(LLBack.hasTarget());
-            mDistToTarget.setDouble(LLBack.getDistance());
+            mDistToTarget.setDouble(LLBack.LLdistToTarget());
             mTagsSeen.setInteger(LLBack.getTagsSeen());
             mBotposeX.setDouble(LLBack.getBotpose().getX());
             mBotposeY.setDouble(LLBack.getBotpose().getY());
