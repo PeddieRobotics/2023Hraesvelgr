@@ -77,6 +77,8 @@ public class Robot extends TimedRobot {
 
         LimelightFront.getInstance().setPipeline(3);
         LimelightBack.getInstance().setPipeline(0);
+
+        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -110,11 +112,11 @@ public class Robot extends TimedRobot {
         robotContainer.setWristMode(IdleMode.kCoast);
 
         DataLogManager.log("Robot Disabled");
+        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
     public void disabledPeriodic() {
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -133,6 +135,7 @@ public class Robot extends TimedRobot {
         }
 
         DataLogManager.log("Autonomous Enabled");
+        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -164,6 +167,7 @@ public class Robot extends TimedRobot {
         // LimelightFront.getInstance().setPipeline(7);
         // LimelightBack.getInstance().setPipeline(0);
 
+        System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
