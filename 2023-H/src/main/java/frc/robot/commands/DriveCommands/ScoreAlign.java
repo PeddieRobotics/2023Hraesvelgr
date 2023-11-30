@@ -2,7 +2,7 @@ package frc.robot.commands.DriveCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
@@ -17,7 +17,7 @@ import frc.robot.utils.DriverOI;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
 
-public class ScoreAlign extends CommandBase {
+public class ScoreAlign extends Command {
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
     private final Drivetrain drivetrain;

@@ -17,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -225,7 +225,7 @@ public class CustomAutoBuilder extends BaseAutoBuilder {
   }
 
   @Override
-  public CommandBase followPath(PathPlannerTrajectory trajectory) {
+  public Command followPath(PathPlannerTrajectory trajectory) {
     if (useKinematics) {
       return new PPSwerveControllerCommand(
           trajectory,
@@ -253,8 +253,8 @@ public class CustomAutoBuilder extends BaseAutoBuilder {
 
 
   @Override
-    public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {
-        List<CommandBase> commands = new ArrayList<>();
+    public Command fullAuto(List<PathPlannerTrajectory> pathGroup) {
+        List<Command> commands = new ArrayList<>();
     
         commands.add(resetPose(pathGroup.get(0)));
         commands.add(new InstantCommand(setFlipped));
@@ -270,13 +270,13 @@ public class CustomAutoBuilder extends BaseAutoBuilder {
                                         resetPose(pathGroup.get(0)),
                                         new StraightenDrivetrain(),
                                         followPathGroup(pathGroup)),
-                                      Commands.sequence(commands.toArray(CommandBase[]::new)), 
+                                      Commands.sequence(commands.toArray(Command[]::new)), 
                                       () -> SmartDashboard.getBoolean("RunAutonWithoutEvents", false));
   }
 
 
   @Override
-  public CommandBase resetPose(PathPlannerTrajectory trajectory) {
+  public Command resetPose(PathPlannerTrajectory trajectory) {
     if (drivetrainType == DrivetrainType.HOLONOMIC) {
       return Commands.runOnce(
           () -> {

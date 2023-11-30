@@ -7,9 +7,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class RotateToAngleWhileDriving extends CommandBase{
+public class RotateToAngleWhileDriving extends Command{
 
     private Drivetrain drivetrain;
     private DriverOI oi;
