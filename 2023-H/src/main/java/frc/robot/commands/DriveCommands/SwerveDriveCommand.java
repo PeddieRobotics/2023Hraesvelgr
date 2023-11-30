@@ -1,6 +1,6 @@
 package frc.robot.commands.DriveCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,7 +8,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.DriverOI.DPadDirection;
 
-public class SwerveDriveCommand extends Command {
+public class SwerveDriveCommand extends CommandBase {
   private Drivetrain drivetrain = Drivetrain.getInstance();
   private DriverOI driverOI = DriverOI.getInstance();
 

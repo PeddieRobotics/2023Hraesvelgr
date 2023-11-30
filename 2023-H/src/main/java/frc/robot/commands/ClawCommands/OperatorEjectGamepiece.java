@@ -1,12 +1,12 @@
 package frc.robot.commands.ClawCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.utils.OperatorOI;
 import frc.robot.utils.Constants.ClawConstants;
 
-public class OperatorEjectGamepiece extends Command{
+public class OperatorEjectGamepiece extends CommandBase{
     private Claw claw;
     private OperatorOI operatorOI;
     private Blinkin blinkin;

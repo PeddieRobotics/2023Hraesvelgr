@@ -3,12 +3,12 @@ package frc.robot.commands.DriveCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.AutoConstants;
 
-public class ClimbCSGyro extends Command{
+public class ClimbCSGyro extends CommandBase{
     private Drivetrain drivetrain;
     
     private int state;

@@ -1,13 +1,13 @@
 package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.utils.Constants.ClawConstants;
 
-public class IntakeConeSingleSS extends Command{
+public class IntakeConeSingleSS extends CommandBase{
     private Blinkin blinkin;
     private Claw claw;
     private double initialTime, initialReverseTime, initialConeTime, currentTime;

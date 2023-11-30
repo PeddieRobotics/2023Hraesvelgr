@@ -1,14 +1,14 @@
 package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 
-public class SetHomePose extends Command{
+public class SetHomePose extends CommandBase{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;
