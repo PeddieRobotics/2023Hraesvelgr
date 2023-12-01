@@ -244,6 +244,18 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
+    public ChassisSpeeds getRobotChassisSpeeds() {
+        return DriveConstants.kinematics.toChassisSpeeds(
+            frontLeftSwerveModule.getState(), frontRightSwerveModule.getState(),
+            backLeftSwerveModule.getState(), backRightSwerveModule.getState()
+        );
+    }
+
+    public void driveAuton(ChassisSpeeds speeds) {
+        swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(speeds);
+        setSwerveModuleStates(swerveModuleStates);
+    }
+
     public void drive(Translation2d translation, double rotation, boolean fieldOriented,
             Translation2d centerOfRotation) {
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
@@ -255,12 +267,12 @@ public class Drivetrain extends SubsystemBase {
 
         if (fieldOriented) {
             robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds,
-                    Rotation2d.fromDegrees(((isFlipped)?180:0) + getHeading()));
+                    Rotation2d.fromDegrees((isFlipped ? 180 : 0) + getHeading()));
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
 
-        latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2));
+        latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
 
         swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerOfRotation);
 

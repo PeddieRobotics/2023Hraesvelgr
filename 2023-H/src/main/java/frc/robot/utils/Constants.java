@@ -37,6 +37,8 @@ public final class Constants {
                 // Distance between the front and back wheels on the robot
                 public static final double kWheelBase = Units.inchesToMeters(24.5);
 
+                public static final double kBaseRadius = Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2;
+
                 public static final double kRealMaxSpeedMetersPerSecond = 4.459224;
                 public static final double kMaxFloorSpeed = 1.0 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
