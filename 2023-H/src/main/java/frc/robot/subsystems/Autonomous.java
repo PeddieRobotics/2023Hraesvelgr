@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /* 
@@ -18,6 +19,8 @@ import com.pathplanner.lib.path.PathConstraints;
 
 // import com.pathplanner.lib.auto.PIDConstants; becomes:
 import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 // import com.pathplanner.lib.PathPlanner; removed
 
@@ -72,7 +75,7 @@ public class Autonomous extends SubsystemBase{
     private final Arm arm;
     //private final Claw claw;
 
-    private Hashtable<String, Command> autoRoutines;
+    private SendableChooser<Command> autoChooser;
 
     private HashMap<String, Command> eventMap;
 
@@ -85,9 +88,6 @@ public class Autonomous extends SubsystemBase{
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
         claw = Claw.getInstance();
-        
-        // Setup sendable chooser
-        autoRoutines = new Hashtable<String, Command>();
 
         eventMap = new HashMap<>();
 
@@ -152,7 +152,10 @@ public class Autonomous extends SubsystemBase{
         //     drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
         // );
 
-        setupAutoRoutines();
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        //setupAutoRoutines();
 
         SmartDashboard.putBoolean("RunAutonWithoutEvents", false);
 
@@ -193,6 +196,7 @@ public class Autonomous extends SubsystemBase{
         return autonomous;
     }
 
+    @Deprecated
     public void setupAutoRoutines(){
         /*
          * Competition paths start here
@@ -201,195 +205,11 @@ public class Autonomous extends SubsystemBase{
         //DEV COMMENT
         ///*
 
-        // 1 piece routines with charge station - dead reckoning / no gyro
-        // autoRoutines.put("1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
-
-        // 1 piece routines with charge station - GYRO
-        // autoRoutines.put("GYRO 1.5 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlannerAuto.loadPathGroupFromAutoFile("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
-
-        // 2 piece routines without charge station
-        // autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
-        // autoRoutines.put("Open 2 Piece L3 shift", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9Shift", 2, 2)));
-        // autoRoutines.put("Open 2.5 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Modified2PieceCol9", 2.5, 3)));
-
-        //autoRoutines.put("Open 2.5 Piece L2", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweep", 2.5, 3)));
-        //autoRoutines.put("Open 2.5 Piece L2 No Arm", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open2PieceMidPickupBalanceSweepNoArm", 2.5, 3)));
-
-        // autoRoutines.put("Bump 2 piece L3+L1", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Low", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Low", 2.5, 2.5))));
-        //*/ //DEV COMMENT
-
-        // autoRoutines.put("Bump 2 piece L3 Straight", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4Straight", 2, 1))));
-
-        // autoRoutines.put("180 degree pivot test 1 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest1",
-        // new PathConstraints(1, 1),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(1, 1)
-        // ))));
-            
-        // autoRoutines.put("180 degree pivot test 1.5 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest2",
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(1.5, 1.5)
-        // ))));
-            
-        // autoRoutines.put("180 degree pivot test 0.5 m/s", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPPivotTest3",
-        // new PathConstraints(0.5, 1),
-        // new PathConstraints(0.5, 1),
-        // new PathConstraints(0.5, 1)
-        // ))));
-            
-        // autoRoutines.put("WCMP 3 piece free (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat",
-        //     new PathConstraints(3.5, 3.5),
-        //     new PathConstraints(1, 2.5),
-        //     new PathConstraints(1, 1),
-        //     new PathConstraints(3.5, 2.5),
-        //     new PathConstraints(1, 1),
-        //     new PathConstraints(2.5, 3),
-        //     new PathConstraints(1, 1),
-        //     new PathConstraints(3.5, 2.5)
-        //     ))));
-
-        // autoRoutines.put("WCMP 2.5 piece free", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeCollect1",
-        // new PathConstraints(3, 2.5),
-        // new PathConstraints(1, 2.5),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(3,2.5),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(3, 2.5)
-        // ))));
-
-        // autoRoutines.put("WCMP 2 piece free (L3)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
-        // new PathConstraints(3, 2.5),
-        // new PathConstraints(1, 2.5),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(3,2.5)
-        // ))));
-
-        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
-        // new PathConstraints(1.5, 2.75)
-        // ))));
-
-        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
-        // new PathConstraints(1.5, 2.75),
-        // new PathConstraints(1.5, 2.75),
-        // new PathConstraints(1.5, 2.75),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(1.5, 2.75),
-        // new PathConstraints(1.5, 2.75)
-        // ))));
-            
-        // autoRoutines.put("WCMP 3 piece free (v2 cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeCheat2",
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 2),
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5,2),
-        // new PathConstraints(2.5, 3),
-        // new PathConstraints(1.5, 2),
-        // new PathConstraints(3.5, 3.5)
-        // ))));
-            
-        // autoRoutines.put("WCMP 3 piece free (backward cone)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP3FreeBackward",
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(2.5, 3),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5)
-        // ))));
-
-        // autoRoutines.put("WCMP 2.5 piece free (backward cone)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2FreeBackwardCollect1",
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(2.5, 3),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3.5, 3.5)
-        // ))));
-            
-        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2BumpSlanted",
-        // new PathConstraints(1.5, 2.5),
-        // new PathConstraints(1.5, 2.5),
-        // new PathConstraints(1.5, 2.5),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(1.5, 2.5),
-        // new PathConstraints(1.5, 2.5)
-        // ))));
-
-        // autoRoutines.put("WCMP 2 piece center balance (cheat)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2CenterCheat",
-        // new PathConstraints(2, 3),
-        // new PathConstraints(0.75, 0.75),
-        // new PathConstraints(2, 2),
-        // new PathConstraints(1, 1),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(1.5, 1.5),
-        // new PathConstraints(3, 3)
-        // ))));
-
-        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4Straight", 2, 1))));
-
-        // autoRoutines.put("Bump 2 piece L3 Straight Short", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShort", 2, 1))));
-
-        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped Short", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShort", 2, 1))));
-
-        // autoRoutines.put("Bump 2 piece L3 Straight Short Twist", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShortTwist", 2, 1))));
-
-        // autoRoutines.put("Bump 2 piece L3 Straight Uncomped Short Twist", new SequentialCommandGroup(
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP1Straight", 2.5, 2.5)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP2StraightUncomped", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP3Straight", 1, 1)),
-        //                 autoBuilder.fullAuto(PathPlanner.loadPathGroup("NewBumpP4StraightShortTwist", 2, 1))));
-
-        // 3 piece routines here
-        // autoRoutines.put("Open 3 Piece L1/L3/L2 Cheat", autoBuilder.fullAuto(PathPlanner.loadPathGroup("Open3PieceCheat", 2, 2.5)));
-
-
-        /*
-         * Non-competition paths start heredriver
-         */
-        // //test paths
-        //  int i=10;
-        //  while(i-->1){
-        //     autoRoutines.put("TestPath"+i, autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath"+i, 1, 1.5)));
-        //  }
-        // autoRoutines.put("Test Path", autoBuilder.fullAuto(PathPlanner.loadPathGroup("TestPath", .5, 1)));
     }   
 
     // Used only at the start of autonomous
     private void setFlipped(){ 
         drivetrain.setFlipped();
-    }
-
-    public Hashtable<String, Command> getAutoRoutines() {
-        return autoRoutines;
     }
 
 }

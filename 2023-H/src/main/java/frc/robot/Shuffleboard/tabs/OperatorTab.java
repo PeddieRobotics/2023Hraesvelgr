@@ -64,15 +64,16 @@ public class OperatorTab extends ShuffleboardTabBase {
         mGamepieceState.setBoolean(claw.hasGamepiece());
     }
 
+    // TODO: make things appear here
     public void setupAutoSelector(){
-        Hashtable<String,Command> autoRoutines = autonomous.getAutoRoutines();
-        Enumeration<String> e = autoRoutines.keys();
+        // Hashtable<String,Command> autoRoutines = autonomous.getAutoChooser();
+        // Enumeration<String> e = autoRoutines.keys();
 
-        while (e.hasMoreElements()) {
-            String autoRoutineName = e.nextElement();
-            autoRoutineSelector.addOption(autoRoutineName, autoRoutines.get(autoRoutineName));
-        }
-        mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(16,1); // comp settings: withPosition(16,1);
+        // while (e.hasMoreElements()) {
+        //     String autoRoutineName = e.nextElement();
+        //     autoRoutineSelector.addOption(autoRoutineName, autoRoutines.get(autoRoutineName));
+        // }
+        // mAutoChooser = tab.add("Auto routine", autoRoutineSelector).withSize(5,2).withPosition(16,1); // comp settings: withPosition(16,1);
 
     }
 
