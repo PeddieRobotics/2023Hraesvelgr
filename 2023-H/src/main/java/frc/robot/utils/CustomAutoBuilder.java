@@ -1,19 +1,24 @@
 
 package frc.robot.utils;
 
-// import com.pathplanner.lib.PathPlannerTrajectory;
-// import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-// import com.pathplanner.lib.auto.BaseAutoBuilder;
-// import com.pathplanner.lib.auto.PIDConstants;
+/*
+ * TODO: PPSwerveControllerCommand is removed
+ * TODO: BaseAutoBuilder is removed
+ * TODO: resetPose and fullAuto functions are removed, so the @Override no longer works
+ * TODO: PathPlannerTrajectory.getStartStopEvent() and getEndStopEvent() are removed
+ */
+
+// import com.pathplanner.lib.PathPlannerTrajectory; becomes:
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+
+// import com.pathplanner.lib.auto.PIDConstants; becomes:
+import com.pathplanner.lib.util.PIDConstants;
+
+// REMOVED:
 // import com.pathplanner.lib.auto.SwerveAutoBuilder;
 // import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import com.pathplanner.lib.auto.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.auto.BaseAutoBuilder;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+// import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+// import com.pathplanner.lib.auto.BaseAutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

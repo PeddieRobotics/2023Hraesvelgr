@@ -3,9 +3,21 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.auto.PIDConstants;
+/* 
+ * TODO: loadPathGroup has been moved to a new function (it appears)
+ * TODO: PathConstraints constructor now takes 4 params instead of 2
+ * TODO: PathPlanner is removed, there are now PathPlannerPlan, PathPlannerTrajectory, PathPlannerAuto and PathPlannerLogging
+ * PathConstraints​(double maxVelocityMps, double maxAccelerationMpsSq, double maxAngularVelocityRps, double maxAngularAccelerationRpsSq)
+ */
+
+
+// import com.pathplanner.lib.PathConstraints; becomes:
+import com.pathplanner.lib.path.PathConstraints;
+
+// import com.pathplanner.lib.auto.PIDConstants; becomes:
+import com.pathplanner.lib.util.PIDConstants;
+
+// import com.pathplanner.lib.PathPlanner; removed
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;

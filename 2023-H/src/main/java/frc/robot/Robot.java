@@ -4,7 +4,9 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.server.PathPlannerServer;
+// TODO: PathPlannerServer is removed, though it is not used in the code
+
+// import com.pathplanner.lib.server.PathPlannerServer; removed
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DataLogManager;
