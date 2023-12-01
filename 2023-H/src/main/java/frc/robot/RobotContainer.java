@@ -79,7 +79,7 @@ public class RobotContainer {
     }
 
     public void resetPoseToFaceOtherAlliance() {
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) { //2024 update - (dot)equals
             drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(0))));
         } else {
             drivetrain.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(Math.toRadians(180))));

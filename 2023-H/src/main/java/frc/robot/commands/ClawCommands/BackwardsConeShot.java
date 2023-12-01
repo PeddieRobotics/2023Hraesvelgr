@@ -1,13 +1,13 @@
 package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
 
-public class BackwardsConeShot extends CommandBase{
+public class BackwardsConeShot extends Command{
     private Claw claw;
     private double initialTime, currentTime,time;
 

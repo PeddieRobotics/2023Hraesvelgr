@@ -2,13 +2,13 @@ package frc.robot.commands.DriveCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.Constants.LimelightConstants;
 
-public class IntakeAlign extends CommandBase {
+public class IntakeAlign extends Command {
     private final LimelightFront limelightFront;
     private final Drivetrain drivetrain;
     private PIDController yController;

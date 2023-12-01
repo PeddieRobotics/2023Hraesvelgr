@@ -41,7 +41,7 @@ public class LimelightBack extends Limelight {
 
     public Translation2d getBotXY() {
         double[] result;
-        if(DriverStation.getAlliance() == Alliance.Red){
+        if(DriverStation.getAlliance().get() == Alliance.Red){
             result = LimelightHelper.getBotPose_wpiRed(limelightName);
         }
         else{
@@ -56,7 +56,7 @@ public class LimelightBack extends Limelight {
 
     public Pose2d getBotpose() {
         double[] result;
-        if(DriverStation.getAlliance() == Alliance.Red){
+        if(DriverStation.getAlliance().get() == Alliance.Red){
             result = LimelightHelper.getBotPose_wpiRed(limelightName);
         }
         else{

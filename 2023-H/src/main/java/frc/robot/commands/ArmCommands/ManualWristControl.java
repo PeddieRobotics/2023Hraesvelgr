@@ -1,12 +1,12 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.utils.OperatorOI;
 import frc.robot.utils.Constants.WristConstants;
 
-public class ManualWristControl extends CommandBase{
+public class ManualWristControl extends Command{
     private Arm arm;
     private OperatorOI oi;
     private Blinkin blinkin;

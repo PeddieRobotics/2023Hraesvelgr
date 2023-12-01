@@ -1,13 +1,13 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm.ArmState;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 
-public class SetExtendedFloorCubePoseOldAutonL3 extends CommandBase{
+public class SetExtendedFloorCubePoseOldAutonL3 extends Command{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;

@@ -2,7 +2,7 @@ package frc.robot.commands.DriveCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Arm;
@@ -16,7 +16,7 @@ import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.subsystems.Blinkin;
 
-public class SingleSSAlign extends CommandBase {
+public class SingleSSAlign extends Command {
     private final LimelightFront limelightFront;
     private final Drivetrain drivetrain;
     private PIDController thetaController, xController;
@@ -47,7 +47,7 @@ public class SingleSSAlign extends CommandBase {
         initialHeadingCorrectionComplete = false;
         initialTargetNotFound = false;
 
-        switch (DriverStation.getAlliance()) {
+        switch (DriverStation.getAlliance().get()) {
             case Red:
                 if(drivetrain.getFlipped()){
                     scoreSetpoint = -90;

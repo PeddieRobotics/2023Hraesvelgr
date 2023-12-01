@@ -25,6 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "C_Cpp.errorSquiggles": "enabled"
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }

@@ -47,7 +47,7 @@ public class OperatorOI {
     /**
      * the center depending on aliance
      */
-    private int alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 7 : 2;
+    private int alignGoalAprilTagID = DriverStation.getAlliance().get() == Alliance.Blue ? 7 : 2;
     private AlignGoalColumn alignGoalColumn = AlignGoalColumn.kCenter;
 
     private Arm arm;
@@ -257,7 +257,7 @@ public class OperatorOI {
         Trigger dpadUpTrigger = new Trigger(() -> controller.getPOV() == 0);
         dpadUpTrigger.onTrue(new InstantCommand(() -> {
             if (bothBumpersHeld()) {
-                alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 7 : 2;
+                alignGoalAprilTagID = DriverStation.getAlliance().get() == Alliance.Blue ? 7 : 2;
             } else {
                 alignGoalColumn = AlignGoalColumn.kCenter;
             }
@@ -266,7 +266,7 @@ public class OperatorOI {
         Trigger dpadLeftTrigger = new Trigger(() -> controller.getPOV() == 270);
         dpadLeftTrigger.onTrue(new InstantCommand(() -> {
             if (bothBumpersHeld()) {
-                alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 6 : 1;
+                alignGoalAprilTagID = DriverStation.getAlliance().get() == Alliance.Blue ? 6 : 1;
             } else {
                 alignGoalColumn = AlignGoalColumn.kLeft;
             }
@@ -275,7 +275,7 @@ public class OperatorOI {
         Trigger dpadRightTrigger = new Trigger(() -> controller.getPOV() == 90);
         dpadRightTrigger.onTrue(new InstantCommand(() -> {
             if (bothBumpersHeld()) {
-                alignGoalAprilTagID = DriverStation.getAlliance() == Alliance.Blue ? 8 : 3;
+                alignGoalAprilTagID = DriverStation.getAlliance().get() == Alliance.Blue ? 8 : 3;
             } else {
                 alignGoalColumn = AlignGoalColumn.kRight;
             }

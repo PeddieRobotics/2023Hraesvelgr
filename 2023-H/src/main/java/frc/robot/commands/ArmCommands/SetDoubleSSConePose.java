@@ -1,6 +1,6 @@
 package frc.robot.commands.ArmCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
@@ -10,7 +10,7 @@ import frc.robot.utils.DriverOI;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
 
-public class SetDoubleSSConePose extends CommandBase{
+public class SetDoubleSSConePose extends Command{
     private Arm arm;
     private Shoulder shoulder;
     private Wrist wrist;

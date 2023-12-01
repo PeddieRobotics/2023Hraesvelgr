@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 /* 
  * TODO: loadPathGroup has been moved to a new function (it appears)
  * TODO: PathConstraints constructor now takes 4 params instead of 2
@@ -58,7 +60,7 @@ import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
-import frc.robot.utils.CustomAutoBuilder;
+// import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
 
@@ -75,7 +77,7 @@ public class Autonomous extends SubsystemBase{
     private HashMap<String, Command> eventMap;
 
     // Auto Builder
-    private CustomAutoBuilder autoBuilder;
+    // private CustomAutoBuilder autoBuilder;
 
     // Paths
 
@@ -137,18 +139,18 @@ public class Autonomous extends SubsystemBase{
         // eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
         // eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
 
-        autoBuilder = new CustomAutoBuilder(
-        drivetrain ::getPose, // Pose2d supplier
-        drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
-        () -> this.setFlipped(),
-        DriveConstants.kinematics, // SwerveDriveKinematics
-        new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kDTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        new PIDConstants(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController), // PID constants to correct for rotation error (used to create the rotation controller)
-            drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
-            eventMap,
-            true,
-            drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
-        );
+        // autoBuilder = new CustomAutoBuilder(
+        // drivetrain ::getPose, // Pose2d supplier
+        // drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
+        // () -> this.setFlipped(),
+        // DriveConstants.kinematics, // SwerveDriveKinematics
+        // new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kDTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        // new PIDConstants(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController), // PID constants to correct for rotation error (used to create the rotation controller)
+        //     drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
+        //     eventMap,
+        //     true,
+        //     drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
+        // );
 
         setupAutoRoutines();
 
@@ -168,20 +170,20 @@ public class Autonomous extends SubsystemBase{
     }
 
     public void resetAutoBuilderAndPaths(){
-        autoBuilder = new CustomAutoBuilder(
-            drivetrain ::getPose, // Pose2d supplier
-            drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
-            () -> this.setFlipped(),
-            DriveConstants.kinematics, // SwerveDriveKinematics
-            new PIDConstants(SmartDashboard.getNumber("auto trans p", 0.0), SmartDashboard.getNumber("auto trans i", 0.0), SmartDashboard.getNumber("auto trans d", 0.0)), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-            new PIDConstants(SmartDashboard.getNumber("auto theta p", 0.0), SmartDashboard.getNumber("auto theta i", 0.0), SmartDashboard.getNumber("auto theta d", 0.0)), // PID constants to correct for rotation error (used to create the rotation controller)
-                drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
-                eventMap,
-                true,
-                drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
-            );
+        // autoBuilder = new CustomAutoBuilder(
+        //     drivetrain ::getPose, // Pose2d supplier
+        //     drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
+        //     () -> this.setFlipped(),
+        //     DriveConstants.kinematics, // SwerveDriveKinematics
+        //     new PIDConstants(SmartDashboard.getNumber("auto trans p", 0.0), SmartDashboard.getNumber("auto trans i", 0.0), SmartDashboard.getNumber("auto trans d", 0.0)), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        //     new PIDConstants(SmartDashboard.getNumber("auto theta p", 0.0), SmartDashboard.getNumber("auto theta i", 0.0), SmartDashboard.getNumber("auto theta d", 0.0)), // PID constants to correct for rotation error (used to create the rotation controller)
+        //         drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
+        //         eventMap,
+        //         true,
+        //         drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
+        //     );
     
-            setupAutoRoutines();
+        //     setupAutoRoutines();
     }
 
     public static Autonomous getInstance(){
@@ -200,10 +202,10 @@ public class Autonomous extends SubsystemBase{
         ///*
 
         // 1 piece routines with charge station - dead reckoning / no gyro
-        autoRoutines.put("1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
+        // autoRoutines.put("1 Piece L3 Center Balance Front", autoBuilder.fullAuto(PathPlanner.loadPathGroup("HATBORO1PieceBalanceFrontCol4", 1.0, 1.0)));
 
         // 1 piece routines with charge station - GYRO
-        autoRoutines.put("GYRO 1.5 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
+        // autoRoutines.put("GYRO 1.5 Piece L3 Center Balance Back", autoBuilder.fullAuto(PathPlannerAuto.loadPathGroupFromAutoFile("SENECAGyro1PieceBalanceBackCol4", 1.25, 3.0)));
 
         // 2 piece routines without charge station
         // autoRoutines.put("Seneca Open 2 Piece L3", autoBuilder.fullAuto(PathPlanner.loadPathGroup("SENECA2PieceCol9", 2, 2)));
@@ -263,16 +265,16 @@ public class Autonomous extends SubsystemBase{
         // new PathConstraints(3, 2.5)
         // ))));
 
-        autoRoutines.put("WCMP 2 piece free (L3)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
-        new PathConstraints(3, 2.5),
-        new PathConstraints(1, 2.5),
-        new PathConstraints(1, 1),
-        new PathConstraints(3,2.5)
-        ))));
+        // autoRoutines.put("WCMP 2 piece free (L3)", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMP2Free",
+        // new PathConstraints(3, 2.5),
+        // new PathConstraints(1, 2.5),
+        // new PathConstraints(1, 1),
+        // new PathConstraints(3,2.5)
+        // ))));
 
-        autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
-        new PathConstraints(1.5, 2.75)
-        ))));
+        // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
+        // new PathConstraints(1.5, 2.75)
+        // ))));
 
         // autoRoutines.put("WCMP 2 piece bump", autoBuilder.fullAuto((PathPlanner.loadPathGroup("WCMPFridayTest",
         // new PathConstraints(1.5, 2.75),
