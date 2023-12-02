@@ -71,7 +71,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         drivetrain.resetGyro();
-        return shuffleboard.getAutonomousCommand();
+        return Autonomous.getAutonomousCommand();
     }
 
     public void resetGyro() {

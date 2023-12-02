@@ -77,7 +77,7 @@ public class Autonomous extends SubsystemBase{
     private final Arm arm;
     //private final Claw claw;
 
-    private SendableChooser<Command> autoChooser;
+    private static SendableChooser<Command> autoChooser;
 
     private HashMap<String, Command> eventMap;
 
@@ -132,27 +132,6 @@ public class Autonomous extends SubsystemBase{
 
         eventMap.put("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
         eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
-        // eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroNew(180, 1.0, 0.5), new WaitCommand(0.5), new ConditionalCommand(new RotateToAngle(180), new InstantCommand(), drivetrain::isBalanced), new LockDrivetrain()));
-        
-        // eventMap.put("ClimbCSFrontMedium", new ClimbCSGyro(0, 1.5, 0.5));//speed should be 1.0
-       
-        // eventMap.put("ClimbCSBackMedium", new ClimbCSGyro(180, 1.5, 0.5));
-
-        // eventMap.put("ClimbCSFrontFast", new ClimbCSGyro(0, 2.0, 1.0));
-        // eventMap.put("ClimbCSBackFast", new ClimbCSGyro(180, 2.0, 1.0));
-
-        // autoBuilder = new CustomAutoBuilder(
-        // drivetrain ::getPose, // Pose2d supplier
-        // drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
-        // () -> this.setFlipped(),
-        // DriveConstants.kinematics, // SwerveDriveKinematics
-        // new PIDConstants(AutoConstants.kPTranslationController, AutoConstants.kITranslationController, AutoConstants.kDTranslationController), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        // new PIDConstants(AutoConstants.kPThetaController, AutoConstants.kIThetaController, AutoConstants.kDThetaController), // PID constants to correct for rotation error (used to create the rotation controller)
-        //     drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
-        //     eventMap,
-        //     true,
-        //     drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
-        // );
 
         // TODO: tune PIDConstants
 
@@ -162,13 +141,13 @@ public class Autonomous extends SubsystemBase{
             drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                new PIDConstants(SmartDashboard.getNumber("Auto Translation P", 0), 0.0, 0.0), // Translation PID constants
+                new PIDConstants(SmartDashboard.getNumber("Auto Rotation P", 0), 0.0, 0.0), // Rotation PID constants
                 Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
                 Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
                 new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
-            this // Reference to this subsystem to set requirements
+            drivetrain // Reference to drive subsystem to set requirements
         );
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -178,34 +157,25 @@ public class Autonomous extends SubsystemBase{
 
         SmartDashboard.putBoolean("RunAutonWithoutEvents", false);
 
-        SmartDashboard.putNumber("auto trans p", AutoConstants.kPTranslationController);
-        SmartDashboard.putNumber("auto trans i", AutoConstants.kITranslationController);
-        SmartDashboard.putNumber("auto trans d", AutoConstants.kDTranslationController);
+        // SmartDashboard.putNumber("auto trans p", AutoConstants.kPTranslationController);
+        // SmartDashboard.putNumber("auto trans i", AutoConstants.kITranslationController);
+        // SmartDashboard.putNumber("auto trans d", AutoConstants.kDTranslationController);
 
-        SmartDashboard.putNumber("auto theta p", AutoConstants.kPThetaController);
-        SmartDashboard.putNumber("auto theta i", AutoConstants.kIThetaController);
-        SmartDashboard.putNumber("auto theta d", AutoConstants.kDThetaController);
+        // SmartDashboard.putNumber("auto theta p", AutoConstants.kPThetaController);
+        // SmartDashboard.putNumber("auto theta i", AutoConstants.kIThetaController);
+        // SmartDashboard.putNumber("auto theta d", AutoConstants.kDThetaController);
+
+        SmartDashboard.putNumber("Auto Translation P", AutoConstants.kPTranslationController);
+        SmartDashboard.putNumber("Auto Rotation P", AutoConstants.kPThetaController);
     }
 
     @Override
     public void periodic(){
+        SmartDashboard.putNumber("Auto Translation P", AutoConstants.kPTranslationController);
+        SmartDashboard.putNumber("Auto Rotation P", AutoConstants.kPThetaController);
     }
 
     public void resetAutoBuilderAndPaths(){
-        // autoBuilder = new CustomAutoBuilder(
-        //     drivetrain ::getPose, // Pose2d supplier
-        //     drivetrain ::resetRobotPoseAndGyro, // Pose2d consumer, used to reset odometry at the beginning of auto
-        //     () -> this.setFlipped(),
-        //     DriveConstants.kinematics, // SwerveDriveKinematics
-        //     new PIDConstants(SmartDashboard.getNumber("auto trans p", 0.0), SmartDashboard.getNumber("auto trans i", 0.0), SmartDashboard.getNumber("auto trans d", 0.0)), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        //     new PIDConstants(SmartDashboard.getNumber("auto theta p", 0.0), SmartDashboard.getNumber("auto theta i", 0.0), SmartDashboard.getNumber("auto theta d", 0.0)), // PID constants to correct for rotation error (used to create the rotation controller)
-        //         drivetrain::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
-        //         eventMap,
-        //         true,
-        //         drivetrain // The drive subsystem. Used to properly set the requirements of path following commands
-        //     );
-    
-        //     setupAutoRoutines();
     }
 
     public static Autonomous getInstance(){
@@ -229,6 +199,10 @@ public class Autonomous extends SubsystemBase{
     // Used only at the start of autonomous
     private void setFlipped(){ 
         drivetrain.setFlipped();
+    }
+
+    public static Command getAutonomousCommand() {
+        return autoChooser.getSelected();
     }
 
 }
