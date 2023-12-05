@@ -141,8 +141,8 @@ public class Autonomous extends SubsystemBase{
             drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(SmartDashboard.getNumber("Auto Translation P", 0), 0.0, 0.0), // Translation PID constants
-                new PIDConstants(SmartDashboard.getNumber("Auto Rotation P", 0), 0.0, 0.0), // Rotation PID constants
+                new PIDConstants(4, 0.0, 0.0), // Translation PID constants
+                new PIDConstants(3.5, 0.0, 0.0), // Rotation PID constants
                 Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
                 Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
                 new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -171,8 +171,8 @@ public class Autonomous extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Auto Translation P", AutoConstants.kPTranslationController);
-        SmartDashboard.putNumber("Auto Rotation P", AutoConstants.kPThetaController);
+        // SmartDashboard.putNumber("Auto Translation P", AutoConstants.kPTranslationController);
+        // SmartDashboard.putNumber("Auto Rotation P", AutoConstants.kPThetaController);
     }
 
     public void resetAutoBuilderAndPaths(){

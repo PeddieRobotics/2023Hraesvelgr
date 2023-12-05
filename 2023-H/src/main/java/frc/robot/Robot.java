@@ -54,10 +54,10 @@ public class Robot extends TimedRobot {
         robotContainer = new RobotContainer();
         
         
-        DataLogManager.logNetworkTables(false);
-        DataLogManager.start("/media/sdb1");
-        logger = Logger.getInstance();
-        DriverStation.startDataLog(DataLogManager.getLog());
+        //DataLogManager.logNetworkTables(false);
+        //DataLogManager.start("/media/sdb1");
+        //logger = Logger.getInstance();
+        //DriverStation.startDataLog(DataLogManager.getLog());
 
         shuffleboard = ShuffleboardMain.getInstance();
         if(OIConstants.kUseDebugModeLayout){
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
         LimelightFront.getInstance().setPipeline(3);
         LimelightBack.getInstance().setPipeline(0);
 
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
+        //System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -113,8 +113,8 @@ public class Robot extends TimedRobot {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
 
-        DataLogManager.log("Robot Disabled");
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
+        // DataLogManager.log("Robot Disabled");
+        // System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -136,13 +136,13 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
 
-        DataLogManager.log("Autonomous Enabled");
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
+        // DataLogManager.log("Autonomous Enabled");
+        // System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
     public void autonomousPeriodic() {
-        logger.updateLogs();
+        // logger.updateLogs();
     }
 
     @Override
@@ -163,13 +163,13 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
 
-        DataLogManager.log("Tele-op Enabled");
+        // DataLogManager.log("Tele-op Enabled");
 
         // Make sure pipelines are set correctly to the defaults
         // LimelightFront.getInstance().setPipeline(7);
         // LimelightBack.getInstance().setPipeline(0);
 
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
+        // System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
@@ -183,7 +183,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        logger.updateLogs();
+        // logger.updateLogs();
     }
 
     @Override
