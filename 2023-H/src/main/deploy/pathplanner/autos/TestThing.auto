@@ -28,6 +28,12 @@
           "data": {
             "pathName": "2m + turn2"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow"
+          }
         }
       ]
     }
