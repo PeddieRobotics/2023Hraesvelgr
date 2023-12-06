@@ -92,8 +92,6 @@ public class Autonomous extends SubsystemBase{
         arm = Arm.getInstance();
         claw = Claw.getInstance();
 
-        eventMap = new HashMap<>();
-
         NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
         NamedCommands.registerCommand("lock", new LockDrivetrain());

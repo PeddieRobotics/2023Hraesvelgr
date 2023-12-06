@@ -30,12 +30,25 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeCubePose",
+      "name": "Intake the first cube",
       "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeCubePose"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeCone"
+              }
+            }
+          ]
         }
       }
     }
