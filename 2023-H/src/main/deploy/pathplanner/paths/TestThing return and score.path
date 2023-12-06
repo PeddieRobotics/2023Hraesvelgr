@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9,
+        "x": 6.4,
         "y": 4.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
+        "x": 5.325,
         "y": 4.6
       },
       "isLocked": false
     },
     {
       "anchor": {
-        "x": 6.4,
-        "y": 4.6
+        "x": 1.9,
+        "y": 4.9
       },
       "prevControl": {
-        "x": 6.300000000000001,
-        "y": 4.6
+        "x": 2.9,
+        "y": 4.9
       },
       "nextControl": null,
       "isLocked": false
@@ -30,22 +30,16 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake the first cube",
-      "waypointRelativePos": 0.5,
+      "name": "eject",
+      "waypointRelativePos": 0.55,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
-                "name": "IntakeCubePose"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeCone"
+                "name": "L1Pose"
               }
             }
           ]
@@ -61,12 +55,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 179.9,
+    "rotation": 0.0,
     "velocity": 0
   }
 }
