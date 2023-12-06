@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /* 
@@ -93,45 +94,46 @@ public class Autonomous extends SubsystemBase{
 
         eventMap = new HashMap<>();
 
-        eventMap.put("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
-        eventMap.put("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
-        eventMap.put("lock", new LockDrivetrain());
-        eventMap.put("straighten", new StraightenDrivetrain());
+        NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
+        NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
+        NamedCommands.registerCommand("lock", new LockDrivetrain());
+        NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
 
-        eventMap.put("pidturnto0", new RotateToAngle(0));
-        eventMap.put("pidturnto180", new RotateToAngle(180));
+        NamedCommands.registerCommand("pidturnto0", new RotateToAngle(0));
+        NamedCommands.registerCommand("pidturnto180", new RotateToAngle(180));
 
-        eventMap.put("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
-        eventMap.put("CubeL2ShotPose", new SetLevelTwoCubeShot());
+        NamedCommands.registerCommand("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
+        NamedCommands.registerCommand("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
-        eventMap.put("L1Pose", new SetLevelOnePose());
+        NamedCommands.registerCommand("L1Pose", new SetLevelOnePose());
 
-        eventMap.put("IntakeCone", new IntakeFloorCone());
-        eventMap.put("IntakeCube", new IntakeFloorCube());
+        NamedCommands.registerCommand("IntakeCone", new IntakeFloorCone());
+        NamedCommands.registerCommand("IntakeCube", new IntakeFloorCube());
 
-        eventMap.put("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
+        NamedCommands.registerCommand("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
 
-        eventMap.put("CubeL2Pose", new SetLevelTwoCubePose());
-        eventMap.put("OverBridgePose", new SetTravelOverBridgePoseInAuto());
+        NamedCommands.registerCommand("CubeL2Pose", new SetLevelTwoCubePose());
+        NamedCommands.registerCommand("OverBridgePose", new SetTravelOverBridgePoseInAuto());
 
-        eventMap.put("CubeL3Pose", new SetLevelThreeCubeForwardPose());
-        eventMap.put("ConeL3Pose", new SetLevelThreeConeInvertedPose());
+        NamedCommands.registerCommand("CubeL3Pose", new SetLevelThreeCubeForwardPose());
+        NamedCommands.registerCommand("ConeL3Pose", new SetLevelThreeConeInvertedPose());
 
-        eventMap.put("PreScorePose", new SetPreScorePose());
-        eventMap.put("PreScorePoseWristDown", new SetPreScorePoseWristDown());
+        NamedCommands.registerCommand("PreScorePose", new SetPreScorePose());
+        NamedCommands.registerCommand("PreScorePoseWristDown", new SetPreScorePoseWristDown());
 
-        eventMap.put("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
-        eventMap.put("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
+        NamedCommands.registerCommand("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
+        NamedCommands.registerCommand("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
 
-        eventMap.put("IntakeConePose", new SetExtendedFloorConePose());
-        eventMap.put("IntakeCubePose", new SetExtendedFloorCubePoseOld());
-        eventMap.put("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
-        eventMap.put("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
-        eventMap.put("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
-        eventMap.put("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
+        NamedCommands.registerCommand("IntakeConePose", new SetExtendedFloorConePose());
+        NamedCommands.registerCommand("IntakeCubePose", new SetExtendedFloorCubePoseOld());
+        NamedCommands.registerCommand("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
+        NamedCommands.registerCommand("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
+        NamedCommands.registerCommand("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
+        NamedCommands.registerCommand("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
 
-        eventMap.put("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
-        eventMap.put("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
+        NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
+
+        NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
         // TODO: tune PIDConstants
 
@@ -141,8 +143,8 @@ public class Autonomous extends SubsystemBase{
             drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(4, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(3.5, 0.0, 0.0), // Rotation PID constants
+                new PIDConstants(6, 0.0, 0.0), // Translation PID constants
+                new PIDConstants(4.5, 0.0, 0.0), // Rotation PID constants
                 Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
                 Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
                 new ReplanningConfig() // Default path replanning config. See the API for the options here

@@ -1,0 +1,42 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 4.0,
+      "y": 4.0
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "L1Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "eject"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1m Back"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null
+}
