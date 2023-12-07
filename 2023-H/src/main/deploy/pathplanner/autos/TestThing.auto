@@ -26,25 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TestThing pickup movement"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stow"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TestThing return and score"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "eject"
+            "pathName": "2m + turn2"
           }
         },
         {
