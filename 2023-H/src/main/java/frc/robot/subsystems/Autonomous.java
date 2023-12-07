@@ -133,6 +133,8 @@ public class Autonomous extends SubsystemBase{
 
         NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
+        NamedCommands.registerCommand("TranslateRotate", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
+
         // TODO: tune PIDConstants
 
         AutoBuilder.configureHolonomic(
