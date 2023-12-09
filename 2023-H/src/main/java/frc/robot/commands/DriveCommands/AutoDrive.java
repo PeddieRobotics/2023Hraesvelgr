@@ -10,7 +10,6 @@ import frc.robot.utils.DriverOI.DPadDirection;
 
 public class AutoDrive extends Command {
   private Drivetrain drivetrain = Drivetrain.getInstance();
-  private DriverOI driverOI = DriverOI.getInstance();
   private Translation2d Translation;
   private double Rotation;
 

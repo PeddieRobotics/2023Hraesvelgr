@@ -3,35 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.4,
-        "y": 4.5
+        "x": 1.9,
+        "y": 4.9
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.325,
-        "y": 4.5
+        "x": 4.9,
+        "y": 4.9
       },
       "isLocked": false
     },
     {
       "anchor": {
-        "x": 1.9,
-        "y": 4.9
+        "x": 6.9206637399076,
+        "y": 3.5203233895311614
       },
       "prevControl": {
-        "x": 2.9,
-        "y": 4.9
+        "x": 5.521801009285053,
+        "y": 4.653100093420869
       },
       "nextControl": null,
       "isLocked": false
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "eject",
-      "waypointRelativePos": 0.55,
+      "name": "intake",
+      "waypointRelativePos": 0.35,
       "command": {
         "type": "sequential",
         "data": {
@@ -39,7 +44,13 @@
             {
               "type": "named",
               "data": {
-                "name": "L1Pose"
+                "name": "IntakeCubePose"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeCone"
               }
             }
           ]
@@ -50,17 +61,17 @@
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 1.0,
-    "maxAngularVelocity": 80.0,
-    "maxAngularAcceleration": 100.0
+    "maxAngularVelocity": 120.0,
+    "maxAngularAcceleration": 90.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -39.0
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0.0,
+    "rotation": 180.0,
     "velocity": 0
   }
 }
