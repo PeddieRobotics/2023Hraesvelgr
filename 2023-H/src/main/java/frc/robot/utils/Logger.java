@@ -11,6 +11,7 @@ import edu.wpi.first.util.datalog.RawLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
@@ -30,9 +31,10 @@ public class Logger {
   private BooleanLogEntry booleanLog1, booleanLog2;
   private DoubleLogEntry gyroAngleEntry, wheelSpeedEntry, shoulderAngleEntry, wristAngleEntry, clawSpeedEntry,
    clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry;
-  private StringLogEntry stringLog1;
+  private StringLogEntry stringLog1, checkCommands;
   private DataLogEntry dataLog1;
   private DoubleArrayLogEntry fieldPositionEntry;
+  private CommandScheduler command;
 
   public Logger(){
     //Setup Subsystems
@@ -42,6 +44,8 @@ public class Logger {
     shoulder = Shoulder.getInstance();
     wrist = Wrist.getInstance();
     claw = Claw.getInstance();
+    command = CommandScheduler.getInstance();
+
 
     //Double Logs
     gyroAngleEntry = new DoubleLogEntry(log, "/Drivetrain/Gyro Angle");
@@ -54,9 +58,14 @@ public class Logger {
     wristCurrentEntry = new DoubleLogEntry(log, "/Wrist/Wrist Current");
     fieldPosition = drivetrain.getPose();
     fieldPositionEntry = new DoubleArrayLogEntry(log, "/Field/Position");
+    checkCommands = new StringLogEntry(log, "/Field/Commands");
 
     //Boolean Logs
 
+  }
+
+  public void logCommands(String command, boolean isStarted){
+    checkCommands.append(command + (isStarted ? " started" : " ended"));
   }
 
   public void updateLogs(){
@@ -82,6 +91,8 @@ public class Logger {
     //Claw
     clawSpeedEntry.append(claw.getClawSpeed());
     clawCurrentEntry.append(claw.getOutputCurrent());
+
+    //checkCommands.append()
   }
 
   public static Logger getInstance() {
