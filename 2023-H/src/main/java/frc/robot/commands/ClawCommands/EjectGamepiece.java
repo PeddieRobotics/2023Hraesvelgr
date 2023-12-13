@@ -6,13 +6,16 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
+//import frc.robot.utils.Logger;
 
 public class EjectGamepiece extends Command{
     private Claw claw;
     private double initialTime, currentTime;
+    //private Logger logger;
 
     public EjectGamepiece(){
         claw = Claw.getInstance();
+        //logger = Logger.getInstance();
 
         addRequirements(claw);
 
@@ -28,6 +31,8 @@ public class EjectGamepiece extends Command{
         } else {
             claw.outtakeCube();
         }
+
+        //logger.logCommand("Eject Gampiece", true);
 
     }
 
@@ -48,6 +53,8 @@ public class EjectGamepiece extends Command{
         claw.setGamepieceOperatorOverride(false);
         claw.classifyGamepiece();
         claw.setCurrentAlignmentDistance(0.0);
+
+        //logger.logCommand("Eject Gamepiece", false);
     }
 
     @Override

@@ -34,7 +34,6 @@ public class Logger {
   private StringLogEntry stringLog1, checkCommands;
   private DataLogEntry dataLog1;
   private DoubleArrayLogEntry fieldPositionEntry;
-  private CommandScheduler command;
 
   public Logger(){
     //Setup Subsystems
@@ -44,7 +43,6 @@ public class Logger {
     shoulder = Shoulder.getInstance();
     wrist = Wrist.getInstance();
     claw = Claw.getInstance();
-    command = CommandScheduler.getInstance();
 
 
     //Double Logs
@@ -64,7 +62,7 @@ public class Logger {
 
   }
 
-  public void logCommands(String command, boolean isStarted){
+  public void logCommand(String command, boolean isStarted){
     checkCommands.append(command + (isStarted ? " started" : " ended"));
   }
 
@@ -93,6 +91,7 @@ public class Logger {
     clawCurrentEntry.append(claw.getOutputCurrent());
 
     //checkCommands.append()
+    //logCommand("hi", true);
   }
 
   public static Logger getInstance() {
