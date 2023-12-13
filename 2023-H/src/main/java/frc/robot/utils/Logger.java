@@ -10,6 +10,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.RawLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Claw;
@@ -31,9 +32,10 @@ public class Logger {
   private BooleanLogEntry booleanLog1, booleanLog2;
   private DoubleLogEntry gyroAngleEntry, wheelSpeedEntry, shoulderAngleEntry, wristAngleEntry, clawSpeedEntry,
    clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry;
-  private StringLogEntry stringLog1, checkCommands;
+  private StringLogEntry stringLog1, eventsEntry;
   private DataLogEntry dataLog1;
   private DoubleArrayLogEntry fieldPositionEntry;
+  private double lastTeleopEnable;
 
   public Logger(){
     //Setup Subsystems
@@ -56,17 +58,26 @@ public class Logger {
     wristCurrentEntry = new DoubleLogEntry(log, "/Wrist/Wrist Current");
     fieldPosition = drivetrain.getPose();
     fieldPositionEntry = new DoubleArrayLogEntry(log, "/Field/Position");
-    checkCommands = new StringLogEntry(log, "/Field/Commands");
+    eventsEntry = new StringLogEntry(log, "/Events");
 
     //Boolean Logs
 
   }
 
-  public void logCommand(String command, boolean isStarted){
-    checkCommands.append(command + (isStarted ? " started" : " ended"));
+  public void logEvent(String event, boolean isStarted){
+    double enableTimeDelta = Timer.getFPGATimestamp();
+    long DeltaMicroseconds = Double.valueOf(1000000 * enableTimeDelta).longValue();
+    eventsEntry.append(event + (isStarted ? " started" : " ended"), DeltaMicroseconds);
+  }
+
+  public void signalRobotEnable(){
+    lastTeleopEnable = Timer.getFPGATimestamp();
   }
 
   public void updateLogs(){
+    double enableTimeDelta = Timer.getFPGATimestamp();
+    long DeltaMicroseconds = Double.valueOf(1000000 * enableTimeDelta).longValue();
+
     //Field Pose
     fieldPosition = drivetrain.getPose();
     double[] pose = {fieldPosition.getX(),fieldPosition.getY(),drivetrain.getHeading()}; 

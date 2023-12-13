@@ -6,7 +6,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
-//import frc.robot.utils.Logger;
+import frc.robot.utils.Logger;
 
 public class EjectGamepiece extends Command{
     private Claw claw;

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Claw.ClawState;
-//import frc.robot.utils.Logger;
+import frc.robot.utils.Logger;
 import frc.robot.utils.Constants.ClawConstants;
 
 public class IntakeFloorCube extends Command{
@@ -14,7 +14,6 @@ public class IntakeFloorCube extends Command{
     private Claw claw;
     private double initialTime, currentTime;
     private boolean hasCone, hasCube;
-    //private Logger logger;
 
     public IntakeFloorCube(){
         blinkin = Blinkin.getInstance();
@@ -23,7 +22,6 @@ public class IntakeFloorCube extends Command{
 
         initialTime = 0.0;
         currentTime = 0.0;
-        //logger = Logger.getInstance();
     }
 
     @Override
@@ -35,7 +33,7 @@ public class IntakeFloorCube extends Command{
         claw.intakeCube();
         claw.startMonitoringCurrent();
 
-        //logger.logCommand("Intake Floor Cube", true);
+        Logger.getInstance().logEvent("Intake Floor Cube", true);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class IntakeFloorCube extends Command{
             Blinkin.getInstance().success();
         }
 
-        //logger.logCommand("Intake Floor Cone", false);
+        Logger.getInstance().logEvent("Intake Floor Cone", false);
     }
 
     @Override

@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
 
-        DataLogManager.log("Robot Disabled");
+        logger.logEvent("Disabled mode", true);
         System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
 
-        DataLogManager.log("Autonomous Enabled");
+        logger.logEvent("Autonomous mode", true);
         System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
@@ -163,7 +163,8 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
 
-        DataLogManager.log("Tele-op Enabled");
+        logger.logEvent("Tele-op mode", true);
+        logger.signalRobotEnable();
 
         // Make sure pipelines are set correctly to the defaults
         // LimelightFront.getInstance().setPipeline(7);
