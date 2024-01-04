@@ -65,9 +65,7 @@ public class Logger {
   }
 
   public void logEvent(String event, boolean isStarted){
-    double enableTimeDelta = Timer.getFPGATimestamp();
-    long DeltaMicroseconds = Double.valueOf(1000000 * enableTimeDelta).longValue();
-    eventsEntry.append(event + (isStarted ? " started" : " ended"), DeltaMicroseconds);
+    eventsEntry.append(event + (isStarted ? " started" : " ended"));
   }
 
   public void signalRobotEnable(){
@@ -75,9 +73,6 @@ public class Logger {
   }
 
   public void updateLogs(){
-    double enableTimeDelta = Timer.getFPGATimestamp();
-    long DeltaMicroseconds = Double.valueOf(1000000 * enableTimeDelta).longValue();
-
     //Field Pose
     fieldPosition = drivetrain.getPose();
     double[] pose = {fieldPosition.getX(),fieldPosition.getY(),drivetrain.getHeading()}; 
