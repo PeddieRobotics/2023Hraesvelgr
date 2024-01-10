@@ -2,12 +2,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
@@ -26,7 +27,7 @@ public class Wrist {
     private RollingAverage currentAverage;
     private boolean monitorCurrent;
 
-    private SparkMaxPIDController pidController;
+    private SparkPIDController pidController;
 
     private ArmFeedforward wristFeedforward;
 
@@ -93,7 +94,7 @@ public class Wrist {
         // Keep track of the current setpoint for any position PID controllers (regular or SmartMotion by proxy)
         currentPIDSetpointAngle = WristConstants.kHomeAngle;
 
-        wristEncoder = wristMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        wristEncoder = wristMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         wristEncoder.setPositionConversionFactor(WristConstants.kAbsoluteEncoderConversionFactor);
         wristEncoder.setInverted(true);
         wristEncoder.setZeroOffset(WristConstants.kAbsoluteEncoderZeroOffset);

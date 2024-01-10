@@ -140,20 +140,20 @@ public class Autonomous extends SubsystemBase{
 
         // TODO: tune PIDConstants
 
-        AutoBuilder.configureHolonomic(
-            drivetrain::getPose, // Robot pose supplier
-            drivetrain::resetRobotPoseAndGyro, // Method to reset odometry (will be called if your auto has a starting pose)
-            drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                new PIDConstants(6, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(4.5, 0.0, 0.0), // Rotation PID constants
-                Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
-                Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
-                new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            drivetrain // Reference to drive subsystem to set requirements
-        );
+        // AutoBuilder.configureHolonomic(
+        //     drivetrain::getPose, // Robot pose supplier
+        //     drivetrain::resetRobotPoseAndGyro, // Method to reset odometry (will be called if your auto has a starting pose)
+        //     drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        //     drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        //         new PIDConstants(6, 0.0, 0.0), // Translation PID constants
+        //         new PIDConstants(4.5, 0.0, 0.0), // Rotation PID constants
+        //         Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
+        //         Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
+        //         new ReplanningConfig() // Default path replanning config. See the API for the options here
+        //     ),
+        //     drivetrain // Reference to drive subsystem to set requirements
+        // );
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
