@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.util.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -87,22 +87,22 @@ public class Claw extends SubsystemBase {
 
         normalizingCone = false;
 
-         // Linear interpolation calibrated points for cube alignment
-        cubeAlignmentTable = new InterpolatingTreeMap<>();
-        cubeAlignmentTable.put(-13.26, -9.93); // Left calibration point
-        cubeAlignmentTable.put(8.46, 1.67); // Right calibration point
+        //  // Linear interpolation calibrated points for cube alignment
+        // cubeAlignmentTable = new InterpolatingTreeMap<>();
+        // cubeAlignmentTable.put(-13.26, -9.93); // Left calibration point
+        // cubeAlignmentTable.put(8.46, 1.67); // Right calibration point
 
-        // Linear interpolation calibrated points for L2 cone alignment
-        coneL2AlignmentTable = new InterpolatingTreeMap<>();
-        coneL2AlignmentTable.put(-14.76, -7.65); // Left calibration point
-        coneL2AlignmentTable.put(9.65, 0.55); // Right calibration point
-        coneL2AlignmentTable.put(-3.57,-3.07); // Center calibration point
+        // // Linear interpolation calibrated points for L2 cone alignment
+        // coneL2AlignmentTable = new InterpolatingTreeMap<>();
+        // coneL2AlignmentTable.put(-14.76, -7.65); // Left calibration point
+        // coneL2AlignmentTable.put(9.65, 0.55); // Right calibration point
+        // coneL2AlignmentTable.put(-3.57,-3.07); // Center calibration point
 
-        // Linear interpolation calibrated points for L3 cone alignment
-        coneL3AlignmentTable = new InterpolatingTreeMap<>();
-        coneL3AlignmentTable.put(-16.44, 3.92); // Left calibration point ******
-        coneL3AlignmentTable.put(9.83, -1.76); // Right calibration point
-        coneL3AlignmentTable.put(-2.75,-1.04); // Center calibration point
+        // // Linear interpolation calibrated points for L3 cone alignment
+        // coneL3AlignmentTable = new InterpolatingTreeMap<>();
+        // coneL3AlignmentTable.put(-16.44, 3.92); // Left calibration point ******
+        // coneL3AlignmentTable.put(9.83, -1.76); // Right calibration point
+        // coneL3AlignmentTable.put(-2.75,-1.04); // Center calibration point
     
         /*
          * Seneca/DCMP values for calibration below

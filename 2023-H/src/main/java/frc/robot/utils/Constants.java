@@ -6,7 +6,7 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
