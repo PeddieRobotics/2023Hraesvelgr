@@ -87,7 +87,7 @@ public class Superstructure extends SubsystemBase {
                     nextSystemState = requestedSystemState;
                 } else if(requestedSystemState == SuperstructureState.EJECT_L1){
                     nextSystemState = requestedSystemState;
-                } else if(claw.hasGamepiece()){
+                } else if(claw.isEitherSensor()){
                     nextSystemState = SuperstructureState.STOWED;
                 }
                 break;
@@ -101,7 +101,7 @@ public class Superstructure extends SubsystemBase {
                     nextSystemState = requestedSystemState;
                 } else if(requestedSystemState == SuperstructureState.EJECT_L1){
                     nextSystemState = requestedSystemState;
-                } else if(claw.hasGamepiece()){
+                } else if(claw.isBothSensors()){
                     nextSystemState = SuperstructureState.STOWED;
                 }
                 break;
