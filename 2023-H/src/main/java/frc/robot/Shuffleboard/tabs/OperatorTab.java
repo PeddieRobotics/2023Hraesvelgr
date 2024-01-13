@@ -22,7 +22,7 @@ public class OperatorTab extends ShuffleboardTabBase {
     private Claw claw = Claw.getInstance();
     private Wrist wrist = Wrist.getInstance();
     private Shoulder shoulder = Shoulder.getInstance();
-    private Autonomous autonomous = Autonomous.getInstance();
+    //private Autonomous autonomous = Autonomous.getInstance();
     private OperatorOI operatorOI = OperatorOI.getInstance();
 
     private FieldView fieldView;

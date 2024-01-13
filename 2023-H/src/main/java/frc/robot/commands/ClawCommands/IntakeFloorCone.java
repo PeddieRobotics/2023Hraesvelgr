@@ -36,7 +36,7 @@ public class IntakeFloorCone extends Command{
         claw.intakeCone();
         blinkinSuccess = false;
 
-        Logger.getInstance().logEvent("Intake Floor Cone", true);
+        //Logger.getInstance().logEvent("Intake Floor Cone", true);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class IntakeFloorCone extends Command{
     @Override
     public void end(boolean interrupted) {
         claw.classifyGamepiece();
-        Logger.getInstance().logEvent("Intake Floor Cone", false);
+        //Logger.getInstance().logEvent("Intake Floor Cone", false);
     }
 
     @Override

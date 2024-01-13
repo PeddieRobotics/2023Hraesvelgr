@@ -33,7 +33,7 @@ public class IntakeFloorCube extends Command{
         claw.intakeCube();
         claw.startMonitoringCurrent();
 
-        Logger.getInstance().logEvent("Intake Floor Cube", true);
+        //Logger.getInstance().logEvent("Intake Floor Cube", true);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class IntakeFloorCube extends Command{
             Blinkin.getInstance().success();
         }
 
-        Logger.getInstance().logEvent("Intake Floor Cone", false);
+        //Logger.getInstance().logEvent("Intake Floor Cone", false);
     }
 
     @Override

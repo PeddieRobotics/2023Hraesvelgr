@@ -45,6 +45,8 @@ import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.OIConstants;
 
@@ -55,7 +57,8 @@ public class DriverOI {
     private final Claw claw;
     private final Arm arm;
     private final Blinkin blinkin;
-    private final Autonomous autonomous;
+    //private final Autonomous autonomous;
+    private final Superstructure superstructure;
 
     private final PS4Controller controller = new PS4Controller(0);
 
@@ -67,6 +70,8 @@ public class DriverOI {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+
+    private Trigger leftBumperButton, rightBumperButton, muteButton;
 
     private boolean returnL3ConeInvertedToPreScore;
     private boolean returnForwardL2L3ScoringPosesToPreScore;
@@ -86,7 +91,8 @@ public class DriverOI {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
-        autonomous = Autonomous.getInstance();
+        //autonomous = Autonomous.getInstance();
+        superstructure = Superstructure.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 
@@ -97,128 +103,53 @@ public class DriverOI {
 
     }
 
+    public void controlLoop(){
+        if(leftBumperButton.getAsBoolean()){
+            if(claw.hasGamepiece()) superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
+            else superstructure.requestState(SuperstructureState.CUBE_INTAKE_GROUND);
+        } else if(rightBumperButton.getAsBoolean()){
+            if(claw.hasGamepiece()) superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
+            else superstructure.requestState(SuperstructureState.CONE_INTAKE_GROUND);
+        } else if(muteButton.getAsBoolean()){
+            superstructure.requestState(SuperstructureState.STOWED);
+        }
+    }
+
     public void configureController() {
 
         // Cone intake/eject gamepiece
-        Trigger leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        leftBumperButton.onTrue(new ConditionalCommand(
-            /*
-             * If we're in a valid ejection pose, eject, and then if we're L3 inverted, un-invert.
-             * NOTE: If we are not yet in a scoring pose and a goal scoring pose has been set, this moves immediately
-             * to the goal pose, bypassing auto-align.
-             * When we un-invert, either go to the pre-score score pose or stow, depending on the loaded setting.
-             * Or, if we are L1 pose, stow automatically.
-             * Otherwise do nothing.
-             */
-            new SequentialCommandGroup(new InstantCommand(() -> arm.moveToScoringPose()), new EjectGamepiece(),
-                new ConditionalCommand(
-                    // Either return to pre-score or stow from L3 cone inverted
-                    new ConditionalCommand(new SetPreScorePoseL3Return(),
-                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                        this::isReturnL3ConeInvertedToPreScore),
-                        // If we're in L1, just stow.
-                    new ConditionalCommand(new SetStowedPose(),
-                        // If we're not in L3 cone inverted or L1, check if we're in any other forward scoring pose.
-                        // Depending on the settings, either go to pre-score or do nothing
-                        new ConditionalCommand(new ConditionalCommand(new SetPreScorePose(), new InstantCommand(), arm::isL2L3ForwardScoringPose),
-                            new InstantCommand(),
-                            this::isReturnForwardL2L3ScoringPosesToPreScore),
-                        arm::isL1Pose),
-                    arm::isInvertedL3)),
-            /*
-             * If we are not in a valid ejection pose, then we should do floor cone intake, and stow when we have
-             * a gamepiece.
-             */
-            new SequentialCommandGroup(new ParallelRaceGroup(new SetExtendedFloorConePose(), new IntakeFloorCone()),
-                new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
-            arm::isValidEjectPose));
+         leftBumperButton = new JoystickButton(controller, PS4Controller.Button.kL1.value);
 
         // Cube intake/eject gamepiece
-        Trigger rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
-        rightBumperButton.onTrue(new ConditionalCommand(
-            /*
-             * If we're in a valid ejection pose, eject, and then if we're L3 inverted, un-invert and stow.
-             * NOTE: If we are not yet in a scoring pose and a goal scoring pose has been set, this moves immediately
-             * to the goal pose, bypassing auto-align.
-             * When we un-invert, either go to the pre-score score pose or stow, depending on the loaded setting.
-             * Or, if we are L1 pose, stow automatically.
-             * Otherwise do nothing.
-             */
-            new SequentialCommandGroup(new InstantCommand(() -> arm.moveToScoringPose()), new EjectGamepiece(),
-                new ConditionalCommand(
-                    // Either return to pre-score or stow from L3 cone inverted
-                    new ConditionalCommand(new SetPreScorePoseL3Return(),
-                        new SequentialCommandGroup(new SetTransitoryPoseL3Return(), new SetStowedPose()),
-                        this::isReturnL3ConeInvertedToPreScore),
-                        // If we're in L1, just stow.
-                    new ConditionalCommand(new SetStowedPose(),
-                        // If we're not in L3 cone inverted or L1, check if we're in any other forward scoring pose.
-                        // Depending on the settings, either go to pre-score or do nothing
-                        new ConditionalCommand(new ConditionalCommand(new SetPreScorePose(), new InstantCommand(), arm::isL2L3ForwardScoringPose),
-                            new InstantCommand(),
-                            this::isReturnForwardL2L3ScoringPosesToPreScore),
-                        arm::isL1Pose),
-                    arm::isInvertedL3)),
-            /*
-             * If we are not in a valid ejection pose, then we should do floor cube intake, and stow when we have
-             * a gamepiece.
-             */
-            new SequentialCommandGroup(new ConditionalCommand(new ParallelCommandGroup(new SetExtendedFloorCubePose(), new IntakeFloorCube()), new ParallelCommandGroup(new SetExtendedFloorCubePoseOld(), new IntakeFloorCube()), arm::canNewIntake), new ParallelCommandGroup(new SetStowedPose(), new ConditionalCommand(new NormalizeConeAfterIntake(), new InstantCommand(), claw::hasCone))),
-            arm::isValidEjectPose));
+         rightBumperButton = new JoystickButton(controller, PS4Controller.Button.kR1.value);
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose
-        Trigger muteButton = new JoystickButton(controller, 15);
-        muteButton.onTrue(new SetStowedPose());
+         muteButton = new JoystickButton(controller, 15);
 
         // Auto-align to score, or to single substation
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.whileTrue(
-            new ConditionalCommand(
-                /*
-                 * If we have a gamepiece, perform auto-align to score.
-                 * Also: transition from pre-score pose to scoring pose if needed.
-                 */
-                new ConditionalCommand(new ParallelCommandGroup(new ScoreAlign(),
-                    new ConditionalCommand(new InstantCommand(() -> {arm.moveToScoringPose();}), new InstantCommand(), arm::isPreScorePose)),
-                new InstantCommand(() -> {blinkin.failure();}),
-                arm::isAutoAlignValid),
-                /*
-                 * If we do not have a gamepiece, perform auto-align to the single substation,
-                 * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
-                 */
-                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
-            claw::hasGamepiece));
 
         // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
-        rightStickButton.toggleOnTrue(new LockDrivetrain());
 
         // Left stick button, unused
         Trigger leftStickButton = new JoystickButton(controller, PS4Controller.Button.kL3.value);
 
         // Back button (Touchpad button on front), snaps robot to goal heading
         Trigger touchpadButton = new JoystickButton(controller, PS4Controller.Button.kTouchpad.value);
-        touchpadButton.onTrue(new ConditionalCommand(new InstantCommand(),
-            new ConditionalCommand(new RotateToAngleWhileDriving(180), new RotateToAngleWhileDriving(0),
-                drivetrain::getFlipped),
-            arm::isUnsafeSnapPose));
 
         // Slow Mode
         // Back button (Option button on front)
         Trigger optionsButton = new JoystickButton(controller, PS4Controller.Button.kOptions.value);
-        optionsButton.onTrue(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.SLOW))).onFalse(new InstantCommand(() -> setDriveSpeedMode(DriveSpeedMode.NORMAL)));
 
         // Share button unused
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);

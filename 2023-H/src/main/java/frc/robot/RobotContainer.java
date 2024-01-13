@@ -20,6 +20,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.OperatorOI;
 
@@ -29,10 +30,11 @@ public class RobotContainer {
     private final Claw claw;
     private final Arm arm;
     private final Blinkin blinkin;
+    private final Superstructure superstructure;
 
     private final OperatorOI operatorOI;
     private final DriverOI driverOI;
-    private final Autonomous autonomous;
+    //private final Autonomous autonomous;
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
 
@@ -55,9 +57,10 @@ public class RobotContainer {
 
         arm = Arm.getInstance();
         claw = Claw.getInstance();
+        superstructure = Superstructure.getInstance();
 
         blinkin = Blinkin.getInstance();
-        autonomous = Autonomous.getInstance();
+        //autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
@@ -104,6 +107,11 @@ public class RobotContainer {
 
     public void setRanAutonomousRoutine(boolean ranAutonomousRoutine) {
         this.ranAutonomousRoutine = ranAutonomousRoutine;
+    }
+
+    public void controlLoop(){
+        driverOI.controlLoop();
+        operatorOI.controlLoop();
     }
 
 }

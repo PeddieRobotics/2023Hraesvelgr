@@ -16,11 +16,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Wrist;
 
 public class Logger {
   private static Logger logger;
   private DataLog log = DataLogManager.getLog();
+  private Superstructure superstructure;
   private Drivetrain drivetrain;
   private DriverOI driverOI;
   private OperatorOI operatorOI;
@@ -32,7 +34,7 @@ public class Logger {
   private BooleanLogEntry booleanLog1, booleanLog2;
   private DoubleLogEntry gyroAngleEntry, wheelSpeedEntry, shoulderAngleEntry, wristAngleEntry, clawSpeedEntry,
    clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry;
-  private StringLogEntry stringLog1, eventsEntry;
+  private StringLogEntry stringLog1, eventsEntry, robotStateEntry;
   private DataLogEntry dataLog1;
   private DoubleArrayLogEntry fieldPositionEntry;
   private double lastTeleopEnable;
@@ -45,6 +47,7 @@ public class Logger {
     shoulder = Shoulder.getInstance();
     wrist = Wrist.getInstance();
     claw = Claw.getInstance();
+    superstructure = Superstructure.getInstance();
 
 
     //Double Logs
@@ -59,13 +62,14 @@ public class Logger {
     fieldPosition = drivetrain.getPose();
     fieldPositionEntry = new DoubleArrayLogEntry(log, "/Field/Position");
     eventsEntry = new StringLogEntry(log, "/Events");
+    robotStateEntry = new StringLogEntry(log, "/Superstructure/RobotStates");
 
     //Boolean Logs
 
   }
 
-  public void logEvent(String event, boolean isStarted){
-    eventsEntry.append(event + (isStarted ? " started" : " ended"));
+  public void logEvent(String event){
+    eventsEntry.append(event);
   }
 
   public void signalRobotEnable(){
@@ -95,6 +99,9 @@ public class Logger {
     //Claw
     clawSpeedEntry.append(claw.getClawSpeed());
     clawCurrentEntry.append(claw.getOutputCurrent());
+
+    //log robot state state
+    robotStateEntry.append((superstructure.getRobotState()!=null||!superstructure.getRobotState().equals("") ? superstructure.getRobotState() : "BAD"));
 
     //checkCommands.append()
     //logCommand("hi", true);

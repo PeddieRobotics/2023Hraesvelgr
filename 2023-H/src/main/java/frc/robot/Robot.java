@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
         
         
         DataLogManager.logNetworkTables(false);
-        DataLogManager.start("/media/sda2");
+        DataLogManager.start("/media/sda1");
         logger = Logger.getInstance();
         DriverStation.startDataLog(DataLogManager.getLog());
 
@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
         robotContainer.setArmMode(IdleMode.kCoast);
         robotContainer.setWristMode(IdleMode.kCoast);
 
-        logger.logEvent("Disabled mode", true);
+        logger.logEvent("Disabled mode started");
         System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
 
-        logger.logEvent("Autonomous mode", true);
+        logger.logEvent("Autonomous mode started");
         System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
 
-        logger.logEvent("Tele-op mode", true);
+        logger.logEvent("Tele-op mode started");
         logger.signalRobotEnable();
 
         // Make sure pipelines are set correctly to the defaults
@@ -171,6 +171,7 @@ public class Robot extends TimedRobot {
         // LimelightBack.getInstance().setPipeline(0);
 
         System.out.println("LOGGING: " + DataLogManager.getLogDir());
+
     }
 
     @Override
@@ -185,6 +186,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         logger.updateLogs();
+        robotContainer.controlLoop();
     }
 
     @Override
