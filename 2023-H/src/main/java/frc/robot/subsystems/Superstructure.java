@@ -79,6 +79,10 @@ public class Superstructure extends SubsystemBase {
                 break;
 
             case CUBE_INTAKE_GROUND:
+                if(claw.isEitherSensor()){
+                    nextSystemState = SuperstructureState.STOWED;
+                    break;
+                }
                 arm.setWristPosition(Constants.WristConstants.kExtendedFloorCubeAngle);
                 arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kExtendedFloorCubeAngle, SmartMotionArmSpeed.REGULAR);
                 claw.setSpeed(-1);
@@ -87,9 +91,7 @@ public class Superstructure extends SubsystemBase {
                     nextSystemState = requestedSystemState;
                 } else if(requestedSystemState == SuperstructureState.EJECT_L1){
                     nextSystemState = requestedSystemState;
-                } else if(claw.isEitherSensor()){
-                    nextSystemState = SuperstructureState.STOWED;
-                }
+                } 
                 break;
 
             case CONE_INTAKE_GROUND:

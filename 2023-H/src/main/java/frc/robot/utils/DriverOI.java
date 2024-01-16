@@ -105,11 +105,18 @@ public class DriverOI {
 
     public void controlLoop(){
         if(leftBumperButton.getAsBoolean()){
-            if(claw.isEitherSensor()) superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
-            else superstructure.requestState(SuperstructureState.CUBE_INTAKE_GROUND);
+            if(claw.isEitherSensor()){
+                superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
+            } else {
+                superstructure.requestState(SuperstructureState.CUBE_INTAKE_GROUND);
+            }
         } else if(rightBumperButton.getAsBoolean()){
-            if(claw.isBothSensors()) superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
-            else superstructure.requestState(SuperstructureState.CONE_INTAKE_GROUND);
+            if(claw.isBothSensors()) {
+                superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);
+            }
+            else {
+                superstructure.requestState(SuperstructureState.CONE_INTAKE_GROUND);
+            }
         } else if(muteButton.getAsBoolean()){
             superstructure.requestState(SuperstructureState.STOWED);
         }
