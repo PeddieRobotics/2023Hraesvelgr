@@ -155,7 +155,11 @@ public class Autonomous extends SubsystemBase{
                 new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
-                return true;
+                var alliance = DriverStation.getAlliance();
+                if(alliance.isPresent()){
+                    return alliance.get()==DriverStation.Alliance.Red;
+                }
+                return false;
             },
             drivetrain // Reference to drive subsystem to set requirements
         );
