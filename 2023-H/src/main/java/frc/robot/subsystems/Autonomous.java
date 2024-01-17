@@ -36,30 +36,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAuto;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLessLower;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubeInAutoLower;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOldAutonL3;
-import frc.robot.commands.ArmCommands.SetLevelOnePose;
-import frc.robot.commands.ArmCommands.SetTransitoryPoseL3ReturnInAuto;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeConePoseInAuto;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubeInvertedPoseInAuto;
-import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
-import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
-import frc.robot.commands.ArmCommands.SetLevelTwoCubeShot;
-import frc.robot.commands.ArmCommands.SetPreScorePose;
-import frc.robot.commands.ArmCommands.SetPreScorePoseWristDown;
-import frc.robot.commands.ArmCommands.SetTravelOverBridgePoseInAuto;
-import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ClawCommands.BackwardsConeShot;
-import frc.robot.commands.ClawCommands.EjectGamepiece;
-import frc.robot.commands.ClawCommands.IntakeFloorCone;
-import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyroDelta;
 import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
@@ -94,43 +70,6 @@ public class Autonomous extends SubsystemBase{
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
         claw = Claw.getInstance();
-
-        NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
-        NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
-        NamedCommands.registerCommand("lock", new LockDrivetrain());
-        NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
-
-        NamedCommands.registerCommand("pidturnto0", new RotateToAngle(0));
-        NamedCommands.registerCommand("pidturnto180", new RotateToAngle(180));
-
-        NamedCommands.registerCommand("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
-        NamedCommands.registerCommand("CubeL2ShotPose", new SetLevelTwoCubeShot());
-
-        NamedCommands.registerCommand("L1Pose", new SetLevelOnePose());
-
-        NamedCommands.registerCommand("IntakeCone", new IntakeFloorCone());
-        NamedCommands.registerCommand("IntakeCube", new IntakeFloorCube());
-
-        NamedCommands.registerCommand("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
-
-        NamedCommands.registerCommand("CubeL2Pose", new SetLevelTwoCubePose());
-        NamedCommands.registerCommand("OverBridgePose", new SetTravelOverBridgePoseInAuto());
-
-        NamedCommands.registerCommand("CubeL3Pose", new SetLevelThreeCubeForwardPose());
-        NamedCommands.registerCommand("ConeL3Pose", new SetLevelThreeConeInvertedPose());
-
-        NamedCommands.registerCommand("PreScorePose", new SetPreScorePose());
-        NamedCommands.registerCommand("PreScorePoseWristDown", new SetPreScorePoseWristDown());
-
-        NamedCommands.registerCommand("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
-        NamedCommands.registerCommand("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
-
-        NamedCommands.registerCommand("IntakeConePose", new SetExtendedFloorConePose());
-        NamedCommands.registerCommand("IntakeCubePose", new SetExtendedFloorCubePoseOld());
-        NamedCommands.registerCommand("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
-        NamedCommands.registerCommand("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
-        NamedCommands.registerCommand("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
-        NamedCommands.registerCommand("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
 
         NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
 

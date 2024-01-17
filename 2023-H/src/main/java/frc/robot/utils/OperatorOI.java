@@ -8,18 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmCommands.ManualShoulderControl;
-import frc.robot.commands.ArmCommands.ManualWristControl;
-import frc.robot.commands.ArmCommands.SetHomePose;
-import frc.robot.commands.ArmCommands.SetLevelOnePose;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
-import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
-import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
-import frc.robot.commands.ArmCommands.SetPreScorePose;
-import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ClawCommands.OperatorEjectGamepiece;
-import frc.robot.commands.ClawCommands.OperatorIntakeGamepiece;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
@@ -59,7 +47,7 @@ public class OperatorOI {
 
     private boolean usePreScorePose;
 
-    private Trigger xButton, touchpadButton;
+    private Trigger xButton, touchpadButton, circleButton, triangleButton;
 
     public OperatorOI() {
         arm = Arm.getInstance();
@@ -82,9 +70,17 @@ public class OperatorOI {
 
     public void controlLoop(){
         if(xButton.getAsBoolean()){
-            superstructure.requestState(SuperstructureState.EJECT_L1);
+            superstructure.requestState(SuperstructureState.SCORE_L1);
         } else if(touchpadButton.getAsBoolean()){
             superstructure.requestState(SuperstructureState.STOWED);
+        } else if(circleButton.getAsBoolean()){
+            if(claw.isBothSensors()){
+                superstructure.requestState(SuperstructureState.CONE_L2);
+            } else if (claw.isFrontSensor() && !claw.isBackSensor()){
+                superstructure.requestState(SuperstructureState.CUBE_L2);
+            }
+        } else if(triangleButton.getAsBoolean()){
+            superstructure.requestState(SuperstructureState.CUBE_L3);
         }
     }
 
@@ -96,10 +92,10 @@ public class OperatorOI {
         xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
 
         // L2 scoring pose
-        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
 
         // L3 scoring pose - does not include L3 cone forward right now.
-        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
 
         // Square button forces the robot to look at odometry updates.
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);

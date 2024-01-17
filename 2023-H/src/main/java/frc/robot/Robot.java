@@ -154,15 +154,6 @@ public class Robot extends TimedRobot {
         }
         //Claw.getInstance().classifyGamepiece();
 
-        if (!ranAutonomousRoutine) {
-            robotContainer.setFlipped(true);
-            robotContainer.resetPoseToFaceOtherAlliance();
-        }
-
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-
         logger.logEvent("Tele-op mode started");
         logger.signalRobotEnable();
 

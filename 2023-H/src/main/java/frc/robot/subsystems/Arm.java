@@ -5,11 +5,11 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
-import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
-import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
-import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
+// import frc.robot.commands.ArmCommands.SetLevelThreeConeForwardPose;
+// import frc.robot.commands.ArmCommands.SetLevelThreeConeInvertedPose;
+// import frc.robot.commands.ArmCommands.SetLevelThreeCubeForwardPose;
+// import frc.robot.commands.ArmCommands.SetLevelTwoConePose;
+// import frc.robot.commands.ArmCommands.SetLevelTwoCubePose;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Constants.WristConstants;
@@ -252,29 +252,29 @@ public class Arm extends SubsystemBase {
         goalPose = ArmState.L3_CUBE_INVERTED;
     }
 
-    // Moves from the pre-pose state into a scoring pose.
-    public void moveToScoringPose(){
-         // Now execute the goal pose
-        if(goalPose == ArmState.L2_CONE){
-            CommandScheduler.getInstance().schedule(new SetLevelTwoConePose());
-        }
-        else if(goalPose == ArmState.L2_CUBE){
-            CommandScheduler.getInstance().schedule(new SetLevelTwoCubePose());
-        }
-        else if(goalPose == ArmState.L3_CUBE_FORWARD){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
-        }
-        // else if(goalPose == ArmState.L3_CUBE_INVERTED){
-        //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
-        // }
-        else if(goalPose == ArmState.L3_CONE_FORWARD){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
-        }
-        else if(goalPose == ArmState.L3_CONE_INVERTED){
-            CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
-        }
+    // // Moves from the pre-pose state into a scoring pose.
+    // public void moveToScoringPose(){
+    //      // Now execute the goal pose
+    //     if(goalPose == ArmState.L2_CONE){
+    //         CommandScheduler.getInstance().schedule(new SetLevelTwoConePose());
+    //     }
+    //     else if(goalPose == ArmState.L2_CUBE){
+    //         CommandScheduler.getInstance().schedule(new SetLevelTwoCubePose());
+    //     }
+    //     else if(goalPose == ArmState.L3_CUBE_FORWARD){
+    //         CommandScheduler.getInstance().schedule(new SetLevelThreeCubeForwardPose());
+    //     }
+    //     // else if(goalPose == ArmState.L3_CUBE_INVERTED){
+    //     //     CommandScheduler.getInstance().schedule(new SetLevelThreeCubeInvertedPose());
+    //     // }
+    //     else if(goalPose == ArmState.L3_CONE_FORWARD){
+    //         CommandScheduler.getInstance().schedule(new SetLevelThreeConeForwardPose());
+    //     }
+    //     else if(goalPose == ArmState.L3_CONE_INVERTED){
+    //         CommandScheduler.getInstance().schedule(new SetLevelThreeConeInvertedPose());
+    //     }
 
-    }
+    // }
 
     public void turnOffSmartLimits(){
         wrist.turnOffSmartLimits();

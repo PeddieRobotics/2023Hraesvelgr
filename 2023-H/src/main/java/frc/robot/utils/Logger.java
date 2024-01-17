@@ -101,7 +101,7 @@ public class Logger {
     clawCurrentEntry.append(claw.getOutputCurrent());
 
     //log robot state state
-    robotStateEntry.append((superstructure.getRobotState()!=null||!superstructure.getRobotState().equals("") ? superstructure.getRobotState() : "BAD"));
+    robotStateEntry.append(superstructure.getRobotState());
 
     //checkCommands.append()
     //logCommand("hi", true);

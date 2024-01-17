@@ -212,7 +212,7 @@ public class Claw extends SubsystemBase {
     }
 
     public boolean hasGamepiece() {
-        return hasCone() || hasCube() || state == ClawState.UNKNOWN;
+        return isEitherSensor();
     }
 
     public double getClawSpeed() {

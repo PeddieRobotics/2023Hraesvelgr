@@ -13,25 +13,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmCommands.SetDoubleSSConePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorConePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePose;
-import frc.robot.commands.ArmCommands.SetExtendedFloorCubePoseOld;
-import frc.robot.commands.ArmCommands.SetLevelTwoConeShootL1Pose;
-import frc.robot.commands.ArmCommands.SetLevelTwoConeStowedPose;
-import frc.robot.commands.ArmCommands.SetPreScorePose;
-import frc.robot.commands.ArmCommands.SetPreScorePoseL3Return;
-import frc.robot.commands.ArmCommands.SetSingleSSConePose;
-import frc.robot.commands.ArmCommands.SetSingleSSCubePose;
-import frc.robot.commands.ArmCommands.SetStowedPose;
-import frc.robot.commands.ArmCommands.SetTransitoryPoseL3Return;
-import frc.robot.commands.ClawCommands.NormalizeConeAfterIntake;
-import frc.robot.commands.ClawCommands.BackwardsConeShot;
-import frc.robot.commands.ClawCommands.EjectGamepiece;
-import frc.robot.commands.ClawCommands.IntakeFloorCone;
-import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
-import frc.robot.commands.ClawCommands.IntakeFloorCube;
-import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
@@ -71,7 +52,7 @@ public class DriverOI {
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-    private Trigger leftBumperButton, rightBumperButton, muteButton;
+    private Trigger leftBumperButton, rightBumperButton, muteButton, xButton;
 
     private boolean returnL3ConeInvertedToPreScore;
     private boolean returnForwardL2L3ScoringPosesToPreScore;
@@ -119,6 +100,8 @@ public class DriverOI {
             }
         } else if(muteButton.getAsBoolean()){
             superstructure.requestState(SuperstructureState.STOWED);
+        } else if(xButton.getAsBoolean()){
+            superstructure.requestState(SuperstructureState.HP_STATION_INTAKE);
         }
     }
 
@@ -134,7 +117,7 @@ public class DriverOI {
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
    
         // Single substation (cone) intake
-        Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
