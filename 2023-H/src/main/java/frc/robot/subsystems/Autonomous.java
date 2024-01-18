@@ -183,12 +183,12 @@ public class Autonomous extends SubsystemBase{
     public void resetAutoBuilderAndPaths(){
     }
 
-    public static Autonomous getInstance(){
-        if(autonomous == null){
-            autonomous = new Autonomous();
-        }
-        return autonomous;
-    }
+    // public static Autonomous getInstance(){
+    //     if(autonomous == null){
+    //         autonomous = new Autonomous();
+    //     }
+    //     return autonomous;
+    // }
 
     @Deprecated
     public void setupAutoRoutines(){
