@@ -34,7 +34,7 @@ public class RobotContainer {
 
     private final OperatorOI operatorOI;
     private final DriverOI driverOI;
-    //private final Autonomous autonomous;
+    private final Autonomous autonomous;
     private final LimelightFront limelightFront;
     private final LimelightBack limelightBack;
 
@@ -60,7 +60,7 @@ public class RobotContainer {
         superstructure = Superstructure.getInstance();
 
         blinkin = Blinkin.getInstance();
-        //autonomous = Autonomous.getInstance();
+        autonomous = Autonomous.getInstance();
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
@@ -74,7 +74,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         drivetrain.resetGyro();
-        return Autonomous.getAutonomousCommand();
+        return autonomous.getAutonomousCommand();
     }
 
     public void resetGyro() {

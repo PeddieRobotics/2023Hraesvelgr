@@ -80,7 +80,11 @@ public class OperatorOI {
                 superstructure.requestState(SuperstructureState.CUBE_L2);
             }
         } else if(triangleButton.getAsBoolean()){
-            superstructure.requestState(SuperstructureState.CUBE_L3);
+            if(claw.isBothSensors()){
+                superstructure.requestState(SuperstructureState.PRE_CONE_INVERTED_L3);
+            } else if (claw.isFrontSensor() && !claw.isBackSensor()){
+                superstructure.requestState(SuperstructureState.CUBE_L3);
+            }
         }
     }
 

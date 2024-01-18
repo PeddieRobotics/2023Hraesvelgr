@@ -52,7 +52,7 @@ public class DriverOI {
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-    private Trigger leftBumperButton, rightBumperButton, muteButton, xButton;
+    private Trigger leftBumperButton, rightBumperButton, muteButton, xButton, ps4Button;
 
     private boolean returnL3ConeInvertedToPreScore;
     private boolean returnForwardL2L3ScoringPosesToPreScore;
@@ -103,6 +103,8 @@ public class DriverOI {
         } else if(xButton.getAsBoolean()){
             superstructure.requestState(SuperstructureState.HP_STATION_INTAKE);
         }
+
+        ps4Button.onTrue(new InstantCommand(() -> drivetrain.resetGyro()));
     }
 
     public void configureController() {
@@ -145,8 +147,7 @@ public class DriverOI {
         Trigger shareButton = new JoystickButton(controller, PS4Controller.Button.kShare.value);
 
         // Reset gyro (resets field oriented drive)
-        Trigger ps4Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        ps4Button.onTrue(new InstantCommand(() -> drivetrain.resetGyro()));
+        ps4Button = new JoystickButton(controller, PS4Controller.Button.kPS.value);
     }
 
     public static DriverOI getInstance() {

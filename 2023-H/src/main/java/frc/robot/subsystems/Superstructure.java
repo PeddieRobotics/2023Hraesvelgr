@@ -4,12 +4,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Shoulder.SmartMotionArmSpeed;
 import frc.robot.utils.Constants;
+import frc.robot.utils.Constants.ShoulderConstants;
 import frc.robot.utils.Logger;
 
 public class Superstructure extends SubsystemBase {
     private static Superstructure superstructure;
     private Claw claw;
     private Arm arm;
+    private Shoulder shoulder;
     private double stateDuration;
     private double internalStateTimer;
 
@@ -34,6 +36,7 @@ public class Superstructure extends SubsystemBase {
     public Superstructure(){
         claw = Claw.getInstance();
         arm = Arm.getInstance();
+        shoulder = Shoulder.getInstance();
 
         systemState = SuperstructureState.STOWED;
         requestedSystemState = SuperstructureState.STOWED;
@@ -87,7 +90,9 @@ public class Superstructure extends SubsystemBase {
                     nextSystemState = requestedSystemState;
                 } else if (requestedSystemState == SuperstructureState.CUBE_L3){
                     nextSystemState = requestedSystemState;
-                } 
+                } else if (requestedSystemState == SuperstructureState.PRE_CONE_INVERTED_L3){
+                    nextSystemState = requestedSystemState;
+                }
                 break;
 
             case CUBE_INTAKE_GROUND:
@@ -251,6 +256,95 @@ public class Superstructure extends SubsystemBase {
                 } else if (requestedSystemState == SuperstructureState.CONE_L2){
                     nextSystemState = requestedSystemState;
                 } 
+                break;
+
+            case PRE_CONE_INVERTED_L3:
+                arm.setWristPosition(Constants.WristConstants.kStowedAngle);
+                if(arm.isShoulderBelowAngle(65)){
+                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.SLOW);
+                } else {
+                    // shoulder.setSlowSmartMotionParameters(Constants.ShoulderConstants.kSmartMotionSlowSetpointTol, 
+                    //                                       Constants.ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.SLOW);
+                }
+
+                if(arm.isShoulderAboveAngle(75.0)){
+                    arm.setWristPosition(Constants.WristConstants.kL3ConeInvertedAngle);
+                }
+
+                if(requestedSystemState == SuperstructureState.STOWED || requestedSystemState == SuperstructureState.SCORE_L1 || requestedSystemState == SuperstructureState.CUBE_L2 
+                    || requestedSystemState == SuperstructureState.CONE_L2 || requestedSystemState == SuperstructureState.CUBE_L3){
+                    shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+                                                          ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
+                    if(arm.isShoulderAboveAngle(65.0)) {
+                        nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                        arm.holdShoulderPosition();
+                    } else {
+                        nextSystemState = requestedSystemState;
+                    }
+
+                }
+                
+                if (arm.isShoulderAtAngle(Constants.ShoulderConstants.kL3ConeInvertedAngle) && arm.isWristAtAngle(Constants.WristConstants.kL3ConeInvertedAngle)){
+                    nextSystemState = requestedSystemState = SuperstructureState.CONE_INVERTED_L3;
+                    arm.holdShoulderPosition();
+                }
+                break;
+            case CONE_INVERTED_L3:
+
+                if(requestedSystemState == SuperstructureState.EJECTING_GAMEPIECE){
+                    claw.setSpeed(1);
+                }
+
+                if(claw.hasGamepiece()){
+                    internalStateTimer=Timer.getFPGATimestamp();
+                } 
+
+                if(requestedSystemState == SuperstructureState.STOWED){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                } else if (requestedSystemState == SuperstructureState.SCORE_L1){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                } else if (requestedSystemState == SuperstructureState.CUBE_L2){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                } else if (requestedSystemState == SuperstructureState.CONE_L2){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                } else if (requestedSystemState == SuperstructureState.CUBE_L3){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                } else if (Timer.getFPGATimestamp() - internalStateTimer >.2 && !claw.hasGamepiece()){
+                    nextSystemState = SuperstructureState.POST_CONE_INVERTED_L3;
+                    requestedSystemState = SuperstructureState.STOWED;
+                } 
+                break;
+            case POST_CONE_INVERTED_L3:
+                shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
+                                                    ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
+                arm.setWristPosition(Constants.WristConstants.kStowedAngle);
+                claw.setSpeed(0);
+                if(arm.isShoulderAboveAngle(65)){
+                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3CubeForwardAngle, SmartMotionArmSpeed.SLOW);
+                } else {
+                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3CubeForwardAngle, SmartMotionArmSpeed.SLOW);
+                }
+
+                if(arm.isShoulderBelowAngle(20)){
+                    if(requestedSystemState == SuperstructureState.STOWED){
+                        nextSystemState = SuperstructureState.STOWED;
+                    } else if(requestedSystemState == SuperstructureState.CUBE_INTAKE_GROUND){
+                        nextSystemState = requestedSystemState;
+                    } else if (requestedSystemState == SuperstructureState.CONE_INTAKE_GROUND){
+                        nextSystemState = requestedSystemState;
+                    } else if (requestedSystemState == SuperstructureState.HP_STATION_INTAKE){
+                        nextSystemState = requestedSystemState;
+                    }   else if (requestedSystemState == SuperstructureState.SCORE_L1){
+                        nextSystemState = requestedSystemState;
+                    } else if (requestedSystemState == SuperstructureState.CUBE_L2){
+                        nextSystemState = requestedSystemState;
+                    } else if (requestedSystemState == SuperstructureState.CONE_L2){
+                        nextSystemState = requestedSystemState;
+                    } else if (requestedSystemState == SuperstructureState.CUBE_L3){
+                        nextSystemState = requestedSystemState;
+                    }
+                }
                 break;
 
         }

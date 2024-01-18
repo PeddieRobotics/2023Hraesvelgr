@@ -23,6 +23,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 // import com.pathplanner.lib.PathPlanner; removed
@@ -71,11 +72,11 @@ public class Autonomous extends SubsystemBase{
         arm = Arm.getInstance();
         claw = Claw.getInstance();
 
-        NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
+        // NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
 
-        NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
+        // NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
-        NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
+        // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
 
         // TODO: tune PIDConstants
 
@@ -93,6 +94,32 @@ public class Autonomous extends SubsystemBase{
         //     ),
         //     drivetrain // Reference to drive subsystem to set requirements
         // );
+
+         AutoBuilder.configureHolonomic(
+                drivetrain::getPose, // Robot pose supplier
+                drivetrain::resetRobotPoseAndGyro, // Method to reset odometry (will be called if your auto has a starting pose)
+                drivetrain::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                drivetrain::driveAuton, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        Constants.DriveConstants.kMaxFloorSpeed, // Max module speed, in m/s
+                        Constants.DriveConstants.kBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                drivetrain // Reference to this subsystem to set requirements
+        );
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -145,7 +172,7 @@ public class Autonomous extends SubsystemBase{
         drivetrain.setFlipped();
     }
 
-    public static Command getAutonomousCommand() {
+    public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
 
