@@ -41,7 +41,7 @@ import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Autonomous;
+// import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -55,7 +55,7 @@ public class DriverOI {
     private final Claw claw;
     private final Arm arm;
     private final Blinkin blinkin;
-    private final Autonomous autonomous;
+    // private final Autonomous autonomous;
 
     private final PS4Controller controller = new PS4Controller(0);
 
@@ -86,7 +86,7 @@ public class DriverOI {
         claw = Claw.getInstance();
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
-        autonomous = Autonomous.getInstance();
+        // autonomous = Autonomous.getInstance();
 
         driveSpeedMode = DriveSpeedMode.NORMAL;
 

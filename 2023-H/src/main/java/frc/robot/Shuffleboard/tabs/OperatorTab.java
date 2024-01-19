@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Shuffleboard.FieldView;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Autonomous;
+// import frc.robot.subsystems.Autonomous;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Wrist;
@@ -22,7 +22,7 @@ public class OperatorTab extends ShuffleboardTabBase {
     private Claw claw = Claw.getInstance();
     private Wrist wrist = Wrist.getInstance();
     private Shoulder shoulder = Shoulder.getInstance();
-    private Autonomous autonomous = Autonomous.getInstance();
+    // private Autonomous autonomous = Autonomous.getInstance();
     private OperatorOI operatorOI = OperatorOI.getInstance();
 
     private FieldView fieldView;

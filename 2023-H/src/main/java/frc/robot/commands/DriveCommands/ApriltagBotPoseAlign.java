@@ -1,0 +1,101 @@
+package frc.robot.commands.DriveCommands;
+
+import java.sql.Driver;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Blinkin;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightFront;
+import frc.robot.utils.DriverOI;
+import frc.robot.utils.RollingAverage;
+import frc.robot.utils.Constants.AutoConstants;
+import frc.robot.utils.DriverOI.DPadDirection;
+
+public class ApriltagBotPoseAlign extends Command {
+    private Drivetrain drivetrain;
+    private Limelight limelightFront;
+    private final double angleThreshold;
+    private final double targetAngle;
+    private DriverOI driverOI;
+
+    private double FF;
+    private double llTurn;
+    private PIDController thetaController;
+
+    private double currentAngle;
+    private double error;
+
+    // Full constructor with all 6 parameters for the climb charge station
+    // algorithm.
+    public ApriltagBotPoseAlign() {
+        drivetrain = Drivetrain.getInstance();
+        limelightFront = LimelightFront.getInstance();
+        angleThreshold = 1.0;
+        targetAngle = -120;
+
+        error = 0.0;
+        thetaController = new PIDController(0.05, 0.0001, 0);
+        thetaController.enableContinuousInput(-180, 180);
+        FF = 0.1;
+        llTurn = 0;
+        addRequirements(drivetrain);
+
+        driverOI = DriverOI.getInstance();
+
+        SmartDashboard.putNumber("DATA: Rotation from BotPose", 1000);
+    }
+
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void execute() {
+        Translation2d position;
+        if (driverOI.getDriverDPadInput() != DPadDirection.NONE) {
+            position = driverOI.getCardinalDirection();
+        } else {
+            position = driverOI.getSwerveTranslation();
+            SmartDashboard.putNumber("field relative input forward axis", position.getX());
+            SmartDashboard.putNumber("field relative input strafe axis", position.getY());
+        }
+
+        if (limelightFront.hasTarget()) {
+            currentAngle = limelightFront.getRotationAverage();
+            error = currentAngle - targetAngle;
+            if (error < -angleThreshold) {
+                llTurn = thetaController.calculate(currentAngle, targetAngle) + FF;
+            } else if (error > angleThreshold) {
+                llTurn = thetaController.calculate(currentAngle, targetAngle) - FF;
+            }
+
+            else {
+                llTurn = 0;
+            }
+        } else {
+            llTurn = 0;
+        }
+
+        drivetrain.drive(position, llTurn, true, new Translation2d(0, 0));
+        SmartDashboard.putNumber("DATA: Rotation from BotPose", currentAngle);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.stopSwerveModules();
+    }
+
+    @Override
+    public boolean isFinished() {
+
+        return Math.abs(limelightFront.getRotationAverage() - targetAngle) < angleThreshold;
+
+    }
+}

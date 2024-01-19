@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.utils.Constants.LimelightConstants;
 import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RollingAverage;
@@ -14,8 +16,9 @@ import frc.robot.utils.RollingAverage;
 public class LimelightBack extends Limelight {
     private static LimelightBack limelightBack;
 
-    private RollingAverage txAverage, tyAverage, taAverage, xAverage;
+    private RollingAverage txAverage, tyAverage, taAverage, xAverage, rotationAverage;
     private boolean cube,level2;
+
 
     private String limelightName = "limelight-back";
 
@@ -23,6 +26,7 @@ public class LimelightBack extends Limelight {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
+        rotationAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
         setPipeline(0);
     }
@@ -54,6 +58,14 @@ public class LimelightBack extends Limelight {
         return new Translation2d(0, 0);
     }
 
+    public Pose2d getBotposeBlue() {
+        double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        if (result.length > 0.0) {
+            return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+        }
+        return new Pose2d();
+    }
+
     public Pose2d getBotpose() {
         double[] result;
         if(DriverStation.getAlliance().get() == Alliance.Red){
@@ -68,6 +80,7 @@ public class LimelightBack extends Limelight {
         }
         return new Pose2d();
     }
+    
 
     public void startAveragingX(){
         xAverage = new RollingAverage(4,getBotpose().getX());
@@ -116,6 +129,10 @@ public class LimelightBack extends Limelight {
         return taAverage.getAverage();
     }
 
+    public double getRotationAverage() {
+        return rotationAverage.getAverage();
+    }
+
     // Class ID of primary neural detector result or neural classifier result
     public double getNeuralClassID() {
         return LimelightHelper.getNeuralClassID(limelightName);
@@ -155,6 +172,7 @@ public class LimelightBack extends Limelight {
             txAverage.add(getTx());
             tyAverage.add(getTy());
             taAverage.add(getTa());
+            rotationAverage.add(getBotposeBlue().getRotation().getDegrees());
             double xMeasurement = getBotpose().getX();
             if(Math.abs(xAverage.getAverage()-xMeasurement)>.3) xAverage.add(xMeasurement);
         }
