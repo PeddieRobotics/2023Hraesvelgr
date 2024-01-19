@@ -34,7 +34,6 @@ public class SetLevelThreeConeInvertedPose extends Command{
         arm.setState(ArmState.L3_CONE_INVERTED);
         arm.setGoalPose(ArmState.NONE);
 
-
     }
 
     @Override

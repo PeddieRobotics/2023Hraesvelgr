@@ -259,12 +259,12 @@ public class Superstructure extends SubsystemBase {
                 break;
 
             case PRE_CONE_INVERTED_L3:
-                arm.setWristPosition(Constants.WristConstants.kStowedAngle);
+                arm.setWristPosition(Constants.WristConstants.kHomeAngle);
                 if(arm.isShoulderBelowAngle(65)){
-                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.SLOW);
+                    arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.FAST);
                 } else {
-                    // shoulder.setSlowSmartMotionParameters(Constants.ShoulderConstants.kSmartMotionSlowSetpointTol, 
-                    //                                       Constants.ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
+                    shoulder.setSlowSmartMotionParameters(Constants.ShoulderConstants.kSmartMotionSlowSetpointTol, 
+                                                          Constants.ShoulderConstants.kSmartMotionSlowMinVel, 3000, 2000);
                     arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.SLOW);
                 }
 
@@ -290,6 +290,7 @@ public class Superstructure extends SubsystemBase {
                     arm.holdShoulderPosition();
                 }
                 break;
+                
             case CONE_INVERTED_L3:
 
                 if(requestedSystemState == SuperstructureState.EJECTING_GAMEPIECE){
@@ -315,6 +316,7 @@ public class Superstructure extends SubsystemBase {
                     requestedSystemState = SuperstructureState.STOWED;
                 } 
                 break;
+
             case POST_CONE_INVERTED_L3:
                 shoulder.setSlowSmartMotionParameters(ShoulderConstants.kSmartMotionSlowSetpointTol,
                                                     ShoulderConstants.kSmartMotionSlowMinVel, ShoulderConstants.kSmartMotionSlowMaxVel, ShoulderConstants.kSmartMotionSlowMaxAccel);
