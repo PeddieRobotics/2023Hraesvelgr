@@ -42,6 +42,8 @@ public class LimelightFront extends Limelight {
     @Override
     public void periodic() {
         updateRollingAverages();
+        SmartDashboard.putNumber("megatag heading", getBotposeBlue().getRotation().getDegrees());
+        SmartDashboard.putNumber("megatag heading average", getRotationAverage()); 
     }
 
     public void startAveragingX(){
