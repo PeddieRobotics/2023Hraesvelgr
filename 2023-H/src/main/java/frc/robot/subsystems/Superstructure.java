@@ -259,7 +259,6 @@ public class Superstructure extends SubsystemBase {
                 break;
 
             case PRE_CONE_INVERTED_L3:
-                arm.setWristPosition(Constants.WristConstants.kHomeAngle);
                 if(arm.isShoulderBelowAngle(65)){
                     arm.setShoulderPositionSmartMotion(Constants.ShoulderConstants.kL3ConeInvertedAngle, SmartMotionArmSpeed.FAST);
                 } else {
@@ -270,6 +269,8 @@ public class Superstructure extends SubsystemBase {
 
                 if(arm.isShoulderAboveAngle(75.0)){
                     arm.setWristPosition(Constants.WristConstants.kL3ConeInvertedAngle);
+                } else {
+                    arm.setWristPosition(Constants.WristConstants.kHomeAngle);
                 }
 
                 if(requestedSystemState == SuperstructureState.STOWED || requestedSystemState == SuperstructureState.SCORE_L1 || requestedSystemState == SuperstructureState.CUBE_L2 
