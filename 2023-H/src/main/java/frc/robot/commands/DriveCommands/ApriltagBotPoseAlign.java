@@ -20,9 +20,9 @@ import frc.robot.utils.DriverOI.DPadDirection;
 public class ApriltagBotPoseAlign extends Command {
     private Drivetrain drivetrain;
     private Limelight limelightFront;
-    private final double angleThreshold;
-    private final double targetAngle;
-    private DriverOI driverOI;
+    private DriverOI oi;
+    private double angleThreshold;
+    private double targetAngle;
 
     private double FF;
     private double llTurn;
@@ -36,6 +36,7 @@ public class ApriltagBotPoseAlign extends Command {
     public ApriltagBotPoseAlign() {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
+        
         angleThreshold = 1.0;
         targetAngle = -120;
 
@@ -45,24 +46,20 @@ public class ApriltagBotPoseAlign extends Command {
         FF = 0.1;
         llTurn = 0;
         addRequirements(drivetrain);
-
-        driverOI = DriverOI.getInstance();
-
-        SmartDashboard.putNumber("DATA: Rotation from BotPose", 1000);
-    }
+   }
 
     @Override
     public void initialize() {
-
+        oi = DriverOI.getInstance();
     }
 
     @Override
     public void execute() {
         Translation2d position;
-        if (driverOI.getDriverDPadInput() != DPadDirection.NONE) {
-            position = driverOI.getCardinalDirection();
+        if (oi.getDriverDPadInput() != DPadDirection.NONE) {
+            position = oi.getCardinalDirection();
         } else {
-            position = driverOI.getSwerveTranslation();
+            position = oi.getSwerveTranslation();
             SmartDashboard.putNumber("field relative input forward axis", position.getX());
             SmartDashboard.putNumber("field relative input strafe axis", position.getY());
         }

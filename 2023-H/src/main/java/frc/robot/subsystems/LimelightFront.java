@@ -181,6 +181,7 @@ public class LimelightFront extends Limelight {
         txAverage.clear();
         tyAverage.clear();
         taAverage.clear();
+        rotationAverage.clear(); 
     }
 
     public void setPipeline(int pipelineNum) {
