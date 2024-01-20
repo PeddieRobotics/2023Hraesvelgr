@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3299999999994108,
+      "x": 1.33,
       "y": 5.5
     },
-    "rotation": -6.474960789095564e-21
+    "rotation": -3.185959472870538e-29
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceCenterChoreoLeft.1"
+          }
+        },
         {
           "type": "wait",
           "data": {
@@ -20,7 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3PieceCenterChoreoRight.1"
+            "pathName": "4PieceCenterChoreoLeft.2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceCenterChoreoLeft.3"
           }
         },
         {
