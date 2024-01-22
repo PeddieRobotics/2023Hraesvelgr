@@ -64,8 +64,8 @@ public class Logger {
 
   }
 
-  public void logEvent(String event, boolean isStarted){
-    eventsEntry.append(event + (isStarted ? " started" : " ended"));
+  public void logEvent(String event){
+    eventsEntry.append(event);
   }
 
   public void signalRobotEnable(){

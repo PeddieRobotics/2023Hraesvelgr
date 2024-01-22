@@ -39,7 +39,7 @@ public final class Constants {
 
                 public static final double kBaseRadius = Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2;
 
-                public static final double kRealMaxSpeedMetersPerSecond = 1.00; //4.459224;
+                public static final double kRealMaxSpeedMetersPerSecond = 4.459224;
                 public static final double kMaxFloorSpeed = 1.0 * kRealMaxSpeedMetersPerSecond;
                 public static final double kMaxAcceleration = 3;
                 public static final double kMaxAngularSpeed = 4 * Math.PI / 3;

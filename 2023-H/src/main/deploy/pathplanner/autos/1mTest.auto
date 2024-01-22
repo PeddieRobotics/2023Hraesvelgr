@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.33,
-      "y": 5.5
+      "y": 5.604986667633057
     },
     "rotation": 0.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3PieceCenterChoreoRight"
+            "pathName": "1mTest"
           }
         }
       ]
