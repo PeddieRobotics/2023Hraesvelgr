@@ -14,19 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "eliza1"
+            "pathName": "3PieceRightPt1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "eliza2"
+            "pathName": "3PieceRightPt2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "eliza3"
+            "pathName": "3PieceRightPt3"
           }
         }
       ]
