@@ -8,7 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SourceSideAlign extends Command{
+public class AprilTagSourceSideAlign extends Command{
     Drivetrain drivetrain; 
     LimelightFront limelightFront; 
 
@@ -21,7 +21,7 @@ public class SourceSideAlign extends Command{
     Translation2d translation; 
 
 
-    public SourceSideAlign(){
+    public AprilTagSourceSideAlign(){
         angleThreshold = 1.0; 
         error = 0.0; 
         FF = 0.5; 

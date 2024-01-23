@@ -12,7 +12,7 @@ public abstract class Limelight extends SubsystemBase {
     public abstract Pose2d getBotposeBlue();
     public abstract Pose2d getBotpose();
 
-
+    public abstract void setPipeline(int pipelineNum);
     public abstract int getPipeline();
 
     public abstract String getJSONDump();

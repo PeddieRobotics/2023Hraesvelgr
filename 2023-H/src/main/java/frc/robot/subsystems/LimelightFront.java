@@ -30,6 +30,7 @@ public class LimelightFront extends Limelight {
         rotationAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
         setPipeline(7);
+        
     }
 
     public static LimelightFront getInstance() {
@@ -71,6 +72,13 @@ public class LimelightFront extends Limelight {
 
     public Pose2d getBotposeBlue() {
         double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        if (result.length > 0.0) {
+            return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+        }
+        return new Pose2d();
+    }
+    public Pose2d getBotpoesRPose2d() {
+        double[] result = LimelightHelper.getBotPose_wpiRed(limelightName);
         if (result.length > 0.0) {
             return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
         }
@@ -175,7 +183,11 @@ public class LimelightFront extends Limelight {
             txAverage.add(getTx());
             tyAverage.add(getTy());
             taAverage.add(getTa());
-            rotationAverage.add(getBotposeBlue().getRotation().getDegrees());
+            
+            // rotationAverage.add(getBotpose().getRotation().getDegrees());//based on alliance of driverstation, awaiting testing 
+            rotationAverage.add(getBotposeBlue().getRotation().getDegrees()); 
+            
+           
         }
     }
 

@@ -6,6 +6,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Blinkin;
@@ -38,12 +40,19 @@ public class ApriltagBotPoseAlign extends Command {
         limelightFront = LimelightFront.getInstance();
         
         angleThreshold = 1.0;
-        targetAngle = -120;
+        if(DriverStation.getAlliance().get() == Alliance.Red){
+           targetAngle = -60; //RED SIDE 
+        }
+        else{
+            targetAngle = -120;//BLUE SIDE 
+        }
+
+        //
 
         error = 0.0;
         thetaController = new PIDController(0.05, 0.0001, 0);
         thetaController.enableContinuousInput(-180, 180);
-        FF = 0.1;
+        FF = 0.2;
         llTurn = 0;
         addRequirements(drivetrain);
    }
@@ -51,6 +60,7 @@ public class ApriltagBotPoseAlign extends Command {
     @Override
     public void initialize() {
         oi = DriverOI.getInstance();
+        limelightFront.setPipeline(3); 
     }
 
     @Override
