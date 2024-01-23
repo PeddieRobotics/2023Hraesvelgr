@@ -45,6 +45,7 @@ import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
 import frc.robot.utils.Constants;
 import frc.robot.commands.DriveCommands.AutoDrive;
+import frc.robot.subsystems.Superstructure.SuperstructureState;
 
 // import frc.robot.utils.CustomAutoBuilder;
 import frc.robot.utils.Constants.AutoConstants;
@@ -54,6 +55,7 @@ public class Autonomous extends SubsystemBase{
     // Subsystems
     private static Autonomous autonomous;
     private final Drivetrain drivetrain;
+    private final Superstructure superstructure;
     private final Claw claw;
     private final Arm arm;
     //private final Claw claw;
@@ -71,8 +73,12 @@ public class Autonomous extends SubsystemBase{
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
         claw = Claw.getInstance();
+        superstructure = Superstructure.getInstance();
 
-        // NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
+        NamedCommands.registerCommand("DeployIntake", new InstantCommand( () -> { superstructure.requestState(SuperstructureState.CUBE_INTAKE_GROUND);}));
+        NamedCommands.registerCommand("Stow", new InstantCommand( () -> { superstructure.requestState(SuperstructureState.STOWED);}));
+        NamedCommands.registerCommand("EjectL1", new InstantCommand( () -> { superstructure.requestState(SuperstructureState.SCORE_L1);}));
+        NamedCommands.registerCommand("EjectingGamepiece", new InstantCommand( () -> { superstructure.requestState(SuperstructureState.EJECTING_GAMEPIECE);}));
 
         // NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
