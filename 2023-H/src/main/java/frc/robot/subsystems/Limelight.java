@@ -19,6 +19,8 @@ public abstract class Limelight extends SubsystemBase {
     
     public abstract double getTxAverage();
 
+    public abstract double getTyAverage();
+
     public abstract double getTaAverage();
 
     public abstract double getRotationAverage();

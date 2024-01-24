@@ -35,6 +35,7 @@ import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
 import frc.robot.commands.DriveCommands.AprilTagSourceSideAlign;
 import frc.robot.commands.DriveCommands.ApriltagBotPoseAlign;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
+import frc.robot.commands.DriveCommands.FollowNote;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -175,7 +176,7 @@ public class DriverOI {
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
+        xButton.whileTrue(new FollowNote());
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
@@ -249,6 +250,17 @@ public class DriverOI {
         } else {
             driveSpeedMode = DriveSpeedMode.NORMAL;
         }
+    }
+
+    public double getForwardRight() {
+        double input = controller.getRawAxis(PS4Controller.Axis.kRightY.value);
+        if(Math.abs(input) < 0.9){
+            input *= 0.7777;
+        }
+        else{
+            input = Math.pow(input, 3);
+        }
+        return input;
     }
 
     public double getForward() {
