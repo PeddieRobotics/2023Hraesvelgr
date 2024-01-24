@@ -66,13 +66,17 @@ public class ApriltagBotPoseAlign extends Command {
     @Override
     public void execute() {
         Translation2d position;
-        if (oi.getDriverDPadInput() != DPadDirection.NONE) {
-            position = oi.getCardinalDirection();
-        } else {
-            position = oi.getSwerveTranslation();
-            SmartDashboard.putNumber("field relative input forward axis", position.getX());
-            SmartDashboard.putNumber("field relative input strafe axis", position.getY());
-        }
+        double throttle = oi.getSwerveTranslation().getX();
+        
+        // if (oi.getDriverDPadInput() != DPadDirection.NONE) {
+        //     position = oi.getCardinalDirection();
+        // } else {
+        //     position = oi.getSwerveTranslation();
+        //     SmartDashboard.putNumber("field relative input forward axis", position.getX());
+        //     SmartDashboard.putNumber("field relative input strafe axis", position.getY());
+        // }
+
+        position = new Translation2d(-throttle, 0.0); 
 
         if (limelightFront.hasTarget()) {
             currentAngle = limelightFront.getRotationAverage();
@@ -90,7 +94,7 @@ public class ApriltagBotPoseAlign extends Command {
             llTurn = 0;
         }
 
-        drivetrain.drive(position, llTurn, true, new Translation2d(0, 0));
+        drivetrain.drive(position, llTurn, false, new Translation2d(0, 0));
         SmartDashboard.putNumber("DATA: Rotation from BotPose", currentAngle);
     }
 
