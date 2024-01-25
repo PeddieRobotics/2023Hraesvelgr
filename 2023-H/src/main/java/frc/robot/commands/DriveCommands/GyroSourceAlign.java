@@ -20,7 +20,7 @@ import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.DriverOI.DPadDirection;
 
-public class ApriltagBotPoseAlign extends Command {
+public class GyroSourceAlign extends Command {
     private Drivetrain drivetrain;
     private Limelight limelightFront;
     private DriverOI oi;
@@ -36,18 +36,20 @@ public class ApriltagBotPoseAlign extends Command {
 
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
-    public ApriltagBotPoseAlign() {
+    public GyroSourceAlign() {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
         
         angleThreshold = 1.0;
-        if(DriverStation.getAlliance().get() == Alliance.Red){
-           targetAngle = -60; //RED SIDE 
-        }
-        else{
-            targetAngle = -120;//BLUE SIDE 
-        }
-        SmartDashboard.putNumber("target angle", targetAngle); 
+        // if(DriverStation.getAlliance().get() == Alliance.Red){
+        //    targetAngle = -90; //RED SIDE 
+        // }
+        // else{
+        //     targetAngle = 90;//BLUE SIDE 
+        // }
+    
+        targetAngle = -90; 
+        SmartDashboard.putNumber("target angle", 90); 
 
         //
 
@@ -68,6 +70,7 @@ public class ApriltagBotPoseAlign extends Command {
     @Override
     public void execute() {
         Translation2d position;
+        // targetAngle = SmartDashboard.getNumber("target angle", 90); 
         double throttle = oi.getSwerveTranslation().getX();
         
         // if (oi.getDriverDPadInput() != DPadDirection.NONE) {
@@ -80,24 +83,23 @@ public class ApriltagBotPoseAlign extends Command {
 
         position = new Translation2d(-throttle, 0.0); 
 
-        if (limelightFront.hasTarget()) {
-            currentAngle = limelightFront.getRotationAverage();
-            error = currentAngle - targetAngle;
-            if (error < -angleThreshold) {
-                llTurn = thetaController.calculate(currentAngle, targetAngle) + FF;
-            } else if (error > angleThreshold) {
-                llTurn = thetaController.calculate(currentAngle, targetAngle) - FF;
-            }
-
-            else {
-                llTurn = 0;
-            }
-        } else {
-            llTurn = 0;
+        
+        currentAngle = drivetrain.getHeading();
+        error = currentAngle - targetAngle;
+        if (error < -angleThreshold) {
+            llTurn = thetaController.calculate(currentAngle, targetAngle) + FF;
+        } else if (error > angleThreshold) {
+            llTurn = thetaController.calculate(currentAngle, targetAngle) - FF;
         }
 
+        else {
+            llTurn = 0;
+        }
+        
+        
+
         drivetrain.drive(position, llTurn, false, new Translation2d(0, 0));
-        // SmartDashboard.putNumber("DATA: Rotation from BotPose", currentAngle);
+        SmartDashboard.putNumber("Gyro angle error", error);
     }
 
     @Override

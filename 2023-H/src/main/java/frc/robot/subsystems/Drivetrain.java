@@ -152,6 +152,8 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("IMU Pitch Average", gyroTiltAverage.getAverage());
         SmartDashboard.putBoolean("isFlipped", isFlipped);
 
+        SmartDashboard.putNumber("gyro angle", getHeading());
+
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();

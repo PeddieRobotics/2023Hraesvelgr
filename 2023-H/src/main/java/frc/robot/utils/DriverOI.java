@@ -36,6 +36,7 @@ import frc.robot.commands.DriveCommands.AprilTagSourceSideAlign;
 import frc.robot.commands.DriveCommands.ApriltagBotPoseAlign;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.FollowNote;
+import frc.robot.commands.DriveCommands.GyroSourceAlign;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -180,7 +181,8 @@ public class DriverOI {
 
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new ApriltagBotPoseAlign());
+        // squareButton.whileTrue(new ApriltagBotPoseAlign());
+        squareButton.whileTrue(new GyroSourceAlign());
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

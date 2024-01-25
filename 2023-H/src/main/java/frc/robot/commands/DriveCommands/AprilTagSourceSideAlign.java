@@ -24,7 +24,7 @@ public class AprilTagSourceSideAlign extends Command{
     public AprilTagSourceSideAlign(){
         angleThreshold = 1.0; 
         error = 0.0; 
-        FF = 0.5; 
+        FF = 0.4; 
         // pidController = new PIDController(0.04, 0.0001, 0);
         pidController = new PIDController(0.03, 0.0, 0.0);
         pidController.enableContinuousInput(-180, 180);
@@ -37,6 +37,7 @@ public class AprilTagSourceSideAlign extends Command{
 
     @Override
     public void initialize(){
+        limelightFront.setPipeline(3); 
         
     }
 
