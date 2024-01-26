@@ -14,6 +14,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.DriverOI;
+import frc.robot.utils.Logger;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.DriverOI.DPadDirection;
@@ -28,6 +29,7 @@ public class SpeakerSquareThenAlign extends Command {
 
     private double moveThreshold, moveTarget, moveFF;
     private PIDController moveController;
+    private boolean isSquared; 
 
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
@@ -37,68 +39,86 @@ public class SpeakerSquareThenAlign extends Command {
 
         turnThreshold = 1.0;
         turnTarget = 1.5;
-        turnFF = 0.1;
-        turnController = new PIDController(0.06, 0.0, 0);
+        turnFF = 0.0;
+        turnController = new PIDController(0.05, 0.0, 0);
         turnController.enableContinuousInput(-180, 180);
 
         moveThreshold = 1.0;
         moveTarget = 0;
         moveFF = 0.4;
         moveController = new PIDController(0.03, 0.0, 0.0);
+        
+        isSquared = false; 
+        SmartDashboard.putBoolean("is squared", isSquared);
 
         addRequirements(drivetrain);
+        
    }
 
     @Override
     public void initialize() {
+        isSquared = false;
         oi = DriverOI.getInstance();
         limelightFront.setPipeline(3); 
+
+        turnController.setP(0.05); 
+        turnController.setI( 0.00);
+        turnController.setD(0.0);
+        turnThreshold = 4.0;
+        turnFF = 0.2;
+
+        moveController.setP(0.03); 
+        moveController.setI(0.00);
+        moveController.setD(0.0);
+        moveThreshold = 1.0; 
+        moveFF = 0.40;
     }
 
     @Override
     public void execute() {
-        boolean isSquared = false;
+        double turnAngle = 0;
+        SmartDashboard.putBoolean("is squared", isSquared);
 
-        if (!isSquared) {
-            double turnAngle;
-
-            turnController.setP(SmartDashboard.getNumber("apriltag align p", 0.08)); 
-            turnController.setI(SmartDashboard.getNumber("apriltag align i", 0.00));
-            turnFF = SmartDashboard.getNumber("apriltag ff", 0.02); 
-
-            // double throttle = oi.getSwerveTranslation().getX();
-            // Translation2d position = new Translation2d(-throttle, 0.0);
-            Translation2d position = new Translation2d(0.0, 0.0); 
-
-            if (limelightFront.hasTarget()) {
-                double currentAngle = limelightFront.getRotationAverage();
-                double error = currentAngle - turnTarget;
-                if (error < -turnThreshold)
-                    turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
-                else if (error > turnThreshold)
-                    turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
-                else
-                    turnAngle = 0;
-            }
-            else
-                turnAngle = 0;
-
-            drivetrain.drive(position, turnAngle, false, new Translation2d(0, 0));
-            return;
-        }
+        // double throttle = oi.getSwerveTranslation().getX();
+        // Translation2d position = new Translation2d(-throttle, 0.0);
+        Translation2d translation = new Translation2d(0.0, 0.0); 
 
         if (limelightFront.hasTarget()) {
-            Translation2d translation;
-            double currentTx = limelightFront.getTxAverage(); 
-            double error = currentTx - moveTarget;
-            if (error > moveThreshold)
-                translation = new Translation2d(0.0, moveController.calculate(-currentTx, moveTarget) + moveFF); 
-            else if (error < -turnThreshold)
-                translation = new Translation2d(0.0, moveController.calculate(-currentTx, moveTarget) - moveFF); 
-            else
-                translation = new Translation2d(0.0, 0.0); 
-            drivetrain.drive(translation, 0.0, true, new Translation2d(0, 0));
+            double currentAngle = limelightFront.getRotationAverage();
+            double turnError = currentAngle - turnTarget;
+
+            Logger.getInstance().logEvent("Turn Angle: " + turnError, false);
+            Logger.getInstance().logEvent("Is squared: " + isSquared, false);
+        
+            if (Math.abs(turnError) < turnThreshold)
+                isSquared = true;
+                
+            // if(!isSquared){
+                Logger.getInstance().logEvent("Running square", false);
+                if (turnError < -turnThreshold)
+                    turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
+                else if (turnError > turnThreshold)
+                    turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
+            // }
+            if (isSquared) {
+                double currentTx = limelightFront.getTxAverage(); 
+                double moveError = currentTx - moveTarget;
+                Logger.getInstance().logEvent("Move Error: " + moveError, false);    
+
+                //part we are fixing 
+                if (moveError > moveThreshold)
+                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) - moveFF); 
+                else if (moveError < -moveThreshold)
+                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) + moveFF); 
+                else
+                    translation = new Translation2d(0.0, 0.0); 
+            }
         }
+
+        Logger.getInstance().logEvent("Translation: " + translation.toString(), false);
+        drivetrain.drive(translation, turnAngle, false, new Translation2d(0, 0));
+
+        
 
         // thetaController.setP(0.06); 
         // thetaController.setI(0);
