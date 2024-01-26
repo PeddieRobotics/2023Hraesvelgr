@@ -30,7 +30,9 @@ public class LimelightFront extends Limelight {
         rotationAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
         setPipeline(7);
-        
+        SmartDashboard.putNumber("apriltag p", 0.08); 
+        SmartDashboard.putNumber("apriltag i", 0.00); 
+        SmartDashboard.putNumber("apriltag ff", 0.02); 
     }
 
     public static LimelightFront getInstance() {
