@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import org.ejml.dense.row.misc.TransposeAlgs_DDRM;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +22,8 @@ import frc.robot.utils.Constants.ModuleConstants;
 import frc.robot.utils.ADIS16470_IMU;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
+import swervelib.SwerveDrive;
+import swervelib.parser.SwerveDriveConfiguration;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
@@ -271,6 +276,18 @@ public class Drivetrain extends SubsystemBase {
         } else {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
+
+        // robotRelativeSpeeds= ChassisSpeeds.discretize(robotRelativeSpeeds,.02);
+
+        // //fudge factoring
+
+        // double fudgefactor=-.11;
+        // Translation2d commandedVelocity = new Translation2d(robotRelativeSpeeds.vxMetersPerSecond,robotRelativeSpeeds.vyMetersPerSecond);
+        // Rotation2d commandedRotation = Rotation2d.fromRadians(robotRelativeSpeeds.omegaRadiansPerSecond);
+        // Translation2d TangentVelocity = commandedVelocity.rotateBy(Rotation2d.fromDegrees(90));
+        // commandedVelocity = commandedVelocity.plus(TangentVelocity.times(fudgefactor*commandedRotation.getRadians())); // adds tangent veclocity times rotational speed times fudge factor
+
+        // robotRelativeSpeeds = new ChassisSpeeds(commandedVelocity.getX(), commandedVelocity.getY(), commandedRotation.getRadians());
 
         latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
 

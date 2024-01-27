@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
+import frc.robot.commands.DriveCommands.DriveRotate;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -117,6 +118,7 @@ public class DriverOI {
 
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        triangleButton.toggleOnTrue(new DriveRotate());
    
         // Single substation (cone) intake
         xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
