@@ -158,6 +158,8 @@ public class Drivetrain extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();
             swerveModules[i].putSmartDashboard();
+
+            SmartDashboard.putNumber("swerve module " + i + " speed", swerveModules[i].getState().speedMetersPerSecond);
             // swerveModules[i].setDrivePIDF(SmartDashboard.getNumber("drive p", 0.0),
             //     SmartDashboard.getNumber("drive i", 0.0),
             //     SmartDashboard.getNumber("drive d", 0.0),

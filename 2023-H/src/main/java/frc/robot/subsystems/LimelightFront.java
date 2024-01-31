@@ -30,19 +30,6 @@ public class LimelightFront extends Limelight {
         rotationAverage = new RollingAverage();
         xAverage = new RollingAverage(4,getBotpose().getX());
         setPipeline(7);
-        SmartDashboard.putNumber("apriltag align p", 0.05); 
-        SmartDashboard.putNumber("apriltag align i", 0.00); 
-        SmartDashboard.putNumber("apriltag align d", 0.00);
-        SmartDashboard.putNumber("apriltag ff", 0.01);
-        SmartDashboard.putNumber("apriltag angle threshold", 1.0); 
-        
-        SmartDashboard.putNumber("apriltag move p", 0.03); 
-        SmartDashboard.putNumber("apriltag move i", 0.00);
-        SmartDashboard.putNumber("apriltag move d", 0.0);
-        SmartDashboard.putNumber("apriltag move threshold", 1.0); 
-        SmartDashboard.putNumber("apriltag move ff", 0.40);
-        SmartDashboard.putNumber("Current RX", 0.0);
-        SmartDashboard.putBoolean("ISSQUARED", false); 
     }
 
     public static LimelightFront getInstance() {
@@ -55,9 +42,6 @@ public class LimelightFront extends Limelight {
     @Override
     public void periodic() {
         updateRollingAverages();
-        SmartDashboard.putNumber("megatag heading", getBotposeBlue().getRotation().getDegrees());
-        SmartDashboard.putNumber("megatag heading average", getRotationAverage()); 
-        SmartDashboard.putNumber("Current RX", getRotationAverage()); 
     }
 
     public void startAveragingX(){

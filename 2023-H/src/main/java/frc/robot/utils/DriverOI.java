@@ -183,7 +183,7 @@ public class DriverOI {
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.whileTrue(new ApriltagBotPoseAlign());
-        squareButton.whileTrue(new SpeakerSquareThenAlign());
+        squareButton.onTrue(new ApriltagBotPoseAlign());
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

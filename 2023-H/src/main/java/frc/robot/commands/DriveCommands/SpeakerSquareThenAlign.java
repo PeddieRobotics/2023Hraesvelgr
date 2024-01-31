@@ -38,7 +38,7 @@ public class SpeakerSquareThenAlign extends Command {
         limelightFront = LimelightFront.getInstance();
 
         turnThreshold = 1.0;
-        turnTarget = 1.5;
+        turnTarget = 3;
         turnFF = 0.0;
         turnController = new PIDController(0.05, 0.0, 0);
         turnController.enableContinuousInput(-180, 180);
@@ -51,6 +51,18 @@ public class SpeakerSquareThenAlign extends Command {
         isSquared = false; 
         SmartDashboard.putBoolean("is squared", isSquared);
 
+        SmartDashboard.putNumber("ll turn p", 0.05);
+        SmartDashboard.putNumber("ll turn i", 0.0);
+        SmartDashboard.putNumber("ll turn d", 0.0);
+        SmartDashboard.putNumber("ll turn thresh", 2000);
+        SmartDashboard.putNumber("ll turn ff", 0);
+
+        SmartDashboard.putNumber("ll move p", 0.1);
+        SmartDashboard.putNumber("ll move i", 0.0001);
+        SmartDashboard.putNumber("ll move d", 0.0);
+        SmartDashboard.putNumber("ll move thresh", 0.01);
+        SmartDashboard.putNumber("ll move ff", 0);
+
         addRequirements(drivetrain);
         
    }
@@ -61,17 +73,17 @@ public class SpeakerSquareThenAlign extends Command {
         oi = DriverOI.getInstance();
         limelightFront.setPipeline(3); 
 
-        turnController.setP(0.05); 
-        turnController.setI( 0.00);
-        turnController.setD(0.0);
-        turnThreshold = 4.0;
-        turnFF = 0.2;
+        turnController.setP(SmartDashboard.getNumber("ll turn p", 0.05)); 
+        turnController.setI(SmartDashboard.getNumber("ll turn i", 0.0));
+        turnController.setD(SmartDashboard.getNumber("ll turn d", 0.0));
+        turnThreshold = SmartDashboard.getNumber("ll turn thresh", 4.0);
+        turnFF = SmartDashboard.getNumber("ll turn ff", 0.2);
 
-        moveController.setP(0.03); 
-        moveController.setI(0.00);
-        moveController.setD(0.0);
-        moveThreshold = 1.0; 
-        moveFF = 0.40;
+        moveController.setP(SmartDashboard.getNumber("ll move p", 0.03)); 
+        moveController.setI(SmartDashboard.getNumber("ll move i", 0.0));
+        moveController.setD(SmartDashboard.getNumber("ll move d", 0.0));
+        moveThreshold = SmartDashboard.getNumber("ll move thresh", 1.0); 
+        moveFF = SmartDashboard.getNumber("ll move ff", 0.4);
     }
 
     @Override
@@ -87,42 +99,31 @@ public class SpeakerSquareThenAlign extends Command {
             double currentAngle = limelightFront.getRotationAverage();
             double turnError = currentAngle - turnTarget;
 
-            Logger.getInstance().logEvent("Turn Angle: " + turnError, false);
-            Logger.getInstance().logEvent("Is squared: " + isSquared, false);
-        
-            if (Math.abs(turnError) < turnThreshold)
+            SmartDashboard.putNumber("turn error", turnError);    
+                    
+            if (turnError < -turnThreshold)
+                turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
+            else if (turnError > turnThreshold)
+                turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
+            else
                 isSquared = true;
-                
-            // if(!isSquared){
-                Logger.getInstance().logEvent("Running square", false);
-                if (turnError < -turnThreshold)
-                    turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
-                else if (turnError > turnThreshold)
-                    turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
-            // }
+
             if (isSquared) {
                 double currentTx = limelightFront.getTxAverage(); 
                 double moveError = currentTx - moveTarget;
-                Logger.getInstance().logEvent("Move Error: " + moveError, false);    
+                SmartDashboard.putNumber("move error", moveError);    
 
-                //part we are fixing 
                 if (moveError > moveThreshold)
                     translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) - moveFF); 
                 else if (moveError < -moveThreshold)
-                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) + moveFF); 
-                else
-                    translation = new Translation2d(0.0, 0.0); 
+                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) + moveFF);
             }
         }
 
-        Logger.getInstance().logEvent("Translation: " + translation.toString(), false);
+        SmartDashboard.putNumber("translation y", translation.getY());
+        SmartDashboard.putNumber("turn angle", turnAngle);
+
         drivetrain.drive(translation, turnAngle, false, new Translation2d(0, 0));
-
-        
-
-        // thetaController.setP(0.06); 
-        // thetaController.setI(0);
-        
     }
 
     @Override
