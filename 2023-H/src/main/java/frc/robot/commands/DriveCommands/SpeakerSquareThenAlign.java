@@ -58,10 +58,10 @@ public class SpeakerSquareThenAlign extends Command {
         SmartDashboard.putNumber("ll turn ff", 0);
 
         SmartDashboard.putNumber("ll move p", 0.1);
-        SmartDashboard.putNumber("ll move i", 0.0001);
-        SmartDashboard.putNumber("ll move d", 0.0);
-        SmartDashboard.putNumber("ll move thresh", 0.01);
-        SmartDashboard.putNumber("ll move ff", 0);
+        SmartDashboard.putNumber("ll move i", 0.0002);
+        SmartDashboard.putNumber("ll move d", 0.01);
+        SmartDashboard.putNumber("ll move thresh", 0.5);
+        SmartDashboard.putNumber("ll move ff", 0.1);
 
         addRequirements(drivetrain);
         
