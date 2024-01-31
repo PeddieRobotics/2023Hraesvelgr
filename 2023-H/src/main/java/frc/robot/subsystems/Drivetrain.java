@@ -277,11 +277,11 @@ public class Drivetrain extends SubsystemBase {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
 
-        robotRelativeSpeeds= ChassisSpeeds.discretize(robotRelativeSpeeds,.02);
+        robotRelativeSpeeds= ChassisSpeeds.discretize(robotRelativeSpeeds,.02);//real loop time should be .02
 
         //fudge factoring
 
-        double fudgefactor=-.11;
+        double fudgefactor=-.11;//-.11
         Translation2d commandedVelocity = new Translation2d(robotRelativeSpeeds.vxMetersPerSecond,robotRelativeSpeeds.vyMetersPerSecond);
         Rotation2d commandedRotation = Rotation2d.fromRadians(robotRelativeSpeeds.omegaRadiansPerSecond);
         Translation2d TangentVelocity = commandedVelocity.rotateBy(Rotation2d.fromDegrees(90));
