@@ -13,6 +13,7 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFront;
+import frc.robot.utils.Constants;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.Logger;
 import frc.robot.utils.RollingAverage;
@@ -24,7 +25,7 @@ public class SpeakerSquareThenAlign extends Command {
     private Limelight limelightFront;
     private DriverOI oi;
 
-    private double turnThreshold, turnTarget, turnFF;
+    private double turnThreshold1, turnThreshold2, turnTarget, turnFF;
     private PIDController turnController;
 
     private double moveThreshold, moveTarget, moveFF;
@@ -33,35 +34,50 @@ public class SpeakerSquareThenAlign extends Command {
 
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
+    // possible use i-zone
+    // 
     public SpeakerSquareThenAlign() {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
 
-        turnThreshold = 1.0;
-        turnTarget = 3;
-        turnFF = 0.0;
-        turnController = new PIDController(0.05, 0.0, 0);
+        //turn controller 
+        turnThreshold1 = Constants.LimelightConstants.sourceTurnThresh1;
+        turnThreshold2 = Constants.LimelightConstants.sourceTurnThresh2;
+        turnTarget = 2;
+        turnFF = Constants.LimelightConstants.sourceTurnFF;
+        turnController = new PIDController(Constants.LimelightConstants.sourceTurnP, 
+        Constants.LimelightConstants.sourceTurnP, 
+        Constants.LimelightConstants.sourceTurnD);
+
         turnController.enableContinuousInput(-180, 180);
 
-        moveThreshold = 1.0;
+
+        //move controller 
+        moveThreshold = Constants.LimelightConstants.sourceMoveThresh;
         moveTarget = 0;
-        moveFF = 0.4;
-        moveController = new PIDController(0.03, 0.0, 0.0);
+        moveFF = Constants.LimelightConstants.sourceMoveFF;
+        moveController = new PIDController(Constants.LimelightConstants.sourceMoveP,
+            Constants.LimelightConstants.sourceMoveI, 
+            Constants.LimelightConstants.sourceMoveD);
         
+        //is squared 
         isSquared = false; 
         SmartDashboard.putBoolean("is squared", isSquared);
 
-        SmartDashboard.putNumber("ll turn p", 0.05);
-        SmartDashboard.putNumber("ll turn i", 0.0);
-        SmartDashboard.putNumber("ll turn d", 0.0);
-        SmartDashboard.putNumber("ll turn thresh", 2000);
-        SmartDashboard.putNumber("ll turn ff", 0);
+        //turn controller values 
+        SmartDashboard.putNumber("ll turn p", Constants.LimelightConstants.sourceTurnP);
+        SmartDashboard.putNumber("ll turn i", Constants.LimelightConstants.sourceTurnI);
+        SmartDashboard.putNumber("ll turn d", Constants.LimelightConstants.sourceTurnD);
+        SmartDashboard.putNumber("ll turn thresh 1", Constants.LimelightConstants.sourceTurnThresh1);
+        SmartDashboard.putNumber("ll turn thresh 2", Constants.LimelightConstants.sourceTurnThresh2);
+        SmartDashboard.putNumber("ll turn ff", Constants.LimelightConstants.sourceTurnFF);
 
-        SmartDashboard.putNumber("ll move p", 0.1);
-        SmartDashboard.putNumber("ll move i", 0.0002);
-        SmartDashboard.putNumber("ll move d", 0.01);
-        SmartDashboard.putNumber("ll move thresh", 0.5);
-        SmartDashboard.putNumber("ll move ff", 0.1);
+        //move controller values 
+        SmartDashboard.putNumber("ll move p", Constants.LimelightConstants.sourceMoveP);
+        SmartDashboard.putNumber("ll move i", Constants.LimelightConstants.sourceMoveI);
+        SmartDashboard.putNumber("ll move d", Constants.LimelightConstants.sourceMoveD);
+        SmartDashboard.putNumber("ll move thresh", Constants.LimelightConstants.sourceMoveThresh);
+        SmartDashboard.putNumber("ll move ff", Constants.LimelightConstants.sourceMoveFF);
 
         addRequirements(drivetrain);
         
@@ -73,17 +89,20 @@ public class SpeakerSquareThenAlign extends Command {
         oi = DriverOI.getInstance();
         limelightFront.setPipeline(3); 
 
-        turnController.setP(SmartDashboard.getNumber("ll turn p", 0.05)); 
-        turnController.setI(SmartDashboard.getNumber("ll turn i", 0.0));
-        turnController.setD(SmartDashboard.getNumber("ll turn d", 0.0));
-        turnThreshold = SmartDashboard.getNumber("ll turn thresh", 4.0);
-        turnFF = SmartDashboard.getNumber("ll turn ff", 0.2);
+        //turn controller 
+        turnController.setP(SmartDashboard.getNumber("ll turn p", Constants.LimelightConstants.sourceTurnP)); 
+        turnController.setI(SmartDashboard.getNumber("ll turn i", Constants.LimelightConstants.sourceTurnI));
+        turnController.setD(SmartDashboard.getNumber("ll turn d", Constants.LimelightConstants.sourceTurnD));
+        turnThreshold1 = SmartDashboard.getNumber("ll turn thresh 1", 2000);
+        turnThreshold2 = SmartDashboard.getNumber("ll turn thresh 2", 2000);
+        turnFF = SmartDashboard.getNumber("ll turn ff", Constants.LimelightConstants.sourceTurnFF);
 
-        moveController.setP(SmartDashboard.getNumber("ll move p", 0.03)); 
-        moveController.setI(SmartDashboard.getNumber("ll move i", 0.0));
-        moveController.setD(SmartDashboard.getNumber("ll move d", 0.0));
-        moveThreshold = SmartDashboard.getNumber("ll move thresh", 1.0); 
-        moveFF = SmartDashboard.getNumber("ll move ff", 0.4);
+        //move controller
+        moveController.setP(SmartDashboard.getNumber("ll move p", Constants.LimelightConstants.sourceMoveP)); 
+        moveController.setI(SmartDashboard.getNumber("ll move i", Constants.LimelightConstants.sourceMoveI));
+        moveController.setD(SmartDashboard.getNumber("ll move d", Constants.LimelightConstants.sourceMoveD));
+        moveThreshold = SmartDashboard.getNumber("ll move thresh", Constants.LimelightConstants.sourceMoveThresh); 
+        moveFF = SmartDashboard.getNumber("ll move ff", Constants.LimelightConstants.sourceMoveFF);
     }
 
     @Override
@@ -91,9 +110,10 @@ public class SpeakerSquareThenAlign extends Command {
         double turnAngle = 0;
         SmartDashboard.putBoolean("is squared", isSquared);
 
-        // double throttle = oi.getSwerveTranslation().getX();
-        // Translation2d position = new Translation2d(-throttle, 0.0);
-        Translation2d translation = new Translation2d(0.0, 0.0); 
+        double throttle = -oi.getSwerveTranslation().getX();
+        Translation2d translation = new Translation2d(throttle, 0.0); 
+
+        double turnThreshold = isSquared ? turnThreshold2 : turnThreshold1;
 
         if (limelightFront.hasTarget()) {
             double currentAngle = limelightFront.getRotationAverage();
@@ -114,9 +134,9 @@ public class SpeakerSquareThenAlign extends Command {
                 SmartDashboard.putNumber("move error", moveError);    
 
                 if (moveError > moveThreshold)
-                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) - moveFF); 
+                    translation = new Translation2d(throttle, moveController.calculate(currentTx, moveTarget) - moveFF); 
                 else if (moveError < -moveThreshold)
-                    translation = new Translation2d(0.0, moveController.calculate(currentTx, moveTarget) + moveFF);
+                    translation = new Translation2d(throttle, moveController.calculate(currentTx, moveTarget) + moveFF);
             }
         }
 

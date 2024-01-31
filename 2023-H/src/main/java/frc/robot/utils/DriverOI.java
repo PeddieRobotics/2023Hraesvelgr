@@ -208,7 +208,7 @@ public class DriverOI {
         //          */
         //         new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
         //     claw::hasGamepiece));
-        circleButton.toggleOnTrue(new SpeakerSquareThenAlign()); 
+        circleButton.whileTrue(new SpeakerSquareThenAlign()); 
         // circleButton.toggleOnTrue(new ApriltagBotPoseAlign()); 
 
         // Lock drivetrain (toggle)
