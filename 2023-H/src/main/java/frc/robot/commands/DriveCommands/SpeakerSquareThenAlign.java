@@ -32,6 +32,8 @@ public class SpeakerSquareThenAlign extends Command {
     private PIDController moveController;
     private boolean isSquared; 
 
+    private double maxThrottle; 
+
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
     // possible use i-zone
@@ -39,6 +41,9 @@ public class SpeakerSquareThenAlign extends Command {
     public SpeakerSquareThenAlign() {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
+
+        maxThrottle = Constants.LimelightConstants.sourceMaxThrottle; 
+        
 
         //turn controller 
         turnThreshold1 = Constants.LimelightConstants.sourceTurnThresh1;
@@ -79,6 +84,12 @@ public class SpeakerSquareThenAlign extends Command {
         SmartDashboard.putNumber("ll move thresh", Constants.LimelightConstants.sourceMoveThresh);
         SmartDashboard.putNumber("ll move ff", Constants.LimelightConstants.sourceMoveFF);
 
+
+        SmartDashboard.putNumber("ll turn iZone", Constants.LimelightConstants.sourceTurnIZone);
+        SmartDashboard.putNumber("ll move iZone", Constants.LimelightConstants.sourceMoveIZone); 
+
+        SmartDashboard.putNumber("ll max throttle", Constants.LimelightConstants.sourceMaxThrottle);
+
         addRequirements(drivetrain);
         
    }
@@ -93,8 +104,8 @@ public class SpeakerSquareThenAlign extends Command {
         turnController.setP(SmartDashboard.getNumber("ll turn p", Constants.LimelightConstants.sourceTurnP)); 
         turnController.setI(SmartDashboard.getNumber("ll turn i", Constants.LimelightConstants.sourceTurnI));
         turnController.setD(SmartDashboard.getNumber("ll turn d", Constants.LimelightConstants.sourceTurnD));
-        turnThreshold1 = SmartDashboard.getNumber("ll turn thresh 1", 2000);
-        turnThreshold2 = SmartDashboard.getNumber("ll turn thresh 2", 2000);
+        turnThreshold1 = SmartDashboard.getNumber("ll turn thresh 1", Constants.LimelightConstants.sourceTurnThresh1);
+        turnThreshold2 = SmartDashboard.getNumber("ll turn thresh 2", Constants.LimelightConstants.sourceTurnThresh2);
         turnFF = SmartDashboard.getNumber("ll turn ff", Constants.LimelightConstants.sourceTurnFF);
 
         //move controller
@@ -103,6 +114,11 @@ public class SpeakerSquareThenAlign extends Command {
         moveController.setD(SmartDashboard.getNumber("ll move d", Constants.LimelightConstants.sourceMoveD));
         moveThreshold = SmartDashboard.getNumber("ll move thresh", Constants.LimelightConstants.sourceMoveThresh); 
         moveFF = SmartDashboard.getNumber("ll move ff", Constants.LimelightConstants.sourceMoveFF);
+
+        turnController.setIZone(SmartDashboard.getNumber("ll move iZone", Constants.LimelightConstants.sourceTurnIZone)); 
+        moveController.setIZone(SmartDashboard.getNumber("ll move iZone", Constants.LimelightConstants.sourceMoveIZone)); 
+
+        maxThrottle = SmartDashboard.getNumber("ll max throttle", Constants.LimelightConstants.sourceMaxThrottle);
     }
 
     @Override
@@ -111,6 +127,8 @@ public class SpeakerSquareThenAlign extends Command {
         SmartDashboard.putBoolean("is squared", isSquared);
 
         double throttle = -oi.getSwerveTranslation().getX();
+
+        throttle = Math.min(throttle, maxThrottle); 
         Translation2d translation = new Translation2d(throttle, 0.0); 
 
         double turnThreshold = isSquared ? turnThreshold2 : turnThreshold1;
@@ -120,7 +138,7 @@ public class SpeakerSquareThenAlign extends Command {
             double turnError = currentAngle - turnTarget;
 
             SmartDashboard.putNumber("turn error", turnError);    
-                    
+            
             if (turnError < -turnThreshold)
                 turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
             else if (turnError > turnThreshold)
@@ -128,6 +146,8 @@ public class SpeakerSquareThenAlign extends Command {
             else
                 isSquared = true;
 
+            
+            
             if (isSquared) {
                 double currentTx = limelightFront.getTxAverage(); 
                 double moveError = currentTx - moveTarget;

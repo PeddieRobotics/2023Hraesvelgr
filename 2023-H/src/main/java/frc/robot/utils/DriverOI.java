@@ -32,18 +32,17 @@ import frc.robot.commands.ClawCommands.IntakeFloorCone;
 import frc.robot.commands.ClawCommands.IntakeConeSingleSS;
 import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.ClawCommands.IntakeCubeSingleSS;
-import frc.robot.commands.DriveCommands.AprilTagSourceSideAlign;
+import frc.robot.commands.DriveCommands.SourceSideAlign;
+import frc.robot.commands.DriveCommands.SpeakerSquareThenAlign;
 import frc.robot.commands.DriveCommands.ApriltagBotPoseAlign;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.FollowNote;
-import frc.robot.commands.DriveCommands.GyroSourceAlign;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.RotateToAngleWhileDriving;
 import frc.robot.commands.DriveCommands.ScoreAlign;
 import frc.robot.commands.DriveCommands.SingleSSAlign;
-import frc.robot.commands.DriveCommands.SpeakerSquareThenAlign;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
 import frc.robot.subsystems.Arm;
 // import frc.robot.subsystems.Autonomous;
@@ -174,16 +173,16 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        triangleButton.onTrue(new AprilTagSourceSideAlign()); 
+        triangleButton.toggleOnTrue(new SourceSideAlign()); 
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        // xButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSConePose(), new IntakeConeSingleSS()), new SetStowedPose()));
         xButton.whileTrue(new FollowNote());
-
+        
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        // squareButton.whileTrue(new ApriltagBotPoseAlign());
-        squareButton.onTrue(new ApriltagBotPoseAlign());
+        squareButton.whileTrue(new SpeakerSquareThenAlign());
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose
@@ -192,24 +191,22 @@ public class DriverOI {
 
         // Auto-align to score, or to single substation
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        // circleButton.whileTrue(
-        //     new ConditionalCommand(
-        //         /*
-        //          * If we have a gamepiece, perform auto-align to score.
-        //          * Also: transition from pre-score pose to scoring pose if needed.
-        //          */
-        //         new ConditionalCommand(new ParallelCommandGroup(new ScoreAlign(),
-        //             new ConditionalCommand(new InstantCommand(() -> {arm.moveToScoringPose();}), new InstantCommand(), arm::isPreScorePose)),
-        //         new InstantCommand(() -> {blinkin.failure();}),
-        //         arm::isAutoAlignValid),
-        //         /*
-        //          * If we do not have a gamepiece, perform auto-align to the single substation,
-        //          * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
-        //          */
-        //         new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
-        //     claw::hasGamepiece));
-        circleButton.whileTrue(new SpeakerSquareThenAlign()); 
-        // circleButton.toggleOnTrue(new ApriltagBotPoseAlign()); 
+        circleButton.whileTrue(
+            new ConditionalCommand(
+                /*
+                 * If we have a gamepiece, perform auto-align to score.
+                 * Also: transition from pre-score pose to scoring pose if needed.
+                 */
+                new ConditionalCommand(new ParallelCommandGroup(new ScoreAlign(),
+                    new ConditionalCommand(new InstantCommand(() -> {arm.moveToScoringPose();}), new InstantCommand(), arm::isPreScorePose)),
+                new InstantCommand(() -> {blinkin.failure();}),
+                arm::isAutoAlignValid),
+                /*
+                 * If we do not have a gamepiece, perform auto-align to the single substation,
+                 * provided we have been commanded to one of those poses. Otherwise refuse to do anything/failure mode. 
+                 */
+                new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
+            claw::hasGamepiece));
 
         // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
@@ -255,17 +252,6 @@ public class DriverOI {
         } else {
             driveSpeedMode = DriveSpeedMode.NORMAL;
         }
-    }
-
-    public double getForwardRight() {
-        double input = controller.getRawAxis(PS4Controller.Axis.kRightY.value);
-        if(Math.abs(input) < 0.9){
-            input *= 0.7777;
-        }
-        else{
-            input = Math.pow(input, 3);
-        }
-        return input;
     }
 
     public double getForward() {

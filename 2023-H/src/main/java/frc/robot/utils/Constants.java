@@ -186,19 +186,23 @@ public final class Constants {
                 public static final double kDriveScaleSingleSSAlign = 1.0;
 
                 //apriltag align, turn 
-                public static final double sourceTurnP = 0.04; 
-                public static final double sourceTurnI = 0.0003; 
+                public static final double sourceTurnP = 0.05; //.04
+                public static final double sourceTurnI = 0.0002; 
                 public static final double sourceTurnD = 0.0; 
                 public static final double sourceTurnThresh1 = 7.0; 
-                public static final double sourceTurnThresh2 = 0.5; 
+                public static final double sourceTurnThresh2 = 1.5; 
                 public static final double sourceTurnFF = 0.0; 
+                public static final double sourceTurnIZone = 5; 
 
                 //apriltag align, move 
-                public static final double sourceMoveP = 0.08;
+                public static final double sourceMoveP = 0.058; //.08
                 public static final double sourceMoveI = 0.0025;
                 public static final double sourceMoveD = 0.005; 
-                public static final double sourceMoveThresh = 0.5; 
-                public static final double sourceMoveFF = 0.01; 
+                public static final double sourceMoveThresh = 1.5; //0.5
+                public static final double sourceMoveFF = 0.03; //.01
+                public static final double sourceMoveIZone = 5; 
+
+                public static final double sourceMaxThrottle = .6; 
         }
 
         public static final class ShoulderConstants {
