@@ -132,6 +132,13 @@ public class LimelightBack extends Limelight {
     public double getRotationAverage() {
         return rotationAverage.getAverage();
     }
+    public double getRYAverage(){
+        return 0.0; 
+    }
+
+    public double getRXAverage(){
+        return 0.0; 
+    }
 
     // Class ID of primary neural detector result or neural classifier result
     public double getNeuralClassID() {

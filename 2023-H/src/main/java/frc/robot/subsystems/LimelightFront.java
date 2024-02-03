@@ -17,7 +17,7 @@ import frc.robot.utils.RollingAverage;
 public class LimelightFront extends Limelight {
     private static LimelightFront limelightFront;
 
-    private RollingAverage txAverage, tyAverage, taAverage, xAverage, rotationAverage;
+    private RollingAverage txAverage, tyAverage, taAverage, xAverage, rotationAverage, rxAverage, ryAverage;
     private boolean cube;
 
 
@@ -28,6 +28,8 @@ public class LimelightFront extends Limelight {
         tyAverage = new RollingAverage();
         taAverage = new RollingAverage();
         rotationAverage = new RollingAverage();
+        rxAverage = new RollingAverage(); 
+        ryAverage = new RollingAverage(); 
         xAverage = new RollingAverage(4,getBotpose().getX());
         setPipeline(7);
     }
@@ -69,6 +71,14 @@ public class LimelightFront extends Limelight {
 
     public Pose2d getBotposeBlue() {
         double[] result = LimelightHelper.getBotPose_wpiBlue(limelightName);
+        if (result.length > 0.0) {
+            return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
+        }
+        return new Pose2d();
+    }
+
+     public Pose2d getBotPoseRed() {
+        double[] result = LimelightHelper.getBotPose_wpiRed(limelightName);
         if (result.length > 0.0) {
             return new Pose2d(new Translation2d(result[0], result[1]), new Rotation2d(Math.toRadians(result[5])));
         }
@@ -137,6 +147,14 @@ public class LimelightFront extends Limelight {
         return rotationAverage.getAverage();
     }
 
+    public double getRXAverage(){
+        return rxAverage.getAverage(); 
+    }
+
+    public double getRYAverage(){
+        return ryAverage.getAverage(); 
+    }
+
     // Class ID of primary neural detector result or neural classifier result
     public double getNeuralClassID() {
         return LimelightHelper.getNeuralClassID(limelightName);
@@ -175,6 +193,7 @@ public class LimelightFront extends Limelight {
         return hasTarget() && getNeuralClassID() == 1;
     }
 
+
     public void updateRollingAverages() {
         if (hasTarget()) {
             txAverage.add(getTx());
@@ -183,6 +202,12 @@ public class LimelightFront extends Limelight {
             
             // rotationAverage.add(getBotpose().getRotation().getDegrees());//based on alliance of driverstation, awaiting testing 
             rotationAverage.add(getBotposeBlue().getRotation().getDegrees()); 
+
+
+            //red
+            rxAverage.add(getBotposeBlue().getX()); 
+            ryAverage.add(getBotposeBlue().getY()); 
+
             
            
         }
@@ -193,6 +218,8 @@ public class LimelightFront extends Limelight {
         tyAverage.clear();
         taAverage.clear();
         rotationAverage.clear(); 
+        rxAverage.clear(); 
+        ryAverage.clear(); 
     }
 
     public void setPipeline(int pipelineNum) {

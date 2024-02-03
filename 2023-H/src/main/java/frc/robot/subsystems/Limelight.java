@@ -25,6 +25,10 @@ public abstract class Limelight extends SubsystemBase {
 
     public abstract double getRotationAverage();
 
+    public abstract double getRXAverage(); 
+
+    public abstract double getRYAverage(); 
+
     public abstract boolean getCube();
 
     public abstract void forceAprilTagLocalization(SwerveDrivePoseEstimator odometry);
