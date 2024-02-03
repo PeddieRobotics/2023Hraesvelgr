@@ -168,7 +168,7 @@ public final class Constants {
         }
 
         public static final class LimelightConstants {
-                public static final double kLimelightHeight = 22.8346; // inches... OLD, NEEDS UPDATING
+                public static final double kLimelightHeight = 28.0; // inches... UPDATED
                 public static final double kLimelightPanningAngle = 0;
                 public static final double kLimelightAngle = 0;
 

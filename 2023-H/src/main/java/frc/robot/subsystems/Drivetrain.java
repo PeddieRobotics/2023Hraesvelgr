@@ -12,11 +12,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants;
 import frc.robot.utils.ADIS16470_IMU;
+import frc.robot.utils.LimelightHelper;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
@@ -66,10 +68,28 @@ public class Drivetrain extends SubsystemBase {
     // Gyro Tilt Rolling Average
     private RollingAverage gyroTiltAverage;
 
+    private Field2d field; 
+
+    private static double inch2meter(double inch) {
+        return inch * 0.0254;
+    }
+
+    private static final double S = 5.0;
+    private static final double I = 0.1;
+    private static final double K = 3.5;
+    private static final double H = 4.8;
+    private static double sigmoid(double dist) {
+
+        return (S-I)/(1.0+Math.exp(-K*(dist-H)))+I;
+    }
+
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
+    
+
+        field = new Field2d(); 
 
         // Initialize Swerve Modules
         frontLeftSwerveModule = new MAXSwerveModule(
@@ -123,8 +143,13 @@ public class Drivetrain extends SubsystemBase {
                         backLeftSwerveModule.getPosition(),
                         backRightSwerveModule.getPosition() },
                 new Pose2d(),
-                VecBuilder.fill(0.1, 0.1, 0.1),
-                VecBuilder.fill(0.9, 0.9, 0.9));
+                // VecBuilder.fill(0.1, 0.1, 0.1),
+                // VecBuilder.fill(0.9, 0.9, 0.9));
+                VecBuilder.fill(0.3, 0.3, 0.1), //DRIVE 
+                VecBuilder.fill(0.1, 0.1, 0.9) //VISION
+        );
+
+              
 
         allowDriving = true;
 
@@ -154,6 +179,10 @@ public class Drivetrain extends SubsystemBase {
 
         SmartDashboard.putNumber("gyro angle", getHeading());
 
+        field.setRobotPose(getPose()); 
+
+        SmartDashboard.putData(field); 
+
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();
@@ -170,6 +199,11 @@ public class Drivetrain extends SubsystemBase {
             // SmartDashboard.getNumber("turn ff", 0.0));
         }
 
+        double distance = inch2meter(limelightFront.getDistance());
+        double stdDev = sigmoid(distance);
+        SmartDashboard.putNumber("distance", distance);
+        SmartDashboard.putNumber("standard deviation", stdDev);
+        odometry.setVisionMeasurementStdDevs(VecBuilder.fill(stdDev, stdDev, 30));
         updateOdometry();
 
         gyroTiltAverage.add(getPitch());
@@ -223,8 +257,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        // limelightFront.checkForAprilTagUpdates(odometry);
-        // limelightBack.checkForAprilTagUpdates(odometry);
+        limelightFront.checkForAprilTagUpdates(odometry);
+        limelightBack.checkForAprilTagUpdates(odometry);
     }
 
     public void setFlipped(){

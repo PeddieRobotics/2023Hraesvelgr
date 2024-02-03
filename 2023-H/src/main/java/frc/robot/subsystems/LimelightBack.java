@@ -199,14 +199,14 @@ public class LimelightBack extends Limelight {
 
     public void checkForAprilTagUpdates(SwerveDrivePoseEstimator odometry) {
         int tagsSeen = LimelightHelper.getNumberOfAprilTagsSeen(limelightName);
-        if (tagsSeen > 1 && this.getBotpose().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm() < 0.5) {
-            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+        if (tagsSeen > 1 && this.getBotposeBlue().relativeTo(odometry.getEstimatedPosition()).getTranslation().getNorm() < 0.5) {
+            odometry.addVisionMeasurement(this.getBotposeBlue(), Timer.getFPGATimestamp());
         }
     }
 
     public void forceAprilTagLocalization(SwerveDrivePoseEstimator odometry){
         if(getTv()){
-            odometry.addVisionMeasurement(this.getBotpose(), Timer.getFPGATimestamp());
+            odometry.addVisionMeasurement(this.getBotposeBlue(), Timer.getFPGATimestamp());
         }
     }
 
