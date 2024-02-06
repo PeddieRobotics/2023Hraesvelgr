@@ -136,13 +136,13 @@ public class Robot extends TimedRobot {
             autonomousCommand.schedule();
         }
 
-        logger.logEvent("Autonomous mode", true);
-        System.out.println("LOGGING: " + DataLogManager.getLogDir());
+        //logger.logEvent("Autonomous mode", true);
+        //System.out.println("LOGGING: " + DataLogManager.getLogDir());
     }
 
     @Override
     public void autonomousPeriodic() {
-        logger.updateLogs();
+        //logger.updateLogs();
     }
 
     @Override
