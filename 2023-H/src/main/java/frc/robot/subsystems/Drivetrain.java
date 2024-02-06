@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -10,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -24,7 +27,6 @@ import frc.robot.utils.RollingAverage;
 import frc.robot.utils.ADIS16470_IMU.IMUAxis;
 
 public class Drivetrain extends SubsystemBase {
-
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
@@ -48,7 +50,7 @@ public class Drivetrain extends SubsystemBase {
 
     private double latestChassisSpeed;
 
-    private final SwerveDrivePoseEstimator odometry;
+    public final SwerveDrivePoseEstimator odometry;
 
     // Snap To Angle Algorithm Variables
     private final PIDController snapToAnglePID;
@@ -68,7 +70,7 @@ public class Drivetrain extends SubsystemBase {
     // Gyro Tilt Rolling Average
     private RollingAverage gyroTiltAverage;
 
-    private Field2d field; 
+    private Field2d field;
 
     private static double inch2meter(double inch) {
         return inch * 0.0254;
@@ -93,8 +95,6 @@ public class Drivetrain extends SubsystemBase {
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
-
-    
 
         field = new Field2d(); 
 
@@ -187,11 +187,15 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Logistic K3", K3); 
         SmartDashboard.putNumber("Logistic H3", H3); 
         
-        SmartDashboard.putNumber("DRIVE STD", 0.3); 
+        SmartDashboard.putNumber("DRIVE STD", 0.3);
+
+        SmartDashboard.putBoolean("odometry start isAdjustingRotation", false);
     }
 
     @Override
     public void periodic() {
+
+        boolean isAdjustingRotation = SmartDashboard.getBoolean("odometry start isAdjustingRotation", false); 
 
         S2 = SmartDashboard.getNumber("Logistic S2", S2); 
         I2 = SmartDashboard.getNumber("Logistic I2", I2); 
@@ -233,19 +237,20 @@ public class Drivetrain extends SubsystemBase {
         int numAprilTag = LimelightHelper.getNumberOfAprilTagsSeen(limelightFront.getLimelightName());
         SmartDashboard.putString("name", limelightFront.getLimelightName());
         SmartDashboard.putNumber("num april tags", numAprilTag);
-        if (numAprilTag < 2)
-            return;
 
-        double stdDev = numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance);
-        
-        SmartDashboard.putNumber("distance", distance);
-        SmartDashboard.putNumber("standard deviation", stdDev);
+        if (numAprilTag >= 2) {
+            double stdDev = numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance);
+            
+            SmartDashboard.putNumber("distance", distance);
+            SmartDashboard.putNumber("standard deviation", stdDev);
 
-        odometry.setVisionMeasurementStdDevs(VecBuilder.fill(stdDev, stdDev, 30));
+            Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isAdjustingRotation ? 0.05 : 30);
+            odometry.setVisionMeasurementStdDevs(visionStdDevs);
+        }
+
         updateOdometry();
 
         gyroTiltAverage.add(getPitch());
-
     }
 
     public static Drivetrain getInstance() {

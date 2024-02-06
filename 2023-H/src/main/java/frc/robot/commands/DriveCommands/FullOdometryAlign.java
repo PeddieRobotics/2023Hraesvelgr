@@ -42,7 +42,7 @@ public class FullOdometryAlign extends Command {
         turnController = new PIDController(Constants.LimelightConstants.bpTurnP, Constants.LimelightConstants.bpTurnI, 
             Constants.LimelightConstants.bpTurnD);
         turnController.enableContinuousInput(-180, 180);
-        turnTarget = 2;
+        turnTarget = 0;
         turnThreshold = Constants.LimelightConstants.bpTurnThresh; 
         turnFF = Constants.LimelightConstants.bpTurnFF; 
 
@@ -102,48 +102,56 @@ public class FullOdometryAlign extends Command {
         Translation2d position = new Translation2d(0.0, 0.0); 
         double turnAngle = 0.0, xMove = 0.0, yMove = 0.0; 
 
-        if (limelightFront.hasTarget()) {
-            // double currentAngle = limelightFront.getRotationAverage();
-            // double currentTX = limelightFront.getRXAverage(); 
-            // double currentTY = limelightFront.getRYAverage(); 
-            double currentAngle = drivetrain.getPose().getRotation().getDegrees(); 
-            double currentTX = drivetrain.getPose().getX(); 
-            double currentTY = drivetrain.getPose().getY(); 
+        // double currentAngle = limelightFront.getRotationAverage();
+        // double currentTX = limelightFront.getRXAverage(); 
+        // double currentTY = limelightFront.getRYAverage(); 
+        double currentAngle = drivetrain.getPose().getRotation().getDegrees(); 
+        double currentTX = drivetrain.getPose().getX(); 
+        double currentTY = drivetrain.getPose().getY(); 
 
-            double turnError = currentAngle - turnTarget;
-            double xError = currentTX - xTarget; 
-            double yError = currentTY - yTarget; 
+        double turnError = currentAngle - turnTarget;
+        double xError = currentTX - xTarget; 
+        double yError = currentTY - yTarget; 
 
-            if (turnError < -turnThreshold)
-                turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
-            else if (turnError > turnThreshold)
-                turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
+        if (turnError < -turnThreshold)
+            turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
+        else if (turnError > turnThreshold)
+            turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
 
-            if (xError < -moveThreshold)
-                xMove = xController.calculate(currentTX, xTarget) + moveFF; 
-            else if (xError > moveThreshold)
-                xMove = xController.calculate(currentTX, xTarget) - moveFF; 
+        if (xError < -moveThreshold)
+            xMove = xController.calculate(currentTX, xTarget) + moveFF; 
+        else if (xError > moveThreshold)
+            xMove = xController.calculate(currentTX, xTarget) - moveFF; 
 
-            if (yError < -moveThreshold)
-                yMove = yController.calculate(currentTY, yTarget) + moveFF; 
-            else if (yError > moveThreshold)
-                yMove = yController.calculate(currentTY, yTarget) - moveFF; 
+        if (yError < -moveThreshold)
+            yMove = yController.calculate(currentTY, yTarget) + moveFF; 
+        else if (yError > moveThreshold)
+            yMove = yController.calculate(currentTY, yTarget) - moveFF; 
 
-            // SmartDashboard.putNumber("x move", xMove);
-            // SmartDashboard.putNumber("y move", yMove);
-            // SmartDashboard.putNumber("tx avg", currentTX);
-            // SmartDashboard.putNumber("ty avg", currentTY);
-            SmartDashboard.putNumber("odom current x", currentTX); 
-            SmartDashboard.putNumber("odom current Y", currentTY); 
-            SmartDashboard.putNumber("odom current rotation", currentAngle); 
-            SmartDashboard.putNumber("odom x error", xError);
-            SmartDashboard.putNumber("odom y error", yError);
-            SmartDashboard.putNumber("odom rotation error", turnError); 
-
-            position = new Translation2d(xMove, yMove); 
-        }
-
-        drivetrain.drive(position, turnAngle, false, new Translation2d(0, 0));
+        // SmartDashboard.putNumber("x move", xMove);
+        // SmartDashboard.putNumber("y move", yMove);
+        // SmartDashboard.putNumber("tx avg", currentTX);
+        // SmartDashboard.putNumber("ty avg", currentTY);
+        SmartDashboard.putNumber("odom current x", currentTX); 
+        SmartDashboard.putNumber("odom current Y", currentTY); 
+        SmartDashboard.putNumber("odom current rotation", currentAngle); 
+        SmartDashboard.putNumber("odom x error", xError);
+        SmartDashboard.putNumber("odom y error", yError);
+        SmartDashboard.putNumber("odom rotation error", turnError); 
+        
+        // if (xMove < 0)
+        //     xMove = Math.max(xMove, -0.5);
+        // else
+        //     xMove = Math.min(xMove, 0.5);
+        
+        // if (yMove < 0)
+        //     yMove = Math.max(yMove, -0.5);
+        // else
+        //     yMove = Math.min(yMove, 0.5); 
+        
+        
+        position = new Translation2d(-xMove, -yMove); 
+        drivetrain.drive(position, turnAngle, true, new Translation2d(0, 0));
     }
 
     @Override

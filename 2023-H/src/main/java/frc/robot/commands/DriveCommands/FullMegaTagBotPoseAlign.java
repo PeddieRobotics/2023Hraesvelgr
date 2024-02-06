@@ -136,7 +136,7 @@ public class FullMegaTagBotPoseAlign extends Command {
             position = new Translation2d(xMove, yMove); 
         }
 
-        drivetrain.drive(position, turnAngle, false, new Translation2d(0, 0));
+        drivetrain.drive(position, turnAngle, true, new Translation2d(0, 0));
     }
 
     @Override

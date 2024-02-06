@@ -210,7 +210,7 @@ public class DriverOI {
         //          */
         //         new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
         //     claw::hasGamepiece));
-        circleButton.whileTrue(new FullMegaTagBotPoseAlign());
+        // circleButton.whileTrue(new ApriltagCalibrate());
 
         // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);
