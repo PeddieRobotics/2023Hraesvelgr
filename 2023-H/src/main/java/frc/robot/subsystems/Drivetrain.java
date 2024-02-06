@@ -74,13 +74,20 @@ public class Drivetrain extends SubsystemBase {
         return inch * 0.0254;
     }
 
-    private static final double S = 5.0;
-    private static final double I = 0.1;
-    private static final double K = 3.5;
-    private static final double H = 4.8;
-    private static double sigmoid(double dist) {
+    private double S2 = 18.0;
+    private double I2 = 0.1;
+    private double K2 = 4.0;
+    private double H2 = 3.3;
+    private double sigmoid2(double dist) {
+        return (S2-I2)/(1.0+Math.exp(-K2*(dist-H2)))+I2;
+    }
 
-        return (S-I)/(1.0+Math.exp(-K*(dist-H)))+I;
+    private double S3 = 5.0;
+    private double I3 = 0.1;
+    private double K3 = 3.0;
+    private double H3 = 3.3;
+    private double sigmoid3(double dist) {
+        return (S3-I3)/(1.0+Math.exp(-K3*(dist-H3)))+I3;
     }
 
     public Drivetrain() {
@@ -169,10 +176,33 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("turn i", ModuleConstants.kTurningI);
         SmartDashboard.putNumber("turn d", ModuleConstants.kTurningD);
         SmartDashboard.putNumber("turn ff", ModuleConstants.kTurningFF);
+
+        SmartDashboard.putNumber("Logistic S2", S2); 
+        SmartDashboard.putNumber("Logistic I2", I2); 
+        SmartDashboard.putNumber("Logistic K2", K2); 
+        SmartDashboard.putNumber("Logistic H2", H2);
+        
+        SmartDashboard.putNumber("Logistic S3", S3); 
+        SmartDashboard.putNumber("Logistic I3", I3); 
+        SmartDashboard.putNumber("Logistic K3", K3); 
+        SmartDashboard.putNumber("Logistic H3", H3); 
+        
+        SmartDashboard.putNumber("DRIVE STD", 0.3); 
     }
 
     @Override
     public void periodic() {
+
+        S2 = SmartDashboard.getNumber("Logistic S2", S2); 
+        I2 = SmartDashboard.getNumber("Logistic I2", I2); 
+        K2 = SmartDashboard.getNumber("Logistic K2", K2); 
+        H2 = SmartDashboard.getNumber("Logistic H2", H2); 
+
+        S3 = SmartDashboard.getNumber("Logistic S3", S3); 
+        I3 = SmartDashboard.getNumber("Logistic I3", I3); 
+        K3 = SmartDashboard.getNumber("Logistic K3", K3); 
+        H3 = SmartDashboard.getNumber("Logistic H3", H3); 
+
         SmartDashboard.putNumber("IMU Pitch", getPitch());
         SmartDashboard.putNumber("IMU Pitch Average", gyroTiltAverage.getAverage());
         SmartDashboard.putBoolean("isFlipped", isFlipped);
@@ -200,9 +230,17 @@ public class Drivetrain extends SubsystemBase {
         }
 
         double distance = inch2meter(limelightFront.getDistance());
-        double stdDev = sigmoid(distance);
+        int numAprilTag = LimelightHelper.getNumberOfAprilTagsSeen(limelightFront.getLimelightName());
+        SmartDashboard.putString("name", limelightFront.getLimelightName());
+        SmartDashboard.putNumber("num april tags", numAprilTag);
+        if (numAprilTag < 2)
+            return;
+
+        double stdDev = numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance);
+        
         SmartDashboard.putNumber("distance", distance);
         SmartDashboard.putNumber("standard deviation", stdDev);
+
         odometry.setVisionMeasurementStdDevs(VecBuilder.fill(stdDev, stdDev, 30));
         updateOdometry();
 

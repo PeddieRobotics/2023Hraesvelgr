@@ -31,6 +31,8 @@ public abstract class Limelight extends SubsystemBase {
 
     public abstract boolean getCube();
 
+    public abstract String getLimelightName();
+
     public abstract void forceAprilTagLocalization(SwerveDrivePoseEstimator odometry);
 
 }

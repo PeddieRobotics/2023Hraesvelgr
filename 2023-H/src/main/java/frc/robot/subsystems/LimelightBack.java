@@ -22,6 +22,10 @@ public class LimelightBack extends Limelight {
 
     private String limelightName = "limelight-back";
 
+    public String getLimelightName() {
+        return limelightName;
+    }
+
     public LimelightBack() {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();

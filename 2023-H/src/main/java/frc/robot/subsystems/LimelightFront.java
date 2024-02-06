@@ -23,6 +23,10 @@ public class LimelightFront extends Limelight {
 
     private String limelightName = "limelight-front";
 
+    public String getLimelightName() {
+        return limelightName;
+    }
+
     public LimelightFront() {
         txAverage = new RollingAverage();
         tyAverage = new RollingAverage();
