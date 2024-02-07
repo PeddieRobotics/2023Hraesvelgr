@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6582127857550994,
-      "y": 4.379852868122284
+      "x": 0.66,
+      "y": 4.38
     },
-    "rotation": -60.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,21 +18,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Intake"
+            "pathName": "4PieceHP.2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2PieceHPSideBack"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SideLayup"
+            "pathName": "4PieceHP.3"
           }
         }
       ]

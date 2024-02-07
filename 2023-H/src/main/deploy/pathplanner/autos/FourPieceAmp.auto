@@ -2,49 +2,55 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.69,
-      "y": 6.68
+      "x": 0.8108477755417065,
+      "y": 6.7337310138186055
     },
-    "rotation": 60.0
+    "rotation": -119.48000000000002
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "SideLayup"
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceAmp.1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2pieceampsidego"
+            "pathName": "4PieceAmp.2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2pieceampsideback"
+            "pathName": "4PieceAmp.3"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "shoot"
+            "waitTime": 2.0
           }
         }
       ]
