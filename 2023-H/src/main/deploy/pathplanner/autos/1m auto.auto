@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.0,
-      "y": 4.0
+      "x": 1.41,
+      "y": 5.62
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test path 1"
+            "pathName": "1m"
           }
         }
       ]
