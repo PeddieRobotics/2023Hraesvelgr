@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.33,
-      "y": 5.5
+      "x": 1.41,
+      "y": 5.62
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StraightLine"
+            "pathName": "straightLine"
           }
         }
       ]
     }
   },
-  "folder": "ChoreoPaths",
-  "choreoAuto": true
+  "folder": null,
+  "choreoAuto": false
 }
