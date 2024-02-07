@@ -20,13 +20,17 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2pieceampsidego"
+            "pathName": "2pieceampside"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
+<<<<<<< HEAD
             "pathName": "2pieceampsideback"
+=======
+            "waitTime": 0.5
+>>>>>>> parent of c128fff (add in paths that we made for 2024)
           }
         }
       ]

@@ -14,12 +14,17 @@
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD:2023-H/src/main/deploy/pathplanner/autos/Rotate180repeat.auto
             "pathName": "straightish1"
+=======
+            "pathName": "3PieceRightPt1"
+>>>>>>> parent of c128fff (add in paths that we made for 2024):2023-H/src/main/deploy/pathplanner/autos/3PieceRight.auto
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD:2023-H/src/main/deploy/pathplanner/autos/Rotate180repeat.auto
             "pathName": "backstraightish2"
           }
         },
@@ -27,11 +32,15 @@
           "type": "wait",
           "data": {
             "waitTime": 1.0
+=======
+            "pathName": "3PieceRightPt2"
+>>>>>>> parent of c128fff (add in paths that we made for 2024):2023-H/src/main/deploy/pathplanner/autos/3PieceRight.auto
           }
         },
         {
           "type": "path",
           "data": {
+<<<<<<< HEAD:2023-H/src/main/deploy/pathplanner/autos/Rotate180repeat.auto
             "pathName": "straightish1"
           }
         },
@@ -39,11 +48,19 @@
           "type": "path",
           "data": {
             "pathName": "backstraightish2"
+=======
+            "pathName": "3PieceRightPt3"
+>>>>>>> parent of c128fff (add in paths that we made for 2024):2023-H/src/main/deploy/pathplanner/autos/3PieceRight.auto
           }
         }
       ]
     }
   },
+<<<<<<< HEAD:2023-H/src/main/deploy/pathplanner/autos/Rotate180repeat.auto
   "folder": null,
   "choreoAuto": false
+=======
+  "folder": "ChoreoPaths",
+  "choreoAuto": true
+>>>>>>> parent of c128fff (add in paths that we made for 2024):2023-H/src/main/deploy/pathplanner/autos/3PieceRight.auto
 }

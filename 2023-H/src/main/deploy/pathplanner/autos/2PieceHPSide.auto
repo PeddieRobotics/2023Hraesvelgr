@@ -16,12 +16,15 @@
           "data": {
             "pathName": "2PieceHPSide"
           }
+<<<<<<< HEAD
         },
         {
           "type": "path",
           "data": {
             "pathName": "2PieceHPSideBack"
           }
+=======
+>>>>>>> parent of c128fff (add in paths that we made for 2024)
         }
       ]
     }
