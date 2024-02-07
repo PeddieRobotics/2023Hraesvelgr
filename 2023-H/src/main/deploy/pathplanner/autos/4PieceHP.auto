@@ -2,25 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.0,
-      "y": 4.0
+      "x": 0.66,
+      "y": 4.38
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "L1Pose"
+            "pathName": "2PieceHPSide"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Test path 1"
+            "pathName": "4PieceHP.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceHP.3"
           }
         }
       ]

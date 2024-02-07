@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 0.6582127857550994,
+      "y": 4.379852868122284
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,25 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Star1"
+            "pathName": "2PieceHPSide"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Star2"
+            "pathName": "2PieceHPSideBack"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Star3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Star4"
+            "name": "SideLayup"
           }
         }
       ]

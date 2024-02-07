@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.0,
-      "y": 4.0
+      "x": 0.69,
+      "y": 6.68
     },
-    "rotation": 0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,25 +14,37 @@
         {
           "type": "named",
           "data": {
-            "name": "L1Pose"
+            "name": "SideLayup"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "eject"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stow"
+            "name": "Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1m Back"
+            "pathName": "2pieceampsidego"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2pieceampsideback"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]
