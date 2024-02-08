@@ -2,41 +2,42 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.0,
-      "y": 4.0
+      "x": 0.8108477755417065,
+      "y": 6.7337310138186055
     },
-    "rotation": 0
+    "rotation": -119.48000000000002
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "L1Pose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "eject"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stow"
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1m Back"
+            "pathName": "4PieceAmp.1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4PieceAmp.2"
           }
         }
       ]
     }
   },
-  "folder": null
+  "folder": null,
+  "choreoAuto": false
 }
