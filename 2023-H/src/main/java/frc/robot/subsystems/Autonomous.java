@@ -23,6 +23,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 // import com.pathplanner.lib.PathPlanner; removed
@@ -153,6 +154,10 @@ public class Autonomous extends SubsystemBase{
                 new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
+                var alliance = DriverStation.getAlliance();
+                if(alliance.isPresent()){
+                    return alliance.get()==DriverStation.Alliance.Red;
+                }
                 return false;
             },
             drivetrain // Reference to drive subsystem to set requirements
