@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
-      "y": 2
+      "x": 1.41,
+      "y": 5.62
     },
     "rotation": 0
   },
@@ -14,25 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Star1"
+            "pathName": "straightish1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Star2"
+            "pathName": "backish2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Star3"
+            "pathName": "straightish1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Star4"
+            "pathName": "backish2"
           }
         }
       ]

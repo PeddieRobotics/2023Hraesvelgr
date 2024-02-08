@@ -72,6 +72,8 @@ public class Drivetrain extends SubsystemBase {
 
     private Field2d field;
 
+    private boolean useMegaTag;
+
     private static double inch2meter(double inch) {
         return inch * 0.0254;
     }
@@ -95,6 +97,8 @@ public class Drivetrain extends SubsystemBase {
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
+
+        useMegaTag = true; 
 
         field = new Field2d(); 
 
@@ -190,12 +194,16 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("DRIVE STD", 0.3);
 
         SmartDashboard.putBoolean("odometry start isAdjustingRotation", false);
+
+        SmartDashboard.putBoolean("Toggle Megatag updates", true);
     }
 
     @Override
     public void periodic() {
 
         boolean isAdjustingRotation = SmartDashboard.getBoolean("odometry start isAdjustingRotation", false); 
+
+        useMegaTag = SmartDashboard.getBoolean("Toggle Megatag updates", true); 
 
         S2 = SmartDashboard.getNumber("Logistic S2", S2); 
         I2 = SmartDashboard.getNumber("Logistic I2", I2); 
@@ -245,10 +253,13 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("standard deviation", stdDev);
 
             Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isAdjustingRotation ? 0.05 : 30);
+
             odometry.setVisionMeasurementStdDevs(visionStdDevs);
         }
 
         updateOdometry();
+
+        
 
         gyroTiltAverage.add(getPitch());
     }
@@ -300,8 +311,10 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), getHeadingAsRotation2d(), swerveModulePositions);
 
-        limelightFront.checkForAprilTagUpdates(odometry);
-        limelightBack.checkForAprilTagUpdates(odometry);
+        if(useMegaTag){
+            limelightFront.checkForAprilTagUpdates(odometry);
+            limelightBack.checkForAprilTagUpdates(odometry);
+        }
     }
 
     public void setFlipped(){
