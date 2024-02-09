@@ -96,48 +96,48 @@ public class Autonomous extends SubsystemBase{
         arm = Arm.getInstance();
         claw = Claw.getInstance();
 
-        NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
-        NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
-        NamedCommands.registerCommand("lock", new LockDrivetrain());
-        NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
+        // NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
+        // NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
+        // NamedCommands.registerCommand("lock", new LockDrivetrain());
+        // NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
 
-        NamedCommands.registerCommand("pidturnto0", new RotateToAngle(0));
-        NamedCommands.registerCommand("pidturnto180", new RotateToAngle(180));
+        // NamedCommands.registerCommand("pidturnto0", new RotateToAngle(0));
+        // NamedCommands.registerCommand("pidturnto180", new RotateToAngle(180));
 
-        NamedCommands.registerCommand("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
-        NamedCommands.registerCommand("CubeL2ShotPose", new SetLevelTwoCubeShot());
+        // NamedCommands.registerCommand("ConeL2Stowed", new SequentialCommandGroup(new SetLevelTwoConeStowedPose(), new WaitCommand(.3), new BackwardsConeShot(.3)));
+        // NamedCommands.registerCommand("CubeL2ShotPose", new SetLevelTwoCubeShot());
 
-        NamedCommands.registerCommand("L1Pose", new SetLevelOnePose());
+        // NamedCommands.registerCommand("L1Pose", new SetLevelOnePose());
 
-        NamedCommands.registerCommand("IntakeCone", new IntakeFloorCone());
-        NamedCommands.registerCommand("IntakeCube", new IntakeFloorCube());
+        // NamedCommands.registerCommand("IntakeCone", new IntakeFloorCone());
+        // NamedCommands.registerCommand("IntakeCube", new IntakeFloorCube());
 
-        NamedCommands.registerCommand("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
+        // NamedCommands.registerCommand("ConeL3", new SequentialCommandGroup(new SetLevelThreeConePoseInAuto(), new WaitCommand(.3), new InstantCommand(claw::stopClaw),new SetTransitoryPoseL3ReturnInAuto()));
 
-        NamedCommands.registerCommand("CubeL2Pose", new SetLevelTwoCubePose());
-        NamedCommands.registerCommand("OverBridgePose", new SetTravelOverBridgePoseInAuto());
+        // NamedCommands.registerCommand("CubeL2Pose", new SetLevelTwoCubePose());
+        // NamedCommands.registerCommand("OverBridgePose", new SetTravelOverBridgePoseInAuto());
 
-        NamedCommands.registerCommand("CubeL3Pose", new SetLevelThreeCubeForwardPose());
-        NamedCommands.registerCommand("ConeL3Pose", new SetLevelThreeConeInvertedPose());
+        // NamedCommands.registerCommand("CubeL3Pose", new SetLevelThreeCubeForwardPose());
+        // NamedCommands.registerCommand("ConeL3Pose", new SetLevelThreeConeInvertedPose());
 
-        NamedCommands.registerCommand("PreScorePose", new SetPreScorePose());
-        NamedCommands.registerCommand("PreScorePoseWristDown", new SetPreScorePoseWristDown());
+        // NamedCommands.registerCommand("PreScorePose", new SetPreScorePose());
+        // NamedCommands.registerCommand("PreScorePoseWristDown", new SetPreScorePoseWristDown());
 
-        NamedCommands.registerCommand("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
-        NamedCommands.registerCommand("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
+        // NamedCommands.registerCommand("CubeL3InvertedPose", new SetLevelThreeCubeInvertedPoseInAuto());
+        // NamedCommands.registerCommand("CubeL3InvertedPoseReturn", new SetTransitoryPoseL3ReturnInAuto());
 
-        NamedCommands.registerCommand("IntakeConePose", new SetExtendedFloorConePose());
-        NamedCommands.registerCommand("IntakeCubePose", new SetExtendedFloorCubePoseOld());
-        NamedCommands.registerCommand("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
-        NamedCommands.registerCommand("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
-        NamedCommands.registerCommand("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
-        NamedCommands.registerCommand("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
+        // NamedCommands.registerCommand("IntakeConePose", new SetExtendedFloorConePose());
+        // NamedCommands.registerCommand("IntakeCubePose", new SetExtendedFloorCubePoseOld());
+        // NamedCommands.registerCommand("IntakeCubePoseFromL3", new SetExtendedFloorCubePoseOldAutonL3());
+        // NamedCommands.registerCommand("IntakeCubePoseLessLower", new SetExtendedFloorCubeInAutoLessLower());
+        // NamedCommands.registerCommand("IntakeCubePoseLower", new SetExtendedFloorCubeInAutoLower());
+        // NamedCommands.registerCommand("IntakeCubePoseTeleop", new SetExtendedFloorCubePoseOld());
 
-        NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
+        // NamedCommands.registerCommand("ClimbCSFrontSlow", new SequentialCommandGroup(new ClimbCSGyro(0, 1.0, 0.75), new LockDrivetrain()));
 
-        NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
+        // NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
-        NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
+        // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
 
         // TODO: tune PIDConstants
 
