@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.81,
+      "y": 6.73
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2PieceAmp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
