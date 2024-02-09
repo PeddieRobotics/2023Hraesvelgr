@@ -166,7 +166,7 @@ public class Autonomous extends SubsystemBase{
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        //setupAutoRoutines();
+        // setupAutoRoutines();
 
         SmartDashboard.putBoolean("RunAutonWithoutEvents", false);
 
