@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
-      "y": 5.5
+      "x": 1.85,
+      "y": 5.4
     },
     "rotation": 180.0
   },
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "forward"
+            "pathName": "forwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "backwardFacingSpeaker"
           }
         }
       ]
