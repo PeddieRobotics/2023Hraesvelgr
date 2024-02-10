@@ -13,6 +13,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.DriverOI;
+import frc.robot.utils.Logger;
 import frc.robot.utils.RollingAverage;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Constants.DriveConstants;
@@ -32,6 +33,8 @@ public class FollowNote extends Command {
     private double currentAngle;
     private double error;
 
+    private boolean useJayden; 
+
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
     public FollowNote() {
@@ -46,22 +49,28 @@ public class FollowNote extends Command {
         FF = 0.1;
         targetAngle = 0;
         llTurn = 0;
-        
+    
+        useJayden = false; 
+
         addRequirements(drivetrain);
    }
 
     @Override
     public void initialize() {
         oi = DriverOI.getInstance();
-        limelightFront.setPipeline(1); 
+        SmartDashboard.putBoolean("useJayden", false); 
+        limelightFront.setPipeline(useJayden ? 4 : 1); 
+        
     }
 
     @Override
     public void execute() {
+        useJayden = SmartDashboard.getBoolean("useJayden", false); 
         double throttle = oi.getSwerveTranslation().getX();
         Translation2d position = new Translation2d(-throttle, 0.0);
 
         if (limelightFront.hasTarget()) {
+            Logger.getInstance().logEvent("Has target?", true);
             currentAngle = limelightFront.getTxAverage();
             error = currentAngle - targetAngle;
             SmartDashboard.putNumber("DATA: Error", currentAngle);
@@ -75,12 +84,14 @@ public class FollowNote extends Command {
                 llTurn = 0;
             }
         } else {
+            Logger.getInstance().logEvent("Has target?", false);
             llTurn = 0;
         }
 
+        Logger.getInstance().logEvent("follow note turn " + llTurn + " translation (" + position.getX() + ", " + position.getY() + ")", true);
+
         drivetrain.drive(position, llTurn, false, new Translation2d(0, 0));
-        SmartDashboard.putNumber("DATA: Note Tx", currentAngle);
-        SmartDashboard.putNumber("DATA: Note Turn", llTurn);
+        
     }
 
     @Override
