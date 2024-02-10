@@ -37,6 +37,7 @@ import frc.robot.commands.DriveCommands.SpeakerSquareThenAlign;
 import frc.robot.commands.DriveCommands.ApriltagBotPoseAlign;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.FollowNote;
+import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.FullMegaTagBotPoseAlign;
 import frc.robot.commands.DriveCommands.FullOdometryAlign;
 import frc.robot.commands.DriveCommands.IntakeAlign;
@@ -210,7 +211,7 @@ public class DriverOI {
         //          */
         //         new ConditionalCommand(new SingleSSAlign(), new InstantCommand(() -> {blinkin.failure();}), arm::isSingleSSPose),
         //     claw::hasGamepiece));
-        // circleButton.whileTrue(new ApriltagCalibrate());
+        circleButton.onTrue(new ForcedCalibration());
 
         // Lock drivetrain (toggle)
         Trigger rightStickButton = new JoystickButton(controller, PS4Controller.Button.kR3.value);

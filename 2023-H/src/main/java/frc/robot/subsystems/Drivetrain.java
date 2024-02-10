@@ -94,11 +94,20 @@ public class Drivetrain extends SubsystemBase {
         return (S3-I3)/(1.0+Math.exp(-K3*(dist-H3)))+I3;
     }
 
+    private boolean isAdjusting;
+    public boolean getIsAdjusting() {
+        return isAdjusting;
+    }
+    public void setIsAdjusting(boolean isAdjusting) {
+        this.isAdjusting = isAdjusting;
+    }
+
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
         useMegaTag = true; 
+        isAdjusting = false;
 
         field = new Field2d(); 
 
@@ -200,9 +209,6 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-
-        boolean isAdjustingRotation = SmartDashboard.getBoolean("odometry start isAdjustingRotation", false); 
-
         useMegaTag = SmartDashboard.getBoolean("Toggle Megatag updates", true); 
 
         S2 = SmartDashboard.getNumber("Logistic S2", S2); 
@@ -247,13 +253,12 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("num april tags", numAprilTag);
 
         if (numAprilTag >= 2) {
-            double stdDev = numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance);
+            double stdDev = isAdjusting ? 0.0001 : (numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance));
             
             SmartDashboard.putNumber("distance", distance);
             SmartDashboard.putNumber("standard deviation", stdDev);
 
-            Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isAdjustingRotation ? 0.05 : 30);
-
+            Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isAdjusting ? 0.0001 : 30);
             odometry.setVisionMeasurementStdDevs(visionStdDevs);
         }
 

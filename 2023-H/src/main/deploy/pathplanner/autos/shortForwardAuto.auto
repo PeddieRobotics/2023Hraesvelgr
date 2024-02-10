@@ -12,15 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Set Odom"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 200.0
+            "pathName": "shortForward"
           }
         }
       ]
