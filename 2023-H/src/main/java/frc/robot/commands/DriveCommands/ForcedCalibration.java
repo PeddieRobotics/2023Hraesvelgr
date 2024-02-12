@@ -7,6 +7,7 @@ public class ForcedCalibration extends Command {
     private Drivetrain drivetrain;
     private int cycles = 0;
     private static final int maxCycles = 2;
+    private boolean wasUsingMegaTag;
 
     public ForcedCalibration() {
         drivetrain = Drivetrain.getInstance();
@@ -14,7 +15,10 @@ public class ForcedCalibration extends Command {
 
     @Override
     public void initialize() {
-        drivetrain.setIsAdjusting(true);
+        wasUsingMegaTag = drivetrain.getUseMegaTag();
+        if (!wasUsingMegaTag)
+            drivetrain.setUseMegaTag(true);
+        drivetrain.setIsForcingCalibration(true);
         cycles = 0;
     }
 
@@ -25,7 +29,10 @@ public class ForcedCalibration extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setIsAdjusting(false);
+        if (!wasUsingMegaTag)
+            drivetrain.setUseMegaTag(false);
+        drivetrain.setUseMegaTag(false);
+        drivetrain.setIsForcingCalibration(false);
     }
 
     @Override

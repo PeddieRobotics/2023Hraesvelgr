@@ -144,7 +144,7 @@ public final class Constants {
         }
 
         public static final class AutoConstants {
-                public static final double kPTranslationController = 3.5;
+                public static final double kPTranslationController = 3.5; //3.5 old 
                 public static final double kITranslationController = 0.0;
                 public static final double kDTranslationController = 0.0;
 

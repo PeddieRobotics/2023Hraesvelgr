@@ -72,8 +72,6 @@ public class Drivetrain extends SubsystemBase {
 
     private Field2d field;
 
-    private boolean useMegaTag;
-
     private static double inch2meter(double inch) {
         return inch * 0.0254;
     }
@@ -94,20 +92,27 @@ public class Drivetrain extends SubsystemBase {
         return (S3-I3)/(1.0+Math.exp(-K3*(dist-H3)))+I3;
     }
 
-    private boolean isAdjusting;
-    public boolean getIsAdjusting() {
-        return isAdjusting;
+    private boolean useMegaTag;
+    private boolean isForcingCalibration;
+
+    public boolean getUseMegaTag() {
+        return useMegaTag;
     }
-    public void setIsAdjusting(boolean isAdjusting) {
-        this.isAdjusting = isAdjusting;
+    public void setUseMegaTag(boolean useMegaTag) {
+        this.useMegaTag = useMegaTag;
+    }
+    public boolean getIsForcingCalibration() {
+        return isForcingCalibration;
+    }
+    public void setIsForcingCalibration(boolean isForcingCalibration) {
+        this.isForcingCalibration = isForcingCalibration;
     }
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
         limelightBack = LimelightBack.getInstance();
 
-        useMegaTag = true; 
-        isAdjusting = false;
+        isForcingCalibration = false;
 
         field = new Field2d(); 
 
@@ -209,8 +214,6 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        useMegaTag = SmartDashboard.getBoolean("Toggle Megatag updates", true); 
-
         S2 = SmartDashboard.getNumber("Logistic S2", S2); 
         I2 = SmartDashboard.getNumber("Logistic I2", I2); 
         K2 = SmartDashboard.getNumber("Logistic K2", K2); 
@@ -224,6 +227,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("IMU Pitch", getPitch());
         SmartDashboard.putNumber("IMU Pitch Average", gyroTiltAverage.getAverage());
         SmartDashboard.putBoolean("isFlipped", isFlipped);
+        SmartDashboard.putBoolean("Megatag updates", useMegaTag); 
 
         SmartDashboard.putNumber("gyro angle", getHeading());
 
@@ -253,18 +257,16 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("num april tags", numAprilTag);
 
         if (numAprilTag >= 2) {
-            double stdDev = isAdjusting ? 0.0001 : (numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance));
+            double stdDev = isForcingCalibration ? 0.0001 : (numAprilTag >= 3 ? sigmoid3(distance) : sigmoid2(distance));
             
             SmartDashboard.putNumber("distance", distance);
             SmartDashboard.putNumber("standard deviation", stdDev);
 
-            Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isAdjusting ? 0.0001 : 30);
+            Matrix<N3, N1> visionStdDevs = VecBuilder.fill(stdDev, stdDev, isForcingCalibration ? 0.0001 : 30);
             odometry.setVisionMeasurementStdDevs(visionStdDevs);
         }
 
-        updateOdometry();
-
-        
+        updateOdometry();        
 
         gyroTiltAverage.add(getPitch());
     }

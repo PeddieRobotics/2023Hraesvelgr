@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.85,
-      "y": 5.4
+      "x": 2.5,
+      "y": 5.5
     },
     "rotation": 180.0
   },
@@ -16,6 +16,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Turn off MegaTag"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "forwardSpinningSpeaker"
@@ -25,6 +31,72 @@
                 "type": "path",
                 "data": {
                   "pathName": "backwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Odom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "forwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "backwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Odom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "forwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "backwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Odom"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "forwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "backwardSpinningSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Set Odom"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Turn on MegaTag"
                 }
               }
             ]

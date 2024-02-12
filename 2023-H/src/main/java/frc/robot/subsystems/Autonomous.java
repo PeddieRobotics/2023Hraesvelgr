@@ -65,9 +65,11 @@ import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyroDelta;
 import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
+import frc.robot.commands.DriveCommands.TurnOffMegatag;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
+import frc.robot.commands.DriveCommands.TurnOnMegatag;
 import frc.robot.utils.Constants;
 import frc.robot.commands.DriveCommands.AutoDrive;
 
@@ -140,6 +142,8 @@ public class Autonomous extends SubsystemBase{
 
         // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
         NamedCommands.registerCommand("Set Odom", new ForcedCalibration());
+        NamedCommands.registerCommand("Turn on MegaTag", new TurnOnMegatag());
+        NamedCommands.registerCommand("Turn off MegaTag", new TurnOffMegatag());
 
         // TODO: tune PIDConstants
 

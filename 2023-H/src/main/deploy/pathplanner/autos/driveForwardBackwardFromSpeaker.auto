@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.85,
+      "x": 2.0,
       "y": 5.4
     },
     "rotation": 180.0
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn off MegaTag"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -21,6 +27,66 @@
           "type": "path",
           "data": {
             "pathName": "backwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Odom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "forwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "backwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Odom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "forwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "backwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Odom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "forwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "backwardFacingSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Turn on MegaTag"
           }
         }
       ]
