@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2,
+      "x": 1.5,
       "y": 5.5
     },
     "rotation": 0
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "forwardNotFacingSpeaker"
+            "pathName": "straightToMidline"
           }
         },
         {
@@ -32,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "backwardNotFacingSpeaker"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Turn on MegaTag"
+            "pathName": "backFromMidline"
           }
         }
       ]
