@@ -64,6 +64,7 @@ import frc.robot.commands.ClawCommands.IntakeFloorCube;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.ClimbCSGyroDelta;
 import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
+import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.TurnOffMegatag;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
@@ -83,6 +84,7 @@ public class Autonomous extends SubsystemBase{
     private final Drivetrain drivetrain;
     private final Claw claw;
     private final Arm arm;
+    private final LimelightFront limelightFront;
     //private final Claw claw;
 
     private static SendableChooser<Command> autoChooser;
@@ -98,6 +100,7 @@ public class Autonomous extends SubsystemBase{
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
         claw = Claw.getInstance();
+        limelightFront = LimelightFront.getInstance();
 
         // NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         // NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
@@ -144,8 +147,8 @@ public class Autonomous extends SubsystemBase{
         NamedCommands.registerCommand("Set Odom", new ForcedCalibration());
         NamedCommands.registerCommand("Turn on MegaTag", new TurnOnMegatag());
         NamedCommands.registerCommand("Turn off MegaTag", new TurnOffMegatag());
-
-        // TODO: tune PIDConstants
+        NamedCommands.registerCommand("Follow note", new FollowNoteInAuto());
+        NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
 
         AutoBuilder.configureHolonomic(
             drivetrain::getPose, // Robot pose supplier

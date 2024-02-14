@@ -37,6 +37,7 @@ import frc.robot.commands.DriveCommands.SpeakerSquareThenAlign;
 import frc.robot.commands.DriveCommands.ApriltagBotPoseAlign;
 import frc.robot.commands.DriveCommands.ClimbCSGyro;
 import frc.robot.commands.DriveCommands.FollowNote;
+import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.FullMegaTagBotPoseAlign;
 import frc.robot.commands.DriveCommands.FullOdometryAlign;
@@ -176,7 +177,7 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        // triangleButton.toggleOnTrue(new SourceSideAlign()); 
+        triangleButton.toggleOnTrue(new FollowNoteInAuto());
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
