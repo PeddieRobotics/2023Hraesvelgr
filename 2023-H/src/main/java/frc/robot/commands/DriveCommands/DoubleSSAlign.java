@@ -24,7 +24,7 @@ public class DoubleSSAlign extends Command {
     private Translation2d destinationXY, odometryXY;
     private String limelightName;
     LimelightFront limelightFront;
-    LimelightBack limelightBack;
+    // LimelightBack limelightBack;
     private Arm arm;
     private Blinkin blinkin;
     private boolean isCube;
@@ -34,7 +34,7 @@ public class DoubleSSAlign extends Command {
         arm = Arm.getInstance();
         blinkin = Blinkin.getInstance();
         limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        // limelightBack = LimelightBack.getInstance();
         thetaController = new PIDController(0.035, 0, 0);
         yController = new PIDController(0.055, 0, 0);
         SmartDashboard.putString("side", "right");
@@ -79,14 +79,14 @@ public class DoubleSSAlign extends Command {
             LimelightHelper.setPipelineIndex(limelightName, 0);
         }
         double txAvg;
-        if(limelightName.equals("limelightBack")){
-            txAvg = limelightBack.getTxAverage();
-        } else {
-            txAvg = limelightFront.getTxAverage();
-        }
-        if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
-            yMove = yController.calculate(txAvg, 0);
-        }
+        // if(limelightName.equals("limelightBack")){
+        //     txAvg = limelightBack.getTxAverage();
+        // } else {
+        //     txAvg = limelightFront.getTxAverage();
+        // }
+        // if (Math.abs(txAvg) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
+        //     yMove = yController.calculate(txAvg, 0);
+        // }
 
         switch (state) {
             case "6-3": // 6 <= dist < 3

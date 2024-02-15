@@ -30,7 +30,7 @@ public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
 
     private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    // private final LimelightBack limelightBack;
 
     private BuiltInAccelerometer mRioAccel;
 
@@ -110,7 +110,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         limelightFront = LimelightFront.getInstance();
-        limelightBack = LimelightBack.getInstance();
+        // limelightBack = LimelightBack.getInstance();
 
         isForcingCalibration = false;
 
@@ -235,6 +235,8 @@ public class Drivetrain extends SubsystemBase {
 
         SmartDashboard.putData(field); 
 
+        //SmartDashboard.putNumber("chassis speed", getRobotChassisSpeeds())
+
         // Updating the odometry
         for (int i = 0; i < 4; i++) {
             swerveModulePositions[i] = swerveModules[i].getPosition();
@@ -320,7 +322,7 @@ public class Drivetrain extends SubsystemBase {
 
         if(useMegaTag){
             limelightFront.checkForAprilTagUpdates(odometry);
-            limelightBack.checkForAprilTagUpdates(odometry);
+            // limelightBack.checkForAprilTagUpdates(odometry);
         }
     }
 
@@ -373,8 +375,8 @@ public class Drivetrain extends SubsystemBase {
             robotRelativeSpeeds = fieldRelativeSpeeds;
         }
 
-        latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
-
+        
+latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2) + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
         swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerOfRotation);
 
         if(allowDriving){

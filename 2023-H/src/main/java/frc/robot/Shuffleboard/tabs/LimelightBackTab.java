@@ -9,7 +9,7 @@ import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.subsystems.LimelightBack;
 
 public class LimelightBackTab extends ShuffleboardTabBase {
-    private LimelightBack LLBack = LimelightBack.getInstance();
+//     private LimelightBack LLBack = LimelightBack.getInstance();
 
     private GenericEntry mTx;
     private GenericEntry mTy;
@@ -58,15 +58,15 @@ public LimelightBackTab(){
     @Override
     public void update() {
         try{
-            mTx.setDouble(LLBack.getTx());
-            mTy.setDouble(LLBack.getTy());
-            mTa.setDouble(LLBack.getTa());
-            mLimelightHasTarget.setBoolean(LLBack.hasTarget());
-            mDistToTarget.setDouble(LLBack.getDistance());
-            mTagsSeen.setInteger(LLBack.getTagsSeen());
-            mBotposeX.setDouble(LLBack.getBotpose().getX());
-            mBotposeY.setDouble(LLBack.getBotpose().getY());
-            mBotposeTheta.setDouble(LLBack.getBotpose().getRotation().getDegrees());
+        //     mTx.setDouble(LLBack.getTx());
+        //     mTy.setDouble(LLBack.getTy());
+        //     mTa.setDouble(LLBack.getTa());
+        //     mLimelightHasTarget.setBoolean(LLBack.hasTarget());
+        //     mDistToTarget.setDouble(LLBack.getDistance());
+        //     mTagsSeen.setInteger(LLBack.getTagsSeen());
+        //     mBotposeX.setDouble(LLBack.getBotpose().getX());
+        //     mBotposeY.setDouble(LLBack.getBotpose().getY());
+        //     mBotposeTheta.setDouble(LLBack.getBotpose().getRotation().getDegrees());
         } catch(NullPointerException e){
         }
     }

@@ -19,7 +19,7 @@ import frc.robot.utils.Constants.LimelightConstants;
 
 public class ScoreAlign extends Command {
     private final LimelightFront limelightFront;
-    private final LimelightBack limelightBack;
+    // private final LimelightBack limelightBack;
     private final Drivetrain drivetrain;
     private PIDController thetaController, yController;
     private DriverOI oi;
@@ -37,7 +37,7 @@ public class ScoreAlign extends Command {
     private double convertedGamepieceAlignError;
 
     public ScoreAlign() {
-        limelightBack = LimelightBack.getInstance();
+        // limelightBack = LimelightBack.getInstance();
         limelightFront = LimelightFront.getInstance();
         drivetrain = Drivetrain.getInstance();
         arm = Arm.getInstance();
@@ -128,14 +128,14 @@ public class ScoreAlign extends Command {
         Translation2d swerveTranslation = oi.getSwerveTranslation();
         swerveTranslation = swerveTranslation.times(LimelightConstants.kDriveScaleScoreAlign);
 
-        double txAvg;
-        if (limelightName.equals("limelight-back")) {
-            txAvg = limelightBack.getTxAverage();
-        } else {
-            txAvg = limelightFront.getTxAverage();
-        }
+        // double txAvg;
+        // if (limelightName.equals("limelight-back")) {
+        //     txAvg = limelightBack.getTxAverage();
+        // } else {
+        //     txAvg = limelightFront.getTxAverage();
+        // }
 
-        SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
+        // SmartDashboard.putNumber("converted gamepiece align error", convertedGamepieceAlignError);
 
         // if (!initialHeadingCorrectionComplete && Math.abs(Math.abs(drivetrain.getHeading()) - scoreSetpoint) > LimelightConstants.kLimelightHeadingBound) {
         //     turn = thetaController.calculate(drivetrain.getHeading(), scoreSetpoint);
@@ -143,7 +143,7 @@ public class ScoreAlign extends Command {
         //     drivetrain.drive(swerveTranslation, turn + turnFF * Math.signum(turn), true, new Translation2d(0, 0));
         // }
         //else
-        if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
+        // if (Math.abs(txAvg-convertedGamepieceAlignError) > LimelightConstants.kLimeLightTranslationScoringAngleBound) {
             // If we still don't see a target after the first heading correction stage is complete, stop.
             // Otherwise, proceed indefinitely.
             // if (!initialHeadingCorrectionComplete){
@@ -155,14 +155,14 @@ public class ScoreAlign extends Command {
             // }
             // initialHeadingCorrectionComplete = true;
 
-            yMove = yController.calculate(txAvg, convertedGamepieceAlignError);
+        //     yMove = yController.calculate(txAvg, convertedGamepieceAlignError);
 
-            drivetrain.drive(new Translation2d(swerveTranslation.getX(), yMove + yFF * Math.signum(yMove)), oi.getRotation(), true, new Translation2d(0, 0));
+        //     drivetrain.drive(new Translation2d(swerveTranslation.getX(), yMove + yFF * Math.signum(yMove)), oi.getRotation(), true, new Translation2d(0, 0));
 
-        } else {
-            horizAlignComplete = true;
-            drivetrain.drive(new Translation2d(swerveTranslation.getX(), 0), oi.getRotation(), true, new Translation2d(0, 0));
-        }
+        // } else {
+        //     horizAlignComplete = true;
+        //     drivetrain.drive(new Translation2d(swerveTranslation.getX(), 0), oi.getRotation(), true, new Translation2d(0, 0));
+        // }
 
         // Check for how close we are to the goal according to our pose state
         // ClawState state = claw.getState();

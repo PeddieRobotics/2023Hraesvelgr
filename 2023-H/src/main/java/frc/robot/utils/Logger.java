@@ -31,7 +31,7 @@ public class Logger {
 
   private BooleanLogEntry booleanLog1, booleanLog2;
   private DoubleLogEntry gyroAngleEntry, wheelSpeedEntry, shoulderAngleEntry, wristAngleEntry, clawSpeedEntry,
-   clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry;
+   clawCurrentEntry, shoulderCurrentEntry, wristCurrentEntry, odometryXEntry, odometryYEntry;
   private StringLogEntry stringLog1, eventsEntry;
   private DataLogEntry dataLog1;
   private DoubleArrayLogEntry fieldPositionEntry;
@@ -58,6 +58,8 @@ public class Logger {
     wristCurrentEntry = new DoubleLogEntry(log, "/Wrist/Wrist Current");
     fieldPosition = drivetrain.getPose();
     fieldPositionEntry = new DoubleArrayLogEntry(log, "/Field/Position");
+    odometryXEntry = new DoubleLogEntry(log, "/Field/Odometry X");
+    odometryYEntry = new DoubleLogEntry(log, "/Field/Odometry Y");
     eventsEntry = new StringLogEntry(log, "/Events");
 
     //Boolean Logs
@@ -77,6 +79,8 @@ public class Logger {
     fieldPosition = drivetrain.getPose();
     double[] pose = {fieldPosition.getX(),fieldPosition.getY(),drivetrain.getHeading()}; 
     fieldPositionEntry.append(pose);
+    odometryXEntry.append(fieldPosition.getX());
+    odometryYEntry.append(fieldPosition.getY());
 
     //Drivetrain
     gyroAngleEntry.append(drivetrain.getHeading());

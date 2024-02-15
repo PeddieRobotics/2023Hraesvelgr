@@ -66,11 +66,9 @@ import frc.robot.commands.DriveCommands.ClimbCSGyroDelta;
 import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
 import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
-import frc.robot.commands.DriveCommands.TurnOffMegatag;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
-import frc.robot.commands.DriveCommands.TurnOnMegatag;
 import frc.robot.utils.Constants;
 import frc.robot.commands.DriveCommands.AutoDrive;
 
@@ -105,7 +103,7 @@ public class Autonomous extends SubsystemBase{
         // NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         // NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
         // NamedCommands.registerCommand("lock", new LockDrivetrain());
-        // NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
+        NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
 
         // NamedCommands.registerCommand("pidturnto0", new RotateToAngle(0));
         // NamedCommands.registerCommand("pidturnto180", new RotateToAngle(180));
@@ -145,9 +143,9 @@ public class Autonomous extends SubsystemBase{
 
         // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
         NamedCommands.registerCommand("Set Odom", new ForcedCalibration());
-        NamedCommands.registerCommand("Turn on MegaTag", new TurnOnMegatag());
-        NamedCommands.registerCommand("Turn off MegaTag", new TurnOffMegatag());
         NamedCommands.registerCommand("Follow note", new FollowNoteInAuto());
+        NamedCommands.registerCommand("Turn on MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(true)));
+        NamedCommands.registerCommand("Turn off MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(false)));
         NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
 
         AutoBuilder.configureHolonomic(

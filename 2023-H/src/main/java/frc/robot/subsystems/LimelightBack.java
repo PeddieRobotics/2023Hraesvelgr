@@ -19,7 +19,6 @@ public class LimelightBack extends Limelight {
     private RollingAverage txAverage, tyAverage, taAverage, xAverage, rotationAverage;
     private boolean cube,level2;
 
-
     private String limelightName = "limelight-back";
 
     public String getLimelightName() {
@@ -36,10 +35,11 @@ public class LimelightBack extends Limelight {
     }
 
     public static LimelightBack getInstance() {
-        if (limelightBack == null) {
-            limelightBack = new LimelightBack();
-        }
-        return limelightBack;
+        return null;
+        // if (limelightBack == null) {
+        //     limelightBack = new LimelightBack();
+        // }
+        // return limelightBack;
     }
 
     @Override
