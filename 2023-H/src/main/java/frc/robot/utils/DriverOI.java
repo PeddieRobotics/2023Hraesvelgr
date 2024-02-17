@@ -187,7 +187,7 @@ public class DriverOI {
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.whileTrue(new SpeakerSquareThenAlign());
-        squareButton.whileTrue(new FullOdometryAlign(14.45, 5.27, 0));
+        squareButton.whileTrue(new FullOdometryAlign(14.45, 5.27, 0, 10000));
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

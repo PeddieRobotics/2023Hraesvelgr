@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 
         ranAutonomousRoutine = false;
 
-        LimelightFront.getInstance().setPipeline(3);
+        LimelightFront.getInstance().setPipeline(1);
         // LimelightBack.getInstance().setPipeline(0);
 
         System.out.println("LOGGING: " + DataLogManager.getLogDir());

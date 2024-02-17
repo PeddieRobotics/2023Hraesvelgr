@@ -1,7 +1,11 @@
 package frc.robot.commands.DriveCommands;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
@@ -19,32 +23,41 @@ public class FullOdometryAlign extends Command {
     private double moveThreshold, moveFF, xTarget, yTarget;
     private PIDController xController, yController; 
 
+    private double timeLimit;
+    private double startTime;
+
     private boolean end = false;
 
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
-    public FullOdometryAlign(double x, double y, double theta) {
+    public FullOdometryAlign(double x, double y, double theta, double timeLimit) {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
+
+        boolean isRed = DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
         
         turnController = new PIDController(Constants.LimelightConstants.bpTurnP, Constants.LimelightConstants.bpTurnI, 
             Constants.LimelightConstants.bpTurnD);
         turnController.enableContinuousInput(-180, 180);
-        turnTarget = theta;
+        turnTarget = isRed ? theta + 180 : theta;
+        
         turnThreshold = Constants.LimelightConstants.bpTurnThresh; 
         turnFF = Constants.LimelightConstants.bpTurnFF; 
 
         xController = new PIDController(Constants.LimelightConstants.bpMoveP, Constants.LimelightConstants.bpMoveI, 
             Constants.LimelightConstants.bpMoveD); 
-        xTarget = x; 
+        xTarget = isRed ? 16.542 - x : x; 
 
         yController = new PIDController(Constants.LimelightConstants.bpMoveP, Constants.LimelightConstants.bpMoveI, 
             Constants.LimelightConstants.bpMoveD);
+        // yTarget = isRed ? 8.211 - y : y; 
         yTarget = y; 
 
         moveThreshold = Constants.LimelightConstants.bpMoveThresh; 
         moveFF = Constants.LimelightConstants.bpMoveFF; 
+
+        this.timeLimit = timeLimit;
 
         addRequirements(drivetrain);
 
@@ -84,6 +97,7 @@ public class FullOdometryAlign extends Command {
 
         turnController.setIZone(5); 
 
+        startTime = Timer.getFPGATimestamp();
         end = false;
     }
 
@@ -92,9 +106,6 @@ public class FullOdometryAlign extends Command {
         Translation2d position = new Translation2d(0.0, 0.0); 
         double turnAngle = 0.0, xMove = 0.0, yMove = 0.0; 
 
-        // double currentAngle = limelightFront.getRotationAverage();
-        // double currentTX = limelightFront.getRXAverage(); 
-        // double currentTY = limelightFront.getRYAverage(); 
         double currentAngle = drivetrain.getPose().getRotation().getDegrees(); 
         double currentTX = drivetrain.getPose().getX(); 
         double currentTY = drivetrain.getPose().getY(); 
@@ -102,6 +113,10 @@ public class FullOdometryAlign extends Command {
         double turnError = currentAngle - turnTarget;
         double xError = currentTX - xTarget; 
         double yError = currentTY - yTarget; 
+
+        SmartDashboard.putNumber("pid move turn error", turnError);
+        SmartDashboard.putNumber("pid move x error", xError);
+        SmartDashboard.putNumber("pid move y error", yError);
 
         boolean end1 = false, end2 = false, end3 = false;
 
@@ -126,20 +141,17 @@ public class FullOdometryAlign extends Command {
         else
             end3 = true;
 
-        end = end1 && end2 && end3;
-
-        xMove = Math.min(xMove, 0.5);
-        yMove = Math.min(yMove, 0.5);
+        end |= end1 && end2 && end3;
         
-        // if (xMove < 0)
-        //     xMove = Math.max(xMove, -0.5);
-        // else
-        //     xMove = Math.min(xMove, 0.5);
+        if (xMove < 0)
+            xMove = Math.max(xMove, -0.5);
+        else
+            xMove = Math.min(xMove, 0.5);
         
-        // if (yMove < 0)
-        //     yMove = Math.max(yMove, -0.5);
-        // else
-        //     yMove = Math.min(yMove, 0.5); 
+        if (yMove < 0)
+            yMove = Math.max(yMove, -0.5);
+        else
+            yMove = Math.min(yMove, 0.5); 
         
         
         position = new Translation2d(-xMove, -yMove); 
@@ -153,6 +165,6 @@ public class FullOdometryAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        return end; 
+        return end || Timer.getFPGATimestamp() - startTime >= timeLimit; 
     }
 }

@@ -143,13 +143,14 @@ public class Autonomous extends SubsystemBase{
         // NamedCommands.registerCommand("ClimbCSBackSlow", new SequentialCommandGroup(new ClimbCSGyroDelta(180, 1.0, 0.75), new LockDrivetrain()));
 
         // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
+
         NamedCommands.registerCommand("Set Odom", new ForcedCalibration());
         NamedCommands.registerCommand("Follow note", new FollowNoteInAuto());
         NamedCommands.registerCommand("Turn on MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(true)));
         NamedCommands.registerCommand("Turn off MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(false)));
         NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
-        NamedCommands.registerCommand("PID back to start", new FullOdometryAlign(2, 5.50, 0));
-        NamedCommands.registerCommand("PID to back to midline start", new FullOdometryAlign(5.50, 5.50, 0));
+        NamedCommands.registerCommand("PID back to start", new FullOdometryAlign(2, 5.50, 0, 3));
+        NamedCommands.registerCommand("PID to back to midline start", new FullOdometryAlign(5.50, 5.50, 0, 3));
 
         AutoBuilder.configureHolonomic(
             drivetrain::getPose, // Robot pose supplier
