@@ -1,30 +1,17 @@
 package frc.robot.commands.DriveCommands;
 
-import java.sql.Driver;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants;
-import frc.robot.utils.DriverOI;
-import frc.robot.utils.RollingAverage;
-import frc.robot.utils.Constants.AutoConstants;
-import frc.robot.utils.DriverOI.DPadDirection;
 
 public class FullOdometryAlign extends Command {
     private Drivetrain drivetrain;
     private Limelight limelightFront;
-    private DriverOI oi;
 
     private double turnThreshold, turnFF, turnTarget;
     private PIDController turnController;
@@ -32,9 +19,11 @@ public class FullOdometryAlign extends Command {
     private double moveThreshold, moveFF, xTarget, yTarget;
     private PIDController xController, yController; 
 
+    private boolean end = false;
+
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
-    public FullOdometryAlign() {
+    public FullOdometryAlign(double x, double y, double theta) {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
 
@@ -42,17 +31,17 @@ public class FullOdometryAlign extends Command {
         turnController = new PIDController(Constants.LimelightConstants.bpTurnP, Constants.LimelightConstants.bpTurnI, 
             Constants.LimelightConstants.bpTurnD);
         turnController.enableContinuousInput(-180, 180);
-        turnTarget = 0;
+        turnTarget = theta;
         turnThreshold = Constants.LimelightConstants.bpTurnThresh; 
         turnFF = Constants.LimelightConstants.bpTurnFF; 
 
         xController = new PIDController(Constants.LimelightConstants.bpMoveP, Constants.LimelightConstants.bpMoveI, 
             Constants.LimelightConstants.bpMoveD); 
-        xTarget = 14.45; 
+        xTarget = x; 
 
         yController = new PIDController(Constants.LimelightConstants.bpMoveP, Constants.LimelightConstants.bpMoveI, 
             Constants.LimelightConstants.bpMoveD);
-        yTarget = 5.27; 
+        yTarget = y; 
 
         moveThreshold = Constants.LimelightConstants.bpMoveThresh; 
         moveFF = Constants.LimelightConstants.bpMoveFF; 
@@ -74,7 +63,6 @@ public class FullOdometryAlign extends Command {
 
     @Override
     public void initialize() {
-        oi = DriverOI.getInstance();
         limelightFront.setPipeline(3); 
 
         turnController.setP(SmartDashboard.getNumber("bp turn p", Constants.LimelightConstants.bpTurnP)); 
@@ -95,6 +83,8 @@ public class FullOdometryAlign extends Command {
         moveFF = SmartDashboard.getNumber("bp move ff", Constants.LimelightConstants.bpMoveFF);  
 
         turnController.setIZone(5); 
+
+        end = false;
     }
 
     @Override
@@ -113,31 +103,33 @@ public class FullOdometryAlign extends Command {
         double xError = currentTX - xTarget; 
         double yError = currentTY - yTarget; 
 
+        boolean end1 = false, end2 = false, end3 = false;
+
         if (turnError < -turnThreshold)
             turnAngle = turnController.calculate(currentAngle, turnTarget) + turnFF;
         else if (turnError > turnThreshold)
             turnAngle = turnController.calculate(currentAngle, turnTarget) - turnFF;
+        else
+            end1 = true;
 
         if (xError < -moveThreshold)
             xMove = xController.calculate(currentTX, xTarget) + moveFF; 
         else if (xError > moveThreshold)
             xMove = xController.calculate(currentTX, xTarget) - moveFF; 
+        else
+            end2 = true;
 
         if (yError < -moveThreshold)
             yMove = yController.calculate(currentTY, yTarget) + moveFF; 
         else if (yError > moveThreshold)
             yMove = yController.calculate(currentTY, yTarget) - moveFF; 
+        else
+            end3 = true;
 
-        // SmartDashboard.putNumber("x move", xMove);
-        // SmartDashboard.putNumber("y move", yMove);
-        // SmartDashboard.putNumber("tx avg", currentTX);
-        // SmartDashboard.putNumber("ty avg", currentTY);
-        SmartDashboard.putNumber("odom current x", currentTX); 
-        SmartDashboard.putNumber("odom current Y", currentTY); 
-        SmartDashboard.putNumber("odom current rotation", currentAngle); 
-        SmartDashboard.putNumber("odom x error", xError);
-        SmartDashboard.putNumber("odom y error", yError);
-        SmartDashboard.putNumber("odom rotation error", turnError); 
+        end = end1 && end2 && end3;
+
+        xMove = Math.min(xMove, 0.5);
+        yMove = Math.min(yMove, 0.5);
         
         // if (xMove < 0)
         //     xMove = Math.max(xMove, -0.5);
@@ -156,12 +148,11 @@ public class FullOdometryAlign extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.stopSwerveModules();
+        // drivetrain.stopSwerveModules();
     }
 
     @Override
     public boolean isFinished() {
-        // return Math.abs(limelightFront.getRotationAverage() - turnTarget) < turnThreshold;
-        return false; 
+        return end; 
     }
 }

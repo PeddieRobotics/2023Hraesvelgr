@@ -214,7 +214,7 @@ public final class Constants {
                 public static final double bpTurnP = 0.02; 
                 public static final double bpTurnI = 0.00002; 
                 public static final double bpTurnD = 0.0; 
-                public static final double bpTurnThresh = 0.8; 
+                public static final double bpTurnThresh = 1; 
                 public static final double bpTurnFF = 0.0; 
 
         }

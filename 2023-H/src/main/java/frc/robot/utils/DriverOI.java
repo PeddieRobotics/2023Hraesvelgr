@@ -177,7 +177,7 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        triangleButton.toggleOnTrue(new FollowNoteInAuto());
+        triangleButton.whileTrue(new FollowNoteInAuto());
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
@@ -187,7 +187,7 @@ public class DriverOI {
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.whileTrue(new SpeakerSquareThenAlign());
-        squareButton.whileTrue(new FullOdometryAlign());
+        squareButton.whileTrue(new FullOdometryAlign(14.45, 5.27, 0));
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

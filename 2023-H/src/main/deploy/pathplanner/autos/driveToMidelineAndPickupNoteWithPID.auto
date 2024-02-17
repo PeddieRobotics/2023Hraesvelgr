@@ -38,13 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "PID to back to midline start"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "backFromMidline"
+            "name": "PID back to start"
           }
         }
       ]
