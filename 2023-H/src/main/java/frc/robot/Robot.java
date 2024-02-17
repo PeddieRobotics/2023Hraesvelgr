@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Shuffleboard.ShuffleboardMain;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.subsystems.Claw.ClawState;
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        Drivetrain.getInstance().setIsParkedAuto(false);
 
         LiveWindow.setEnabled(false);
 
@@ -123,6 +125,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        Drivetrain.getInstance().setIsParkedAuto(false);
+
         robotContainer.resetGyro();
 
         Claw.getInstance().classifyGamepiece();

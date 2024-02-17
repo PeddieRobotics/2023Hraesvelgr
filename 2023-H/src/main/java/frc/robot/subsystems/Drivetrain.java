@@ -94,6 +94,7 @@ public class Drivetrain extends SubsystemBase {
 
     private boolean useMegaTag;
     private boolean isForcingCalibration;
+    private boolean isParkedAuto = false;
 
     public boolean getUseMegaTag() {
         return useMegaTag;
@@ -106,6 +107,12 @@ public class Drivetrain extends SubsystemBase {
     }
     public void setIsForcingCalibration(boolean isForcingCalibration) {
         this.isForcingCalibration = isForcingCalibration;
+    }
+    public boolean getIsParkedAuto()  {
+        return isParkedAuto;
+    }
+    public void setIsParkedAuto(boolean isParked) {
+        this.isParkedAuto = isParked;
     }
 
     public Drivetrain() {
@@ -355,6 +362,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void driveAuton(ChassisSpeeds speeds) {
+        if (isParkedAuto)
+            return;
         swerveModuleStates = DriveConstants.kinematics.toSwerveModuleStates(speeds);
         setSwerveModuleStates(swerveModuleStates);
     }

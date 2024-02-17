@@ -40,7 +40,7 @@ import frc.robot.commands.DriveCommands.FollowNote;
 import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.FullMegaTagBotPoseAlign;
-import frc.robot.commands.DriveCommands.FullOdometryAlign;
+import frc.robot.commands.DriveCommands.PIDToLocation;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -177,7 +177,7 @@ public class DriverOI {
         // Double substation (human player) cone loading
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         // triangleButton.onTrue(new ParallelCommandGroup(new SetDoubleSSConePose(), new IntakeFloorCone()));
-        triangleButton.whileTrue(new FollowNoteInAuto());
+        triangleButton.whileTrue(new FollowNoteInAuto(100));
    
         // Single substation (cone) intake
         Trigger xButton = new JoystickButton(controller, PS4Controller.Button.kCross.value);
@@ -187,7 +187,7 @@ public class DriverOI {
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.whileTrue(new SpeakerSquareThenAlign());
-        squareButton.whileTrue(new FullOdometryAlign(14.45, 5.27, 0, 10000));
+        squareButton.whileTrue(new PIDToLocation(5.50, 5.50, 0, 10000, 0.09));
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

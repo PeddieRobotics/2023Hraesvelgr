@@ -209,12 +209,12 @@ public final class Constants {
                 public static final double bpMoveI = 0.0001; 
                 public static final double bpMoveD = 0.0; 
                 public static final double bpMoveFF = 0.05; 
-                public static final double bpMoveThresh = 0.09; 
+                public static final double bpMoveThresh = 0.09; // 0.09
 
                 public static final double bpTurnP = 0.02; 
                 public static final double bpTurnI = 0.00002; 
                 public static final double bpTurnD = 0.0; 
-                public static final double bpTurnThresh = 1; 
+                public static final double bpTurnThresh = 1; // 1 
                 public static final double bpTurnFF = 0.0; 
 
         }

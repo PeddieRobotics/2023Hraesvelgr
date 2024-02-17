@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "straightToMidline"
+            "pathName": "startToMidline"
           }
         },
         {
@@ -38,7 +38,13 @@
         {
           "type": "named",
           "data": {
-            "name": "PID back to start"
+            "name": "PID to back to midline start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "backFromMidline"
           }
         }
       ]

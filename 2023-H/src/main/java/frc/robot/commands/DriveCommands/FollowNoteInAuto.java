@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
-import frc.robot.utils.Constants;
 import frc.robot.utils.DriverOI;
 
 public class FollowNoteInAuto extends Command {
@@ -25,25 +23,27 @@ public class FollowNoteInAuto extends Command {
     private double currentAngle;
     private double error;
 
-    private static final double DURATION = Integer.MAX_VALUE;
-    private static final double EARLY_END_DURATION = 0.6;
-    private static final int DO_NOT_SEE_FRAME_LIMIT = 25;
+    private static final double EARLY_END_MIN_DURATION = 0.10;
+    private static final double EARLY_END_MAX_DURATION = 0.25;
+    private static final double EARLY_END_NO_NOTE_PCT = 0.80;
     private static final double NOT_SAME_NOTE_THRESHOLD = 2.5;
     private static final double SPEED = 1.5;
     
-    private double startTime;
-    private int doNotSeeFrameCount;
-    private boolean endNow;
+    private double startTime, timeLimit;
+    private int totalFrameCount, doNotSeeFrameCount;
+    private boolean endBecauseNoNote;
     private boolean hasGamePiece;
 
     private double lastTx;
 
     // Full constructor with all 6 parameters for the climb charge station
     // algorithm.
-    public FollowNoteInAuto() {
+    public FollowNoteInAuto(double timeLimit) {
         drivetrain = Drivetrain.getInstance();
         limelightFront = LimelightFront.getInstance();
         
+        this.timeLimit = timeLimit;
+
         angleThreshold = 0.5;
 
         error = 0.0;
@@ -59,7 +59,7 @@ public class FollowNoteInAuto extends Command {
         SmartDashboard.putNumber("DATA: Current-Last Difference", 0);
 
         doNotSeeFrameCount = 0;
-        endNow = false;
+        endBecauseNoNote = false;
         hasGamePiece = false;
         
         addRequirements(drivetrain);
@@ -67,8 +67,10 @@ public class FollowNoteInAuto extends Command {
 
     @Override
     public void initialize() {
+        SmartDashboard.putBoolean("has game piece", false);
         doNotSeeFrameCount = 0;
-        endNow = false;
+        totalFrameCount = 0;
+        endBecauseNoNote = false;
         lastTx = Integer.MAX_VALUE;
         startTime = Timer.getFPGATimestamp();
         oi = DriverOI.getInstance();
@@ -84,8 +86,10 @@ public class FollowNoteInAuto extends Command {
 
         llTurn = 0;
 
+        boolean hasTarget = limelightFront.hasTarget();
+
         // when the limelight has a target
-        if (limelightFront.hasTarget()) {
+        if (hasTarget) {
             // defined as number of consecutive cycles without note (see below)
             doNotSeeFrameCount = 0;
             // current angle
@@ -103,38 +107,41 @@ public class FollowNoteInAuto extends Command {
                 else if (error > angleThreshold)
                     llTurn = thetaController.calculate(currentAngle, targetAngle) - FF;
             }
-            SmartDashboard.putNumber("DATA: Current TX", currentAngle);
-            SmartDashboard.putNumber("DATA: Last TX", lastTx);
-            SmartDashboard.putNumber("DATA: Current-Last Difference", Math.abs(currentAngle - lastTx));
         }
-        else {
-            // limelight is kind of jittery, sometimes it loses a note for a couple of frames even if it's there
-            // so we only say there's no note if there has been no visible note for a certain number of cycles
-
-            // if the path ends at a point where there is no note at all, then we do not want to run this command
-            // if we see that there is no note (see above), and this current cycle is within the first x milliseconds,
-            // then end the command immediately
-            if (doNotSeeFrameCount >= DO_NOT_SEE_FRAME_LIMIT && Timer.getFPGATimestamp() - startTime <= EARLY_END_DURATION) {
-                endNow = true;
+        
+        double elapsed = Timer.getFPGATimestamp() - startTime;
+        if (elapsed <= EARLY_END_MAX_DURATION) {
+            if (!hasTarget)
+                doNotSeeFrameCount++;
+            totalFrameCount++;
+            if (elapsed >= EARLY_END_MIN_DURATION && doNotSeeFrameCount / totalFrameCount >= EARLY_END_NO_NOTE_PCT) {
+                endBecauseNoNote = true;
                 return;
             }
-            doNotSeeFrameCount++;
         }
+
+        SmartDashboard.putNumber("follow note total frame count", totalFrameCount);
+        SmartDashboard.putNumber("follow note no note frame count", doNotSeeFrameCount);
+        SmartDashboard.putNumber("follow note percentage", doNotSeeFrameCount / totalFrameCount);
 
         drivetrain.drive(position, llTurn, false, new Translation2d(0, 0));
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.stopSwerveModules();
+        if (endBecauseNoNote) {
+            drivetrain.setIsParkedAuto(true);
+            drivetrain.stopSwerveModules();
+        }
     }
 
     @Override
     public boolean isFinished() {
         // endNow is a condition we invented earlier, hasGamePiece is whether the intake detects a piece
         // and set a cap on total time so that we do not get stuck in this command
-        return endNow ||
-            Timer.getFPGATimestamp() - startTime >= DURATION ||
+        return endBecauseNoNote ||
+            Timer.getFPGATimestamp() - startTime >= timeLimit ||
             hasGamePiece; // OR has the game piece
     }
 }
+

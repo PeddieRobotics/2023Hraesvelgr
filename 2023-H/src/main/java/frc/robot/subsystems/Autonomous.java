@@ -66,7 +66,7 @@ import frc.robot.commands.DriveCommands.ClimbCSGyroDelta;
 import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
 import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
-import frc.robot.commands.DriveCommands.FullOdometryAlign;
+import frc.robot.commands.DriveCommands.PIDToLocation;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -101,7 +101,9 @@ public class Autonomous extends SubsystemBase{
         claw = Claw.getInstance();
         limelightFront = LimelightFront.getInstance();
 
-        // NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
+        drivetrain.setIsParkedAuto(false);
+
+        NamedCommands.registerCommand("stow", new ParallelRaceGroup(new SetStowedPose(), new WaitCommand(3)));
         // NamedCommands.registerCommand("eject", new ParallelRaceGroup(new EjectGamepiece(), new WaitCommand(.3)));
         // NamedCommands.registerCommand("lock", new LockDrivetrain());
         NamedCommands.registerCommand("straighten", new StraightenDrivetrain());
@@ -145,12 +147,12 @@ public class Autonomous extends SubsystemBase{
         // NamedCommands.registerCommand("TranslateRotate", new AutoDrive(new Translation2d(-.3, 0), 0.5 * Constants.DriveConstants.kMaxAngularSpeed));
 
         NamedCommands.registerCommand("Set Odom", new ForcedCalibration());
-        NamedCommands.registerCommand("Follow note", new FollowNoteInAuto());
+        NamedCommands.registerCommand("Follow note", new FollowNoteInAuto(5));
         NamedCommands.registerCommand("Turn on MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(true)));
         NamedCommands.registerCommand("Turn off MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(false)));
         NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
-        NamedCommands.registerCommand("PID back to start", new FullOdometryAlign(2, 5.50, 0, 3));
-        NamedCommands.registerCommand("PID to back to midline start", new FullOdometryAlign(5.50, 5.50, 0, 3));
+        NamedCommands.registerCommand("PID back to start", new PIDToLocation(1.50, 5.50, 0, 5, 0.2));
+        NamedCommands.registerCommand("PID to shooting", new PIDToLocation(4.25, 5.90, -10, 3, 0.1));
 
         AutoBuilder.configureHolonomic(
             drivetrain::getPose, // Robot pose supplier
