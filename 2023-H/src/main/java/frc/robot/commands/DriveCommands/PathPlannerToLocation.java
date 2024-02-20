@@ -57,41 +57,25 @@ public class PathPlannerToLocation extends Command {
 
     @Override
     public void initialize() {
+        // pathfindToPose doesn't flip coordinates for red side. Have to do that manually
         boolean isRed = DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
         turnTarget = isRed ? turnTargetInitial - 180 : turnTargetInitial;
         xTarget = isRed ? 16.542 - xTargetInitial : xTargetInitial;
 
         // https://pathplanner.dev/pplib-create-a-path-on-the-fly.html
-        var currentOdometry = drivetrain.getPose();
-        // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-        //     new Pose2d(currentOdometry.getX(), currentOdometry.getY(), currentOdometry.getRotation()),
-        //     new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(turnTarget))
-        // );
+        // var currentOdometry = drivetrain.getPose();
 
-        SmartDashboard.putNumber("otf target x", xTarget);
-        SmartDashboard.putNumber("otf target y", yTarget);
-        SmartDashboard.putNumber("otf target turn", turnTarget);
+        // SmartDashboard.putNumber("otf target x", xTarget);
+        // SmartDashboard.putNumber("otf target y", yTarget);
+        // SmartDashboard.putNumber("otf target turn", turnTarget);
 
-        SmartDashboard.putNumber("otf current pose x", currentOdometry.getX());
-        SmartDashboard.putNumber("otf current pose y", currentOdometry.getY());
-        SmartDashboard.putNumber("otf current pose turn", currentOdometry.getRotation().getDegrees());
-
-        // Create the path using the bezier points created above
-        // PathPlannerPath path = new PathPlannerPath(
-        //     bezierPoints,
-        //     new PathConstraints(0.5, 0.5, Math.PI, Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-        //     new GoalEndState(0.0, Rotation2d.fromDegrees(turnTarget)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        // );
-
-        // path.preventFlipping = true;
+        // SmartDashboard.putNumber("otf current pose x", currentOdometry.getX());
+        // SmartDashboard.putNumber("otf current pose y", currentOdometry.getY());
+        // SmartDashboard.putNumber("otf current pose turn", currentOdometry.getRotation().getDegrees());
 
         PathConstraints constraints = new PathConstraints(
-            1.5, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(540)
+            1.5, 1.5, Units.degreesToRadians(720), Units.degreesToRadians(720)
         );
-
-        // followPathCommand = AutoBuilder.pathfindThenFollowPath(
-        //     path, constraints
-        // );
 
         Pose2d targetPose = new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(turnTarget));
         followPathCommand = AutoBuilder.pathfindToPose(

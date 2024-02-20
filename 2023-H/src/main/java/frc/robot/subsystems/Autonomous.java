@@ -153,7 +153,7 @@ public class Autonomous extends SubsystemBase{
         NamedCommands.registerCommand("Turn off MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(false)));
         NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
         NamedCommands.registerCommand("PID back to start", new PIDToLocation(1.50, 5.50, 0, 5, 0.2));
-        NamedCommands.registerCommand("PP to shooting", new PathPlannerToLocation(4.00, 7.00, 20, 3));
+        NamedCommands.registerCommand("PP to shooting", new PathPlannerToLocation(4.00, 6.40, 20, 3));
         NamedCommands.registerCommand("PP to the start", new PathPlannerToLocation(2.0, 7.0, 0, 3));
 
         AutoBuilder.configureHolonomic(
