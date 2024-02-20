@@ -31,7 +31,6 @@ public class ForcedCalibration extends Command {
     public void end(boolean interrupted) {
         if (!wasUsingMegaTag)
             drivetrain.setUseMegaTag(false);
-        drivetrain.setUseMegaTag(false);
         drivetrain.setIsForcingCalibration(false);
     }
 

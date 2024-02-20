@@ -41,6 +41,7 @@ import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.FullMegaTagBotPoseAlign;
 import frc.robot.commands.DriveCommands.PIDToLocation;
+import frc.robot.commands.DriveCommands.PathPlannerToLocation;
 import frc.robot.commands.DriveCommands.IntakeAlign;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
@@ -187,7 +188,7 @@ public class DriverOI {
         // Single substation (cube) intake
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         // squareButton.whileTrue(new SpeakerSquareThenAlign());
-        squareButton.whileTrue(new PIDToLocation(5.50, 5.50, 0, 10000, 0.09));
+        squareButton.whileTrue(new PathPlannerToLocation(7.0, 6.60, 0, 10000));
         // squareButton.onTrue(new SequentialCommandGroup(new ParallelCommandGroup(new SetSingleSSCubePose(), new IntakeCubeSingleSS()), new SetStowedPose()));
 
         // Set stowed pose

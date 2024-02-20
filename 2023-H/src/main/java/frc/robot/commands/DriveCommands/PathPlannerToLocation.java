@@ -1,0 +1,119 @@
+package frc.robot.commands.DriveCommands;
+
+import java.util.List;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+// code from these people who figured this out
+// https://github.com/Hamosad1657/MiniProject2023/blob/chassis/src/main/java/frc/robot/commands/drivetrain/FollowGeneratedTrajectoryCommand.java
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightFront;
+import frc.robot.utils.Constants;
+
+public class PathPlannerToLocation extends Command {
+    private Drivetrain drivetrain;
+    private Command followPathCommand;
+
+    private double xTargetInitial, turnTargetInitial;
+    private double xTarget, yTarget, turnTarget;
+
+    private double timeLimit;
+    private double startTime;
+
+    // Full constructor with all 6 parameters for the climb charge station
+    // algorithm.
+    public PathPlannerToLocation(double x, double y, double theta, double timeLimit) {
+        drivetrain = Drivetrain.getInstance();
+        
+        xTargetInitial = x; 
+        yTarget = y; 
+        turnTargetInitial = theta;
+
+        this.timeLimit = timeLimit;
+        startTime = Timer.getFPGATimestamp();
+
+        addRequirements(drivetrain);
+   }
+
+    @Override
+    public void initialize() {
+        boolean isRed = DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
+        turnTarget = isRed ? turnTargetInitial - 180 : turnTargetInitial;
+        xTarget = isRed ? 16.542 - xTargetInitial : xTargetInitial;
+
+        // https://pathplanner.dev/pplib-create-a-path-on-the-fly.html
+        var currentOdometry = drivetrain.getPose();
+        // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
+        //     new Pose2d(currentOdometry.getX(), currentOdometry.getY(), currentOdometry.getRotation()),
+        //     new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(turnTarget))
+        // );
+
+        SmartDashboard.putNumber("otf target x", xTarget);
+        SmartDashboard.putNumber("otf target y", yTarget);
+        SmartDashboard.putNumber("otf target turn", turnTarget);
+
+        SmartDashboard.putNumber("otf current pose x", currentOdometry.getX());
+        SmartDashboard.putNumber("otf current pose y", currentOdometry.getY());
+        SmartDashboard.putNumber("otf current pose turn", currentOdometry.getRotation().getDegrees());
+
+        // Create the path using the bezier points created above
+        // PathPlannerPath path = new PathPlannerPath(
+        //     bezierPoints,
+        //     new PathConstraints(0.5, 0.5, Math.PI, Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
+        //     new GoalEndState(0.0, Rotation2d.fromDegrees(turnTarget)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+        // );
+
+        // path.preventFlipping = true;
+
+        PathConstraints constraints = new PathConstraints(
+            1.5, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(540)
+        );
+
+        // followPathCommand = AutoBuilder.pathfindThenFollowPath(
+        //     path, constraints
+        // );
+
+        Pose2d targetPose = new Pose2d(xTarget, yTarget, Rotation2d.fromDegrees(turnTarget));
+        followPathCommand = AutoBuilder.pathfindToPose(
+            targetPose, constraints, 0.0, 0.0
+        );
+
+        followPathCommand.initialize();
+    }
+
+    @Override
+    public void execute() {
+        followPathCommand.execute();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        followPathCommand.end(interrupted);
+    }
+
+    @Override
+    public boolean isFinished() {
+        // return followPathCommand.isFinished() || Timer.getFPGATimestamp() - startTime >= timeLimit; 
+        return followPathCommand.isFinished();
+    }
+}

@@ -92,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
         return (S3-I3)/(1.0+Math.exp(-K3*(dist-H3)))+I3;
     }
 
-    private boolean useMegaTag;
+    private boolean useMegaTag = true;
     private boolean isForcingCalibration;
     private boolean isParkedAuto = false;
 
@@ -555,6 +555,4 @@ latestChassisSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2
     public SwerveDrivePoseEstimator getOdometry() {
         return odometry;
     }
-
-
 }

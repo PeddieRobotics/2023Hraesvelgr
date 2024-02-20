@@ -67,6 +67,7 @@ import frc.robot.commands.DriveCommands.ClimbCSGyroWithAnglePid;
 import frc.robot.commands.DriveCommands.FollowNoteInAuto;
 import frc.robot.commands.DriveCommands.ForcedCalibration;
 import frc.robot.commands.DriveCommands.PIDToLocation;
+import frc.robot.commands.DriveCommands.PathPlannerToLocation;
 import frc.robot.commands.DriveCommands.LockDrivetrain;
 import frc.robot.commands.DriveCommands.RotateToAngle;
 import frc.robot.commands.DriveCommands.StraightenDrivetrain;
@@ -152,7 +153,8 @@ public class Autonomous extends SubsystemBase{
         NamedCommands.registerCommand("Turn off MegaTag", new InstantCommand(() -> drivetrain.setUseMegaTag(false)));
         NamedCommands.registerCommand("Set Pipeline to 1", new InstantCommand(() -> limelightFront.setPipeline(1)));         // TODO: tune PIDConstants
         NamedCommands.registerCommand("PID back to start", new PIDToLocation(1.50, 5.50, 0, 5, 0.2));
-        NamedCommands.registerCommand("PID to shooting", new PIDToLocation(4.25, 5.90, -10, 3, 0.1));
+        NamedCommands.registerCommand("PP to shooting", new PathPlannerToLocation(4.00, 7.00, 20, 3));
+        NamedCommands.registerCommand("PP to the start", new PathPlannerToLocation(2.0, 7.0, 0, 3));
 
         AutoBuilder.configureHolonomic(
             drivetrain::getPose, // Robot pose supplier
